@@ -48,6 +48,7 @@ public class Scr_ObjetoAgarrable : MonoBehaviour
                 //Si esta recolectando se gira y espera a que termine
                 if (Gata.GetChild(0).GetComponent<Animator>().GetBool("Recolectar"))
                 {
+                    Gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = true;
                     Recolectando = true;
 
                     Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = false;
@@ -81,6 +82,8 @@ public class Scr_ObjetoAgarrable : MonoBehaviour
     IEnumerator Esperar()
     {
         yield return new WaitForSeconds(5.22f);
+        Recolectando = false;
+        Gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = false;
         DarItem();
         Destroy(gameObject);
     }

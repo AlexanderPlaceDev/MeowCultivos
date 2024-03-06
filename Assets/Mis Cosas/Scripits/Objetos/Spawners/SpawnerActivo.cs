@@ -11,6 +11,7 @@ public class SpawnerActivo : MonoBehaviour
     [SerializeField] public int Vida;
     [SerializeField] public GameObject Objeto;
     [SerializeField] float Distancia;
+    [SerializeField, Range(0,10)] float DistanciaSpawneo;
 
     GameObject Herramienta;
     Transform Gata;
@@ -62,7 +63,7 @@ public class SpawnerActivo : MonoBehaviour
         Gata.GetChild(4).gameObject.SetActive(false);
         for (int i = 0; i < r; i++)
         {
-            GameObject Item= Instantiate(Objeto, transform.position + new Vector3(Random.Range(0f, 10f), transform.position.y + 5f, Random.Range(0f, 10f)),Quaternion.identity, null);
+            GameObject Item= Instantiate(Objeto, transform.position + new Vector3(Random.Range(0f, DistanciaSpawneo), transform.position.y + 5f, Random.Range(0f, DistanciaSpawneo)),Quaternion.identity, null);
             Item.transform.GetChild(0).rotation=Quaternion.Euler(Random.Range(0f, 359f), Random.Range(0f, 359f), Random.Range(0f, 359f));
             Destroy(gameObject);
         }

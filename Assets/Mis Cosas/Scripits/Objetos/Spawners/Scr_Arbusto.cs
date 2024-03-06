@@ -51,6 +51,7 @@ public class Scr_Arbusto : MonoBehaviour
                 //Si esta recolectando se gira y espera a que termine
                 if (Gata.GetChild(0).GetComponent<Animator>().GetBool("Recolectar"))
                 {
+                    Gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = true;
                     Recolectando = true;
 
                     Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = false;
@@ -82,6 +83,7 @@ public class Scr_Arbusto : MonoBehaviour
         yield return new WaitForSeconds(5.22f);
         TieneMoras = false;
         Recolectando = false;
+        Gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = false;
         DarMoras();
         DarFibra();
     }

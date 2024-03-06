@@ -1313,7 +1313,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 25800770}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.055178154, y: -0.5504157, z: 0.03649186, w: 0.8322658}
+  m_LocalRotation: {x: 0.055178147, y: -0.5504157, z: 0.03649185, w: 0.8322658}
   m_LocalPosition: {x: 74.26961, y: 11.98, z: 98.41801}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2480,7 +2480,8 @@ MonoBehaviour:
   Tecla: {fileID: 21300000, guid: 1effa06f147261a4098395eb6a1c36d3, type: 3}
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
-  Distancia: 7
+  Distancia: 8
+  DistanciaSpawneo: 5
 --- !u!1 &66666919
 GameObject:
   m_ObjectHideFlags: 0
@@ -3989,7 +3990,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: 0, w: 0.19987449}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -4609,6 +4610,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &122690276 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4a18a70886b000d47aa3c23196538ab4,
@@ -4662,6 +4664,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &125339390
 GameObject:
   m_ObjectHideFlags: 0
@@ -5450,7 +5453,8 @@ MonoBehaviour:
   Tecla: {fileID: 21300000, guid: 1effa06f147261a4098395eb6a1c36d3, type: 3}
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
-  Distancia: 7
+  Distancia: 8
+  DistanciaSpawneo: 5
 --- !u!1 &144020238
 GameObject:
   m_ObjectHideFlags: 0
@@ -8463,6 +8467,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 57b6e7e309ca618419d15926480befa9, type: 3}
   Distancia: 8
+  DistanciaSpawneo: 5
 --- !u!1 &217223541
 GameObject:
   m_ObjectHideFlags: 0
@@ -14183,6 +14188,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &323558240
 GameObject:
   m_ObjectHideFlags: 0
@@ -17107,6 +17113,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 57b6e7e309ca618419d15926480befa9, type: 3}
   Distancia: 8
+  DistanciaSpawneo: 5
 --- !u!1 &385686123
 GameObject:
   m_ObjectHideFlags: 0
@@ -18774,7 +18781,8 @@ MonoBehaviour:
   Tecla: {fileID: 21300000, guid: 1effa06f147261a4098395eb6a1c36d3, type: 3}
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
-  Distancia: 7
+  Distancia: 8
+  DistanciaSpawneo: 5
 --- !u!1 &415316630
 GameObject:
   m_ObjectHideFlags: 0
@@ -21082,7 +21090,8 @@ MonoBehaviour:
   Tecla: {fileID: 21300000, guid: 1effa06f147261a4098395eb6a1c36d3, type: 3}
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
-  Distancia: 7
+  Distancia: 8
+  DistanciaSpawneo: 5
 --- !u!1 &469813713
 GameObject:
   m_ObjectHideFlags: 0
@@ -34787,6 +34796,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &706407571
 GameObject:
   m_ObjectHideFlags: 0
@@ -41760,6 +41770,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -43571,6 +43582,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &854285897
 GameObject:
   m_ObjectHideFlags: 0
@@ -45773,7 +45785,8 @@ MonoBehaviour:
   Tecla: {fileID: 21300000, guid: 1effa06f147261a4098395eb6a1c36d3, type: 3}
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
-  Distancia: 7
+  Distancia: 8
+  DistanciaSpawneo: 5
 --- !u!1 &898719334
 GameObject:
   m_ObjectHideFlags: 0
@@ -48055,6 +48068,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 57b6e7e309ca618419d15926480befa9, type: 3}
   Distancia: 8
+  DistanciaSpawneo: 5
 --- !u!1001 &927324075
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -49021,6 +49035,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &951381606
 GameObject:
   m_ObjectHideFlags: 0
@@ -51865,7 +51880,8 @@ MonoBehaviour:
   Tecla: {fileID: 21300000, guid: 1effa06f147261a4098395eb6a1c36d3, type: 3}
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
-  Distancia: 7
+  Distancia: 8
+  DistanciaSpawneo: 5
 --- !u!1 &1001023927
 GameObject:
   m_ObjectHideFlags: 0
@@ -54205,6 +54221,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 57b6e7e309ca618419d15926480befa9, type: 3}
   Distancia: 8
+  DistanciaSpawneo: 5
 --- !u!1001 &1052653406
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -58049,7 +58066,8 @@ MonoBehaviour:
   Tecla: {fileID: 21300000, guid: 1effa06f147261a4098395eb6a1c36d3, type: 3}
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
-  Distancia: 7
+  Distancia: 8
+  DistanciaSpawneo: 5
 --- !u!1 &1113628021
 GameObject:
   m_ObjectHideFlags: 0
@@ -58708,7 +58726,8 @@ MonoBehaviour:
   Tecla: {fileID: 21300000, guid: 1effa06f147261a4098395eb6a1c36d3, type: 3}
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
-  Distancia: 7
+  Distancia: 8
+  DistanciaSpawneo: 5
 --- !u!1 &1129589980
 GameObject:
   m_ObjectHideFlags: 0
@@ -59988,7 +60007,8 @@ MonoBehaviour:
   Tecla: {fileID: 21300000, guid: 1effa06f147261a4098395eb6a1c36d3, type: 3}
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
-  Distancia: 7
+  Distancia: 8
+  DistanciaSpawneo: 5
 --- !u!1001 &1153438588
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -62327,6 +62347,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 57b6e7e309ca618419d15926480befa9, type: 3}
   Distancia: 8
+  DistanciaSpawneo: 5
 --- !u!4 &1183729188 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 473b6ca6ef0909b45b461879e11d96d9,
@@ -63066,6 +63087,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &1194477040
 GameObject:
   m_ObjectHideFlags: 0
@@ -67420,6 +67442,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &1273981272
 GameObject:
   m_ObjectHideFlags: 0
@@ -69683,6 +69706,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &1333314465
 GameObject:
   m_ObjectHideFlags: 0
@@ -71122,6 +71146,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &1355145243
 GameObject:
   m_ObjectHideFlags: 0
@@ -72411,6 +72436,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &1372118985
 GameObject:
   m_ObjectHideFlags: 0
@@ -76644,6 +76670,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &1442463677 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4a18a70886b000d47aa3c23196538ab4,
@@ -76697,6 +76724,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &1442670966
 GameObject:
   m_ObjectHideFlags: 0
@@ -81369,6 +81397,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &1522186403
 GameObject:
   m_ObjectHideFlags: 0
@@ -83782,6 +83811,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &1579332742
 GameObject:
   m_ObjectHideFlags: 0
@@ -84237,7 +84267,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1600294763}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.055178154, y: -0.5504157, z: 0.03649186, w: 0.8322658}
+  m_LocalRotation: {x: 0.055178147, y: -0.5504157, z: 0.03649185, w: 0.8322658}
   m_LocalPosition: {x: 361.25067, y: 333.2181, z: 49.277805}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -86594,6 +86624,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1001 &1678181383
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -90217,6 +90248,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &1758313484
 GameObject:
   m_ObjectHideFlags: 0
@@ -95859,6 +95891,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &1866662902
 GameObject:
   m_ObjectHideFlags: 0
@@ -99693,7 +99726,8 @@ MonoBehaviour:
   Tecla: {fileID: 21300000, guid: 1effa06f147261a4098395eb6a1c36d3, type: 3}
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
-  Distancia: 7
+  Distancia: 8
+  DistanciaSpawneo: 5
 --- !u!1 &1961327182
 GameObject:
   m_ObjectHideFlags: 0
@@ -100389,6 +100423,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
+  DistanciaSpawneo: 9
 --- !u!1 &1970619063
 GameObject:
   m_ObjectHideFlags: 0
@@ -106276,6 +106311,7 @@ MonoBehaviour:
   Vida: 1
   Objeto: {fileID: 4414294522979041898, guid: 57b6e7e309ca618419d15926480befa9, type: 3}
   Distancia: 8
+  DistanciaSpawneo: 5
 --- !u!1 &2079614622
 GameObject:
   m_ObjectHideFlags: 0

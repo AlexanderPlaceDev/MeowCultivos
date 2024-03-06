@@ -29,11 +29,13 @@ public class Scr_CargadorGuardado : MonoBehaviour
             CinematicaInicial.GetComponent<PlayableDirector>().enabled = false;
             camara.GetComponent<CinemachineBrain>().m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.EaseInOut;
         }
-        //Posicion
-        Gata.transform.position = new Vector3(PlayerPrefs.GetFloat("GataPosX", 62), PlayerPrefs.GetFloat("GataPosY", 7), PlayerPrefs.GetFloat("GataPosZ", 103.5f));
-        //Rotacion
-        Gata.transform.rotation = Quaternion.Euler(PlayerPrefs.GetFloat("GataRotX", 0), PlayerPrefs.GetFloat("GataRotY", -67), PlayerPrefs.GetFloat("GataRotZ", 0));
-        Camara360.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.x = 0;
+        //Posicion y Rotacion
+        if (PlayerPrefs.GetInt("DialogoGusano", 0) > 0)
+        {
+            Gata.transform.position = new Vector3(PlayerPrefs.GetFloat("GataPosX", 62), PlayerPrefs.GetFloat("GataPosY", 7), PlayerPrefs.GetFloat("GataPosZ", 103.5f));
+            Gata.transform.rotation = Quaternion.Euler(PlayerPrefs.GetFloat("GataRotX", 0), PlayerPrefs.GetFloat("GataRotY", -67), PlayerPrefs.GetFloat("GataRotZ", 0));
+            Camara360.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.x = 0;
+        }
         //Movimiento
         if (PlayerPrefs.GetString("Movimiento", "No") == "Si")
         {
@@ -54,11 +56,11 @@ public class Scr_CargadorGuardado : MonoBehaviour
         //Dialogos
         GusanoTutotial.GetComponent<Scr_ControladorDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoGusano", 0);
         //Tablero
-        Tablero.GetComponent<Scr_MenuTablero>().TipoActual = PlayerPrefs.GetInt("TipoTablero",1);
-        Tablero.GetComponent<Scr_MenuTablero>().EstructuraActual = PlayerPrefs.GetInt("EstructuraTablero",0);
-        for(int i = 0; i < 3; i++)
+        Tablero.GetComponent<Scr_MenuTablero>().TipoActual = PlayerPrefs.GetInt("TipoTablero", 1);
+        Tablero.GetComponent<Scr_MenuTablero>().EstructuraActual = PlayerPrefs.GetInt("EstructuraTablero", 0);
+        for (int i = 0; i < 3; i++)
         {
-            if(i == 0)
+            if (i == 0)
             {
                 for (int i2 = 0; i2 < Tablero.GetComponent<Scr_MenuTablero>().EstructurasIndustrialesGuardadas.Length; i2++)
                 {
@@ -68,9 +70,9 @@ public class Scr_CargadorGuardado : MonoBehaviour
                     }
                 }
             }
-            if(i == 1)
+            if (i == 1)
             {
-                for(int i2 = 0;i2< Tablero.GetComponent<Scr_MenuTablero>().EstructurasGranjaGuardadas.Length; i2++)
+                for (int i2 = 0; i2 < Tablero.GetComponent<Scr_MenuTablero>().EstructurasGranjaGuardadas.Length; i2++)
                 {
                     if (PlayerPrefs.GetString(i.ToString() + i2.ToString(), "No") == "Si")
                     {
