@@ -7,7 +7,9 @@ using UnityEngine;
 public class Scr_CreadorObjetos : ScriptableObject 
 {
     public string Nombre;
-    public Sprite Imagen;
+    public int Tamaño;
+    public bool[] Forma;
+    public Sprite[] Iconos;
 
 }
 

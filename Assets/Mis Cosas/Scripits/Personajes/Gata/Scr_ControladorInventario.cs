@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class Scr_ControladorInventario : MonoBehaviour
 {
@@ -11,10 +12,15 @@ public class Scr_ControladorInventario : MonoBehaviour
     public Image[] Casillas;
     public TextMeshProUGUI[] CasillasTexto;
     public string[] CasillasContenido;
-    public float[] Cantidades;
+    public int[] Cantidades;
     [SerializeField] public Scr_ObjetoEnMano ObjetoEnMano;
     [SerializeField] Sprite CasillaVacia;
+    Scr_EventosGuardado Guardado;
 
+    private void Start()
+    {
+        Guardado = GetComponent<Scr_EventosGuardado>();
+    }
     void LateUpdate()
     {
         int cont = 0;
@@ -22,9 +28,18 @@ public class Scr_ControladorInventario : MonoBehaviour
         {
             foreach (Scr_CreadorObjetos Objeto in TodosLosObjetos)
             {
-                if (Objeto.Nombre == Item)
+                if (Item.Contains(Objeto.Nombre))
                 {
-                    Casillas[cont].sprite = Objeto.Imagen;
+                    if (Objeto.Iconos.Length > 1)
+                    {
+                        char UltimaLetra = Item[Item.Length-1];
+                        int Numero =int.Parse(UltimaLetra.ToString());
+                        Casillas[cont].sprite = Objeto.Iconos[Numero-1];
+                    }
+                    else
+                    {
+                        Casillas[cont].sprite = Objeto.Iconos[0];
+                    }
                     CasillasTexto[cont].text = Cantidades[cont].ToString();
                 }
             }
@@ -37,6 +52,7 @@ public class Scr_ControladorInventario : MonoBehaviour
             cont++;
         }
 
+        Guardado.GuardarInventario(CasillasContenido,Cantidades);
     }
 
     public void AgarrarObjetoDelInventario(Image[] Casillas, bool Mitad, bool Uno)
@@ -173,12 +189,12 @@ public class Scr_ControladorInventario : MonoBehaviour
 
     public void EliminarObjeto(Image[] Casillas)
     {
-       foreach (Image Casilla in Casillas)
+        foreach (Image Casilla in Casillas)
         {
             Scr_CasillaInventario CasillaInventario = Casilla.GetComponent<Scr_CasillaInventario>();
 
-            CasillasContenido[(int)CasillaInventario.Numero]="";
-            Cantidades[(int)CasillaInventario.Numero]=0;
+            CasillasContenido[(int)CasillaInventario.Numero] = "";
+            Cantidades[(int)CasillaInventario.Numero] = 0;
             CasillaInventario.ReiniciarCasilla();
         }
     }

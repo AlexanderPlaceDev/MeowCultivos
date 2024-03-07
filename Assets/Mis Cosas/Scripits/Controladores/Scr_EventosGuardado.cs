@@ -57,6 +57,20 @@ public class Scr_EventosGuardado : MonoBehaviour
         PlayerPrefs.SetFloat("GataRotZ", Trans.rotation.eulerAngles.z);
     }
 
+    public void GuardarInventario(string[] Items, int[] Cantidades)
+    {
+        int i = 0;
+        foreach (string item in Items)
+        {
+            if (item != "")
+            {
+                PlayerPrefs.SetString("Casilla" + i, item);
+                PlayerPrefs.SetInt("CasillaCantidad" + i, Cantidades[i]);
+            }
+            i++;
+        }
+    }
+
     public void GuardarTablero(int Tipo, int EstructuraActual)
     {
         PlayerPrefs.SetInt("TipoTablero", Tipo);
@@ -66,6 +80,6 @@ public class Scr_EventosGuardado : MonoBehaviour
     public void GuardarEstructurasTablero(int Tipo, int EstructuraActual)
     {
         PlayerPrefs.SetString(Tipo.ToString() + EstructuraActual.ToString(), "Si");
-        
+
     }
 }

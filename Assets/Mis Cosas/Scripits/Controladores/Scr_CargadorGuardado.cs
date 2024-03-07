@@ -42,6 +42,13 @@ public class Scr_CargadorGuardado : MonoBehaviour
             Gata.GetComponent<Scr_Movimiento>().enabled = true;
             Gata.GetComponent<Scr_GiroGata>().enabled = true;
         }
+        //Inventario
+        for(int i = 0;i< Gata.transform.GetChild(3).GetComponent<Scr_ControladorInventario>().CasillasContenido.Length; i++)
+        {
+
+            Gata.transform.GetChild(3).GetComponent<Scr_ControladorInventario>().CasillasContenido[i] = PlayerPrefs.GetString("Casilla" + i, "");
+            Gata.transform.GetChild(3).GetComponent<Scr_ControladorInventario>().Cantidades[i] = PlayerPrefs.GetInt("CasillaCantidad" + i, 0);
+        }
         //Radio
         if (PlayerPrefs.GetString("Radio", "No") == "Si")
         {

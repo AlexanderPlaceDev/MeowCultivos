@@ -171,7 +171,7 @@ public class Scr_ObjetoEnMano : MonoBehaviour
 
             Casilla.GetComponent<Scr_CasillaInventario>().FormaConHermanas = Forma;
 
-            Inventario.Cantidades[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] += Cantidad;
+            Inventario.Cantidades[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] += (int)Cantidad;
         }
     }
 
