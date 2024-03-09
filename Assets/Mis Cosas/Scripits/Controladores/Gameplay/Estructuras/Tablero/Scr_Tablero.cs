@@ -31,6 +31,9 @@ public class Scr_Tablero : MonoBehaviour
             EstaDentro = true;
             Camara360.SetActive(false);
             Gata.GetChild(4).gameObject.SetActive(false);
+            Gata.GetComponent<Scr_Movimiento>().enabled = false;
+            Gata.GetComponent<Scr_GiroGata>().enabled = false;
+            transform.GetChild(0).gameObject.SetActive(true);
             Tween.UIAnchoredPosition3DY(Canvas.transform.GetChild(4).GetComponent<RectTransform>(), -120, 1);
             Tween.UIAnchoredPosition3DY(Canvas.transform.GetChild(3).GetComponent<RectTransform>(), 137, 1);
             Gata.GetChild(2).GetComponent<Scr_ControladorUI>().PuedeAbrirMochila = false;
@@ -44,6 +47,9 @@ public class Scr_Tablero : MonoBehaviour
                 EstaDentro = false;
                 Camara360.SetActive(true);
                 Gata.GetChild(4).gameObject.SetActive(true);
+                Gata.GetComponent<Scr_Movimiento>().enabled = true;
+                Gata.GetComponent<Scr_GiroGata>().enabled = true;
+                transform.GetChild(0).gameObject.SetActive(false);
                 Tween.UIAnchoredPosition3DY(Canvas.transform.GetChild(4).GetComponent<RectTransform>(), 20, 1);
                 Tween.UIAnchoredPosition3DY(Canvas.transform.GetChild(3).GetComponent<RectTransform>(), -20, 1);
             }
