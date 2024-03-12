@@ -1890,7 +1890,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 162}
   m_SizeDelta: {x: 0, y: 115.05}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &36813749
@@ -2941,6 +2941,7 @@ GameObject:
   - component: {fileID: 68892990}
   - component: {fileID: 68892992}
   - component: {fileID: 68892991}
+  - component: {fileID: 68892993}
   m_Layer: 0
   m_Name: Borrar
   m_TagString: Untagged
@@ -3006,6 +3007,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 68892989}
   m_CullTransparentMesh: 1
+--- !u!114 &68892993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68892989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2064262666}
+          m_TargetAssemblyTypeName: Scr_MenuHoguera, Assembly-CSharp
+          m_MethodName: EntraBoton
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 13
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2064262666}
+          m_TargetAssemblyTypeName: Scr_MenuHoguera, Assembly-CSharp
+          m_MethodName: SaleBoton
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 13
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2064262666}
+          m_TargetAssemblyTypeName: Scr_MenuHoguera, Assembly-CSharp
+          m_MethodName: BotonBorrar
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 13
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &68948955
 GameObject:
   m_ObjectHideFlags: 0
@@ -42678,6 +42740,7 @@ GameObject:
   - component: {fileID: 827295196}
   - component: {fileID: 827295198}
   - component: {fileID: 827295197}
+  - component: {fileID: 827295199}
   m_Layer: 0
   m_Name: Mitad
   m_TagString: Untagged
@@ -42743,6 +42806,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 827295195}
   m_CullTransparentMesh: 1
+--- !u!114 &827295199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 827295195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2064262666}
+          m_TargetAssemblyTypeName: Scr_MenuHoguera, Assembly-CSharp
+          m_MethodName: EntraBoton
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 01
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2064262666}
+          m_TargetAssemblyTypeName: Scr_MenuHoguera, Assembly-CSharp
+          m_MethodName: SaleBoton
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 01
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2064262666}
+          m_TargetAssemblyTypeName: Scr_MenuHoguera, Assembly-CSharp
+          m_MethodName: BotonMitad
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 01
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &827529390
 GameObject:
   m_ObjectHideFlags: 0
@@ -94144,6 +94268,38 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2064262666}
+          m_TargetAssemblyTypeName: Scr_MenuHoguera, Assembly-CSharp
+          m_MethodName: EntraBoton
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 25
+            m_BoolArgument: 1
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2064262666}
+          m_TargetAssemblyTypeName: Scr_MenuHoguera, Assembly-CSharp
+          m_MethodName: SaleBoton
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 25
+            m_BoolArgument: 1
+          m_CallState: 2
 --- !u!1 &1781102158
 GameObject:
   m_ObjectHideFlags: 0
@@ -99386,6 +99542,7 @@ GameObject:
   - component: {fileID: 1882635650}
   - component: {fileID: 1882635652}
   - component: {fileID: 1882635651}
+  - component: {fileID: 1882635653}
   m_Layer: 0
   m_Name: Maximo
   m_TagString: Untagged
@@ -99451,6 +99608,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1882635649}
   m_CullTransparentMesh: 1
+--- !u!114 &1882635653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1882635649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2064262666}
+          m_TargetAssemblyTypeName: Scr_MenuHoguera, Assembly-CSharp
+          m_MethodName: EntraBoton
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 02
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2064262666}
+          m_TargetAssemblyTypeName: Scr_MenuHoguera, Assembly-CSharp
+          m_MethodName: SaleBoton
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 02
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2064262666}
+          m_TargetAssemblyTypeName: Scr_MenuHoguera, Assembly-CSharp
+          m_MethodName: BotonMax
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 02
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1885378963
 GameObject:
   m_ObjectHideFlags: 0
@@ -108074,12 +108292,38 @@ MonoBehaviour:
   Fuego: {fileID: 1879845476}
   ObjetosQueProduce:
   - {fileID: 11400000, guid: 98057a97554cd0a4ba29639b7360daad, type: 2}
-  DialogosIniciales: []
-  DialogosMedios: []
-  DialogosFinales: []
+  DialogosIniciales:
+  - Esparciendo
+  - Juntando
+  - Preparando
+  - Mirando
+  DialogosMedios:
+  - cenizas
+  - aceites
+  - brazas
+  - piedras
+  DialogosFinales:
+  - 
+  - sobrantes
+  - calientes
+  - con un palo
+  - porque si
   ColoresBotones:
   - {r: 0.91764706, g: 0.96862745, b: 0.44313726, a: 1}
   - {r: 0.25882354, g: 0.3372549, b: 0.57254905, a: 1}
+  - {r: 0.4262943, g: 0.6528301, b: 0.13179776, a: 1}
+  - {r: 0.7254902, g: 1, b: 0.36862746, a: 1}
+  - {r: 0.7433963, g: 0.15008187, b: 0.15008187, a: 1}
+  - {r: 1, g: 0.36078432, b: 0.36078432, a: 1}
+  - {r: 0.5698112, g: 0.5698112, b: 0.5698112, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  Botones:
+  - {fileID: 827295195}
+  - {fileID: 1882635649}
+  - {fileID: 68892989}
+  - {fileID: 2073741093}
+  - {fileID: 1778872925}
+  Inventario: {fileID: 1473890198}
   TextoNombre: {fileID: 2650060}
   TextoDescripcion: {fileID: 1742355394}
   "ImagenTama\xF1o": {fileID: 739319821}
@@ -108901,6 +109145,38 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2064262666}
+          m_TargetAssemblyTypeName: Scr_MenuHoguera, Assembly-CSharp
+          m_MethodName: EntraBoton
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 24
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2064262666}
+          m_TargetAssemblyTypeName: Scr_MenuHoguera, Assembly-CSharp
+          m_MethodName: SaleBoton
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 24
             m_BoolArgument: 0
           m_CallState: 2
 --- !u!1 &2073763733

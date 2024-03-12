@@ -13,6 +13,8 @@ public class Scr_MenuHoguera : MonoBehaviour
     [SerializeField] string[] DialogosMedios;
     [SerializeField] string[] DialogosFinales;
     [SerializeField] Color[] ColoresBotones;
+    [SerializeField] GameObject[] Botones;
+    [SerializeField] Scr_ControladorInventario Inventario;
 
     [Header("Objetos del menu")]
     [SerializeField] TextMeshProUGUI TextoNombre;
@@ -48,7 +50,33 @@ public class Scr_MenuHoguera : MonoBehaviour
         }
 
         ActualizarDatos();
+        Producir();
 
+    }
+
+    private void Producir()
+    {
+        if (cantidadAProducir > 0)
+        {
+            TiempoProduciendo += Time.deltaTime;
+        }
+        else
+        {
+            TiempoProduciendo = 0;
+        }
+        Carga.fillAmount = TiempoProduciendo / ObjetosQueProduce[ObjetoActual].TiempoDeProduccion;
+        Carga.color = Color.Lerp(ColoresBotones[5], ColoresBotones[3], Carga.fillAmount);
+        if (Carga.fillAmount >= 1)
+        {
+            CambiarDialogos();
+            TiempoProduciendo = 0;
+        }
+
+    }
+
+    private void CambiarDialogos()
+    {
+        DialogoCarga.text = DialogosIniciales[Random.Range(0, DialogosIniciales.Length)] + " " + DialogosMedios[Random.Range(0, DialogosMedios.Length)] + " " + DialogosFinales[Random.Range(0, DialogosFinales.Length)];
     }
 
     void ActualizarDatos()
@@ -70,6 +98,15 @@ public class Scr_MenuHoguera : MonoBehaviour
                             CasillasMateriales[Casilla].transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
                             CasillasMateriales[Casilla].transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = Objeto.Icono;
                             CasillasMateriales[Casilla].transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = ObjetosQueProduce[0].CantidadMaterialesDeProduccion[Casilla].ToString();
+                            if (VerificarCantidades(Objeto, ObjetosQueProduce[0].CantidadMaterialesDeProduccion[Casilla]))
+                            {
+                                CasillasMateriales[Casilla].transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().color = ColoresBotones[3];
+                            }
+                            else
+                            {
+                                CasillasMateriales[Casilla].transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().color = ColoresBotones[5];
+
+                            }
                         }
                         else
                         {
@@ -100,8 +137,12 @@ public class Scr_MenuHoguera : MonoBehaviour
     {
         if (Aumenta)
         {
-            if (cantidadAProducir + cantidadProducida < 99)
+            if (cantidadAProducir + cantidadProducida < 99 && cantidadAProducir < ObtenerCantidadMinima())
             {
+                if (cantidadAProducir == 0)
+                {
+                    CambiarDialogos();
+                }
                 cantidadAProducir++;
             }
         }
@@ -136,4 +177,218 @@ public class Scr_MenuHoguera : MonoBehaviour
         }
     }
 
+    public void EntraBoton(string ColorYNumero)
+    {
+        if (ColorYNumero == "01")
+        {
+            Botones[0].GetComponent<Image>().color = ColoresBotones[2];
+        }
+        if (ColorYNumero == "02")
+        {
+            Botones[1].GetComponent<Image>().color = ColoresBotones[2];
+        }
+        if (ColorYNumero == "13")
+        {
+            Botones[2].GetComponent<Image>().color = ColoresBotones[4];
+        }
+        if (ColorYNumero == "24")
+        {
+            Botones[3].GetComponent<Image>().color = ColoresBotones[6];
+        }
+        if (ColorYNumero == "25")
+        {
+            Botones[4].GetComponent<Image>().color = ColoresBotones[6];
+        }
+    }
+
+    public void SaleBoton(string ColorYNumero)
+    {
+        if (ColorYNumero == "01")
+        {
+            Botones[0].GetComponent<Image>().color = ColoresBotones[3];
+        }
+        if (ColorYNumero == "02")
+        {
+            Botones[1].GetComponent<Image>().color = ColoresBotones[3];
+        }
+        if (ColorYNumero == "13")
+        {
+            Botones[2].GetComponent<Image>().color = ColoresBotones[5];
+        }
+        if (ColorYNumero == "24")
+        {
+            Botones[3].GetComponent<Image>().color = ColoresBotones[7];
+        }
+        if (ColorYNumero == "25")
+        {
+            Botones[4].GetComponent<Image>().color = ColoresBotones[7];
+        }
+    }
+
+
+    private bool VerificarCantidades(Scr_CreadorObjetos Objeto, int minimo)
+    {
+        int TotalCantidad = 0;
+        int ObjetoActual = 0;
+        foreach (string Casilla in Inventario.CasillasContenido)
+        {
+            if (Casilla.Contains(Objeto.Nombre))
+            {
+                TotalCantidad += Inventario.Cantidades[ObjetoActual];
+            }
+            ObjetoActual++;
+        }
+
+        if (TotalCantidad / Objeto.Tamaño >= minimo)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private int VerificarTotales(Scr_CreadorObjetos Objeto)
+    {
+        int TotalCantidad = 0;
+        int ObjetoActual = 0;
+        foreach (string Casilla in Inventario.CasillasContenido)
+        {
+            if (Casilla.Contains(Objeto.Nombre))
+            {
+                TotalCantidad += Inventario.Cantidades[ObjetoActual];
+            }
+            ObjetoActual++;
+        }
+
+        return TotalCantidad / Objeto.Tamaño;
+
+    }
+
+    public void BotonMitad()
+    {
+        int[] Cantidades = new int[4];
+        int CantidadMateriales = 0;
+        switch (ObjetoActual)
+        {
+            case 0:
+                {
+                    int Casilla = 0;
+                    foreach (Scr_CreadorObjetos Objeto in ObjetosQueProduce[0].MaterialesDeProduccion)
+                    {
+                        if (Objeto != null)
+                        {
+                            Cantidades[Casilla] = VerificarTotales(Objeto) / ObjetosQueProduce[0].CantidadMaterialesDeProduccion[Casilla];
+                            CantidadMateriales++;
+                        }
+                        else
+                        {
+                            Cantidades[Casilla] = 0;
+                        }
+                        Casilla++;
+                    }
+
+                    break;
+                }
+        }
+
+        int CantMinima = Cantidades[0];
+
+        int i = 0;
+        foreach (int Cantidad in Cantidades)
+        {
+            if (i >= CantidadMateriales)
+            {
+                break;
+            }
+            if (Cantidad < CantMinima)
+            {
+
+                CantMinima = Cantidad;
+
+            }
+            i++;
+        }
+        if (cantidadAProducir == 0)
+        {
+            CambiarDialogos();
+        }
+        cantidadAProducir = (int)RedondearHaciaArribaCon0_5((float)CantMinima / 2);
+    }
+
+    public void BotonMax()
+    {
+        if (cantidadAProducir == 0)
+        {
+            CambiarDialogos();
+        }
+        cantidadAProducir = ObtenerCantidadMinima();
+    }
+
+    public void BotonBorrar()
+    {
+        cantidadAProducir = 0;
+    }
+
+    float RedondearHaciaArribaCon0_5(float numero)
+    {
+        float redondeado = Mathf.Round(numero);
+
+        // Verificar si los decimales son 0.5
+        if ((numero - redondeado) == 0.5f)
+        {
+            // Ajustar hacia arriba
+            redondeado += numero + 0.5f;
+        }
+        return redondeado;
+    }
+
+    int ObtenerCantidadMinima()
+    {
+        int[] Cantidades = new int[4];
+        int CantidadMateriales = 0;
+        switch (ObjetoActual)
+        {
+            case 0:
+                {
+                    int Casilla = 0;
+                    foreach (Scr_CreadorObjetos Objeto in ObjetosQueProduce[0].MaterialesDeProduccion)
+                    {
+                        if (Objeto != null)
+                        {
+                            Cantidades[Casilla] = VerificarTotales(Objeto) / ObjetosQueProduce[0].CantidadMaterialesDeProduccion[Casilla];
+                            CantidadMateriales++;
+                        }
+                        else
+                        {
+                            Cantidades[Casilla] = 0;
+                        }
+                        Casilla++;
+                    }
+
+                    break;
+                }
+        }
+
+        int CantMinima = Cantidades[0];
+
+        int i = 0;
+        foreach (int Cantidad in Cantidades)
+        {
+            if (i >= CantidadMateriales)
+            {
+                break;
+            }
+            if (Cantidad < CantMinima)
+            {
+
+                CantMinima = Cantidad;
+
+            }
+            i++;
+        }
+
+        return CantMinima;
+    }
 }

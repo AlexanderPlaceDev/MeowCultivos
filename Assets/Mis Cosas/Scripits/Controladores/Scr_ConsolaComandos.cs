@@ -31,9 +31,9 @@ public class Scr_ConsolaComandos : MonoBehaviour
         }
         if (UnityEngine.Input.GetKeyDown(KeyCode.Return))
         {
-            transform.GetChild(0).gameObject.SetActive(false);
             ValidarCodigo();
             Palabra = "";
+            transform.GetChild(0).gameObject.SetActive(false);
         }
         Texto.text = Palabra;
 
@@ -97,15 +97,19 @@ public class Scr_ConsolaComandos : MonoBehaviour
                 }
             }
         }
-
         //Casos Exactos
-        switch (Palabra.ToLower())
+        switch (Palabra.ToLower().Trim())
         {
             case "borrar.datos":
                 {
                     Debug.Log("Datos Borrados");
                     PlayerPrefs.DeleteAll();
                     SceneManager.LoadScene(2);
+                    break;
+                }
+            default:
+                {
+                    Debug.Log("No se encontro el comando");
                     break;
                 }
         }
