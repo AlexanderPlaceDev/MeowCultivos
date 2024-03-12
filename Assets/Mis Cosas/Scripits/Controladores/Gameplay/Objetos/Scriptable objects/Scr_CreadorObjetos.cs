@@ -7,9 +7,15 @@ using UnityEngine;
 public class Scr_CreadorObjetos : ScriptableObject 
 {
     public string Nombre;
+    [SerializeField, TextArea(4, 6)] public string Descripcion;
     public int Tamaño;
+    public Sprite IconoTamaño;
     public bool[] Forma;
-    public Sprite[] Iconos;
+    public Sprite Icono;
+    public Sprite[] IconosInventario;
+    public Scr_CreadorObjetos[] MaterialesDeProduccion;
+    public int[] CantidadMaterialesDeProduccion;
+    public int TiempoDeProduccion;
 
 }
 

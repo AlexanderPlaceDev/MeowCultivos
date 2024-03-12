@@ -18,6 +18,7 @@ public class Scr_ObjetoAgarrable : MonoBehaviour
     [SerializeField] Sprite Tecla;
     [SerializeField] float Distancia;
     [SerializeField] float VelocidadGiro;
+    [SerializeField] float AlturaPanel;
     bool EstaLejos;
     bool Recolectando;
     Transform Gata;
@@ -27,12 +28,10 @@ public class Scr_ObjetoAgarrable : MonoBehaviour
     {
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
         ObjetoEnMano = GameObject.FindGameObjectWithTag("Canvas").transform.GetChild(1).GetComponent<Scr_ObjetoEnMano>();
-        Physics.IgnoreCollision(GetComponent<CapsuleCollider>(), transform.GetChild(0).GetComponent<CapsuleCollider>());
     }
 
     void Update()
     {
-
         if (!Recolectando)
         {
             //Si se Acerca se prenden los iconos
@@ -75,8 +74,6 @@ public class Scr_ObjetoAgarrable : MonoBehaviour
             Quaternion Objetivo = Quaternion.LookRotation(new Vector3(transform.position.x, Gata.position.y, transform.position.z) - Gata.position);
             Gata.rotation = Quaternion.RotateTowards(Gata.rotation, Objetivo, VelocidadGiro * Time.deltaTime);
         }
-
-
     }
 
     IEnumerator Esperar()

@@ -184,6 +184,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  EsCanvas: 0
+  IgnoraX: 0
+  IgnoraY: 0
+  IgnoraZ: 0
+  OffsetX: 0
+  OffsetY: 0
+  OffsetZ: 0
 --- !u!1 &4414294522979041898
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,9 +200,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1516070901648739439}
-  - component: {fileID: 8301751596079558153}
-  - component: {fileID: 6144976918501989888}
   - component: {fileID: 8240128926353228605}
+  - component: {fileID: 8301751596079558153}
+  - component: {fileID: 2490024368182187093}
   m_Layer: 0
   m_Name: Piedra
   m_TagString: Untagged
@@ -220,56 +227,6 @@ Transform:
   - {fileID: 2954592108329231184}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &8301751596079558153
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4414294522979041898}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 1
-  m_Constraints: 112
-  m_CollisionDetection: 0
---- !u!136 &6144976918501989888
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4414294522979041898}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.7
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8240128926353228605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,6 +265,55 @@ MonoBehaviour:
   Tecla: {fileID: 21300000, guid: 2c18b10658a345146b35b30a29ad6d99, type: 3}
   Distancia: 4
   VelocidadGiro: 200
+  AlturaPanel: 0
+--- !u!54 &8301751596079558153
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4414294522979041898}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 1
+--- !u!135 &2490024368182187093
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4414294522979041898}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7955906084759875076
 GameObject:
   m_ObjectHideFlags: 0
@@ -466,6 +472,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mesh Piedra
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 28c84aac62efbf5489b654a0e4ba88e6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -477,7 +488,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 28c84aac62efbf5489b654a0e4ba88e6,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7277040770470667603}
+      addedObject: {fileID: 5579044901581591229}
   m_SourcePrefab: {fileID: 100100000, guid: 28c84aac62efbf5489b654a0e4ba88e6, type: 3}
 --- !u!4 &5096680041139570429 stripped
 Transform:
@@ -514,7 +525,7 @@ CapsuleCollider:
   m_Height: 0
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &7277040770470667603
+--- !u!54 &5579044901581591229
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -538,6 +549,6 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 14
   m_CollisionDetection: 1

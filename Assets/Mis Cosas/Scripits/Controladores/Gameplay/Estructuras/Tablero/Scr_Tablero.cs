@@ -58,6 +58,7 @@ public class Scr_Tablero : MonoBehaviour
 
         if (EstaDentro && Tiempo < Duracion)
         {
+            Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             Tiempo += Time.deltaTime;
             foreach (Material Mat in Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().materials)
             {
@@ -65,12 +66,16 @@ public class Scr_Tablero : MonoBehaviour
             }
         }
 
-        if (!EstaDentro && Tiempo > 0)
+        if (!EstaDentro)
         {
-            Tiempo -= Time.deltaTime;
-            foreach (Material Mat in Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().materials)
+            if (Tiempo > 0)
             {
-                CambiarMaterial(Mat);
+                Tiempo -= Time.deltaTime;
+                foreach (Material Mat in Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().materials)
+                {
+                    CambiarMaterial(Mat);
+                }
+                Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
             }
         }
     }

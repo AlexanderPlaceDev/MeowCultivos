@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
-using UnityEditor.ShaderGraph.Internal;
 
 public class Scr_ControladorInventario : MonoBehaviour
 {
@@ -40,15 +39,15 @@ public class Scr_ControladorInventario : MonoBehaviour
             {
                 if (Item.Contains(Objeto.Nombre))
                 {
-                    if (Objeto.Iconos.Length > 1)
+                    if (Objeto.IconosInventario.Length > 1)
                     {
                         char UltimaLetra = Item[Item.Length - 1];
                         int Numero = int.Parse(UltimaLetra.ToString());
-                        Casillas[cont].sprite = Objeto.Iconos[Numero - 1];
+                        Casillas[cont].sprite = Objeto.IconosInventario[Numero - 1];
                     }
                     else
                     {
-                        Casillas[cont].sprite = Objeto.Iconos[0];
+                        Casillas[cont].sprite = Objeto.IconosInventario[0];
                     }
                     CasillasTexto[cont].text = Cantidades[cont].ToString();
                 }

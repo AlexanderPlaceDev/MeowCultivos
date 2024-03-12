@@ -1,3 +1,4 @@
+using Cinemachine;
 using PrimeTween;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,14 +9,16 @@ public class Scr_Hoguera : MonoBehaviour
     [SerializeField] Sprite Icono;
     [SerializeField] Sprite Tecla;
     [SerializeField] float Distancia;
-    [SerializeField] float Duracion;
+    [SerializeField] float DuracionMaterial;
+    [SerializeField] float DuracionCamara;
     public bool EstaDentro = false;
 
     Transform Gata;
     GameObject Camara360;
     GameObject Canvas;
     bool EstaLejos;
-    float Tiempo = 0;
+    float TiempoMaterial = 0;
+    float TiempoCamara = 0;
 
     void Start()
     {
@@ -40,40 +43,61 @@ public class Scr_Hoguera : MonoBehaviour
             Gata.GetChild(4).GetChild(1).GetComponent<SpriteRenderer>().sprite = Icono;
             Gata.GetChild(4).gameObject.SetActive(true);
         }
-        else
+        if (Vector3.Distance(Gata.position, transform.position) > Distancia && !EstaLejos)
         {
-            if (Vector3.Distance(Gata.position, transform.position) > Distancia && Vector3.Distance(Gata.position, transform.position) < Distancia + 1)
-            {
-                Gata.GetChild(2).GetComponent<Scr_ControladorUI>().PuedeAbrirMochila = true;
-                Gata.GetChild(4).gameObject.SetActive(false);
-                EstaLejos = true;
-            }
+            Gata.GetChild(2).GetComponent<Scr_ControladorUI>().PuedeAbrirMochila = true;
+            Gata.GetChild(4).gameObject.SetActive(false);
+            EstaLejos = true;
         }
     }
 
     private void CambiarCamaras()
     {
-        if (EstaDentro && Tiempo < Duracion)
+        if (EstaDentro)
         {
-            Tiempo += Time.deltaTime;
-            foreach (Material Mat in Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().materials)
+            if (TiempoMaterial < DuracionMaterial)
             {
-                CambiarMaterial(Mat);
+                Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                TiempoMaterial += Time.deltaTime;
+                foreach (Material Mat in Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().materials)
+                {
+                    CambiarMaterial(Mat);
+                }
+            }
+
+            if (TiempoCamara < DuracionCamara)
+            {
+                TiempoCamara += Time.deltaTime;
+            }
+            else
+            {
+                transform.GetChild(2).gameObject.SetActive(true);
             }
         }
 
-        if (!EstaDentro && Tiempo > 0)
+        if (!EstaDentro)
         {
-            Tiempo -= Time.deltaTime;
-            foreach (Material Mat in Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().materials)
+            if (TiempoMaterial > 0)
             {
-                CambiarMaterial(Mat);
+                TiempoMaterial -= Time.deltaTime;
+                foreach (Material Mat in Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().materials)
+                {
+                    CambiarMaterial(Mat);
+                }
+                Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+            }
+
+            if (TiempoCamara > 0)
+            {
+                TiempoCamara -= Time.deltaTime;
+                transform.GetChild(2).gameObject.SetActive(false);
             }
         }
 
 
         if (!EstaLejos && Input.GetKeyDown(KeyCode.E) && !EstaDentro && Time.timeScale == 1)
         {
+            Debug.Log(EstaLejos);
             EstaDentro = true;
             Camara360.SetActive(false);
             Gata.GetChild(4).gameObject.SetActive(false);
@@ -89,7 +113,6 @@ public class Scr_Hoguera : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E) && EstaDentro && Time.timeScale == 1)
             {
                 Gata.GetChild(2).GetComponent<Scr_ControladorUI>().PuedeAbrirMochila = true;
-                Tiempo += 1;
                 EstaDentro = false;
                 Camara360.SetActive(true);
                 Gata.GetChild(4).gameObject.SetActive(true);
@@ -104,7 +127,8 @@ public class Scr_Hoguera : MonoBehaviour
 
     void CambiarMaterial(Material Mat)
     {
-        Mat.SetFloat("_Alpha", Mathf.Lerp(1, 0, Tiempo / Duracion));
+        Mat.SetFloat("_Alpha", Mathf.Lerp(1, 0, TiempoMaterial / DuracionMaterial));
+
 
     }
 }

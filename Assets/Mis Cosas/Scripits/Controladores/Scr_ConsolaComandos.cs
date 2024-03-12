@@ -51,7 +51,7 @@ public class Scr_ConsolaComandos : MonoBehaviour
         else
         {
             string Tecla = UnityEngine.Input.inputString.ToString();
-            if (Regex.IsMatch(Tecla, @"^[a-zA-Z0-9_+-=]+$"))
+            if (Regex.IsMatch(Tecla, @"^[a-zA-Z0-9_+-=\s]+$"))
             {
                 Palabra += Tecla;
             }
@@ -86,7 +86,7 @@ public class Scr_ConsolaComandos : MonoBehaviour
                                     {
                                         if (objeto.Forma[i])
                                         {
-                                            ObjetoEnMano.Iconos[i] = objeto.Iconos[j];
+                                            ObjetoEnMano.Iconos[i] = objeto.IconosInventario[j];
                                             j++;
                                         }
                                     }

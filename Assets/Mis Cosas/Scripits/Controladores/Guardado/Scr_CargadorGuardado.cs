@@ -29,6 +29,13 @@ public class Scr_CargadorGuardado : MonoBehaviour
             CinematicaInicial.GetComponent<PlayableDirector>().enabled = false;
             camara.GetComponent<CinemachineBrain>().m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.EaseInOut;
         }
+        else
+        {
+            if(CinematicaInicial.GetComponent<PlayableDirector>().enabled == false)
+            {
+                camara.GetComponent<CinemachineBrain>().m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.EaseInOut;
+            }
+        }
         //Posicion y Rotacion
         if (PlayerPrefs.GetInt("DialogoGusano", 0) > 0)
         {

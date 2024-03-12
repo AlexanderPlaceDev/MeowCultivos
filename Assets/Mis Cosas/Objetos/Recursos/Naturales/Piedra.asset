@@ -10,10 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
-  m_Name: Baya Roja
+  m_Name: Piedra
   m_EditorClassIdentifier: 
-  Nombre: Baya Roja
+  Nombre: Piedra
+  Descripcion: 
   "Tama\xF1o": 1
+  "IconoTama\xF1o": {fileID: 0}
   Forma: 010000000000000000000000000000000000
-  Iconos:
-  - {fileID: 21300000, guid: 9599768e711ee2641abea3ef3a167c83, type: 3}
+  Icono: {fileID: 0}
+  IconosInventario:
+  - {fileID: 21300000, guid: 85698625a577282448ba28ec5d692da6, type: 3}
+  MaterialesDeProduccion: []
+  CantidadMaterialesDeProduccion: 
+  TiempoDeProduccion: 0

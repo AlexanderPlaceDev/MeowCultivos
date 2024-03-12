@@ -10,11 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
-  m_Name: Tronco
+  m_Name: Baya Roja
   m_EditorClassIdentifier: 
-  Nombre: Tronco
-  "Tama\xF1o": 2
-  Forma: 010100000000000000000000000000000000
-  Iconos:
-  - {fileID: 21300000, guid: 85027a3be5f86bd4284028d431e47f0a, type: 3}
-  - {fileID: 21300000, guid: 02aac81d1044a054aa6cf784020eccec, type: 3}
+  Nombre: Baya Roja
+  Descripcion: 
+  "Tama\xF1o": 1
+  "IconoTama\xF1o": {fileID: 0}
+  Forma: 010000000000000000000000000000000000
+  Icono: {fileID: 0}
+  IconosInventario:
+  - {fileID: 21300000, guid: 9599768e711ee2641abea3ef3a167c83, type: 3}
+  MaterialesDeProduccion: []
+  CantidadMaterialesDeProduccion: 
+  TiempoDeProduccion: 0
