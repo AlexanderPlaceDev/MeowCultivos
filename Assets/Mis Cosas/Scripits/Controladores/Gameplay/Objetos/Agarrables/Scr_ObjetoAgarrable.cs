@@ -87,17 +87,13 @@ public class Scr_ObjetoAgarrable : MonoBehaviour
 
     void DarItem()
     {
-        if(ObjetoEnMano.Nombre==Nombre)
+        if (ObjetoEnMano.Nombre == Nombre || ObjetoEnMano.Nombre == "")
         {
             ObjetoEnMano.Cantidad += Cantidad;
-
-        }else
-        {
-            ObjetoEnMano.Cantidad=Cantidad;
+            ObjetoEnMano.Nombre = Nombre;
+            ObjetoEnMano.Forma = Forma;
+            ObjetoEnMano.Iconos = Iconos;
         }
-        ObjetoEnMano.Nombre = Nombre;
-        ObjetoEnMano.Forma = Forma;
-        ObjetoEnMano.Iconos = Iconos;
     }
 }
 

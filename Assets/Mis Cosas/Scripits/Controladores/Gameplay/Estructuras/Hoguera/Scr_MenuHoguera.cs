@@ -1,6 +1,8 @@
+using PrimeTween;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +10,7 @@ public class Scr_MenuHoguera : MonoBehaviour
 {
     [Header("Datos Generales")]
     [SerializeField] GameObject Fuego;
+    [SerializeField] float velocidadRotacionFuego;
     [SerializeField] Scr_CreadorObjetos[] ObjetosQueProduce;
     [SerializeField] string[] DialogosIniciales;
     [SerializeField] string[] DialogosMedios;
@@ -24,9 +27,13 @@ public class Scr_MenuHoguera : MonoBehaviour
     [SerializeField] GameObject[] CasillasMateriales;
     [SerializeField] TextMeshProUGUI TextoCantidad;
     [SerializeField] TextMeshProUGUI DialogoCarga;
-    [SerializeField] Image Carga;
+    [SerializeField] GameObject Barra;
+    [SerializeField] float DuracionBarra;
     [SerializeField] GameObject ObjetoCreado;
 
+
+    Image Carga;
+    Scr_ObjetoEnMano ObjetoEnMano;
     int ObjetoActual = 0;
     float TiempoProduciendo = 0;
     int cantidadAProducir = 0;
@@ -35,7 +42,8 @@ public class Scr_MenuHoguera : MonoBehaviour
 
     void Start()
     {
-
+        Carga = Barra.transform.GetChild(1).gameObject.GetComponent<Image>();
+        ObjetoEnMano = GameObject.FindGameObjectWithTag("Canvas").transform.GetChild(1).GetComponent<Scr_ObjetoEnMano>();
     }
 
     void Update()
@@ -69,6 +77,9 @@ public class Scr_MenuHoguera : MonoBehaviour
         if (Carga.fillAmount >= 1)
         {
             CambiarDialogos();
+            QuitarObjetos();
+            GenerarObjeto();
+            cantidadAProducir--;
             TiempoProduciendo = 0;
         }
 
@@ -77,6 +88,118 @@ public class Scr_MenuHoguera : MonoBehaviour
     private void CambiarDialogos()
     {
         DialogoCarga.text = DialogosIniciales[Random.Range(0, DialogosIniciales.Length)] + " " + DialogosMedios[Random.Range(0, DialogosMedios.Length)] + " " + DialogosFinales[Random.Range(0, DialogosFinales.Length)];
+    }
+
+    private void QuitarObjetos()
+    {
+        Image[] Materiales = new Image[4];
+        Materiales[0] = CasillasMateriales[0].transform.GetChild(0).GetChild(0).GetComponent<Image>();
+        Materiales[1] = CasillasMateriales[1].transform.GetChild(0).GetChild(0).GetComponent<Image>();
+        Materiales[2] = CasillasMateriales[2].transform.GetChild(0).GetChild(0).GetComponent<Image>();
+        Materiales[3] = CasillasMateriales[3].transform.GetChild(0).GetChild(0).GetComponent<Image>();
+
+        TextMeshProUGUI[] Cantidades = new TextMeshProUGUI[4];
+        Cantidades[0] = CasillasMateriales[0].transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
+        Cantidades[1] = CasillasMateriales[1].transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
+        Cantidades[2] = CasillasMateriales[2].transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
+        Cantidades[3] = CasillasMateriales[3].transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
+
+
+        int MaterialActual = 0;
+        foreach (Image Material in Materiales)
+        {
+            //Total necesario para cada objeto
+            int TotalNecesario = int.Parse(Cantidades[MaterialActual].text);
+
+
+            //En caso de que este activo el material
+            if (Material.isActiveAndEnabled)
+            {
+                int ItemActual = 0;
+                foreach (string Objeto in Inventario.CasillasContenido)
+                {
+                    if (TotalNecesario > 0)
+                    {
+                        //Si encuentra el material
+                        if (Objeto.Contains(Material.sprite.name))
+                        {
+                            //En caso de tener mas de los que piden
+                            if (Inventario.Cantidades[ItemActual] > TotalNecesario)
+                            {
+                                foreach (Image Casilla in Inventario.Casillas[ItemActual].GetComponent<Scr_CasillaInventario>().CasillasHermanas)
+                                {
+                                    Inventario.Cantidades[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] -= TotalNecesario;
+                                }
+                                TotalNecesario = 0;
+                            }
+                            else
+                            {
+                                //En caso de tener menos
+                                if (Inventario.Cantidades[ItemActual] < TotalNecesario)
+                                {
+                                    bool YaResto = false;
+                                    foreach (Image Casilla in Inventario.Casillas[ItemActual].GetComponent<Scr_CasillaInventario>().CasillasHermanas)
+                                    {
+                                        if (!YaResto)
+                                        {
+                                            YaResto = true;
+                                            TotalNecesario -= (int)Inventario.Cantidades[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero];
+                                        }
+                                        Inventario.CasillasContenido[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] = "";
+                                        Inventario.Cantidades[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] = 0;
+                                    }
+                                }
+                                else
+                                {
+                                    foreach (Image Casilla in Inventario.Casillas[ItemActual].GetComponent<Scr_CasillaInventario>().CasillasHermanas)
+                                    {
+                                        TotalNecesario = 0;
+                                        Inventario.CasillasContenido[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] = "";
+                                        Inventario.Cantidades[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] = 0;
+                                    }
+                                }
+
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                    ItemActual++;
+                }
+            }
+            MaterialActual++;
+        }
+    }
+
+    private void GenerarObjeto()
+    {
+        switch (ObjetoActual)
+        {
+            case 0:
+                {
+                    cantidadProducida++;
+                    ObjetoCreado.transform.GetChild(0).GetComponent<Image>().sprite = ObjetosQueProduce[0].Icono;
+                    ObjetoCreado.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = cantidadProducida.ToString();
+                    break;
+                }
+        }
+    }
+    public void DarItem()
+    {
+        if (ObjetoEnMano.Nombre == ObjetosQueProduce[0].Nombre || ObjetoEnMano.Nombre == "")
+        {
+            ObjetoEnMano.Cantidad += int.Parse(ObjetoCreado.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text);
+            ObjetoEnMano.Nombre = ObjetosQueProduce[0].Nombre;
+            ObjetoEnMano.Forma = ObjetosQueProduce[0].Forma;
+            ObjetoEnMano.Iconos = ObjetosQueProduce[0].IconosInventario;
+            cantidadProducida -= int.Parse(ObjetoCreado.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text);
+            ObjetoCreado.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = cantidadProducida.ToString();
+            //GetComponent<Scr_Hoguera>().Salir();
+        }
     }
 
     void ActualizarDatos()
@@ -131,13 +254,30 @@ public class Scr_MenuHoguera : MonoBehaviour
         {
             ObjetoCreado.SetActive(false);
         }
+
+        ImagenTamaño.color = ObjetosQueProduce[ObjetoActual].ColorTamaño;
+
+        if (cantidadAProducir > 0 && Barra.GetComponent<RectTransform>().anchoredPosition.y == -670)
+        {
+            Tween.UIAnchoredPosition3DY(Barra.GetComponent<RectTransform>(), -450, DuracionBarra);
+        }
+        if (cantidadAProducir == 0 && Barra.GetComponent<RectTransform>().anchoredPosition.y == -450)
+        {
+            Tween.UIAnchoredPosition3DY(Barra.GetComponent<RectTransform>(), -670, DuracionBarra);
+        }
+
+        if (cantidadAProducir > 0)
+        {
+            Fuego.transform.Rotate(Vector3.up, velocidadRotacionFuego * Time.deltaTime);
+        }
+
     }
 
     public void Flechas(bool Aumenta)
     {
         if (Aumenta)
         {
-            if (cantidadAProducir + cantidadProducida < 99 && cantidadAProducir < ObtenerCantidadMinima())
+            if (cantidadAProducir + cantidadProducida < 99)
             {
                 if (cantidadAProducir == 0)
                 {
@@ -154,7 +294,6 @@ public class Scr_MenuHoguera : MonoBehaviour
             }
         }
     }
-
 
     public void EntraEnItem(int Objeto)
     {
@@ -324,6 +463,10 @@ public class Scr_MenuHoguera : MonoBehaviour
             CambiarDialogos();
         }
         cantidadAProducir = ObtenerCantidadMinima();
+        if (cantidadProducida + cantidadAProducir >= 99)
+        {
+            cantidadAProducir = 99 - cantidadProducida;
+        }
     }
 
     public void BotonBorrar()

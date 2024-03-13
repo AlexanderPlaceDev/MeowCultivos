@@ -97,7 +97,6 @@ public class Scr_Hoguera : MonoBehaviour
 
         if (!EstaLejos && Input.GetKeyDown(KeyCode.E) && !EstaDentro && Time.timeScale == 1)
         {
-            Debug.Log(EstaLejos);
             EstaDentro = true;
             Camara360.SetActive(false);
             Gata.GetChild(4).gameObject.SetActive(false);
@@ -112,15 +111,7 @@ public class Scr_Hoguera : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.E) && EstaDentro && Time.timeScale == 1)
             {
-                Gata.GetChild(2).GetComponent<Scr_ControladorUI>().PuedeAbrirMochila = true;
-                EstaDentro = false;
-                Camara360.SetActive(true);
-                Gata.GetChild(4).gameObject.SetActive(true);
-                Gata.GetComponent<Scr_Movimiento>().enabled = true;
-                Gata.GetComponent<Scr_GiroGata>().enabled = true;
-                transform.GetChild(1).gameObject.SetActive(false);
-                Tween.UIAnchoredPosition3DY(Canvas.transform.GetChild(4).GetComponent<RectTransform>(), 20, 1);
-                Tween.UIAnchoredPosition3DY(Canvas.transform.GetChild(3).GetComponent<RectTransform>(), -20, 1);
+                Salir();
             }
         }
     }
@@ -130,5 +121,18 @@ public class Scr_Hoguera : MonoBehaviour
         Mat.SetFloat("_Alpha", Mathf.Lerp(1, 0, TiempoMaterial / DuracionMaterial));
 
 
+    }
+
+    public void Salir()
+    {
+        Gata.GetChild(2).GetComponent<Scr_ControladorUI>().PuedeAbrirMochila = true;
+        EstaDentro = false;
+        Camara360.SetActive(true);
+        Gata.GetChild(4).gameObject.SetActive(true);
+        Gata.GetComponent<Scr_Movimiento>().enabled = true;
+        Gata.GetComponent<Scr_GiroGata>().enabled = true;
+        transform.GetChild(1).gameObject.SetActive(false);
+        Tween.UIAnchoredPosition3DY(Canvas.transform.GetChild(4).GetComponent<RectTransform>(), 20, 1);
+        Tween.UIAnchoredPosition3DY(Canvas.transform.GetChild(3).GetComponent<RectTransform>(), -20, 1);
     }
 }

@@ -10,6 +10,7 @@ public class Scr_CreadorObjetos : ScriptableObject
     [SerializeField, TextArea(4, 6)] public string Descripcion;
     public int Tamaño;
     public Sprite IconoTamaño;
+    public Color ColorTamaño;
     public bool[] Forma;
     public Sprite Icono;
     public Sprite[] IconosInventario;
