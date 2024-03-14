@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 63af13ad85656e1498378200931bc5af
+guid: 3e09e167d52ba544e9974ef05b74648d
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -8,12 +8,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Textura Mapa 2
-    second: {fileID: 2100000, guid: 06c3f053203fcd24f827d7164133da9b, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Textura Terreno Mapa 2
-    second: {fileID: 2800000, guid: 768aea6837e91b141a52c4881bc1741d, type: 3}
+    second: {fileID: 2100000, guid: 660264ecc5e723f40a89646932f211a9, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -100,7 +95,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 1
+    globalScale: 100
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
