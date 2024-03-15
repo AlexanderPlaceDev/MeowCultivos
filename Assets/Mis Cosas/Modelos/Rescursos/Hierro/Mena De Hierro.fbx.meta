@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 28920e6db92b64e4abcc44cb7ebd8245
+guid: 16721a60e8c35e849a9e90f156b20a13
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,23 +7,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Piedras
-    second: {fileID: 2100000, guid: 17f98cc9936888c4aa8f4d2a4aa24157, type: 2}
+      name: Color Hierro
+    second: {fileID: 2100000, guid: a37de88d6395d134b8f539279a4b271e, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Tronco
-    second: {fileID: 2100000, guid: e52df2e309478f34ab340dfe91b9eba9, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Textura Piedras
-    second: {fileID: 2800000, guid: ff010d0beee43a84990533b4d34f069d, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Textura Tronco
-    second: {fileID: 2800000, guid: b9f329790b0fe1e4cb5d8852fe7039f9, type: 3}
+      name: Hierro Oscuro
+    second: {fileID: 2100000, guid: d05ed07a2eec9a24583f34fb19542a5d, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -92,7 +82,7 @@ ModelImporter:
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
-    tangentImportMode: 0
+    tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1

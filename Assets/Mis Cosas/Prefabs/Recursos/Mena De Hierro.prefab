@@ -160,7 +160,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a709c5d5fd792cd4f92e43ba02464e51, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d31621a6b47a1a4478e0969734abdbe0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -204,7 +204,7 @@ GameObject:
   - component: {fileID: 8301751596079558153}
   - component: {fileID: 2490024368182187093}
   m_Layer: 0
-  m_Name: Piedra
+  m_Name: Mena De Hierro
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -239,11 +239,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 352afc97fd928ff4a9f4470636019249, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Nombre: Piedra
+  Nombre: Mena De Hierro
   Cantidad: 1
   Forma: 010000000000000000000000000000000000
   Iconos:
-  - {fileID: 21300000, guid: 85698625a577282448ba28ec5d692da6, type: 3}
+  - {fileID: 21300000, guid: d834f61d48324dd49b944a990216be32, type: 3}
   - {fileID: 21300000, guid: 0e75b5dc5389b234299be4526c17f3c8, type: 3}
   - {fileID: 0}
   - {fileID: 0}
@@ -312,7 +312,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.4
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7955906084759875076
 GameObject:
@@ -340,7 +340,7 @@ Transform:
   m_GameObject: {fileID: 7955906084759875076}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.263, z: 0.077}
+  m_LocalPosition: {x: 0, y: 0.227, z: 0.077}
   m_LocalScale: {x: 1.28, y: 1.28, z: 1.28}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -387,7 +387,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f3eaf0bd2d6fde841ae29758ac222956, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 61f6ebfc07a92034db07f0e1d9402de6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
@@ -458,19 +458,29 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 28c84aac62efbf5489b654a0e4ba88e6,
         type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 28c84aac62efbf5489b654a0e4ba88e6,
+        type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 17f98cc9936888c4aa8f4d2a4aa24157, type: 2}
+      objectReference: {fileID: 2100000, guid: a37de88d6395d134b8f539279a4b271e, type: 2}
+    - target: {fileID: -7511558181221131132, guid: 28c84aac62efbf5489b654a0e4ba88e6,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: d05ed07a2eec9a24583f34fb19542a5d, type: 2}
     - target: {fileID: -5754084199372789682, guid: 28c84aac62efbf5489b654a0e4ba88e6,
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -7895367639895188736, guid: 4938c5707532ae54da5ff2080dbf02ec,
+      objectReference: {fileID: -6442944396253151665, guid: 16721a60e8c35e849a9e90f156b20a13,
         type: 3}
     - target: {fileID: 919132149155446097, guid: 28c84aac62efbf5489b654a0e4ba88e6,
         type: 3}
       propertyPath: m_Name
-      value: Mesh Piedra
+      value: Mesh Mena Hierro
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 28c84aac62efbf5489b654a0e4ba88e6,
         type: 3}
@@ -521,10 +531,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.007
-  m_Height: 0
-  m_Direction: 2
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.004
+  m_Height: 0.02
+  m_Direction: 1
+  m_Center: {x: 0.001, y: -0.001, z: 0}
 --- !u!54 &5579044901581591229
 Rigidbody:
   m_ObjectHideFlags: 0
