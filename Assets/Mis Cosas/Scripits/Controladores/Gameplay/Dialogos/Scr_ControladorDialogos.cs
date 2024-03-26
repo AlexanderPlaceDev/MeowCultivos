@@ -15,7 +15,6 @@ public class Scr_ControladorDialogos : MonoBehaviour
     [SerializeField] Scr_ControladorMisiones ControladorMisiones;
     [SerializeField] Scr_Radio Radio;
 
-    Scr_ControladorInventario Inventario;
 
 
     int DialogoGuardado = -1;
@@ -23,14 +22,6 @@ public class Scr_ControladorDialogos : MonoBehaviour
     private void Start()
     {
         Dialogo = GetComponent<Scr_Dialogos>();
-        try
-        {
-            Inventario = GameObject.Find("Gata").transform.GetChild(3).GetComponent<Scr_ControladorInventario>();
-        }
-        catch
-        {
-            Debug.Log("No existe la Gata 3D");
-        }
     }
 
     private void Update()
@@ -69,6 +60,10 @@ public class Scr_ControladorDialogos : MonoBehaviour
                 else
                 {
                     Dialogo.Lineas = Dialogos[DialogoActual].Lineas;
+                    if(Dialogo.Comenzo && Dialogo.Texto.text == "")
+                    {
+                        Dialogo.IniciarDialogo();
+                    }
                 }
             }
             else
@@ -92,16 +87,15 @@ public class Scr_ControladorDialogos : MonoBehaviour
                                 {
                                     if (ControladorMisiones.MisionActual.QuitaObjetos)
                                     {
-                                        QuitarObjetos();
                                     }
                                     ControladorMisiones.MisionActual = null;
                                     ControladorMisiones.MisionCompleta = false;
                                     ControladorMisiones.TeclasPresionadas = null;
-                                    DialogoActual++;
-                                    Dialogo.Lineas = Dialogos[DialogoActual].Lineas;
-                                    Dialogo.YaLeido = false;
                                     Dialogo.StopAllCoroutines();
+                                    DialogoActual++;
+                                    Dialogo.YaLeido = false;
                                     Dialogo.Texto.text = "";
+                                    Dialogo.Lineas = Dialogos[DialogoActual].Lineas;
                                     Dialogo.IniciarDialogo();
                                 }
 
@@ -144,71 +138,6 @@ public class Scr_ControladorDialogos : MonoBehaviour
         }
     }
 
-    void QuitarObjetos()
-    {
-        Scr_CreadorMisiones MisionActual = Dialogos[DialogoActual].Mision;
-        int ObjetoActual = 0;
-        //para cada objeto de la mision
-        foreach (string ObjetoNecesario in MisionActual.Objetos)
-        {
-            int CasillaActual = 0;
-            int TotalNecesario = MisionActual.Cantidades[ObjetoActual];
-            //para cada item en el inventario
-            foreach (string Item in Inventario.CasillasContenido)
-            {
-                //si el total necesario es mayor a cero
-                if (TotalNecesario > 0)
-                {
-                    if (Item.Contains(ObjetoNecesario))
-                    {
-                        //En caso de tener mas de los que se piden
-                        if (Inventario.Cantidades[CasillaActual] > TotalNecesario)
-                        {
-                            foreach (Image Casilla in Inventario.Casillas[CasillaActual].GetComponent<Scr_CasillaInventario>().CasillasHermanas)
-                            {
-                                Inventario.Cantidades[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] -= TotalNecesario;
-                            }
-                            TotalNecesario = 0;
-                        }
-                        else
-                        {
-                            //En caso de tener menos de los necesarios
-                            if (Inventario.Cantidades[CasillaActual] < TotalNecesario)
-                            {
-                                bool YaResto = false;
-                                foreach (Image Casilla in Inventario.Casillas[CasillaActual].GetComponent<Scr_CasillaInventario>().CasillasHermanas)
-                                {
-                                    if (!YaResto)
-                                    {
-                                        YaResto = true;
-                                        TotalNecesario -= (int)Inventario.Cantidades[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero];
-                                    }
-                                    Inventario.CasillasContenido[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] = "";
-                                    Inventario.Cantidades[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] = 0;
-                                }
-                            }
-                            else
-                            {
-                                foreach (Image Casilla in Inventario.Casillas[CasillaActual].GetComponent<Scr_CasillaInventario>().CasillasHermanas)
-                                {
-                                    TotalNecesario = 0;
-                                    Inventario.CasillasContenido[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] = "";
-                                    Inventario.Cantidades[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] = 0;
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    break;
-                }
-
-
-                CasillaActual++;
-            }
-            ObjetoActual++;
-        }
-    }
+    
 
 }

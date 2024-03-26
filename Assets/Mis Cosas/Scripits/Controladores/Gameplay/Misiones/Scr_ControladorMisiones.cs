@@ -6,18 +6,11 @@ using UnityEngine.UI;
 public class Scr_ControladorMisiones : MonoBehaviour
 {
 
-    Scr_ControladorInventario Inventario;
-
     public Scr_CreadorMisiones MisionActual;
 
     public bool MisionCompleta;
 
     public bool[] TeclasPresionadas;
-
-    void Start()
-    {
-        Inventario = GameObject.Find("Gata").transform.GetChild(3).GetComponent<Scr_ControladorInventario>();
-    }
 
     void Update()
     {
@@ -65,41 +58,6 @@ public class Scr_ControladorMisiones : MonoBehaviour
                         break;
                     }
 
-                case "Conseguir":
-                    {
-                        int ObjetosCumplidos = 0;
-                        int ObjetoActual = 0;
-                        foreach (string ObjetoNecesario in MisionActual.Objetos)
-                        {
-                            int TotalDeObjetos = 0;
-                            int CasillaActual=0;
-                            foreach (string Item in Inventario.CasillasContenido)
-                            {
-                                if (Item.Contains(ObjetoNecesario))
-                                {
-                                    TotalDeObjetos += (int)Inventario.Cantidades[CasillaActual];
-                                }
-                                CasillaActual++;
-                            }
-
-                            if (TotalDeObjetos / MisionActual.Tamaños[ObjetoActual] >= MisionActual.Cantidades[ObjetosCumplidos])
-                            {
-                                ObjetosCumplidos++;
-                            }
-                            else
-                            {
-                                break;
-                            }
-
-                            ObjetoActual++;
-                        }
-
-                        if (ObjetosCumplidos >= MisionActual.Cantidades.Length)
-                        {
-                            MisionCompleta = true;
-                        }
-                        break;
-                    }
             }
         }
     }

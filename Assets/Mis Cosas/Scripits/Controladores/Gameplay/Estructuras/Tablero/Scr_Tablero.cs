@@ -36,13 +36,11 @@ public class Scr_Tablero : MonoBehaviour
             transform.GetChild(0).gameObject.SetActive(true);
             Tween.UIAnchoredPosition3DY(Canvas.transform.GetChild(4).GetComponent<RectTransform>(), -120, 1);
             Tween.UIAnchoredPosition3DY(Canvas.transform.GetChild(3).GetComponent<RectTransform>(), 137, 1);
-            Gata.GetChild(2).GetComponent<Scr_ControladorUI>().PuedeAbrirMochila = false;
         }
         else
         {
             if (Input.GetKeyDown(KeyCode.E) && EstaEnRango && EstaDentro && Time.timeScale == 1)
             {
-                Gata.GetChild(2).GetComponent<Scr_ControladorUI>().PuedeAbrirMochila = true;
                 Tiempo += 1;
                 EstaDentro = false;
                 Camara360.SetActive(true);
@@ -85,9 +83,6 @@ public class Scr_Tablero : MonoBehaviour
         if (other.name == "Gata" || other.name == "Gato Mesh")
         {
             EstaEnRango = true;
-            Gata.GetChild(4).gameObject.SetActive(true);
-            Gata.GetChild(4).GetChild(0).GetComponent<SpriteRenderer>().sprite = Tecla;
-            Gata.GetChild(4).GetChild(1).GetComponent<SpriteRenderer>().sprite = Icono;
 
         }
     }

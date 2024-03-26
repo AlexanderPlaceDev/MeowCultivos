@@ -30,7 +30,6 @@ public class Scr_MenuTablero : MonoBehaviour
     [SerializeField] TextMeshProUGUI[] Cantidades;
 
     [Header("Inventario")]
-    [SerializeField] Scr_ControladorInventario Inventario;
     public int TipoActual = 1;
     public int EstructuraActual = 0;
     float cont = 0;
@@ -208,30 +207,12 @@ public class Scr_MenuTablero : MonoBehaviour
                 {
                     case 0:
                         {
-                            if (VerificarCantidades(EstructurasIndustriales[EstructuraActual]))
-                            {
-                                BotonConstruir.GetComponent<Image>().color = Color.green;
-                                BotonConstruir.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.green;
-                            }
-                            else
-                            {
-                                BotonConstruir.GetComponent<Image>().color = Color.red;
-                                BotonConstruir.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.red;
-                            }
+                            
                             break;
                         }
                     case 1:
                         {
-                            if (VerificarCantidades(EstructurasGranja[EstructuraActual]))
-                            {
-                                BotonConstruir.GetComponent<Image>().color = Color.green;
-                                BotonConstruir.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.green;
-                            }
-                            else
-                            {
-                                BotonConstruir.GetComponent<Image>().color = Color.red;
-                                BotonConstruir.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.red;
-                            }
+                            
                             break;
                         }
                 }
@@ -241,164 +222,6 @@ public class Scr_MenuTablero : MonoBehaviour
                 BotonConstruir.GetComponent<Image>().color = Color.white;
                 BotonConstruir.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
             }
-        }
-    }
-
-    public void ComprarEstructura()
-    {
-        if (GetComponent<Scr_Tablero>().EstaDentro)
-        {
-            switch (TipoActual)
-            {
-                case 0:
-                    {
-                        if (VerificarCantidades(EstructurasIndustriales[EstructuraActual]))
-                        {
-                            EstructurasIndustrialesGuardadas[EstructuraActual] = true;
-                            GetComponent<Scr_EventosGuardado>().GuardarEstructurasTablero(TipoActual, EstructuraActual);
-                            QuitarObjetos();
-                            BotonConstruir.SetActive(false);
-                            ImagenConstruido.SetActive(true);
-                            ActivarEstructuras(true);
-
-                        }
-                        break;
-                    }
-
-                case 1:
-                    {
-                        if (VerificarCantidades(EstructurasGranja[EstructuraActual]))
-                        {
-                            EstructurasGranjaGuardadas[EstructuraActual] = true;
-                            GetComponent<Scr_EventosGuardado>().GuardarEstructurasTablero(TipoActual, EstructuraActual);
-                            QuitarObjetos();
-                            BotonConstruir.SetActive(false);
-                            ImagenConstruido.SetActive(true);
-                            ActivarEstructuras(true);
-
-                        }
-                        break;
-                    }
-            }
-
-
-        }
-    }
-
-    private bool VerificarCantidades(Scr_CreadorEstructuras Estructura)
-    {
-        int ObjetosCumplidos = 0;
-        int ObjetoActual = 0;
-        foreach (Image ObjetoNecesario in Materiales)
-        {
-            if (Materiales[ObjetoActual].IsActive())
-            {
-                int TotalDeObjetos = 0;
-                int CasillaActual = 0;
-                foreach (string Item in Inventario.CasillasContenido)
-                {
-                    if (Item.Contains(ObjetoNecesario.sprite.name))
-                    {
-                        TotalDeObjetos += (int)Inventario.Cantidades[CasillaActual];
-                    }
-                    CasillaActual++;
-                }
-
-                if (TotalDeObjetos / Estructura.Tamaños[ObjetoActual] >= Estructura.Cantidades[ObjetosCumplidos])
-                {
-                    ObjetosCumplidos++;
-                }
-                else
-                {
-                    break;
-                }
-
-                ObjetoActual++;
-            }
-
-        }
-
-        Debug.Log("Objetos Cumplidos: " + ObjetosCumplidos);
-        Debug.Log("Objetos necesarios: " + Estructura.Cantidades.Length);
-        if (ObjetosCumplidos >= Estructura.Cantidades.Length)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    private void QuitarObjetos()
-    {
-        int MaterialActual = 0;
-        foreach (Image Material in Materiales)
-        {
-            //Total necesario para cada objeto
-            int TotalNecesario = int.Parse(Cantidades[MaterialActual].text);
-
-
-            //En caso de que este activo el material
-            if (Material.isActiveAndEnabled)
-            {
-                int ItemActual = 0;
-                foreach (string Objeto in Inventario.CasillasContenido)
-                {
-                    if (TotalNecesario > 0)
-                    {
-                        //Si encuentra el material
-                        if (Objeto.Contains(Material.sprite.name))
-                        {
-                            //En caso de tener mas de los que piden
-                            if (Inventario.Cantidades[ItemActual] > TotalNecesario)
-                            {
-                                foreach (Image Casilla in Inventario.Casillas[ItemActual].GetComponent<Scr_CasillaInventario>().CasillasHermanas)
-                                {
-                                    Inventario.Cantidades[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] -= TotalNecesario;
-                                }
-                                TotalNecesario = 0;
-                            }
-                            else
-                            {
-                                //En caso de tener menos
-                                if (Inventario.Cantidades[ItemActual] < TotalNecesario)
-                                {
-                                    bool YaResto = false;
-                                    foreach (Image Casilla in Inventario.Casillas[ItemActual].GetComponent<Scr_CasillaInventario>().CasillasHermanas)
-                                    {
-                                        if (!YaResto)
-                                        {
-                                            YaResto = true;
-                                            TotalNecesario -= (int)Inventario.Cantidades[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero];
-                                        }
-                                        Inventario.CasillasContenido[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] = "";
-                                        Inventario.Cantidades[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] = 0;
-                                    }
-                                }
-                                else
-                                {
-                                    foreach (Image Casilla in Inventario.Casillas[ItemActual].GetComponent<Scr_CasillaInventario>().CasillasHermanas)
-                                    {
-                                        TotalNecesario = 0;
-                                        Inventario.CasillasContenido[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] = "";
-                                        Inventario.Cantidades[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] = 0;
-                                    }
-                                }
-
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        break;
-                    }
-
-                    ItemActual++;
-                }
-            }
-            MaterialActual++;
         }
     }
 

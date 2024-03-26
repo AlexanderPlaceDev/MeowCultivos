@@ -26,9 +26,7 @@ public class Scr_EventosGuardado : MonoBehaviour
                     }
                     if (Dialogo == 2)
                     {
-                        PlayerPrefs.SetString("Radio", "Si");
-                        GameObject.Find("Radio").GetComponent<Image>().color = Color.white;
-                        GameObject.Find("Radio").transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                        PlayerPrefs.SetString("Reloj", "Si");
                     }
                     PlayerPrefs.SetInt("DialogoGusano", Dialogo);
                     break;
@@ -58,40 +56,6 @@ public class Scr_EventosGuardado : MonoBehaviour
         PlayerPrefs.SetFloat("GataRotZ", Trans.rotation.eulerAngles.z);
     }
 
-    public void GuardarInventario(string[] Items, int[] Cantidades, Image[] TodasCasillas)
-    {
-
-
-        int i = 0;
-        foreach (string item in Items)
-        {
-            if (item != "")
-            {
-                PlayerPrefs.SetString("Casilla" + i, item);
-                PlayerPrefs.SetInt("CasillaCantidad" + i, Cantidades[i]);
-                PlayerPrefs.SetInt("CasillasHermanasCantidad" + i, TodasCasillas[i].GetComponent<Scr_CasillaInventario>().CasillasHermanas.ToArray().Length);
-                for (int j = 0; j < TodasCasillas[i].GetComponent<Scr_CasillaInventario>().CasillasHermanas.ToArray().Length; j++)
-                {
-                    PlayerPrefs.SetString("CasillasHermanas" + i + "Hemana" + j, TodasCasillas[i].GetComponent<Scr_CasillaInventario>().CasillasHermanas.ToArray()[j].name);
-                }
-                for (int j = 0; j < 18; j++)
-                {
-                    if (TodasCasillas[i].GetComponent<Scr_CasillaInventario>().FormaConHermanas[j])
-                    {
-                        PlayerPrefs.SetString("CasillasFormaHermanas" + i + j, "Si");
-
-                    }
-                }
-            }
-            else
-            {
-                PlayerPrefs.DeleteKey("Casilla" + i);
-                PlayerPrefs.DeleteKey("CasillaCantidad" + i);
-                PlayerPrefs.DeleteKey("CasillasHermanasCantidad" + i);
-            }
-            i++;
-        }
-    }
 
     public void GuardarTablero(int Tipo, int EstructuraActual)
     {

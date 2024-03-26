@@ -10,7 +10,6 @@ public class SpawnerActivo : MonoBehaviour
     [SerializeField] Sprite Icono;
     [SerializeField] Sprite Tecla;
     [SerializeField] public int Vida;
-    [SerializeField] public GameObject Objeto;
     [SerializeField] float Distancia;
     [SerializeField, Range(0, 10)] float DistanciaSpawneo;
     [SerializeField] float AlturaSpawneo;
@@ -35,9 +34,6 @@ public class SpawnerActivo : MonoBehaviour
             SpawnearHerramienta();
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeTalar = true;
             EstaLejos = false;
-            Gata.GetChild(4).GetChild(0).GetComponent<SpriteRenderer>().sprite = Tecla;
-            Gata.GetChild(4).GetChild(1).GetComponent<SpriteRenderer>().sprite = Icono;
-            Gata.GetChild(4).gameObject.SetActive(true);
         }
         else
         {
@@ -63,18 +59,6 @@ public class SpawnerActivo : MonoBehaviour
     IEnumerator SpawnearObjetos()
     {
         Destruyendo = true;
-
-        int r = Random.Range(1, 4);
-
-        Herramienta.SetActive(false);
-        Gata.GetChild(4).gameObject.SetActive(false);
-        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeTalar=false;
-        for (int i = 0; i < r; i++)
-        {
-            GameObject Item = Instantiate(Objeto, transform.position, Quaternion.identity, null);
-            Item.transform.position = Item.transform.position + new Vector3(Random.Range(0f, DistanciaSpawneo), transform.position.y + AlturaSpawneo, Random.Range(0f, DistanciaSpawneo));
-            Item.transform.GetChild(0).rotation = Quaternion.Euler(Random.Range(0f, 359f), Random.Range(0f, 359f), Random.Range(0f, 359f));
-        }
 
         if (transform.childCount > 0)
         {

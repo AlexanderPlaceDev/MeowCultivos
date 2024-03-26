@@ -45,7 +45,6 @@ public class Scr_Hoguera : MonoBehaviour
         }
         if (Vector3.Distance(Gata.position, transform.position) > Distancia && !EstaLejos)
         {
-            Gata.GetChild(2).GetComponent<Scr_ControladorUI>().PuedeAbrirMochila = true;
             Gata.GetChild(4).gameObject.SetActive(false);
             EstaLejos = true;
         }
@@ -105,7 +104,6 @@ public class Scr_Hoguera : MonoBehaviour
             transform.GetChild(1).gameObject.SetActive(true);
             Tween.UIAnchoredPosition3DY(Canvas.transform.GetChild(4).GetComponent<RectTransform>(), -120, 1);
             Tween.UIAnchoredPosition3DY(Canvas.transform.GetChild(3).GetComponent<RectTransform>(), 137, 1);
-            Gata.GetChild(2).GetComponent<Scr_ControladorUI>().PuedeAbrirMochila = false;
         }
         else
         {
@@ -125,7 +123,6 @@ public class Scr_Hoguera : MonoBehaviour
 
     public void Salir()
     {
-        Gata.GetChild(2).GetComponent<Scr_ControladorUI>().PuedeAbrirMochila = true;
         EstaDentro = false;
         Camara360.SetActive(true);
         Gata.GetChild(4).gameObject.SetActive(true);

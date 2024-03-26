@@ -50,55 +50,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
             Gata.GetComponent<Scr_GiroGata>().enabled = true;
         }
         //Inventario
-        Image[] Casillas = Gata.transform.GetChild(3).GetComponent<Scr_ControladorInventario>().Casillas;
-        for (int i = 0; i < Gata.transform.GetChild(3).GetComponent<Scr_ControladorInventario>().CasillasContenido.Length; i++)
-        {
-            Gata.transform.GetChild(3).GetComponent<Scr_ControladorInventario>().CasillasContenido[i] = PlayerPrefs.GetString("Casilla" + i, "");
-            Gata.transform.GetChild(3).GetComponent<Scr_ControladorInventario>().Cantidades[i] = PlayerPrefs.GetInt("CasillaCantidad" + i, 0);
-            if (Gata.transform.GetChild(3).GetComponent<Scr_ControladorInventario>().CasillasContenido[i] != "")
-            {
-                if (Casillas[i].GetComponent<Scr_CasillaInventario>().FormaConHermanas.Length == 0)
-                {
-                    Casillas[i].GetComponent<Scr_CasillaInventario>().FormaConHermanas = new bool[18];
-                }
-
-                Casillas[i].GetComponent<Scr_CasillaInventario>().PuedeAgarrar = true;
-                for (int j = 0; j < PlayerPrefs.GetInt("CasillasHermanasCantidad" + i, 0); j++)
-                {
-                    for (int l = 0; l < Casillas.Length; l++)
-                    {
-                        if (Casillas[l].gameObject.name == PlayerPrefs.GetString("CasillasHermanas" + i + "Hemana" + j, ""))
-                        {
-                            Casillas[i].GetComponent<Scr_CasillaInventario>().CasillasHermanas.Add(Casillas[l]);
-
-                        }
-
-                    }
-                }
-                for (int j = 0; j < 18; j++)
-                {
-                    if (PlayerPrefs.GetString("CasillasFormaHermanas" + i + j, "No") == "Si")
-                    {
-                        Casillas[i].GetComponent<Scr_CasillaInventario>().FormaConHermanas[j] = true;
-
-                    }
-                }
-            }
-
-
-
-        }
-        //Radio
-        if (PlayerPrefs.GetString("Radio", "No") == "Si")
-        {
-            Radio.GetComponent<Image>().color = Color.white;
-            GameObject.Find("Radio").transform.GetChild(0).GetComponent<Image>().color = Color.white;
-        }
-        Radio.GetComponent<Scr_Radio>().Lineas = new string[PlayerPrefs.GetInt("CantLineasRadio", 0)];
-        for (int i = 0; i < PlayerPrefs.GetInt("CantLineasRadio", 0); i++)
-        {
-            Radio.GetComponent<Scr_Radio>().Lineas[i] = PlayerPrefs.GetString("Linea" + i + "Radio", "");
-        }
+        
         //Dialogos
         GusanoTutotial.GetComponent<Scr_ControladorDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoGusano", 0);
         //Tablero

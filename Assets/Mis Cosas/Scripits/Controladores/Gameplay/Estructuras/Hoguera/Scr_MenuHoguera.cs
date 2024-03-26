@@ -17,7 +17,6 @@ public class Scr_MenuHoguera : MonoBehaviour
     [SerializeField] string[] DialogosFinales;
     [SerializeField] Color[] ColoresBotones;
     [SerializeField] GameObject[] Botones;
-    [SerializeField] Scr_ControladorInventario Inventario;
 
     [Header("Objetos del menu")]
     [SerializeField] TextMeshProUGUI TextoNombre;
@@ -33,7 +32,6 @@ public class Scr_MenuHoguera : MonoBehaviour
 
 
     Image Carga;
-    Scr_ObjetoEnMano ObjetoEnMano;
     int ObjetoActual = 0;
     float TiempoProduciendo = 0;
     int cantidadAProducir = 0;
@@ -43,7 +41,6 @@ public class Scr_MenuHoguera : MonoBehaviour
     void Start()
     {
         Carga = Barra.transform.GetChild(1).gameObject.GetComponent<Image>();
-        ObjetoEnMano = GameObject.FindGameObjectWithTag("Canvas").transform.GetChild(1).GetComponent<Scr_ObjetoEnMano>();
     }
 
     void Update()
@@ -92,87 +89,7 @@ public class Scr_MenuHoguera : MonoBehaviour
 
     private void QuitarObjetos()
     {
-        Image[] Materiales = new Image[4];
-        Materiales[0] = CasillasMateriales[0].transform.GetChild(0).GetChild(0).GetComponent<Image>();
-        Materiales[1] = CasillasMateriales[1].transform.GetChild(0).GetChild(0).GetComponent<Image>();
-        Materiales[2] = CasillasMateriales[2].transform.GetChild(0).GetChild(0).GetComponent<Image>();
-        Materiales[3] = CasillasMateriales[3].transform.GetChild(0).GetChild(0).GetComponent<Image>();
-
-        TextMeshProUGUI[] Cantidades = new TextMeshProUGUI[4];
-        Cantidades[0] = CasillasMateriales[0].transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
-        Cantidades[1] = CasillasMateriales[1].transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
-        Cantidades[2] = CasillasMateriales[2].transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
-        Cantidades[3] = CasillasMateriales[3].transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
-
-
-        int MaterialActual = 0;
-        foreach (Image Material in Materiales)
-        {
-            //Total necesario para cada objeto
-            int TotalNecesario = int.Parse(Cantidades[MaterialActual].text);
-
-
-            //En caso de que este activo el material
-            if (Material.isActiveAndEnabled)
-            {
-                int ItemActual = 0;
-                foreach (string Objeto in Inventario.CasillasContenido)
-                {
-                    if (TotalNecesario > 0)
-                    {
-                        //Si encuentra el material
-                        if (Objeto.Contains(Material.sprite.name))
-                        {
-                            //En caso de tener mas de los que piden
-                            if (Inventario.Cantidades[ItemActual] > TotalNecesario)
-                            {
-                                foreach (Image Casilla in Inventario.Casillas[ItemActual].GetComponent<Scr_CasillaInventario>().CasillasHermanas)
-                                {
-                                    Inventario.Cantidades[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] -= TotalNecesario;
-                                }
-                                TotalNecesario = 0;
-                            }
-                            else
-                            {
-                                //En caso de tener menos
-                                if (Inventario.Cantidades[ItemActual] < TotalNecesario)
-                                {
-                                    bool YaResto = false;
-                                    foreach (Image Casilla in Inventario.Casillas[ItemActual].GetComponent<Scr_CasillaInventario>().CasillasHermanas)
-                                    {
-                                        if (!YaResto)
-                                        {
-                                            YaResto = true;
-                                            TotalNecesario -= (int)Inventario.Cantidades[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero];
-                                        }
-                                        Inventario.CasillasContenido[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] = "";
-                                        Inventario.Cantidades[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] = 0;
-                                    }
-                                }
-                                else
-                                {
-                                    foreach (Image Casilla in Inventario.Casillas[ItemActual].GetComponent<Scr_CasillaInventario>().CasillasHermanas)
-                                    {
-                                        TotalNecesario = 0;
-                                        Inventario.CasillasContenido[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] = "";
-                                        Inventario.Cantidades[(int)Casilla.GetComponent<Scr_CasillaInventario>().Numero] = 0;
-                                    }
-                                }
-
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        break;
-                    }
-
-                    ItemActual++;
-                }
-            }
-            MaterialActual++;
-        }
+        
     }
 
     private void GenerarObjeto()
@@ -190,16 +107,7 @@ public class Scr_MenuHoguera : MonoBehaviour
     }
     public void DarItem()
     {
-        if (ObjetoEnMano.Nombre == ObjetosQueProduce[0].Nombre || ObjetoEnMano.Nombre == "")
-        {
-            ObjetoEnMano.Cantidad += int.Parse(ObjetoCreado.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text);
-            ObjetoEnMano.Nombre = ObjetosQueProduce[0].Nombre;
-            ObjetoEnMano.Forma = ObjetosQueProduce[0].Forma;
-            ObjetoEnMano.Iconos = ObjetosQueProduce[0].IconosInventario;
-            cantidadProducida -= int.Parse(ObjetoCreado.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text);
-            ObjetoCreado.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = cantidadProducida.ToString();
-            //GetComponent<Scr_Hoguera>().Salir();
-        }
+        
     }
 
     void ActualizarDatos()
@@ -221,15 +129,7 @@ public class Scr_MenuHoguera : MonoBehaviour
                             CasillasMateriales[Casilla].transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
                             CasillasMateriales[Casilla].transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = Objeto.Icono;
                             CasillasMateriales[Casilla].transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = ObjetosQueProduce[0].CantidadMaterialesDeProduccion[Casilla].ToString();
-                            if (VerificarCantidades(Objeto, ObjetosQueProduce[0].CantidadMaterialesDeProduccion[Casilla]))
-                            {
-                                CasillasMateriales[Casilla].transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().color = ColoresBotones[3];
-                            }
-                            else
-                            {
-                                CasillasMateriales[Casilla].transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().color = ColoresBotones[5];
-
-                            }
+                            
                         }
                         else
                         {
@@ -365,95 +265,10 @@ public class Scr_MenuHoguera : MonoBehaviour
     }
 
 
-    private bool VerificarCantidades(Scr_CreadorObjetos Objeto, int minimo)
-    {
-        int TotalCantidad = 0;
-        int ObjetoActual = 0;
-        foreach (string Casilla in Inventario.CasillasContenido)
-        {
-            if (Casilla.Contains(Objeto.Nombre))
-            {
-                TotalCantidad += Inventario.Cantidades[ObjetoActual];
-            }
-            ObjetoActual++;
-        }
-
-        if (TotalCantidad / Objeto.Tamaño >= minimo)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    private int VerificarTotales(Scr_CreadorObjetos Objeto)
-    {
-        int TotalCantidad = 0;
-        int ObjetoActual = 0;
-        foreach (string Casilla in Inventario.CasillasContenido)
-        {
-            if (Casilla.Contains(Objeto.Nombre))
-            {
-                TotalCantidad += Inventario.Cantidades[ObjetoActual];
-            }
-            ObjetoActual++;
-        }
-
-        return TotalCantidad / Objeto.Tamaño;
-
-    }
 
     public void BotonMitad()
     {
-        int[] Cantidades = new int[4];
-        int CantidadMateriales = 0;
-        switch (ObjetoActual)
-        {
-            case 0:
-                {
-                    int Casilla = 0;
-                    foreach (Scr_CreadorObjetos Objeto in ObjetosQueProduce[0].MaterialesDeProduccion)
-                    {
-                        if (Objeto != null)
-                        {
-                            Cantidades[Casilla] = VerificarTotales(Objeto) / ObjetosQueProduce[0].CantidadMaterialesDeProduccion[Casilla];
-                            CantidadMateriales++;
-                        }
-                        else
-                        {
-                            Cantidades[Casilla] = 0;
-                        }
-                        Casilla++;
-                    }
-
-                    break;
-                }
-        }
-
-        int CantMinima = Cantidades[0];
-
-        int i = 0;
-        foreach (int Cantidad in Cantidades)
-        {
-            if (i >= CantidadMateriales)
-            {
-                break;
-            }
-            if (Cantidad < CantMinima)
-            {
-
-                CantMinima = Cantidad;
-
-            }
-            i++;
-        }
-        if (cantidadAProducir == 0)
-        {
-            CambiarDialogos();
-        }
-        cantidadAProducir = (int)RedondearHaciaArribaCon0_5((float)CantMinima / 2);
+        
     }
 
     public void BotonMax()
@@ -500,7 +315,6 @@ public class Scr_MenuHoguera : MonoBehaviour
                     {
                         if (Objeto != null)
                         {
-                            Cantidades[Casilla] = VerificarTotales(Objeto) / ObjetosQueProduce[0].CantidadMaterialesDeProduccion[Casilla];
                             CantidadMateriales++;
                         }
                         else

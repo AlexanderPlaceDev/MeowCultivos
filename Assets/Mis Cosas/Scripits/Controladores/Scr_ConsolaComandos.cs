@@ -12,13 +12,11 @@ public class Scr_ConsolaComandos : MonoBehaviour
     string PalabraClave = "truco";
     string Palabra = "";
     TextMeshProUGUI Texto;
-    Scr_ObjetoEnMano ObjetoEnMano;
 
     [SerializeField] Scr_CreadorObjetos[] TodosLosObjetos;
     void Start()
     {
         Texto = transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
-        ObjetoEnMano = GameObject.FindGameObjectWithTag("Canvas").transform.GetChild(1).GetComponent<Scr_ObjetoEnMano>();
     }
 
     void Update()
@@ -76,21 +74,7 @@ public class Scr_ConsolaComandos : MonoBehaviour
                         {
                             if (int.TryParse(split[1], out int Resultado))
                             {
-                                if (ObjetoEnMano.Nombre == "")
-                                {
-                                    ObjetoEnMano.Nombre = objeto.Nombre;
-                                    ObjetoEnMano.Cantidad = Resultado;
-                                    ObjetoEnMano.Forma = objeto.Forma;
-                                    int j = 0;
-                                    for (int i = 0; i < objeto.Forma.Length; i++)
-                                    {
-                                        if (objeto.Forma[i])
-                                        {
-                                            ObjetoEnMano.Iconos[i] = objeto.IconosInventario[j];
-                                            j++;
-                                        }
-                                    }
-                                }
+                                
                             }
                         }
                     }

@@ -11,6 +11,9 @@ public class Scr_Dialogos : MonoBehaviour
     [SerializeField] public TextMeshProUGUI Texto;
     [SerializeField] Scr_ControladorDialogos ControladorDialogos;
     [SerializeField] float VelocidadAlHablar;
+    [SerializeField] GameObject CamaraDialogo;
+    [SerializeField] GameObject CamaraGata;
+    [SerializeField] float VelocidadGiro;
 
     public bool EstaEnRango;
     public bool Comenzo;
@@ -18,7 +21,6 @@ public class Scr_Dialogos : MonoBehaviour
     int LineaActual;
 
     GameObject Gata;
-    GameObject Radio;
     GameObject ControladorUI;
 
     void Start()
@@ -27,7 +29,6 @@ public class Scr_Dialogos : MonoBehaviour
         try
         {
             ControladorUI = Gata.transform.GetChild(2).gameObject;
-            Radio = GameObject.Find("Canvas").transform.GetChild(3).gameObject;
         }
         catch { }
         ControladorDialogos = GetComponent<Scr_ControladorDialogos>();
@@ -37,7 +38,7 @@ public class Scr_Dialogos : MonoBehaviour
     {
         if (ControladorUI != null)
         {
-            if (EstaEnRango && Input.GetKeyDown(KeyCode.E) && Time.timeScale == 1 && !ControladorUI.GetComponent<Scr_ControladorUI>().MochilaActiva)
+            if (EstaEnRango && Input.GetKeyDown(KeyCode.E) && Time.timeScale == 1)
             {
                 if (!Comenzo)
                 {
@@ -81,12 +82,23 @@ public class Scr_Dialogos : MonoBehaviour
         }
 
 
+        if(Comenzo && CamaraDialogo !=null)
+        {
+            Quaternion Objetivo = Quaternion.LookRotation(new Vector3(transform.position.x, Gata.transform.position.y, transform.position.z) - Gata.transform.position);
+            Gata.transform.rotation = Quaternion.RotateTowards(Gata.transform.rotation, Objetivo, VelocidadGiro * Time.deltaTime);
+        }
+
     }
 
     public void IniciarDialogo()
     {
         Comenzo = true;
         PanelDialogo.SetActive(true);
+        if (CamaraDialogo != null)
+        {
+            CamaraGata.SetActive(false);
+            CamaraDialogo.SetActive(true);
+        }
         try
         {
             Gata.GetComponent<Rigidbody>().velocity = Vector3.zero;
@@ -124,14 +136,18 @@ public class Scr_Dialogos : MonoBehaviour
         }
         else
         {
+            if (CamaraDialogo != null)
+            {
+                CamaraGata.SetActive(true);
+                CamaraDialogo.SetActive(false);
+            }
             Comenzo = false;
             YaLeido = true;
             PanelDialogo.SetActive(false);
             EstaEnRango = false;
             try
             {
-                Radio.GetComponent<Scr_Radio>().Comenzo = false;
-                Radio.transform.GetChild(1).gameObject.SetActive(false);
+                Debug.Log("Entra");
                 Gata.GetComponent<Scr_Movimiento>().enabled = true;
                 Gata.GetComponent<Scr_GiroGata>().enabled = true;
                 transform.GetChild(2).gameObject.SetActive(false);
