@@ -20,14 +20,15 @@ public class Scr_ControladorMenuJuego : MonoBehaviour
 
     [Header("Datos del inventario")]
     [SerializeField] Transform[] ObjetosDelInventario;
-
+    [SerializeField] float VelocidadSlider;
+    float ValorSlider = 0;
 
 
     GameObject Gata;
-    public int MenuActual = 0;
-    public float ContAnimacion = 0;
-    public bool Cerrando = false;
-    public bool Esperando = false;
+    int MenuActual = 0;
+    float ContAnimacion = 0;
+    bool Cerrando = false;
+    bool Esperando = false;
 
 
 
@@ -66,7 +67,11 @@ public class Scr_ControladorMenuJuego : MonoBehaviour
                 CambiarColores();
             }
 
+            ScrollBar();
+
             CambiarMenus();
+
+
         }
         else
         {
@@ -204,7 +209,7 @@ public class Scr_ControladorMenuJuego : MonoBehaviour
 
         switch (MenuActual)
         {
-            case 0 :
+            case 0:
                 {
                     EstaEnMenuPrincipal = true;
                     ColoresActuales = TemaActual.ColoresMenu;
@@ -221,5 +226,35 @@ public class Scr_ControladorMenuJuego : MonoBehaviour
         Esperando = false;
         ContAnimacion = 0;
         Abrir();
+    }
+
+    void ScrollBar()
+    {
+        float CantFilas = Mathf.Ceil(((float)ObjetosDelInventario[0].GetChild(0).childCount / 3) - 1);
+        Debug.Log(CantFilas);
+        ObjetosDelInventario[0].GetChild(1).GetComponent<Scrollbar>().size = 1 / CantFilas;
+
+        float scrollDelta = -Input.GetAxis("Mouse ScrollWheel");
+        if (scrollDelta != 0)
+        {
+            ValorSlider = Mathf.Clamp01(ValorSlider + scrollDelta);
+            ObjetosDelInventario[0].GetChild(1).GetComponent<Scrollbar>().value = ValorSlider;
+        }
+        else
+        {
+            ValorSlider = ObjetosDelInventario[0].GetChild(1).GetComponent<Scrollbar>().value;
+        }
+
+
+
+        GridLayoutGroup grid = ObjetosDelInventario[0].GetChild(0).GetComponent<GridLayoutGroup>();
+
+        float topActual = grid.padding.top;
+
+        // Utilizamos Mathf.Lerp para interpolar suavemente hacia el valor de la variable
+        float nuevoTop = Mathf.Lerp(topActual, ValorSlider * -300 * (CantFilas - 1), Time.deltaTime * VelocidadSlider); ;
+
+        // Creamos un nuevo 'RectOffset' con el nuevo valor de 'top' y lo asignamos al GridLayoutGroup
+        grid.padding = new RectOffset(grid.padding.left, grid.padding.right, Mathf.RoundToInt(nuevoTop), grid.padding.bottom);
     }
 }
