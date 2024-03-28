@@ -27,10 +27,4 @@ public class scr_BotonesMenuJuego : MonoBehaviour
         }
 
     }
-
-    public void BotonInventario()
-    {
-        GetComponent<Scr_ControladorMenuJuego>().CambiarMenu(2,true);
-    }
-
 }

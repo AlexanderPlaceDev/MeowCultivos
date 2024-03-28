@@ -2,29 +2,32 @@ using PrimeTween;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using PrimeTween;
 using UnityEngine.UI;
 using Unity.Mathematics;
 
 public class Scr_ControladorMenuJuego : MonoBehaviour
 {
-
+    [Header("Datos Generales")]
     public bool EstaEnMenu = false;
+    public bool EstaEnMenuPrincipal = true;
+    [SerializeField] Color[] ColoresActuales;
+
+    [Header("Datos del menu")]
     [SerializeField] GameObject Menu;
-    [SerializeField] GameObject BotonesMenu;
-    [SerializeField] Transform BarraIzq;
-    [SerializeField] Transform BarraDer;
-    [SerializeField] Transform Fondo;
-    [SerializeField] Transform AreaDia;
+    [SerializeField] Image[] ObjetosUI;
+    [SerializeField] Transform[] ObjetosDelMenu;
     [SerializeField] Scr_CreadorTemas TemaActual;
-    [SerializeField] float Duracion;
-    float ContTiempo = 0;
-    Tween tweenAbrir;
-    Tween tweenCerrar;
-    Tween tweenCambiarColor;
+
+    [Header("Datos del inventario")]
+    [SerializeField] Transform[] ObjetosDelInventario;
+
+
+
     GameObject Gata;
-    bool Va = false;
-    int MenuActual = 0;
+    public int MenuActual = 0;
+    public float ContAnimacion = 0;
+    public bool Cerrando = false;
+    public bool Esperando = false;
 
 
 
@@ -36,115 +39,187 @@ public class Scr_ControladorMenuJuego : MonoBehaviour
 
     void Update()
     {
-
+        //Para Abrir y cerrar el menu
         if (EstaEnMenu)
         {
             Gata.GetComponent<Scr_Movimiento>().enabled = false;
             Gata.GetComponent<Scr_GiroGata>().enabled = false;
-            if (Input.GetKeyDown(KeyCode.Tab))
+
+
+            if (Input.GetKeyDown(KeyCode.Tab) && !Esperando)
             {
-                Cerrar();
+                if (MenuActual == 0)
+                {
+                    Cerrando = true;
+                    Cerrar();
+                }
             }
-            if (tweenCerrar.progress >= 0.9 && MenuActual == 0)
+
+            if (Cerrando)
             {
-                EstaEnMenu = false;
-                CambiarMenu();
+                ContAnimacion += Time.deltaTime;
             }
+
+            if (Esperando)
+            {
+                ContAnimacion += Time.deltaTime;
+                CambiarColores();
+            }
+
+            CambiarMenus();
         }
         else
         {
             Gata.GetComponent<Scr_Movimiento>().enabled = true;
             Gata.GetComponent<Scr_GiroGata>().enabled = true;
+
+
             if (Input.GetKeyDown(KeyCode.Tab))
             {
-                EstaEnMenu = true;
-                CambiarMenu();
+                Menu.SetActive(true);
                 Abrir();
+                EstaEnMenu = true;
             }
-        }
-
-        if (MenuActual == 2)
-        {
-            CambiarAInventario();
-        }
-
-    }
-
-
-    private void CambiarMenu()
-    {
-        if (EstaEnMenu)
-        {
-            Menu.SetActive(true);
-
-        }
-        else
-        {
-
-            Menu.SetActive(false);
         }
     }
 
     void Abrir()
     {
-        if (!tweenAbrir.IsAlive && BarraIzq.GetComponent<RectTransform>().anchoredPosition.x != -850)
-        {
-            tweenAbrir = Tween.UIAnchoredPositionX(BarraIzq.GetComponent<RectTransform>(), -850, Duracion, Ease.Default, 1);
-            Tween.UIAnchoredPosition3DX(BarraDer.GetComponent<RectTransform>(), 850, Duracion, Ease.Default, 1);
-
-        }
+        Menu.GetComponent<Animator>().Play("Abrir");
     }
 
     void Cerrar()
     {
-        if (!tweenCerrar.IsAlive && BarraIzq.GetComponent<RectTransform>().anchoredPosition.x != -260)
-        {
-            tweenCerrar = Tween.UIAnchoredPositionX(BarraIzq.GetComponent<RectTransform>(), -260, Duracion, Ease.Default, 1);
-            Tween.UIAnchoredPosition3DX(BarraDer.GetComponent<RectTransform>(), 245, Duracion, Ease.Default, 1);
+        Menu.GetComponent<Animator>().Play("Cerrar");
 
-        }
     }
 
-    public void CambiarMenu(int NumeroMenu, bool va)
+    public void BotonInventario()
     {
-        MenuActual = NumeroMenu;
-        Va = va;
+        MenuActual = 2;
+        Cerrando = true;
+        EstaEnMenuPrincipal = false;
+        Cerrar();
+
+    }
+
+    public void BotonRegresar()
+    {
+        MenuActual = 0;
+        Cerrando = true;
         Cerrar();
     }
 
-    public void CambiarAInventario()
+    void CambiarMenus()
     {
-        if (tweenCerrar.progress == 0)
+        if (ContAnimacion >= 1 && MenuActual == 0)
         {
-            if (Va)
+            ContAnimacion = 0;
+            Cerrando = false;
+            if (EstaEnMenuPrincipal)
             {
-                if (ContTiempo < Duracion)
-                {
-                    ContTiempo += Time.deltaTime;
-                }
-
+                StopAllCoroutines();
+                Menu.SetActive(false);
+                EstaEnMenu = false;
             }
             else
             {
-                if (ContTiempo > 0)
+                foreach (Transform objeto in ObjetosDelInventario)
                 {
-                    ContTiempo -= Time.deltaTime;
+                    objeto.gameObject.SetActive(false);
+                }
+                foreach (Transform objeto in ObjetosDelMenu)
+                {
+                    objeto.gameObject.SetActive(true);
+                }
+
+                ObjetosUI[4].color = TemaActual.ColoresMenu[4];
+                ObjetosUI[5].color = TemaActual.ColoresMenu[5];
+
+                Debug.Log("Entra");
+                if (!Esperando)
+                {
+                    Esperando = true;
+                    Debug.Log("Entra2");
+                    StartCoroutine(Esperar(1));
                 }
             }
-            BarraIzq.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.BarrasMenu1, TemaActual.BarrasInventario1, ContTiempo);
-            BarraIzq.GetChild(3).GetComponent<Image>().color = Color.Lerp(TemaActual.BarrasMenu2, TemaActual.BarrasInventario2, ContTiempo);
-            BarraDer.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.BarrasMenu1, TemaActual.BarrasInventario1, ContTiempo);
-            BarraDer.GetChild(3).GetComponent<Image>().color = Color.Lerp(TemaActual.BarrasMenu2, TemaActual.BarrasInventario2, ContTiempo);
-            Fondo.GetComponent<Image>().color = Color.Lerp(TemaActual.FondoMenu, TemaActual.FondoInventario, ContTiempo);
-            AreaDia.GetComponent<Image>().color = Color.Lerp(TemaActual.AreaDiaMenu, TemaActual.AreaDiaInventario, ContTiempo);
+
+
         }
 
-        if (ContTiempo >= 1)
+        if (ContAnimacion >= 1 && MenuActual == 2)
         {
-            BotonesMenu.SetActive(false);
-            BarraIzq.GetChild(1).gameObject.SetActive(true);
-            BarraDer.GetChild(1).gameObject.SetActive(true);
-            Abrir();
+            Cerrando = false;
+            ContAnimacion = 0;
+
+            foreach (Transform objeto in ObjetosDelInventario)
+            {
+                objeto.gameObject.SetActive(true);
+            }
+            foreach (Transform objeto in ObjetosDelMenu)
+            {
+                objeto.gameObject.SetActive(false);
+            }
+            ObjetosUI[4].color = TemaActual.ColoresInventario[4];
+            ObjetosUI[5].color = TemaActual.ColoresInventario[5];
+
+            if (!Esperando)
+            {
+                Esperando = true;
+                Debug.Log("Entra1");
+                StartCoroutine(Esperar(1));
+            }
         }
+    }
+
+    void CambiarColores()
+    {
+
+        switch (MenuActual)
+        {
+            case 0:
+                {
+                    for (int i = 0; i < ObjetosUI.Length - 2; i++)
+                    {
+                        ObjetosUI[i].color = Color.Lerp(ColoresActuales[i], TemaActual.ColoresMenu[i], ContAnimacion);
+                    }
+                    break;
+                }
+            case 2:
+                {
+                    for (int i = 0; i < ObjetosUI.Length - 2; i++)
+                    {
+                        ObjetosUI[i].color = Color.Lerp(ColoresActuales[i], TemaActual.ColoresInventario[i], ContAnimacion);
+                    }
+                    break;
+                }
+        }
+
+    }
+
+    IEnumerator Esperar(float Tiempo)
+    {
+        yield return new WaitForSeconds(Tiempo);
+
+        switch (MenuActual)
+        {
+            case 0 :
+                {
+                    EstaEnMenuPrincipal = true;
+                    ColoresActuales = TemaActual.ColoresMenu;
+                    break;
+                }
+
+            case 2:
+                {
+                    ColoresActuales = TemaActual.ColoresInventario;
+                    break;
+                }
+        }
+
+        Esperando = false;
+        ContAnimacion = 0;
+        Abrir();
     }
 }
