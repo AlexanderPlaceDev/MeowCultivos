@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Mathematics;
+using Unity.VisualScripting;
+using TMPro;
 
 public class Scr_ControladorMenuJuego : MonoBehaviour
 {
@@ -22,6 +24,7 @@ public class Scr_ControladorMenuJuego : MonoBehaviour
     [SerializeField] Transform[] ObjetosDelInventario;
     [SerializeField] float VelocidadSlider;
     float ValorSlider = 0;
+    bool InventarioActualizado;
 
 
     GameObject Gata;
@@ -67,7 +70,13 @@ public class Scr_ControladorMenuJuego : MonoBehaviour
                 CambiarColores();
             }
 
-            ScrollBar();
+
+            if (MenuActual == 2)
+            {
+                ScrollBar();
+                ActualizarInventario();
+
+            }
 
             CambiarMenus();
 
@@ -125,6 +134,7 @@ public class Scr_ControladorMenuJuego : MonoBehaviour
             {
                 StopAllCoroutines();
                 Menu.SetActive(false);
+                InventarioActualizado = false;
                 EstaEnMenu = false;
             }
             else
@@ -141,11 +151,9 @@ public class Scr_ControladorMenuJuego : MonoBehaviour
                 ObjetosUI[4].color = TemaActual.ColoresMenu[4];
                 ObjetosUI[5].color = TemaActual.ColoresMenu[5];
 
-                Debug.Log("Entra");
                 if (!Esperando)
                 {
                     Esperando = true;
-                    Debug.Log("Entra2");
                     StartCoroutine(Esperar(1));
                 }
             }
@@ -172,7 +180,6 @@ public class Scr_ControladorMenuJuego : MonoBehaviour
             if (!Esperando)
             {
                 Esperando = true;
-                Debug.Log("Entra1");
                 StartCoroutine(Esperar(1));
             }
         }
@@ -230,9 +237,26 @@ public class Scr_ControladorMenuJuego : MonoBehaviour
 
     void ScrollBar()
     {
-        float CantFilas = Mathf.Ceil(((float)ObjetosDelInventario[0].GetChild(0).childCount / 3) - 1);
+        int CasillasActivas = 0;
+        foreach (Transform Casilla in ObjetosDelInventario[0].GetChild(0).GetComponentInChildren<Transform>())
+        {
+            if (Casilla.gameObject.activeSelf)
+            {
+                CasillasActivas++;
+            }
+        }
+
+        float CantFilas = Mathf.Ceil(((float)CasillasActivas / 3) - 1);
         Debug.Log(CantFilas);
-        ObjetosDelInventario[0].GetChild(1).GetComponent<Scrollbar>().size = 1 / CantFilas;
+        if (CantFilas < 2)
+        {
+            ObjetosDelInventario[0].GetChild(1).GetComponent<Scrollbar>().size = 1;
+        }
+        else
+        {
+            ObjetosDelInventario[0].GetChild(1).GetComponent<Scrollbar>().size = 1 / CantFilas;
+
+        }
 
         float scrollDelta = -Input.GetAxis("Mouse ScrollWheel");
         if (scrollDelta != 0)
@@ -256,5 +280,49 @@ public class Scr_ControladorMenuJuego : MonoBehaviour
 
         // Creamos un nuevo 'RectOffset' con el nuevo valor de 'top' y lo asignamos al GridLayoutGroup
         grid.padding = new RectOffset(grid.padding.left, grid.padding.right, Mathf.RoundToInt(nuevoTop), grid.padding.bottom);
+
+
+    }
+
+    void ActualizarInventario()
+    {
+
+        if (!InventarioActualizado)
+        {
+            int i = 0;
+            foreach (int cantidad in Gata.transform.GetChild(6).GetComponent<Scr_Inventario>().Cantidades)
+            {
+                if (cantidad != 0)
+                {
+                    ObjetosDelInventario[0].GetChild(0).GetChild(i).gameObject.SetActive(true);
+                    ObjetosDelInventario[0].GetChild(0).GetChild(i).GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = cantidad.ToString();
+
+
+                }
+                else
+                {
+                    ObjetosDelInventario[0].GetChild(0).GetChild(i).gameObject.SetActive(false);
+                }
+                i++;
+            }
+            InventarioActualizado = true;
+        }
+    }
+
+    public void ActualizarDescripcionInventario(string NumeroyEntrada)
+    {
+        int NumeroDeObjeto = int.Parse(NumeroyEntrada.Split('-')[0]);
+        if (NumeroyEntrada[NumeroyEntrada.Length-1].ToString() == 0.ToString())
+        {
+            ObjetosDelInventario[0].GetChild(2).gameObject.SetActive(false);
+
+        }
+        else
+        {
+            ObjetosDelInventario[0].GetChild(2).gameObject.SetActive(true);
+            ObjetosDelInventario[0].GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = Gata.transform.GetChild(6).GetComponent<Scr_Inventario>().Objetos[NumeroDeObjeto].Nombre;
+            ObjetosDelInventario[0].GetChild(2).GetChild(1).GetComponent<TextMeshProUGUI>().text = Gata.transform.GetChild(6).GetComponent<Scr_Inventario>().Objetos[NumeroDeObjeto].Descripcion;
+        }
+
     }
 }
