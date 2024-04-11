@@ -104,6 +104,8 @@ public class Scr_ControladorDialogos : MonoBehaviour
                             }
                             else
                             {
+
+                                GameObject.Find("Gata").GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
                                 Dialogo.Lineas = Dialogos[DialogoActual].Lineas;
                                 ControladorMisiones.MisionActual = Dialogos[DialogoActual].Mision;
                                 if (Dialogo.Comenzo)

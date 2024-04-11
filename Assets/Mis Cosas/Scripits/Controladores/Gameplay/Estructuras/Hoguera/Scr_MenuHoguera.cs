@@ -118,7 +118,6 @@ public class Scr_MenuHoguera : MonoBehaviour
                 {
                     TextoNombre.text = ObjetosQueProduce[0].Nombre;
                     TextoDescripcion.text = ObjetosQueProduce[0].Descripcion;
-                    ImagenTamaño.sprite = ObjetosQueProduce[0].IconoTamaño;
                     TextoSegundos.text = ObjetosQueProduce[0].TiempoDeProduccion + "s";
                     int Casilla = 0;
                     foreach (Scr_CreadorObjetos Objeto in ObjetosQueProduce[0].MaterialesDeProduccion)
@@ -155,7 +154,6 @@ public class Scr_MenuHoguera : MonoBehaviour
             ObjetoCreado.SetActive(false);
         }
 
-        ImagenTamaño.color = ObjetosQueProduce[ObjetoActual].ColorTamaño;
 
         if (cantidadAProducir > 0 && Barra.GetComponent<RectTransform>().anchoredPosition.y == -670)
         {

@@ -46,8 +46,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
         //Movimiento
         if (PlayerPrefs.GetString("Movimiento", "No") == "Si")
         {
-            Gata.GetComponent<Scr_Movimiento>().enabled = true;
-            Gata.GetComponent<Scr_GiroGata>().enabled = true;
+            Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
         }
         //Inventario
         

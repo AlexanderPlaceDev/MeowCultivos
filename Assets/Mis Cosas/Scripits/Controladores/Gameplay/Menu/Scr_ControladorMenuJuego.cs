@@ -56,6 +56,7 @@ public class Scr_ControladorMenuJuego : MonoBehaviour
                 {
                     Cerrando = true;
                     Cerrar();
+                    Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
                 }
             }
 
@@ -84,9 +85,6 @@ public class Scr_ControladorMenuJuego : MonoBehaviour
         }
         else
         {
-            Gata.GetComponent<Scr_Movimiento>().enabled = true;
-            Gata.GetComponent<Scr_GiroGata>().enabled = true;
-
 
             if (Input.GetKeyDown(KeyCode.Tab))
             {

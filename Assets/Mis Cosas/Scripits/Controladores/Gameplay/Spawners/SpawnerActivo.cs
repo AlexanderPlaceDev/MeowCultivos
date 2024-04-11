@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Rendering;
 
 public class SpawnerActivo : MonoBehaviour
@@ -8,16 +10,17 @@ public class SpawnerActivo : MonoBehaviour
     public bool UsaPico;
     public bool UsaHacha;
     [SerializeField] Sprite Icono;
-    [SerializeField] Sprite Tecla;
+    [SerializeField] string Tecla;
+    [SerializeField] Sprite TeclaIcono;
     [SerializeField] public int Vida;
     [SerializeField] float Distancia;
-    [SerializeField, Range(0, 10)] float DistanciaSpawneo;
-    [SerializeField] float AlturaSpawneo;
+    [SerializeField] Scr_CreadorObjetos ObjetoQueDa;
+    [SerializeField] int[] MinimoMaximo;
+
 
     GameObject Herramienta;
     Transform Gata;
     bool EstaLejos;
-    bool Destruyendo = false;
 
 
     void Start()
@@ -32,6 +35,17 @@ public class SpawnerActivo : MonoBehaviour
         if (Vector3.Distance(Gata.position, transform.position) < Distancia && GetComponent<MeshRenderer>().enabled)
         {
             SpawnearHerramienta();
+            Gata.GetChild(2).gameObject.SetActive(true);
+            if (Tecla != "")
+            {
+                Gata.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Tecla;
+            }
+            else
+            {
+                Gata.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
+                Gata.GetChild(2).GetChild(0).GetComponent<Image>().sprite = TeclaIcono;
+            }
+            Gata.GetChild(2).GetChild(1).GetComponent<Image>().sprite = Icono;
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeTalar = true;
             EstaLejos = false;
         }
@@ -41,38 +55,46 @@ public class SpawnerActivo : MonoBehaviour
             {
                 Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeTalar = false;
                 Herramienta.SetActive(false);
-                Gata.GetChild(4).gameObject.SetActive(false);
+                Gata.GetChild(2).gameObject.SetActive(false);
                 EstaLejos = true;
             }
 
         }
 
-        if (Vida <= 0 && !Destruyendo)
+        if (Vida <= 0)
         {
-            GetComponent<MeshRenderer>().enabled = false;
             Herramienta.SetActive(false);
+            Gata.GetChild(2).gameObject.SetActive(false);
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeTalar = false;
-            StartCoroutine(SpawnearObjetos());
+            int cantidad = Random.Range(MinimoMaximo[0], MinimoMaximo[1]);
+            Gata.GetChild(6).GetComponent<Scr_Inventario>().Cantidades[ObjetoQueDa.ID] += cantidad;
+            Scr_ObjetosAgregados Controlador = GameObject.Find("Canvas").transform.GetChild(4).GetComponent<Scr_ObjetosAgregados>();
+            if (Controlador.Lista.ToArray().Length == 0)
+            {
+                Controlador.Lista.Add(ObjetoQueDa);
+                Controlador.Cantidades.Add(cantidad);
+            }
+            else
+            {
+                if (Controlador.Lista.Contains(ObjetoQueDa))
+                {
+                    for (int i = 0; i < Controlador.Lista.Count; i++)
+                    {
+                        if (Controlador.Lista[i] == ObjetoQueDa)
+                        {
+                            Controlador.Cantidades[i] += cantidad;
+                            if (i <= 3)
+                            {
+                                Controlador.Tiempo[i] = 2;
+                            }
+                        }
+                    }
+                }
+            }
+            Destroy(gameObject);
         }
     }
 
-    IEnumerator SpawnearObjetos()
-    {
-        Destruyendo = true;
-
-        if (transform.childCount > 0)
-        {
-            transform.GetChild(0).GetComponent<ParticleSystem>().Play();
-            float Tiempo = transform.GetChild(0).GetComponent<ParticleSystem>().main.duration;
-            yield return new WaitForSeconds(Tiempo);
-            Destroy(gameObject);
-        }
-        else
-        {
-            yield return new WaitForSeconds(0);
-            Destroy(gameObject);
-        }
-    }
 
     void SpawnearHerramienta()
     {

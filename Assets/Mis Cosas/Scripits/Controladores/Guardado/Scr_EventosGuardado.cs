@@ -22,6 +22,7 @@ public class Scr_EventosGuardado : MonoBehaviour
                 {
                     if (Dialogo == 1)
                     {
+                        Debug.Log("Se guardo el movimiento");
                         PlayerPrefs.SetString("Movimiento", "Si");
                     }
                     if (Dialogo == 2)

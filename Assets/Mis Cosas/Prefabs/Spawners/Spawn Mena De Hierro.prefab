@@ -4754,12 +4754,12 @@ MonoBehaviour:
   UsaPico: 1
   UsaHacha: 0
   Icono: {fileID: 21300000, guid: 23cd88fecdba22d4a9a7495dbcf66af2, type: 3}
-  Tecla: {fileID: 21300000, guid: 1effa06f147261a4098395eb6a1c36d3, type: 3}
+  Tecla: 
+  TeclaIcono: {fileID: 21300000, guid: 1effa06f147261a4098395eb6a1c36d3, type: 3}
   Vida: 1
-  Objeto: {fileID: 919132149155446097, guid: 16721a60e8c35e849a9e90f156b20a13, type: 3}
   Distancia: 8
-  DistanciaSpawneo: 5
-  AlturaSpawneo: 1
+  ObjetoQueDa: {fileID: 11400000, guid: ab3fae46fc55fa94b85f9e97b27f36a6, type: 2}
+  MinimoMaximo: 0100000003000000
 --- !u!64 &3724193180367822749
 MeshCollider:
   m_ObjectHideFlags: 0

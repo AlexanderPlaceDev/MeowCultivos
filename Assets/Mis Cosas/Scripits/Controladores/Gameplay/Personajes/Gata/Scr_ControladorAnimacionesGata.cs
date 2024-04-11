@@ -9,6 +9,7 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
 
     public KeyCode Talar = KeyCode.Mouse0;
     public KeyCode Recolectar = KeyCode.F;
+    public bool PuedeCaminar;
     public bool PuedeTalar;
     public bool PuedeRecolectar;
     public float TiempoRecoleccion;
@@ -32,8 +33,7 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
         {
             
                 Anim.SetBool("Talar", true);
-                GetComponent<Scr_Movimiento>().enabled = false;
-                GetComponent<Scr_GiroGata>().enabled = false;
+            PuedeCaminar = false;
             
         }
         else
@@ -42,8 +42,7 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
             if (Recolectando)
             {
                 Anim.SetBool("Recolectar", true);
-                GetComponent<Scr_Movimiento>().enabled = false;
-                GetComponent<Scr_GiroGata>().enabled = false;
+                PuedeCaminar = false;
             }
             else
             {
@@ -68,7 +67,16 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
             }
         }
 
-
+        if (PuedeCaminar)
+        {
+            GetComponent<Scr_Movimiento>().enabled = true;
+            GetComponent<Scr_GiroGata>().enabled = true;
+        }
+        else
+        {
+            GetComponent<Scr_Movimiento>().enabled = false;
+            GetComponent<Scr_GiroGata>().enabled = false;
+        }
 
     }
 
@@ -98,15 +106,13 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
     public IEnumerator EsperarRecolectar()
     {
         yield return new WaitForSeconds(TiempoRecoleccion);
-        GetComponent<Scr_Movimiento>().enabled = true;
-        GetComponent<Scr_GiroGata>().enabled = true;
+        PuedeCaminar = true;
         Recolectando =false;
     }
     public IEnumerator EsperarTalar()
     {
         yield return new WaitForSeconds(TiempoTalar);
-        GetComponent<Scr_Movimiento>().enabled = true;
-        GetComponent<Scr_GiroGata>().enabled = true;
+        PuedeCaminar = true;
         Talando =false;
     }
 }

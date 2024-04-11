@@ -4801,12 +4801,12 @@ MonoBehaviour:
   UsaPico: 0
   UsaHacha: 1
   Icono: {fileID: 21300000, guid: 23cd88fecdba22d4a9a7495dbcf66af2, type: 3}
-  Tecla: {fileID: 21300000, guid: 1effa06f147261a4098395eb6a1c36d3, type: 3}
+  Tecla: 
+  TeclaIcono: {fileID: 21300000, guid: 1effa06f147261a4098395eb6a1c36d3, type: 3}
   Vida: 1
-  Objeto: {fileID: 4414294522979041898, guid: 268eed9090301814ea839697debf1854, type: 3}
   Distancia: 7
-  DistanciaSpawneo: 9
-  AlturaSpawneo: 3
+  ObjetoQueDa: {fileID: 11400000, guid: 39699c4a042de2247955bcd7f5e992f8, type: 2}
+  MinimoMaximo: 0200000006000000
 --- !u!4 &4402466260223746920 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4a18a70886b000d47aa3c23196538ab4,
