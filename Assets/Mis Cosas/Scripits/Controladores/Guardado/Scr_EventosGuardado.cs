@@ -8,12 +8,15 @@ using UnityEngine.UI;
 
 public class Scr_EventosGuardado : MonoBehaviour
 {
+
+    //Cinematicas
     public void GuardarCinematicaInicial()
     {
         PlayerPrefs.SetString("CinematicaInicial", "Si");
         Camera.main.GetComponent<CinemachineBrain>().m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.EaseInOut;
     }
 
+    //Dialogos
     public void EventoDialogo(int Dialogo, string Personaje)
     {
         switch (Personaje)
@@ -46,6 +49,7 @@ public class Scr_EventosGuardado : MonoBehaviour
         }
     }
 
+    //Datos Generales
     public void GuardarPosicion(Transform Trans)
     {
         PlayerPrefs.SetFloat("GataPosX", Trans.position.x);
@@ -57,7 +61,7 @@ public class Scr_EventosGuardado : MonoBehaviour
         PlayerPrefs.SetFloat("GataRotZ", Trans.rotation.eulerAngles.z);
     }
 
-
+    //Estructuras
     public void GuardarTablero(int Tipo, int EstructuraActual)
     {
         PlayerPrefs.SetInt("TipoTablero", Tipo);

@@ -9,7 +9,6 @@ public class Scr_CreadorDialogos : ScriptableObject
     public int NumeroDialogo;
     public bool EsUnico;
     public bool EsMision;
-    public bool EsCinematica;
     public Scr_CreadorMisiones Mision;
     [SerializeField,TextArea(4,6)] public string[] Lineas;
     [SerializeField, TextArea(4, 6)] public string[] LineasRadio;

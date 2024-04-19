@@ -30,7 +30,7 @@ public class Scr_ControladorDialogos : MonoBehaviour
         {
             Debug.Log("Guardando Dialogo");
             DialogoGuardado = DialogoActual;
-            if (Nombre != null)
+            if (Nombre != null && Nombre!="")
             {
                 GetComponent<Scr_EventosGuardado>().EventoDialogo(DialogoActual, Nombre);
             }
@@ -49,12 +49,6 @@ public class Scr_ControladorDialogos : MonoBehaviour
                     if (Radio != null)
                     {
                         Radio.Lineas = Dialogos[DialogoActual].LineasRadio;
-                    }
-                    if (!Dialogos[DialogoActual].EsCinematica)
-                    {
-                        Dialogo.Lineas = Dialogos[DialogoActual].Lineas;
-                        DialogoActual++;
-                        Dialogo.YaLeido = false;
                     }
                 }
                 else
