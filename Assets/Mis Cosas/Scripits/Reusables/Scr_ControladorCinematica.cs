@@ -31,4 +31,5 @@ public class Scr_ControladorCinematica : MonoBehaviour
             Director.Play();
         }
     }
+
 }

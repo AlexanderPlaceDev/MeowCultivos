@@ -134,6 +134,10 @@ public class Scr_ControladorDialogos : MonoBehaviour
         }
     }
 
-    
+    public void AumentarDialogo()
+    {
+        DialogoActual++;
+        Dialogo.Lineas = Dialogos[DialogoActual].Lineas;
+    }
 
 }
