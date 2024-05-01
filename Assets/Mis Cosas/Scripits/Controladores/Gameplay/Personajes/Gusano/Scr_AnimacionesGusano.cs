@@ -12,7 +12,7 @@ public class Scr_AnimacionesGusano : MonoBehaviour
     void Update()
     {
         
-        if(GetComponent<Scr_Dialogos>().Comenzo)
+        if(GetComponent<Scr_SistemaDialogos>().Leyendo)
         {
             GetComponent<Animator>().SetBool("Hablando",true);
         }else

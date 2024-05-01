@@ -51,7 +51,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
         //Inventario
         
         //Dialogos
-        GusanoTutotial.GetComponent<Scr_ControladorDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoGusano", 0);
+        //GusanoTutotial.GetComponent<Scr_ControladorDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoGusano", 0);
         //Tablero
         Tablero.GetComponent<Scr_MenuTablero>().TipoActual = PlayerPrefs.GetInt("TipoTablero", 1);
         Tablero.GetComponent<Scr_MenuTablero>().EstructuraActual = PlayerPrefs.GetInt("EstructuraTablero", 0);

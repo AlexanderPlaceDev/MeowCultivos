@@ -7,6 +7,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Color Suelo
+    second: {fileID: 2100000, guid: 5e289437afb265e4282153d858910a2a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Terreno Abejas
     second: {fileID: 2100000, guid: 6f7dc810602a9064b804cded7c3c489f, type: 2}
   materials:
