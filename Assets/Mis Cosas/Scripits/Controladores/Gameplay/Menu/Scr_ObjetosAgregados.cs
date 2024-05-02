@@ -53,8 +53,6 @@ public class Scr_ObjetosAgregados : MonoBehaviour
                 Cantidades.RemoveAt(0);
                 Tiempo[i] = 2;
             }
-
-
             i++;
         }
     }

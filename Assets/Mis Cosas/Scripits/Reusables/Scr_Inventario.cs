@@ -9,7 +9,7 @@ public class Scr_Inventario : MonoBehaviour
     [SerializeField] int Limite;
 
 
-    void AgregarObjeto(int Cantidad, string Nombre)
+    public void AgregarObjeto(int Cantidad, string Nombre)
     {
         int i = 0;
         foreach (Scr_CreadorObjetos Objeto in Objetos)
@@ -30,7 +30,7 @@ public class Scr_Inventario : MonoBehaviour
         }
     }
 
-    void QuitarObjeto(int Cantidad, string Nombre)
+    public void QuitarObjeto(int Cantidad, string Nombre)
     {
         int i = 0;
         foreach (Scr_CreadorObjetos Objeto in Objetos)

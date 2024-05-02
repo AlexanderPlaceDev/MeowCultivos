@@ -1,64 +1,75 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
+
 public class Scr_ControladorMisiones : MonoBehaviour
 {
-
     public Scr_CreadorMisiones MisionActual;
-
     public bool MisionCompleta;
 
-    public bool[] TeclasPresionadas;
+    [SerializeField] GameObject BotonesUI;
+
+    private bool[] TeclasPresionadas;
+    private float[] TiempoTeclas;
 
     void Update()
     {
-
-        //Comprueba si la mision esta completa
+        // Comprueba si la misión está completa
         ComprobarMision();
     }
+
     void ComprobarMision()
     {
-        if (MisionActual != null)
+        if (MisionActual == null)
         {
-            switch (MisionActual.Tipo)
+            MisionCompleta = false;
+            return;
+        }
+
+        switch (MisionActual.Tipo)
+        {
+            case "Teclas":
+                ActualizarMisionTeclas();
+                break;
+        }
+
+        BotonesUI.SetActive(!MisionCompleta);
+    }
+
+    void ActualizarMisionTeclas()
+    {
+        if (TeclasPresionadas == null || TeclasPresionadas.Length != MisionActual.Teclas.Length)
+        {
+            TeclasPresionadas = new bool[MisionActual.Teclas.Length];
+            TiempoTeclas = new float[MisionActual.Teclas.Length];
+        }
+
+        for (int i = 0; i < MisionActual.Teclas.Length; i++)
+        {
+            if (TiempoTeclas[i] >= 1)
             {
-                case "Teclas":
-                    {
-                        if (TeclasPresionadas != null && TeclasPresionadas.Length > 0)
-                        {
-                            for (int i = 0; i < MisionActual.Teclas.Length; i++)
-                            {
-                                if (Input.GetKeyDown(MisionActual.Teclas[i]))
-                                {
-                                    TeclasPresionadas[i] = true;
-                                }
-                            }
+                TeclasPresionadas[i] = true;
+            }
+            else
+            {
+                if (Input.GetKey(MisionActual.Teclas[i]))
+                {
+                    TiempoTeclas[i] += Time.deltaTime;
+                }
+                else if (TiempoTeclas[i] > 0)
+                {
+                    TiempoTeclas[i] -= Time.deltaTime;
+                }
+            }
 
-                            for (int i = 0; i < TeclasPresionadas.Length; i++)
-                            {
-                                if (!TeclasPresionadas[i])
-                                {
-                                    break;
-                                }
-                                if (i == TeclasPresionadas.Length - 1)
-                                {
-                                    MisionCompleta = true;
-                                    TeclasPresionadas = null;
-                                    break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            TeclasPresionadas = new bool[MisionActual.Teclas.Length];
-                        }
-
-                        break;
-                    }
-
+            // Actualiza el indicador visual del progreso de la tecla
+            if (BotonesUI != null)
+            {
+                Image fillImage = BotonesUI.transform.GetChild(i).GetChild(1).GetComponent<Image>();
+                fillImage.fillAmount = TiempoTeclas[i];
             }
         }
+
+        // Comprueba si todas las teclas están presionadas
+        MisionCompleta = System.Array.TrueForAll(TeclasPresionadas, t => t);
     }
 }

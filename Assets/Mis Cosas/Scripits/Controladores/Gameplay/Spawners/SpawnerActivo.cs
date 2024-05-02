@@ -1,27 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
-using UnityEngine.Rendering;
+using System.Collections;
 
 public class SpawnerActivo : MonoBehaviour
 {
-    public bool UsaPico;
-    public bool UsaHacha;
-    [SerializeField] Sprite Icono;
-    [SerializeField] string Tecla;
-    [SerializeField] Sprite TeclaIcono;
+    [SerializeField] private Sprite Icono;
+    [SerializeField] private string Tecla;
+    [SerializeField] private Sprite TeclaIcono;
+    [SerializeField] private float Distancia;
+    [SerializeField] private Scr_CreadorObjetos ObjetoQueDa;
+    [SerializeField] private int[] MinimoMaximo;
     [SerializeField] public int Vida;
-    [SerializeField] float Distancia;
-    [SerializeField] Scr_CreadorObjetos ObjetoQueDa;
-    [SerializeField] int[] MinimoMaximo;
+    [SerializeField] public bool UsaPico;
+    [SerializeField] public bool UsaHacha;
 
-
-    GameObject Herramienta;
-    Transform Gata;
-    bool EstaLejos;
-
+    private GameObject Herramienta;
+    private Transform Gata;
+    private bool estaLejos;
+    private bool objetoAgregado = false; // Variable para controlar si se ha agregado el objeto al inventario
 
     void Start()
     {
@@ -31,90 +28,94 @@ public class SpawnerActivo : MonoBehaviour
 
     void Update()
     {
-
         if (Vector3.Distance(Gata.position, transform.position) < Distancia && GetComponent<MeshRenderer>().enabled)
         {
             SpawnearHerramienta();
-            Gata.GetChild(2).gameObject.SetActive(true);
-            if (Tecla != "")
-            {
-                Gata.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Tecla;
-            }
-            else
-            {
-                Gata.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
-                Gata.GetChild(2).GetChild(0).GetComponent<Image>().sprite = TeclaIcono;
-            }
-            Gata.GetChild(2).GetChild(1).GetComponent<Image>().sprite = Icono;
-            Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeTalar = true;
-            EstaLejos = false;
+            ActivarUI();
+            estaLejos = false;
         }
         else
         {
-            if (!EstaLejos)
+            if (!estaLejos)
             {
-                Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeTalar = false;
-                Herramienta.SetActive(false);
-                Gata.GetChild(2).gameObject.SetActive(false);
-                EstaLejos = true;
+                DesactivarUI();
+                estaLejos = true;
             }
-
         }
 
         if (Vida <= 0)
         {
+            //Desactivar Mesh
+            GetComponent<MeshRenderer>().enabled = false;
+            GetComponent<MeshCollider>().enabled = false;
+            // Reproducir efecto de partículas
+            ParticleSystem particleSystem = transform.GetChild(0).GetComponent<ParticleSystem>();
+            if (!particleSystem.isPlaying)
+            {
+                particleSystem.Play();
+            }
             Herramienta.SetActive(false);
-            Gata.GetChild(2).gameObject.SetActive(false);
-            Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeTalar = false;
-            int cantidad = Random.Range(MinimoMaximo[0], MinimoMaximo[1]);
-            Gata.GetChild(6).GetComponent<Scr_Inventario>().Cantidades[ObjetoQueDa.ID] += cantidad;
-            Scr_ObjetosAgregados Controlador = GameObject.Find("Canvas").transform.GetChild(4).GetComponent<Scr_ObjetosAgregados>();
-            if (Controlador.Lista.ToArray().Length == 0)
+            DesactivarUI();
+            // Incrementar la cantidad de objetos en el inventario solo si no se ha agregado antes
+            if (!objetoAgregado)
             {
-                Controlador.Lista.Add(ObjetoQueDa);
-                Controlador.Cantidades.Add(cantidad);
+                AgregarObjetoInventario();
+                objetoAgregado = true;
             }
-            else
-            {
-                if (Controlador.Lista.Contains(ObjetoQueDa))
-                {
-                    for (int i = 0; i < Controlador.Lista.Count; i++)
-                    {
-                        if (Controlador.Lista[i] == ObjetoQueDa)
-                        {
-                            Controlador.Cantidades[i] += cantidad;
-                            if (i <= 3)
-                            {
-                                Controlador.Tiempo[i] = 2;
-                            }
-                        }
-                    }
-                }
-            }
-            Destroy(gameObject);
+            // Esperar hasta que el sistema de partículas termine para destruir el objeto
+            StartCoroutine(DestruirDespuesDeParticulas(particleSystem));
         }
     }
-
 
     void SpawnearHerramienta()
     {
         Herramienta.SetActive(true);
-        if (UsaHacha)
-        {
-            Herramienta.transform.GetChild(0).gameObject.SetActive(true);
-        }
-        else
-        {
-            Herramienta.transform.GetChild(0).gameObject.SetActive(false);
-        }
-        if (UsaPico)
-        {
-            Herramienta.transform.GetChild(1).gameObject.SetActive(true);
-        }
-        else
-        {
-            Herramienta.transform.GetChild(1).gameObject.SetActive(false);
-        }
+        Herramienta.transform.GetChild(0).gameObject.SetActive(UsaHacha);
+        Herramienta.transform.GetChild(1).gameObject.SetActive(UsaPico);
+    }
 
+    void ActivarUI()
+    {
+        Gata.GetChild(2).gameObject.SetActive(true);
+        Gata.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Tecla;
+        Gata.GetChild(2).GetChild(0).GetComponent<Image>().sprite = TeclaIcono;
+        Gata.GetChild(2).GetChild(1).GetComponent<Image>().sprite = Icono;
+        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeTalar = true;
+    }
+
+    void DesactivarUI()
+    {
+        Gata.GetChild(2).gameObject.SetActive(false);
+        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeTalar = false;
+    }
+
+    void AgregarObjetoInventario()
+    {
+        int cantidad = Random.Range(MinimoMaximo[0], MinimoMaximo[1]);
+        Scr_ObjetosAgregados controlador = GameObject.Find("Canvas").transform.GetChild(4).GetComponent<Scr_ObjetosAgregados>();
+
+        if (controlador.Lista.Contains(ObjetoQueDa))
+        {
+            int indice = controlador.Lista.IndexOf(ObjetoQueDa);
+            controlador.Cantidades[indice] += cantidad;
+            if (indice <= 3)
+            {
+                controlador.Tiempo[indice] = 2;
+            }
+        }
+        else
+        {
+            controlador.Lista.Add(ObjetoQueDa);
+            controlador.Cantidades.Add(cantidad);
+        }
+    }
+
+    IEnumerator DestruirDespuesDeParticulas(ParticleSystem particleSystem)
+    {
+        // Esperar hasta que el sistema de partículas termine
+        yield return new WaitForSeconds(particleSystem.main.duration);
+
+        // Destruir el objeto actual después de que termine el sistema de partículas
+        Destroy(gameObject);
     }
 }

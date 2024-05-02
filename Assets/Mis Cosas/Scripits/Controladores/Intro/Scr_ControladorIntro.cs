@@ -10,9 +10,8 @@ public class Scr_ControladorIntro : MonoBehaviour
     [SerializeField] GameObject Camara2;
     [SerializeField] GameObject Camara3;
     [SerializeField] GameObject Camara4;
-    [SerializeField] Scr_Dialogos Dialogo;
+    [SerializeField] Scr_SistemaDialogos Dialogo;
 
-    [SerializeField] Scr_ControladorDialogos ControladorDialogos;
     [SerializeField] GameObject Gusano;
     [SerializeField] GameObject Gata;
     [SerializeField] GameObject Meteorito;
@@ -55,7 +54,7 @@ public class Scr_ControladorIntro : MonoBehaviour
         {
             PereodicoGrande.SetActive(false);
             Gata.transform.GetChild(0).gameObject.SetActive(false);
-            Dialogo.YaLeido = false;
+            Dialogo.Leido = false;
             cont9=-1;
         }
         if (Gata.transform.GetChild(0).gameObject.activeSelf && Input.GetKeyDown("e"))
@@ -75,7 +74,6 @@ public class Scr_ControladorIntro : MonoBehaviour
 
         if (cont1 == -1 && cont2 < 2 && cont2 >= 0 && !Dialogo.gameObject.transform.GetChild(0).gameObject.activeSelf)
         {
-            Dialogo.EstaEnRango = false;
             cont2 += Time.deltaTime;
         }
 
@@ -124,17 +122,16 @@ public class Scr_ControladorIntro : MonoBehaviour
             cont11 += Time.deltaTime;
         }
 
-        if (cont1 >= 5 && cont1 != 0 && ControladorDialogos.DialogoActual == 0)
+        if (cont1 >= 5 && cont1 != 0 && Dialogo.DialogoActual == 0)
         {
-            if (!Dialogo.YaLeido)
+            if (!Dialogo.Leido)
             {
-                if (!Dialogo.Comenzo)
+                if (!Dialogo.Leyendo)
                 {
-                    if (Dialogo.EstaEnRango)
-                    {
+                    
                         Dialogo.IniciarDialogo();
                         cont1 = -1;
-                    }
+                    
 
                 }
             }
@@ -147,118 +144,87 @@ public class Scr_ControladorIntro : MonoBehaviour
 
         if (cont2 >= 2 && cont2 != 0)
         {
-            ControladorDialogos.DialogoActual++;
+            Dialogo.DialogoActual++;
             Camara1.SetActive(false);
             cont2 = -1;
-            Dialogo.YaLeido = false;
+            Dialogo.Leido = false;
 
         }
 
-        if (cont3 >= 4 && cont3 != 0 && ControladorDialogos.DialogoActual == 1)
+        if (cont3 >= 4 && cont3 != 0 && Dialogo.DialogoActual == 1)
         {
-            Dialogo.EstaEnRango = true;
-            if (!Dialogo.YaLeido)
+            if (!Dialogo.Leido)
             {
-                if (!Dialogo.Comenzo)
+                if (!Dialogo.Leyendo)
                 {
-                    if (Dialogo.EstaEnRango)
-                    {
                         Dialogo.IniciarDialogo();
                         cont3 = -1;
-                    }
                 }
-            }
-            else
-            {
-                Dialogo.EstaEnRango = false;
             }
         }
 
         if (cont4 >= 1.5f && cont4 != 0)
         {
             cont4 = -1;
-            Dialogo.YaLeido = false;
-            ControladorDialogos.DialogoActual=2;
+            Dialogo.Leido = false;
+            Dialogo.DialogoActual=2;
             Gusano.GetComponent<Animator>().Play("Moverse1");
         }
 
 
-        if (cont5 >= 3 && cont5 != 0 && ControladorDialogos.DialogoActual == 2)
+        if (cont5 >= 3 && cont5 != 0 && Dialogo.DialogoActual == 2)
         {
-            Dialogo.EstaEnRango = true;
-            if (!Dialogo.YaLeido)
+            if (!Dialogo.Leido)
             {
-                if (!Dialogo.Comenzo)
+                if (!Dialogo.Leyendo)
                 {
-                    if (Dialogo.EstaEnRango)
-                    {
                         Dialogo.IniciarDialogo();
                         cont5 = -1;
-                    }
                 }
-            }
-            else
-            {
-                Dialogo.EstaEnRango = false;
             }
         }
 
         if (cont6 >= 1 && cont6 != 0)
         {
             cont6 = -1;
-            Dialogo.YaLeido = false;
-            ControladorDialogos.DialogoActual=3;
+            Dialogo.Leido = false;
+            Dialogo.DialogoActual=3;
             Camara2.SetActive(false);
             Gusano.GetComponent<Animator>().Play("Moverse2");
             Gata.GetComponent<Animator>().Play("GataIntro");
         }
 
-        if (cont7 >= 2 && cont7 != 0 && ControladorDialogos.DialogoActual == 3)
+        if (cont7 >= 2 && cont7 != 0 && Dialogo.DialogoActual == 3)
         {
-            Dialogo.EstaEnRango = true;
-            if (!Dialogo.YaLeido)
+            if (!Dialogo.Leido)
             {
-                if (!Dialogo.Comenzo)
+                if (!Dialogo.Leyendo)
                 {
-                    if (Dialogo.EstaEnRango)
-                    {
                         Dialogo.IniciarDialogo();
                         cont7 = -1;
-                    }
                 }
-            }
-            else
-            {
-                Dialogo.EstaEnRango = false;
             }
         }
 
         if (cont8 >= 0.2f && cont8 != 0)
         {
             cont8=-1;
-            ControladorDialogos.DialogoActual=4;
+            Dialogo.DialogoActual=4;
             PereodicoChico.GetComponent<Animator>().Play("Volar");
             Gata.GetComponent<Animator>().Play("ActivarIcono");
             Camara3.SetActive(false);
         }
 
-        if (cont10 >= 1 && cont7 != 0 && ControladorDialogos.DialogoActual == 4)
+        if (cont10 >= 1 && cont7 != 0 && Dialogo.DialogoActual == 4)
         {
-            Dialogo.EstaEnRango = true;
-            if (!Dialogo.YaLeido)
+            if (!Dialogo.Leido)
             {
-                if (!Dialogo.Comenzo)
+                if (!Dialogo.Leyendo)
                 {
-                    if (Dialogo.EstaEnRango)
-                    {
+                    
                         Dialogo.IniciarDialogo();
                         cont10 = -1;
-                    }
                 }
-            }
-            else
-            {
-                Dialogo.EstaEnRango = false;
             }
         }
 

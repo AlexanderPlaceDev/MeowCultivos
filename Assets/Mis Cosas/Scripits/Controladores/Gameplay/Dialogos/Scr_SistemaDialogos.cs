@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 
 public class Scr_SistemaDialogos : MonoBehaviour
 {
+
     public TextMeshProUGUI Texto;
     public Scr_CreadorDialogos[] Dialogos;
     public float letraDelay = 0.1f;
@@ -12,13 +13,42 @@ public class Scr_SistemaDialogos : MonoBehaviour
 
     public bool EnPausa = true;
     public bool Leyendo = false;
+    public int DialogoActual = 0;
     public bool Leido = false;
+    public bool EsCinematica = false;
     private int LineaActual = 0;
-    private int DialogoActual = 0;
     private Coroutine currentCoroutine;
+    private Scr_ControladorMisiones ControladorMisiones;
 
-    void IniciarDialogo()
+    private void Start()
     {
+        ControladorMisiones = GameObject.Find("Gata").transform.GetChild(3).GetComponent<Scr_ControladorMisiones>();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (!EnPausa && EsCinematica)
+            {
+                if (Leyendo)
+                {
+                    Debug.Log("Entra2");
+                    SaltarDialogo();
+                }
+                else
+                {
+                    Debug.Log("Entra1");
+                    SiguienteLinea();
+                }
+            }
+        }
+
+    }
+    public void IniciarDialogo()
+    {
+        EnPausa = false;
+        Texto.transform.parent.gameObject.SetActive(true);
         Texto.text = ""; // Limpiar el texto al iniciar un nuevo diálogo
         LineaActual = 0;
         currentCoroutine = StartCoroutine(ReadDialogue());
@@ -35,15 +65,16 @@ public class Scr_SistemaDialogos : MonoBehaviour
         Leyendo = false;
     }
 
-    public void SiguienteLetra()
+    public void SiguienteLinea()
     {
         if (currentCoroutine != null)
         {
             StopCoroutine(currentCoroutine);
         }
 
-        if (LineaActual < Dialogos[DialogoActual].Lineas.Length)
+        if (LineaActual < Dialogos[DialogoActual].Lineas.Length - 1) // Verificar si hay más líneas disponibles
         {
+            LineaActual++; // Incrementar el índice de la línea actual
             Texto.text = ""; // Limpiar el texto antes de mostrar la siguiente línea
             currentCoroutine = StartCoroutine(ReadDialogue());
         }
@@ -79,9 +110,34 @@ public class Scr_SistemaDialogos : MonoBehaviour
                         EnPausa = true;
                         Leyendo = false;
                         Leido = true;
-                        if (DialogoActual < Dialogos.Length-1)
+
+                        //Asignar Mision
+                        if (Dialogos[DialogoActual].EsMision)
                         {
-                            DialogoActual++; // Avanzar al siguiente diálogo
+                            ControladorMisiones.MisionActual = Dialogos[DialogoActual].Mision;
+                            //Guardar Dialogo
+                            if (GetComponent<Scr_EventosGuardado>() != null)
+                            {
+                                Debug.Log("Entra3");
+                                GetComponent<Scr_EventosGuardado>().EventoDialogo(DialogoActual, "Gusano");
+                            }
+                        }
+
+                        if (DialogoActual < Dialogos.Length - 1)
+                        {
+                            //En caso de no tener mision
+                            if (ControladorMisiones.MisionActual == null)
+                            {
+                                DialogoActual++; // Avanzar al siguiente diálogo
+                                //Guardar Dialogo
+                                if (GetComponent<Scr_EventosGuardado>() != null)
+                                {
+                                    Debug.Log("Entra2");
+                                    GetComponent<Scr_EventosGuardado>().EventoDialogo(DialogoActual, "Gusano");
+                                }
+
+                            }
+
                         }
                         Texto.transform.parent.gameObject.SetActive(false);
                     }

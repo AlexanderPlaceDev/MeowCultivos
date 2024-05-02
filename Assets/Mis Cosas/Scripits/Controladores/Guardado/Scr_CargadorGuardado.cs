@@ -13,7 +13,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
     [SerializeField] GameObject Gata;
     [SerializeField] GameObject Camara360;
     [SerializeField] GameObject GusanoTutotial;
-    [SerializeField] GameObject Radio;
+    [SerializeField] GameObject Reloj;
     [SerializeField] GameObject Tablero;
 
     [SerializeField] bool Moviendo;
@@ -48,10 +48,16 @@ public class Scr_CargadorGuardado : MonoBehaviour
         {
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
         }
+
+        //Reloj
+        if (PlayerPrefs.GetString("Reloj", "No") == "Si")
+        {
+            Reloj.SetActive(true);
+        }
         //Inventario
         
         //Dialogos
-        //GusanoTutotial.GetComponent<Scr_ControladorDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoGusano", 0);
+        GusanoTutotial.GetComponent<Scr_SistemaDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoGusano", 0);
         //Tablero
         Tablero.GetComponent<Scr_MenuTablero>().TipoActual = PlayerPrefs.GetInt("TipoTablero", 1);
         Tablero.GetComponent<Scr_MenuTablero>().EstructuraActual = PlayerPrefs.GetInt("EstructuraTablero", 0);

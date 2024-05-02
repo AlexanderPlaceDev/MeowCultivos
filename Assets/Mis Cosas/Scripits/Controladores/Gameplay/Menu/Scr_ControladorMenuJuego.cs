@@ -85,8 +85,7 @@ public class Scr_ControladorMenuJuego : MonoBehaviour
         }
         else
         {
-
-            if (Input.GetKeyDown(KeyCode.Tab))
+            if (Input.GetKeyDown(KeyCode.Tab) && PlayerPrefs.GetString("Reloj","No")=="Si")
             {
                 Menu.SetActive(true);
                 Abrir();

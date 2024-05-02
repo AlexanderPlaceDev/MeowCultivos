@@ -1,83 +1,132 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 
 public class Scr_ActivadorDialogos : MonoBehaviour
 {
-
-    bool EstaAdentro = false;
-    [SerializeField] GameObject Panel;
-    [SerializeField] GameObject[] Iconos;
-    [SerializeField] GameObject Camara;
-    [SerializeField] GameObject CamaraGata;
+    bool estaAdentro = false;
+    [SerializeField] GameObject panelDialogo;
+    [SerializeField] GameObject[] iconos;
+    [SerializeField] GameObject camara;
+    [SerializeField] GameObject camaraGata;
+    private Scr_SistemaDialogos sistemaDialogos;
+    private Scr_ControladorMisiones ControladorMisiones;
+    private Transform Gata;
 
     private void Start()
     {
-        CamaraGata = GameObject.Find("Camara 360");
+        Gata = GameObject.Find("Gata").transform;
+        camaraGata = GameObject.Find("Camara 360");
+        sistemaDialogos = GetComponent<Scr_SistemaDialogos>();
+        ControladorMisiones = GameObject.Find("Gata").transform.GetChild(3).GetComponent<Scr_ControladorMisiones>();
     }
 
     void Update()
     {
-        if (EstaAdentro)
+        if (estaAdentro)
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (panelDialogo.activeSelf)
             {
-                Iconos[0].SetActive(false);
-                Iconos[1].SetActive(false);
-                Camara.SetActive(true);
-                CamaraGata.SetActive(false);
-                if (!Panel.gameObject.activeSelf)
-                {
-                    Panel.SetActive(true);
-                    GetComponent<Scr_SistemaDialogos>().EnPausa = false;
-                }
+                Girar();
+                Gata.GetComponent<Scr_Movimiento>().enabled = false;
+            }
+            else
+            {
+                Gata.GetComponent<Scr_Movimiento>().enabled = true;
 
-                if (!GetComponent<Scr_SistemaDialogos>().EnPausa)
-                {
-                    if (GetComponent<Scr_SistemaDialogos>().Leyendo)
-                    {
-                        GetComponent<Scr_SistemaDialogos>().SaltarDialogo();
-                    }
-                    else
-                    {
-                        GetComponent<Scr_SistemaDialogos>().SiguienteLetra();
-                    }
-                }
             }
 
-            if (GetComponent<Scr_SistemaDialogos>().Leido && !GetComponent<Scr_SistemaDialogos>().Leyendo)
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                Camara.SetActive(false);
-                CamaraGata.SetActive(true);
-                Iconos[0].SetActive(true);
-                Iconos[1].SetActive(true);
+                ComprobarMision();
+
+                ActivarDialogo();
+            }
+
+            if (sistemaDialogos.Leido && !sistemaDialogos.Leyendo)
+            {
+                DesactivarDialogo();
             }
         }
         else
         {
-            GetComponent<Scr_SistemaDialogos>().EnPausa = true;
+            sistemaDialogos.EnPausa = true;
+        }
+    }
+
+    void ActivarDialogo()
+    {
+        iconos[0].SetActive(false);
+        iconos[1].SetActive(false);
+        camara.SetActive(true);
+        camaraGata.SetActive(false);
+        if (!panelDialogo.activeSelf)
+        {
+            panelDialogo.SetActive(true);
+            sistemaDialogos.EnPausa = false;
+        }
+
+        if (!sistemaDialogos.EnPausa)
+        {
+            if (sistemaDialogos.Leyendo)
+            {
+                sistemaDialogos.SaltarDialogo();
+            }
+            else
+            {
+                sistemaDialogos.SiguienteLinea();
+            }
+        }
+    }
+
+    void Girar()
+    {
+        Quaternion Objetivo = Quaternion.LookRotation(new Vector3(transform.position.x, Gata.position.y, transform.position.z) - Gata.position);
+        Gata.rotation = Quaternion.RotateTowards(Gata.rotation, Objetivo, 200 * Time.deltaTime);
+    }
+
+    void DesactivarDialogo()
+    {
+        camara.SetActive(false);
+        camaraGata.SetActive(true);
+        iconos[0].SetActive(true);
+        iconos[1].SetActive(true);
+    }
+
+    void ComprobarMision()
+    {
+        if (ControladorMisiones.MisionActual != null)
+        {
+            if (ControladorMisiones.MisionCompleta)
+            {
+                //Guardar Dialogo
+                if (GetComponent<Scr_EventosGuardado>() != null)
+                {
+                    Debug.Log("Entra1");
+                    GetComponent<Scr_EventosGuardado>().EventoDialogo(sistemaDialogos.DialogoActual, "Gusano");
+                }
+                ControladorMisiones.MisionActual = null;
+                sistemaDialogos.DialogoActual++; // Avanzar al siguiente diálogo
+            }
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Gata")
+        if (other.CompareTag("Gata"))
         {
-            Debug.Log("Entra");
-            Iconos[0].SetActive(true);
-            Iconos[1].SetActive(true);
-            EstaAdentro = true;
+            iconos[0].SetActive(true);
+            iconos[1].SetActive(true);
+            estaAdentro = true;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Gata")
+        if (other.CompareTag("Gata"))
         {
-            Debug.Log("Sale");
-            Iconos[0].SetActive(false);
-            Iconos[1].SetActive(false);
-            EstaAdentro = false;
+            iconos[0].SetActive(false);
+            iconos[1].SetActive(false);
+            estaAdentro = false;
         }
     }
 }

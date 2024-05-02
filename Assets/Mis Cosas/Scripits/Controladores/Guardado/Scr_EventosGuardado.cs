@@ -8,6 +8,12 @@ using UnityEngine.UI;
 
 public class Scr_EventosGuardado : MonoBehaviour
 {
+    GameObject Gata;
+
+    private void Start()
+    {
+        Gata = GameObject.Find("Gata");
+    }
 
     //Cinematicas
     public void GuardarCinematicaInicial()
@@ -23,13 +29,15 @@ public class Scr_EventosGuardado : MonoBehaviour
         {
             case "Gusano":
                 {
-                    if (Dialogo == 1)
+                    if(Dialogo == 0)
                     {
-                        Debug.Log("Se guardo el movimiento");
-                        PlayerPrefs.SetString("Movimiento", "Si");
+                        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
                     }
                     if (Dialogo == 2)
                     {
+                        Debug.Log("Se guardo el movimiento");
+                        PlayerPrefs.SetString("Movimiento", "Si");
+                        GameObject.Find("Canvas").transform.GetChild(2).gameObject.SetActive(true);
                         PlayerPrefs.SetString("Reloj", "Si");
                     }
                     PlayerPrefs.SetInt("DialogoGusano", Dialogo);

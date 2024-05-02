@@ -1,168 +1,132 @@
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Scr_Arbusto : MonoBehaviour
 {
+    [Header("Configuración del Arbusto")]
+    [SerializeField] private Sprite icono;
+    [SerializeField] private string tecla;
+    [SerializeField] private Sprite teclaIcono;
+    [SerializeField] private Material[] tipos;
+    [SerializeField] private float distancia;
+    [SerializeField] private float velocidadGiro;
+    [SerializeField] private Scr_CreadorObjetos[] objetosQueDa;
+    [SerializeField] private int[] minimoMaximo;
 
-    [SerializeField] Sprite Icono;
-    [SerializeField] string Tecla;
-    [SerializeField] Sprite TeclaIcono;
-    [SerializeField] Material[] Tipos;
-    int TipoActual = 0;
-    [SerializeField] float Distancia;
-    [SerializeField] float VelocidadGiro;
-    [SerializeField] float Duracion;
-    [SerializeField] Scr_CreadorObjetos[] ObjetosQueDa;
-    [SerializeField] int[] MinimoMaximo;
-    bool Recolectando;
-    bool TieneMoras;
-    bool EstaLejos;
+    [Header("Estado del Arbusto")]
+    private int tipoActual = 0;
+    private bool recolectando;
+    private bool tieneMoras;
+    private bool estaLejos;
 
-    Transform Gata;
+    private Transform gata;
 
     void Start()
     {
-        Gata = GameObject.Find("Gata").GetComponent<Transform>();
-        TipoActual = Random.Range(0, 4);
-        GetComponent<MeshRenderer>().material = Tipos[TipoActual];
-        if (TipoActual > 0)
-        {
-            TieneMoras = true;
-        }
+        gata = GameObject.Find("Gata").GetComponent<Transform>();
+        tipoActual = Random.Range(0, 4);
+        GetComponent<MeshRenderer>().material = tipos[tipoActual];
+        tieneMoras = (tipoActual > 0);
     }
 
     void Update()
     {
-        //Verificar si tiene moras y no esta recolectando
-        if (TieneMoras && !Recolectando)
+        // Verificar si tiene moras y no está recolectando
+        if (tieneMoras && !recolectando)
         {
-
-            //Si se Acerca se prenden los iconos
-            if (Vector3.Distance(Gata.position, transform.position) < Distancia)
+            // Si se acerca, se encienden los iconos
+            if (Vector3.Distance(gata.position, transform.position) < distancia)
             {
-                EstaLejos = false;
-                Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = true;
-                Gata.GetChild(2).gameObject.SetActive(true);
-                Gata.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Tecla;
-                Gata.GetChild(2).GetChild(0).GetComponent<Image>().sprite = TeclaIcono;
-                Gata.GetChild(2).GetChild(1).GetComponent<Image>().sprite = Icono;
-
-                //Si esta recolectando se gira y espera a que termine
-                if (Gata.GetChild(0).GetComponent<Animator>().GetBool("Recolectar"))
+                estaLejos = false;
+                ActivarUI();
+                if (gata.GetChild(0).GetComponent<Animator>().GetBool("Recolectar"))
                 {
-                    Gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = true;
-                    Recolectando = true;
-
-                    Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = false;
+                    gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = true;
+                    recolectando = true;
+                    gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = false;
                     StartCoroutine(Esperar());
                 }
             }
             else
             {
-                if (!EstaLejos)
+                if (!estaLejos)
                 {
-                    Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = false;
-                    Gata.GetChild(2).gameObject.SetActive(false);
-                    EstaLejos = true;
+                    DesactivarUI();
+                    estaLejos = true;
                 }
-
             }
         }
 
-        if (Recolectando)
+        if (recolectando)
         {
-            Gata.GetChild(2).gameObject.SetActive(false);
-            Quaternion Objetivo = Quaternion.LookRotation(new Vector3(transform.position.x, Gata.position.y, transform.position.z) - Gata.position);
-            Gata.rotation = Quaternion.RotateTowards(Gata.rotation, Objetivo, VelocidadGiro * Time.deltaTime);
+            DesactivarUI();
+            Quaternion objetivo = Quaternion.LookRotation(new Vector3(transform.position.x, gata.position.y, transform.position.z) - gata.position);
+            gata.rotation = Quaternion.RotateTowards(gata.rotation, objetivo, velocidadGiro * Time.deltaTime);
         }
     }
 
     IEnumerator Esperar()
     {
         yield return new WaitForSeconds(5.22f);
-        Recolectando = false;
-        Gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = false;
-        if (TieneMoras)
+        recolectando = false;
+        gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = false;
+        if (tieneMoras)
         {
             DarMoras();
             DarFibra();
-            TieneMoras = false;
-
+            tieneMoras = false;
         }
-        TipoActual = 0;
-        GetComponent<MeshRenderer>().material = Tipos[TipoActual];
-
+        tipoActual = 0;
+        GetComponent<MeshRenderer>().material = tipos[tipoActual];
     }
 
     void DarMoras()
     {
-        int cantidad = Random.Range(MinimoMaximo[0], MinimoMaximo[1]);
-        Gata.GetChild(6).GetComponent<Scr_Inventario>().Cantidades[ObjetosQueDa[TipoActual].ID] += cantidad;
-        Scr_ObjetosAgregados Controlador = GameObject.Find("Canvas").transform.GetChild(4).GetComponent<Scr_ObjetosAgregados>();
-        if (Controlador.Lista.ToArray().Length == 0)
-        {
-            Controlador.Lista.Add(ObjetosQueDa[TipoActual]);
-            Controlador.Cantidades.Add(cantidad);
-        }
-        else
-        {
-            if (Controlador.Lista.Contains(ObjetosQueDa[TipoActual]))
-            {
-                for (int i = 0; i < Controlador.Lista.Count; i++)
-                {
-                    if (Controlador.Lista[i] == ObjetosQueDa[0])
-                    {
-                        Controlador.Cantidades[i] += cantidad;
-                        if (i <= 3)
-                        {
-                            Controlador.Tiempo[i] = 2;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Controlador.Lista.Add(ObjetosQueDa[TipoActual]);
-                Controlador.Cantidades.Add(cantidad);
-            }
-        }
+        int cantidad = Random.Range(minimoMaximo[0], minimoMaximo[1]);
+        ActualizarInventario(cantidad, objetosQueDa[tipoActual]);
     }
 
     void DarFibra()
     {
-        int cantidad = Random.Range(MinimoMaximo[0], MinimoMaximo[1]);
-        Gata.GetChild(6).GetComponent<Scr_Inventario>().Cantidades[ObjetosQueDa[0].ID] += cantidad;
-        Scr_ObjetosAgregados Controlador = GameObject.Find("Canvas").transform.GetChild(4).GetComponent<Scr_ObjetosAgregados>();
-        if (Controlador.Lista.ToArray().Length == 0)
+        int cantidad = Random.Range(minimoMaximo[2], minimoMaximo[3]);
+        ActualizarInventario(cantidad, objetosQueDa[0]);
+    }
+
+    void ActualizarInventario(int cantidad, Scr_CreadorObjetos objeto)
+    {
+        Scr_Inventario inventario = gata.GetChild(6).GetComponent<Scr_Inventario>();
+        inventario.AgregarObjeto(cantidad, objeto.Nombre);
+        Scr_ObjetosAgregados controlador = GameObject.Find("Canvas").transform.GetChild(4).GetComponent<Scr_ObjetosAgregados>();
+        if (controlador.Lista.Contains(objeto))
         {
-            Controlador.Lista.Add(ObjetosQueDa[0]);
-            Controlador.Cantidades.Add(cantidad);
+            int indice = controlador.Lista.IndexOf(objeto);
+            controlador.Cantidades[indice] += cantidad;
+            if (indice <= 3)
+            {
+                controlador.Tiempo[indice] = 2;
+            }
         }
         else
         {
-            if (Controlador.Lista.Contains(ObjetosQueDa[0]))
-            {
-                for (int i = 0; i < Controlador.Lista.Count; i++)
-                {
-                    if (Controlador.Lista[i] == ObjetosQueDa[0])
-                    {
-                        Controlador.Cantidades[i] += cantidad;
-                        if (i <= 3)
-                        {
-                            Controlador.Tiempo[i] = 2;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Controlador.Lista.Add(ObjetosQueDa[0]);
-                Controlador.Cantidades.Add(cantidad);
-            }
+            controlador.Lista.Add(objeto);
+            controlador.Cantidades.Add(cantidad);
         }
     }
 
+    void ActivarUI()
+    {
+        gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = true;
+        gata.GetChild(2).gameObject.SetActive(true);
+        gata.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
+        gata.GetChild(2).GetChild(0).GetComponent<Image>().sprite = teclaIcono;
+        gata.GetChild(2).GetChild(1).GetComponent<Image>().sprite = icono;
+    }
+
+    void DesactivarUI()
+    {
+        gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = false;
+        gata.GetChild(2).gameObject.SetActive(false);
+    }
 }
