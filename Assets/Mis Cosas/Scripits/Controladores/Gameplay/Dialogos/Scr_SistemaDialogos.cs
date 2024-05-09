@@ -154,4 +154,9 @@ public class Scr_SistemaDialogos : MonoBehaviour
     {
         EnPausa = pause;
     }
+
+    public void CambiarDialogo(int Numero)
+    {
+        DialogoActual = Numero;
+    }
 }
