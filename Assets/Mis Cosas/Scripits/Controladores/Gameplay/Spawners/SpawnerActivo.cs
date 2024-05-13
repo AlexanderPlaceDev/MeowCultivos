@@ -39,6 +39,7 @@ public class SpawnerActivo : MonoBehaviour
             if (!estaLejos)
             {
                 DesactivarUI();
+                Herramienta.SetActive(false);
                 estaLejos = true;
             }
         }
@@ -59,8 +60,9 @@ public class SpawnerActivo : MonoBehaviour
             // Incrementar la cantidad de objetos en el inventario solo si no se ha agregado antes
             if (!objetoAgregado)
             {
-                AgregarObjetoInventario();
                 objetoAgregado = true;
+                int cantidad = Random.Range(MinimoMaximo[0], MinimoMaximo[1]);
+                AgregarObjetoInventario(cantidad,ObjetoQueDa);
             }
             // Esperar hasta que el sistema de partículas termine para destruir el objeto
             StartCoroutine(DestruirDespuesDeParticulas(particleSystem));
@@ -89,14 +91,14 @@ public class SpawnerActivo : MonoBehaviour
         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeTalar = false;
     }
 
-    void AgregarObjetoInventario()
+    void AgregarObjetoInventario(int cantidad, Scr_CreadorObjetos objeto)
     {
-        int cantidad = Random.Range(MinimoMaximo[0], MinimoMaximo[1]);
+        Scr_Inventario inventario = Gata.GetChild(6).GetComponent<Scr_Inventario>();
+        inventario.AgregarObjeto(cantidad, objeto.Nombre);
         Scr_ObjetosAgregados controlador = GameObject.Find("Canvas").transform.GetChild(4).GetComponent<Scr_ObjetosAgregados>();
-
-        if (controlador.Lista.Contains(ObjetoQueDa))
+        if (controlador.Lista.Contains(objeto))
         {
-            int indice = controlador.Lista.IndexOf(ObjetoQueDa);
+            int indice = controlador.Lista.IndexOf(objeto);
             controlador.Cantidades[indice] += cantidad;
             if (indice <= 3)
             {
@@ -105,7 +107,7 @@ public class SpawnerActivo : MonoBehaviour
         }
         else
         {
-            controlador.Lista.Add(ObjetoQueDa);
+            controlador.Lista.Add(objeto);
             controlador.Cantidades.Add(cantidad);
         }
     }
@@ -117,5 +119,26 @@ public class SpawnerActivo : MonoBehaviour
 
         // Destruir el objeto actual después de que termine el sistema de partículas
         Destroy(gameObject);
+    }
+
+    void ActualizarInventario(int cantidad, Scr_CreadorObjetos objeto)
+    {
+        Scr_Inventario inventario = Gata.GetChild(6).GetComponent<Scr_Inventario>();
+        inventario.AgregarObjeto(cantidad, objeto.Nombre);
+        Scr_ObjetosAgregados controlador = GameObject.Find("Canvas").transform.GetChild(4).GetComponent<Scr_ObjetosAgregados>();
+        if (controlador.Lista.Contains(objeto))
+        {
+            int indice = controlador.Lista.IndexOf(objeto);
+            controlador.Cantidades[indice] += cantidad;
+            if (indice <= 3)
+            {
+                controlador.Tiempo[indice] = 2;
+            }
+        }
+        else
+        {
+            controlador.Lista.Add(objeto);
+            controlador.Cantidades.Add(cantidad);
+        }
     }
 }

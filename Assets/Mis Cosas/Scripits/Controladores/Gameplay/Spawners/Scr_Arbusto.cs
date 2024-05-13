@@ -129,4 +129,6 @@ public class Scr_Arbusto : MonoBehaviour
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = false;
         gata.GetChild(2).gameObject.SetActive(false);
     }
+
+   
 }
