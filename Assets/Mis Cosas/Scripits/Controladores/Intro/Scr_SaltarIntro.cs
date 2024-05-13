@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class Scr_SaltarIntro : MonoBehaviour
 {
     TextMeshProUGUI Texto;
-    private float Tiempo = 5;
+    private float Tiempo = 7;
     private float Cont = 0;
 
     void Start()
@@ -30,7 +30,7 @@ public class Scr_SaltarIntro : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Escape))
         {
-            Tiempo = 5;
+            Tiempo = 7;
             if (Cont < 3)
             {
                 Cont += Time.deltaTime;

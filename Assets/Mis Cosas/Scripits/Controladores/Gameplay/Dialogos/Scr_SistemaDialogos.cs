@@ -16,13 +16,16 @@ public class Scr_SistemaDialogos : MonoBehaviour
     public int DialogoActual = 0;
     public bool Leido = false;
     public bool EsCinematica = false;
-    private int LineaActual = 0;
+    public int LineaActual = 0;
     private Coroutine currentCoroutine;
     private Scr_ControladorMisiones ControladorMisiones;
 
     private void Start()
     {
-        ControladorMisiones = GameObject.Find("Gata").transform.GetChild(3).GetComponent<Scr_ControladorMisiones>();
+        if (GameObject.Find("Gata"))
+        {
+            ControladorMisiones = GameObject.Find("Gata").transform.GetChild(3).GetComponent<Scr_ControladorMisiones>();
+        }
     }
 
     private void Update()
@@ -74,6 +77,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
 
         if (LineaActual < Dialogos[DialogoActual].Lineas.Length - 1) // Verificar si hay más líneas disponibles
         {
+            Debug.Log("Entra 4");
             LineaActual++; // Incrementar el índice de la línea actual
             Texto.text = ""; // Limpiar el texto antes de mostrar la siguiente línea
             currentCoroutine = StartCoroutine(ReadDialogue());
@@ -98,6 +102,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
                 if (Texto.text == Dialogos[DialogoActual].Lineas[LineaActual])
                 {
                     Texto.text = ""; // Limpiar el texto antes de mostrar la siguiente línea
+                    Debug.Log("Entra 5");
                     LineaActual++; // Avanzar a la siguiente línea
                     if (LineaActual < Dialogos[DialogoActual].Lineas.Length)
                     {
@@ -126,17 +131,20 @@ public class Scr_SistemaDialogos : MonoBehaviour
                         if (DialogoActual < Dialogos.Length - 1)
                         {
                             //En caso de no tener mision
-                            if (ControladorMisiones.MisionActual == null)
+                            if (ControladorMisiones != null)
                             {
-                                DialogoActual++; // Avanzar al siguiente diálogo
-                                //Guardar Dialogo
-                                if (GetComponent<Scr_EventosGuardado>() != null)
+                                if (ControladorMisiones.MisionActual == null)
                                 {
-                                    Debug.Log("Entra2");
-                                    GetComponent<Scr_EventosGuardado>().EventoDialogo(DialogoActual, "Gusano");
-                                }
+                                    DialogoActual++; // Avanzar al siguiente diálogo
+                                    if (GetComponent<Scr_EventosGuardado>() != null)
+                                    {
+                                        Debug.Log("Entra2");
+                                        GetComponent<Scr_EventosGuardado>().EventoDialogo(DialogoActual, "Gusano");
+                                    }
 
+                                }
                             }
+
 
                         }
                         Texto.transform.parent.gameObject.SetActive(false);
@@ -158,5 +166,10 @@ public class Scr_SistemaDialogos : MonoBehaviour
     public void CambiarDialogo(int Numero)
     {
         DialogoActual = Numero;
+    }
+
+    public void AumentarDialogo()
+    {
+        DialogoActual ++;
     }
 }

@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 
@@ -42,7 +43,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
                 ActivarDialogo();
             }
 
-            if (sistemaDialogos.Leido && !sistemaDialogos.Leyendo)
+            if (sistemaDialogos.Leido && !sistemaDialogos.Leyendo && !panelDialogo.activeSelf)
             {
                 DesactivarDialogo();
             }
@@ -73,7 +74,14 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             }
             else
             {
-                sistemaDialogos.SiguienteLinea();
+                if (sistemaDialogos.Dialogos[sistemaDialogos.DialogoActual].Lineas[sistemaDialogos.LineaActual] == panelDialogo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text)
+                {
+                    sistemaDialogos.SiguienteLinea();
+                }
+                else
+                {
+                    sistemaDialogos.IniciarDialogo();
+                }
             }
         }
     }
@@ -105,6 +113,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
                     GetComponent<Scr_EventosGuardado>().EventoDialogo(sistemaDialogos.DialogoActual, "Gusano");
                 }
                 ControladorMisiones.MisionActual = null;
+                sistemaDialogos.LineaActual = 0;
+                sistemaDialogos.Leido = false;
                 sistemaDialogos.DialogoActual++; // Avanzar al siguiente diálogo
             }
         }
