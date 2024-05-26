@@ -156,6 +156,9 @@ public class Scr_Movimiento : MonoBehaviour
     {
         Direccion = Origen.forward * InputVer + Origen.right * InputHor;
 
+        // Proyectar la dirección en el plano horizontal
+        Direccion = Vector3.ProjectOnPlane(Direccion, Vector3.up).normalized;
+
         if (Subiendo())
         {
             Vector3 direccionRampa = DireccionRampa();
@@ -169,11 +172,11 @@ public class Scr_Movimiento : MonoBehaviour
         {
             if (EstaEnElSuelo)
             {
-                RB.AddForce(Direccion.normalized * Velocidad * 10f, ForceMode.Force);
+                RB.AddForce(Direccion * Velocidad * 10f, ForceMode.Force);
             }
             else
             {
-                RB.AddForce((Direccion.normalized + Vector3.down * Gravedad) * Velocidad * 10f, ForceMode.Force);
+                RB.AddForce((Direccion + Vector3.down * Gravedad) * Velocidad * 10f, ForceMode.Force);
             }
         }
     }
@@ -199,7 +202,7 @@ public class Scr_Movimiento : MonoBehaviour
     {
         SalirRampa = true;
         RB.velocity = new Vector3(RB.velocity.x, 0, RB.velocity.z);
-        RB.AddForce(transform.up * FuerzaSalto, ForceMode.Impulse);
+        RB.AddForce(Vector3.up * FuerzaSalto, ForceMode.Impulse); // Usar Vector3.up en lugar de transform.up
     }
 
     private void ReiniciarSalto()
