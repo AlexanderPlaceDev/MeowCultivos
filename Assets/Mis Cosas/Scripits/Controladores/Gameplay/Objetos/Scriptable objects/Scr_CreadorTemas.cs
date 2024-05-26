@@ -8,5 +8,13 @@ public class Scr_CreadorTemas : ScriptableObject
 
     public Color[] ColoresMenu;
     [Space]
+    public Color[] ColoresHabilidades;
+    [Space]
     public Color[] ColoresInventario;
+    [Space]
+    public Color[] ColoresGuia;
+    [Space]
+    public Color[] ColoresArmas;
+    [Space]
+    public Color[] ColoresOpciones;
 }

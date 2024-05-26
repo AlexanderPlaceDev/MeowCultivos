@@ -24,7 +24,7 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
 
     void Update()
     {
-      
+
         if (EstaEnMenu)
         {
             // Desactiva los componentes de movimiento de la gata mientras está en el menú
@@ -33,8 +33,18 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Tab) && !Esperando)
             {
-                Esperando = true;
-                Menu.GetComponent<Animator>().Play("Cerrar");
+                Debug.Log("Entra");
+
+                if (GetComponent<Scr_CambiadorMenus>().MenuActual == "Menu")
+                {
+                    Esperando = true;
+                    Menu.GetComponent<Animator>().Play("Cerrar");
+                }
+                else
+                {
+                    GetComponent<Scr_CambiadorMenus>().BotonRegresar();
+                }
+
             }
         }
         else
@@ -60,7 +70,7 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
             if (EstaEnMenu)
             {
                 Menu.SetActive(false);
-                EstaEnMenu=false;
+                EstaEnMenu = false;
             }
             else
             {

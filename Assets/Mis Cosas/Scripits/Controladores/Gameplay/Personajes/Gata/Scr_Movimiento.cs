@@ -10,10 +10,8 @@ public class Scr_Movimiento : MonoBehaviour
     public float Velocidad;
     public float VelCaminar;
     public float VelCorrer;
-    public float arrastre;
+    public float Arrastre;
     [SerializeField] bool GuardaPosicion;
-
-
 
     [Header("Checar Suelo")]
     public bool EstaEnElSuelo;
@@ -25,22 +23,22 @@ public class Scr_Movimiento : MonoBehaviour
     public float SaltoCoolDown;
     public float MultiplicadorDeAire;
     public float Gravedad;
-    bool ListoParaSaltar = true;
+    private bool ListoParaSaltar = true;
 
     [Header("Agachar")]
     public float VelAgachado;
     public float EscalaAgachadoY;
-    public float EscalaInicialY;
+    private float EscalaInicialY;
 
     [Header("Rampa")]
     public float AnguloMaximo;
-    public RaycastHit RampaRayo;
+    private RaycastHit RampaRayo;
     private bool SalirRampa;
 
     [Header("Teclas")]
-    public KeyCode Salto = KeyCode.Space;
-    public KeyCode Correr = KeyCode.LeftShift;
-    public KeyCode Agachar = KeyCode.LeftControl;
+    public KeyCode SaltoTecla = KeyCode.Space;
+    public KeyCode CorrerTecla = KeyCode.LeftShift;
+    public KeyCode AgacharTecla = KeyCode.LeftControl;
 
     public Estados Estado;
     public enum Estados
@@ -52,14 +50,13 @@ public class Scr_Movimiento : MonoBehaviour
         Aire
     }
 
+    private float InputHor;
+    private float InputVer;
+    private Vector3 Direccion;
+    private Transform Origen;
+    private Rigidbody RB;
+    private float TiempoGuardado = 0;
 
-    public float InputHor;
-    public float InputVer;
-
-    Vector3 Direccion;
-    Transform Origen;
-    Rigidbody RB;
-    float TiempoGuardado = 0;
     private void Start()
     {
         Origen = GetComponent<Transform>();
@@ -68,29 +65,15 @@ public class Scr_Movimiento : MonoBehaviour
 
         EscalaInicialY = transform.localScale.y;
     }
-    void Update()
+
+    private void Update()
     {
-        EstaEnElSuelo = Physics.Raycast(transform.position, Vector3.down, AlturaPersonaje * 0.5f + 0.2f, Suelo);
-
-        MisInputs();
+        VerificarSuelo();
+        CapturarInputs();
         ControlarVelocidad();
-        MaquinaDeEstados();
-        TiempoGuardado += Time.deltaTime;
-        if (TiempoGuardado >= 5)
-        {
-            TiempoGuardado = 0;
-            GuardaPosYRot();
-
-        }
-
-        if (EstaEnElSuelo)
-        {
-            RB.drag = arrastre;
-        }
-        else
-        {
-            RB.drag = 0;
-        }
+        ActualizarEstado();
+        GuardarPosicionSiEsNecesario();
+        AplicarArrastre();
     }
 
     private void FixedUpdate()
@@ -98,7 +81,13 @@ public class Scr_Movimiento : MonoBehaviour
         Mover();
     }
 
-    private void MisInputs()
+    private void VerificarSuelo()
+    {
+        float alturaVerificacion = AlturaPersonaje * 0.5f * transform.localScale.y + 0.2f;
+        EstaEnElSuelo = Physics.Raycast(transform.position, Vector3.down, alturaVerificacion, Suelo);
+    }
+
+    private void CapturarInputs()
     {
         if (UsaEjeHorizontal)
         {
@@ -116,59 +105,50 @@ public class Scr_Movimiento : MonoBehaviour
             }
         }
 
-
-        if (Input.GetKeyDown(Salto) && ListoParaSaltar && EstaEnElSuelo)
+        if (Input.GetKeyDown(SaltoTecla) && ListoParaSaltar && EstaEnElSuelo)
         {
             ListoParaSaltar = false;
             Saltar();
             Invoke(nameof(ReiniciarSalto), SaltoCoolDown);
         }
 
-        if (Input.GetKeyDown(Agachar))
+        if (Input.GetKeyDown(AgacharTecla))
         {
-            transform.localScale = new Vector3(transform.localScale.x, EscalaAgachadoY, transform.localScale.z);
-            RB.AddForce(Vector3.down * 5f, ForceMode.Force);
+            Agachar();
         }
-        if (Input.GetKeyUp(Agachar))
+        if (Input.GetKeyUp(AgacharTecla))
         {
-            transform.localScale = new Vector3(transform.localScale.x, EscalaInicialY, transform.localScale.z);
+            Levantarse();
         }
-
     }
 
-    private void MaquinaDeEstados()
+    private void ActualizarEstado()
     {
-        if (Input.GetKey(Agachar))
+        if (Input.GetKey(AgacharTecla))
         {
             Estado = Estados.Agachado;
             Velocidad = VelAgachado;
         }
-
-
-        if ((EstaEnElSuelo || Subiendo()) && InputVer > 0 && Input.GetKey(Correr))
+        else if ((EstaEnElSuelo || Subiendo()) && InputVer > 0 && Input.GetKey(CorrerTecla))
         {
             Estado = Estados.Correr;
             Velocidad = VelCorrer;
         }
-        else
+        else if (EstaEnElSuelo || Subiendo())
         {
-            if (EstaEnElSuelo || Subiendo())
+            if (InputHor == 0 && InputVer == 0)
             {
-                if (InputHor == 0 && InputVer == 0)
-                {
-                    Estado = Estados.Quieto;
-                }
-                else
-                {
-                    Estado = Estados.Caminar;
-                }
-                Velocidad = VelCaminar;
+                Estado = Estados.Quieto;
             }
             else
             {
-                Estado = Estados.Aire;
+                Estado = Estados.Caminar;
             }
-
+            Velocidad = VelCaminar;
+        }
+        else
+        {
+            Estado = Estados.Aire;
         }
     }
 
@@ -178,10 +158,10 @@ public class Scr_Movimiento : MonoBehaviour
 
         if (Subiendo())
         {
-            RB.AddForce(DireccionRampa() * Velocidad * 20f, ForceMode.Force);
+            Vector3 direccionRampa = DireccionRampa();
+            RB.AddForce(direccionRampa * Velocidad * 20f, ForceMode.Force);
             if (RB.velocity.y > 0)
             {
-                //Debug.Log("Subiendo");
                 RB.AddForce(Vector3.down * 80f, ForceMode.Force);
             }
         }
@@ -193,34 +173,26 @@ public class Scr_Movimiento : MonoBehaviour
             }
             else
             {
-                //Debug.Log("Esta en el aire");
-                RB.AddForce((Direccion.normalized + new Vector3(0, -Gravedad, 0)) * Velocidad * 10f, ForceMode.Force);
+                RB.AddForce((Direccion.normalized + Vector3.down * Gravedad) * Velocidad * 10f, ForceMode.Force);
             }
         }
-
     }
 
     private void ControlarVelocidad()
     {
-        if (Subiendo() && !SalirRampa)
-        {
-            if (RB.velocity.magnitude > Velocidad)
-            {
-                RB.velocity = RB.velocity.normalized * Velocidad;
-            }
-        }
-        else
-        {
-            Vector3 VelocidadActual = new Vector3(RB.velocity.x, 0, RB.velocity.z);
+        Vector3 velocidadHorizontal = new Vector3(RB.velocity.x, 0, RB.velocity.z);
 
-            if (VelocidadActual.magnitude > Velocidad)
-            {
-                Vector3 VelocidadLimite = VelocidadActual.normalized * Velocidad;
-                RB.velocity = new Vector3(VelocidadLimite.x, RB.velocity.y, VelocidadLimite.z);
-            }
+        if (velocidadHorizontal.magnitude > Velocidad)
+        {
+            Vector3 velocidadLimite = velocidadHorizontal.normalized * Velocidad;
+            RB.velocity = new Vector3(velocidadLimite.x, RB.velocity.y, velocidadLimite.z);
         }
 
-
+        // Limitar la velocidad vertical para evitar que atraviese el suelo
+        if (RB.velocity.y < -50f)
+        {
+            RB.velocity = new Vector3(RB.velocity.x, -50f, RB.velocity.z);
+        }
     }
 
     private void Saltar()
@@ -229,6 +201,7 @@ public class Scr_Movimiento : MonoBehaviour
         RB.velocity = new Vector3(RB.velocity.x, 0, RB.velocity.z);
         RB.AddForce(transform.up * FuerzaSalto, ForceMode.Impulse);
     }
+
     private void ReiniciarSalto()
     {
         SalirRampa = false;
@@ -239,16 +212,36 @@ public class Scr_Movimiento : MonoBehaviour
     {
         if (Physics.Raycast(transform.position, Vector3.down, out RampaRayo, AlturaPersonaje * 0.5f + 0.3f))
         {
-            float Angulo = Vector3.Angle(Vector3.up, RampaRayo.normal);
-            return Angulo < AnguloMaximo && Angulo != 0;
+            float angulo = Vector3.Angle(Vector3.up, RampaRayo.normal);
+            return angulo < AnguloMaximo && angulo != 0;
         }
-
         return false;
     }
 
     private Vector3 DireccionRampa()
     {
         return Vector3.ProjectOnPlane(Direccion, RampaRayo.normal).normalized;
+    }
+
+    private void Agachar()
+    {
+        transform.localScale = new Vector3(transform.localScale.x, EscalaAgachadoY, transform.localScale.z);
+        RB.AddForce(Vector3.down * 5f, ForceMode.Force);
+    }
+
+    private void Levantarse()
+    {
+        transform.localScale = new Vector3(transform.localScale.x, EscalaInicialY, transform.localScale.z);
+    }
+
+    private void GuardarPosicionSiEsNecesario()
+    {
+        TiempoGuardado += Time.deltaTime;
+        if (TiempoGuardado >= 5)
+        {
+            TiempoGuardado = 0;
+            GuardaPosYRot();
+        }
     }
 
     private void GuardaPosYRot()
@@ -259,4 +252,15 @@ public class Scr_Movimiento : MonoBehaviour
         }
     }
 
+    private void AplicarArrastre()
+    {
+        if (EstaEnElSuelo)
+        {
+            RB.drag = Arrastre;
+        }
+        else
+        {
+            RB.drag = 0;
+        }
+    }
 }

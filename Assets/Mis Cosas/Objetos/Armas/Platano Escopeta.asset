@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12ff4b93ff67613438982eb385a7e4e9, type: 3}
+  m_Name: Platano Escopeta
+  m_EditorClassIdentifier: 
+  Icono: {fileID: 0}
+  Color: {r: 1, g: 0.9512944, b: 0, a: 1}
+  Tipo: Escopeta
+  Nombre: Platano
+  Descripcion: 
+  Cadencia: 5
+  Capacidad: 2
+  CapacidadTotal: 100
+  Rango: 20
+  "Da\xF1o": 20
+  Velocidad: 20
+  DobleMano: 0
