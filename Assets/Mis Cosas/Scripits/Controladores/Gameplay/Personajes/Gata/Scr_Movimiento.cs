@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class Scr_Movimiento : MonoBehaviour
 {
     [Header("Movimiento")]
@@ -12,34 +11,28 @@ public class Scr_Movimiento : MonoBehaviour
     public float VelCorrer;
     public float Arrastre;
     [SerializeField] bool GuardaPosicion;
-
     [Header("Checar Suelo")]
     public bool EstaEnElSuelo;
     public float AlturaPersonaje;
     public LayerMask Suelo;
-
     [Header("Salto")]
     public float FuerzaSalto;
     public float SaltoCoolDown;
     public float MultiplicadorDeAire;
     public float Gravedad;
     private bool ListoParaSaltar = true;
-
     [Header("Agachar")]
     public float VelAgachado;
     public float EscalaAgachadoY;
     private float EscalaInicialY;
-
     [Header("Rampa")]
     public float AnguloMaximo;
     private RaycastHit RampaRayo;
     private bool SalirRampa;
-
     [Header("Teclas")]
     public KeyCode SaltoTecla = KeyCode.Space;
     public KeyCode CorrerTecla = KeyCode.LeftShift;
     public KeyCode AgacharTecla = KeyCode.LeftControl;
-
     public Estados Estado;
     public enum Estados
     {
@@ -49,23 +42,19 @@ public class Scr_Movimiento : MonoBehaviour
         Agachado,
         Aire
     }
-
     private float InputHor;
     private float InputVer;
     private Vector3 Direccion;
     private Transform Origen;
     private Rigidbody RB;
     private float TiempoGuardado = 0;
-
     private void Start()
     {
         Origen = GetComponent<Transform>();
         RB = GetComponent<Rigidbody>();
         RB.freezeRotation = true;
-
         EscalaInicialY = transform.localScale.y;
     }
-
     private void Update()
     {
         VerificarSuelo();
@@ -75,18 +64,18 @@ public class Scr_Movimiento : MonoBehaviour
         GuardarPosicionSiEsNecesario();
         AplicarArrastre();
     }
-
     private void FixedUpdate()
     {
-        Mover();
+        if (Estado!=Estados.Aire || RB.velocity==Vector3.zero)
+        {
+            Mover();
+        }
     }
-
     private void VerificarSuelo()
     {
         float alturaVerificacion = AlturaPersonaje * 0.5f * transform.localScale.y + 0.2f;
         EstaEnElSuelo = Physics.Raycast(transform.position, Vector3.down, alturaVerificacion, Suelo);
     }
-
     private void CapturarInputs()
     {
         if (UsaEjeHorizontal)
@@ -104,14 +93,12 @@ public class Scr_Movimiento : MonoBehaviour
                 InputVer = Input.GetAxisRaw("Vertical");
             }
         }
-
         if (Input.GetKeyDown(SaltoTecla) && ListoParaSaltar && EstaEnElSuelo)
         {
             ListoParaSaltar = false;
             Saltar();
             Invoke(nameof(ReiniciarSalto), SaltoCoolDown);
         }
-
         if (Input.GetKeyDown(AgacharTecla))
         {
             Agachar();
@@ -121,7 +108,6 @@ public class Scr_Movimiento : MonoBehaviour
             Levantarse();
         }
     }
-
     private void ActualizarEstado()
     {
         if (Input.GetKey(AgacharTecla))
@@ -151,13 +137,9 @@ public class Scr_Movimiento : MonoBehaviour
             Estado = Estados.Aire;
         }
     }
-
     private void Mover()
     {
         Direccion = Origen.forward * InputVer + Origen.right * InputHor;
-
-        // Proyectar la dirección en el plano horizontal
-        Direccion = Vector3.ProjectOnPlane(Direccion, Vector3.up).normalized;
 
         if (Subiendo())
         {
@@ -172,37 +154,33 @@ public class Scr_Movimiento : MonoBehaviour
         {
             if (EstaEnElSuelo)
             {
-                RB.AddForce(Direccion * Velocidad * 10f, ForceMode.Force);
+                RB.AddForce(Direccion.normalized * Velocidad * 10f, ForceMode.Force);
             }
             else
             {
-                RB.AddForce((Direccion + Vector3.down * Gravedad) * Velocidad * 10f, ForceMode.Force);
+                RB.AddForce((Direccion.normalized + Vector3.down * Gravedad) * Velocidad * 10f, ForceMode.Force);
             }
         }
     }
-
     private void ControlarVelocidad()
     {
         Vector3 velocidadHorizontal = new Vector3(RB.velocity.x, 0, RB.velocity.z);
-
         if (velocidadHorizontal.magnitude > Velocidad)
         {
             Vector3 velocidadLimite = velocidadHorizontal.normalized * Velocidad;
             RB.velocity = new Vector3(velocidadLimite.x, RB.velocity.y, velocidadLimite.z);
         }
-
         // Limitar la velocidad vertical para evitar que atraviese el suelo
         if (RB.velocity.y < -50f)
         {
             RB.velocity = new Vector3(RB.velocity.x, -50f, RB.velocity.z);
         }
     }
-
     private void Saltar()
     {
         SalirRampa = true;
         RB.velocity = new Vector3(RB.velocity.x, 0, RB.velocity.z);
-        RB.AddForce(Vector3.up * FuerzaSalto, ForceMode.Impulse); // Usar Vector3.up en lugar de transform.up
+        RB.AddForce(transform.up * FuerzaSalto, ForceMode.Impulse);
     }
 
     private void ReiniciarSalto()
@@ -210,7 +188,6 @@ public class Scr_Movimiento : MonoBehaviour
         SalirRampa = false;
         ListoParaSaltar = true;
     }
-
     private bool Subiendo()
     {
         if (Physics.Raycast(transform.position, Vector3.down, out RampaRayo, AlturaPersonaje * 0.5f + 0.3f))
@@ -220,23 +197,19 @@ public class Scr_Movimiento : MonoBehaviour
         }
         return false;
     }
-
     private Vector3 DireccionRampa()
     {
         return Vector3.ProjectOnPlane(Direccion, RampaRayo.normal).normalized;
     }
-
     private void Agachar()
     {
         transform.localScale = new Vector3(transform.localScale.x, EscalaAgachadoY, transform.localScale.z);
         RB.AddForce(Vector3.down * 5f, ForceMode.Force);
     }
-
     private void Levantarse()
     {
         transform.localScale = new Vector3(transform.localScale.x, EscalaInicialY, transform.localScale.z);
     }
-
     private void GuardarPosicionSiEsNecesario()
     {
         TiempoGuardado += Time.deltaTime;
@@ -246,7 +219,6 @@ public class Scr_Movimiento : MonoBehaviour
             GuardaPosYRot();
         }
     }
-
     private void GuardaPosYRot()
     {
         if (GuardaPosicion)
@@ -254,7 +226,6 @@ public class Scr_Movimiento : MonoBehaviour
             GetComponent<Scr_EventosGuardado>().GuardarPosicion(transform);
         }
     }
-
     private void AplicarArrastre()
     {
         if (EstaEnElSuelo)

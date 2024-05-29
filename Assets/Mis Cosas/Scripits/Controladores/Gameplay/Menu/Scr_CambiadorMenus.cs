@@ -29,6 +29,30 @@ public class Scr_CambiadorMenus : MonoBehaviour
         // Incrementa el tiempo transcurrido
         tiempoPasado += Time.deltaTime;
 
+        if (CambiarHabilidades)
+        {
+            // Calcula la interpolación lineal entre los colores inicial y final
+
+            if (tiempoPasado >= 1)
+            {
+                float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
+                Fondo.color = Color.Lerp(TemaActual.ColoresMenu[2], TemaActual.ColoresHabilidades[2], t);
+                AreaHora.color = Color.Lerp(TemaActual.ColoresMenu[3], TemaActual.ColoresHabilidades[3], t);
+
+                BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[0], TemaActual.ColoresHabilidades[0], t);
+                BarraIzquierda.transform.GetChild(3).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[1], TemaActual.ColoresHabilidades[1], t);
+
+                BarraDerecha.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[0], TemaActual.ColoresHabilidades[0], t);
+                BarraDerecha.transform.GetChild(3).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[1], TemaActual.ColoresHabilidades[1], t);
+            }
+
+            // Si el tiempo ha superado la duración, desactiva la actualización
+            if (tiempoPasado >= DuracionTransicion + 1)
+            {
+                CambiarHabilidades = false;
+            }
+        }
+
         if (CambiarInventario)
         {
             // Calcula la interpolación lineal entre los colores inicial y final
@@ -102,6 +126,29 @@ public class Scr_CambiadorMenus : MonoBehaviour
         }
 
 
+        if (RegresarHabilidades)
+        {
+            // Calcula la interpolación lineal entre los colores inicial y final
+
+            if (tiempoPasado >= 1)
+            {
+                float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
+                Fondo.color = Color.Lerp(TemaActual.ColoresHabilidades[2], TemaActual.ColoresMenu[2], t);
+                AreaHora.color = Color.Lerp(TemaActual.ColoresHabilidades[3], TemaActual.ColoresMenu[3], t);
+
+                BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresHabilidades[0], TemaActual.ColoresMenu[0], t);
+                BarraIzquierda.transform.GetChild(3).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresHabilidades[1], TemaActual.ColoresMenu[1], t);
+
+                BarraDerecha.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresHabilidades[0], TemaActual.ColoresMenu[0], t);
+                BarraDerecha.transform.GetChild(3).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresHabilidades[1], TemaActual.ColoresMenu[1], t);
+            }
+
+            // Si el tiempo ha superado la duración, desactiva la actualización
+            if (tiempoPasado >= DuracionTransicion + 1)
+            {
+                RegresarHabilidades = false;
+            }
+        }
 
         if (RegresarInventario)
         {
@@ -177,7 +224,6 @@ public class Scr_CambiadorMenus : MonoBehaviour
 
     }
 
-
     public void CambiarAInventario()
     {
         tiempoPasado = 0.0f;
@@ -203,9 +249,9 @@ public class Scr_CambiadorMenus : MonoBehaviour
     public void CambiarAHabilidades()
     {
         tiempoPasado = 0.0f;
-        CambiarGuia = true;
-        MenuActual = "Guia";
-        Menu.GetComponent<Animator>().Play("Cerrar 3");
+        CambiarHabilidades = true;
+        MenuActual = "Habilidades";
+        Menu.GetComponent<Animator>().Play("Cerrar 4");
     }
 
     public void BotonRegresar()
@@ -214,17 +260,17 @@ public class Scr_CambiadorMenus : MonoBehaviour
         tiempoPasado = 0.0f;
         switch (MenuActual)
         {
+            case "Habilidades":
+                {
+                    Menu.GetComponent<Animator>().Play("Cerrar Habilidades");
+                    RegresarHabilidades = true;
+                    break;
+                }
+
             case "Inventario":
                 {
                     Menu.GetComponent<Animator>().Play("Cerrar 1");
                     RegresarInventario = true;
-                    break;
-                }
-
-            case "Opciones":
-                {
-                    Menu.GetComponent<Animator>().Play("Cerrar Opciones");
-                    RegresarOpciones = true;
                     break;
                 }
 
@@ -234,9 +280,14 @@ public class Scr_CambiadorMenus : MonoBehaviour
                     RegresarGuia = true;
                     break;
                 }
+
+            case "Opciones":
+                {
+                    Menu.GetComponent<Animator>().Play("Cerrar Opciones");
+                    RegresarOpciones = true;
+                    break;
+                }
         }
         MenuActual = "Menu";
     }
-
-
 }
