@@ -8,10 +8,10 @@ public class Scr_CreadorArmas : ScriptableObject
     public string Tipo;
     public string Nombre;
     public string Descripcion;
-    public int Cadencia;
+    public float Cadencia;
     public int Capacidad;
     public int CapacidadTotal;
-    public int Rango;
+    public int Alcance;
     public int Daño;
     public int Velocidad;
     public bool DobleMano;

@@ -77,10 +77,7 @@ public class Scr_Movimiento : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Estado != Estados.Aire || RB.velocity == Vector3.zero)
-        {
-            Mover();
-        }
+        Mover();
     }
 
     private void VerificarSuelo()
@@ -156,7 +153,16 @@ public class Scr_Movimiento : MonoBehaviour
 
     private void Mover()
     {
-        Direccion = Origen.forward * InputVer + Origen.right * InputHor;
+        Direccion = transform.forward * InputVer + transform.right * InputHor;
+
+        if (EstaEnElSuelo)
+        {
+            RB.AddForce(Direccion.normalized * Velocidad * 10f, ForceMode.Force);
+        }
+        else
+        {
+            RB.AddForce((Direccion.normalized * MultiplicadorDeAire + Vector3.down * Gravedad) * Velocidad * 10f, ForceMode.Force);
+        }
 
         if (Subiendo())
         {
@@ -165,17 +171,6 @@ public class Scr_Movimiento : MonoBehaviour
             if (RB.velocity.y > 0)
             {
                 RB.AddForce(Vector3.down * 80f, ForceMode.Force);
-            }
-        }
-        else
-        {
-            if (EstaEnElSuelo)
-            {
-                RB.AddForce(Direccion.normalized * Velocidad * 10f, ForceMode.Force);
-            }
-            else
-            {
-                RB.AddForce((Direccion.normalized + Vector3.down * Gravedad) * Velocidad * 10f, ForceMode.Force);
             }
         }
     }
@@ -190,7 +185,6 @@ public class Scr_Movimiento : MonoBehaviour
             RB.velocity = new Vector3(velocidadLimite.x, RB.velocity.y, velocidadLimite.z);
         }
 
-        // Limitar la velocidad vertical para evitar que atraviese el suelo
         if (RB.velocity.y < -50f)
         {
             RB.velocity = new Vector3(RB.velocity.x, -50f, RB.velocity.z);

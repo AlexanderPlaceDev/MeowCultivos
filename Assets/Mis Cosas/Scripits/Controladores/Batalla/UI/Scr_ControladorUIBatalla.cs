@@ -1,11 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 using UnityEngine.UI;
 
 public class Scr_ControladorUIBatalla : MonoBehaviour
@@ -152,8 +146,8 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             Capacidadtxt.text = DatosArma.Capacidad + "/" + DatosArma.CapacidadTotal;
         }
 
-        RangoBarra.fillAmount = (float)DatosArma.Rango / 100;
-        Rangotxt.text = DatosArma.Rango + "/100";
+        RangoBarra.fillAmount = (float)DatosArma.Alcance / 100;
+        Rangotxt.text = DatosArma.Alcance + "/100";
         DañoBarra.fillAmount = (float)DatosArma.Daño / 100;
         Dañotxt.text = DatosArma.Daño + "/100";
         VelocidadBarra.fillAmount = (float)DatosArma.Velocidad / 100;
@@ -322,9 +316,9 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         CanvasGameplay.SetActive(true);
         ObjetosArmas.SetActive(true);
         Mapa.SetActive(true);
-        Camera.main.GetComponent<Scr_Movimiento>().enabled = true;
-        Camera.main.GetComponent<Scr_GirarCamaraBatalla>().enabled = true;
-        Camera.main.GetComponent<Rigidbody>().useGravity = true;
+        GetComponent<Scr_ControladorBatalla>().CuentaAtras();
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void CambiarColorBotonAceptar(bool Entra)
