@@ -41,6 +41,9 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     [SerializeField] Image BotonAceptar;
     [SerializeField] Color[] ColoresAceptar;
     [SerializeField] GameObject CanvasSeleccionDeArmas;
+    [SerializeField] GameObject CanvasGameplay;
+    [SerializeField] GameObject ObjetosArmas;
+    [SerializeField] GameObject Mapa;
 
     [Header("Generales")]
     public int BotonActual = -1;
@@ -316,6 +319,12 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     public void AceptarBatalla()
     {
         CanvasSeleccionDeArmas.SetActive(false);
+        CanvasGameplay.SetActive(true);
+        ObjetosArmas.SetActive(true);
+        Mapa.SetActive(true);
+        Camera.main.GetComponent<Scr_Movimiento>().enabled = true;
+        Camera.main.GetComponent<Scr_GirarCamaraBatalla>().enabled = true;
+        Camera.main.GetComponent<Rigidbody>().useGravity = true;
     }
 
     public void CambiarColorBotonAceptar(bool Entra)
@@ -331,4 +340,5 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             BotonAceptar.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = ColoresAceptar[3];
         }
     }
+
 }
