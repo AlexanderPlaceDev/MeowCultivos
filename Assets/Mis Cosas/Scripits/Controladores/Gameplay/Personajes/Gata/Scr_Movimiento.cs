@@ -155,23 +155,18 @@ public class Scr_Movimiento : MonoBehaviour
     {
         Direccion = transform.forward * InputVer + transform.right * InputHor;
 
-        if (EstaEnElSuelo)
-        {
-            RB.AddForce(Direccion.normalized * Velocidad * 10f, ForceMode.Force);
-        }
-        else
-        {
-            RB.AddForce((Direccion.normalized * MultiplicadorDeAire + Vector3.down * Gravedad) * Velocidad * 10f, ForceMode.Force);
-        }
+        // Mantener la velocidad constante
+        Vector3 velocidadDeseada = Direccion.normalized * Velocidad;
+
+        // Aplicar movimiento en la dirección del personaje
+        RB.velocity = new Vector3(velocidadDeseada.x, RB.velocity.y, velocidadDeseada.z);
 
         if (Subiendo())
         {
+            // Calcular la dirección de la pendiente
             Vector3 direccionRampa = DireccionRampa();
-            RB.AddForce(direccionRampa * Velocidad * 20f, ForceMode.Force);
-            if (RB.velocity.y > 0)
-            {
-                RB.AddForce(Vector3.down * 80f, ForceMode.Force);
-            }
+            // Aplicar la dirección de la pendiente a la velocidad
+            RB.velocity += direccionRampa * Velocidad * Time.deltaTime;
         }
     }
 

@@ -12,7 +12,12 @@ public class Scr_ControladorBatalla : MonoBehaviour
     [SerializeField] TextMeshProUGUI NumeroCuenta;
 
     float Cuenta = 4;
+    [SerializeField] TextMeshProUGUI TextoMinutos;
+    int Minutos = 2;
+    [SerializeField] TextMeshProUGUI TextoSegundos;
+    float Segundos = 60;
     bool ComenzarCuenta = false;
+    bool ComenzoTiempo = false;
 
     void Start()
     {
@@ -20,6 +25,18 @@ public class Scr_ControladorBatalla : MonoBehaviour
     }
 
     void Update()
+    {
+        Comienzo();
+        Tiempo();
+    }
+
+    public void CuentaAtras()
+    {
+        NumeroCuenta.gameObject.SetActive(true);
+        ComenzarCuenta = true;
+    }
+
+    private void Comienzo()
     {
         if (ComenzarCuenta && Cuenta > 0)
         {
@@ -44,13 +61,46 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 Camera.main.transform.parent.GetComponent<Scr_Movimiento>().enabled = true;
                 Camera.main.transform.parent.GetComponent<Rigidbody>().useGravity = true;
                 Camera.main.GetComponent<Scr_GirarCamaraBatalla>().enabled = true;
+                ComenzoTiempo = true;
             }
         }
     }
 
-    public void CuentaAtras()
+    private void Tiempo()
     {
-        NumeroCuenta.gameObject.SetActive(true);
-        ComenzarCuenta = true;
+        if (ComenzoTiempo)
+        {
+            if (Minutos > 0)
+            {
+                if (Segundos >= 0)
+                {
+                    if (Segundos > 9)
+                    {
+                        TextoSegundos.text = ((int)Segundos).ToString();
+                    }
+                    else
+                    {
+                        TextoSegundos.text = "0"+((int)Segundos).ToString();
+                    }
+                    Segundos -= Time.deltaTime;
+
+                }
+                else
+                {
+                    Segundos = 60;
+                    Minutos--;
+                    TextoMinutos.text = Minutos.ToString();
+                }
+            }
+            else
+            {
+                ComenzoTiempo = false;
+                GetComponent<Scr_ControladorArmas>().enabled = true;
+                Camera.main.transform.parent.GetComponent<Scr_Movimiento>().enabled = true;
+                Camera.main.GetComponent<Scr_GirarCamaraBatalla>().enabled = true;
+            }
+
+
+        }
     }
 }

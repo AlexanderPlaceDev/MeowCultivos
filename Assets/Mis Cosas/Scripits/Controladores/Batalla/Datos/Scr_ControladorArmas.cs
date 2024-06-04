@@ -70,4 +70,13 @@ public class Scr_ControladorArmas : MonoBehaviour
         Debug.LogWarning("Clip no encontrado: " + clipName);
         return 0f;
     }
+
+    public void ActivarColision(GameObject Col)
+    {
+        Col.SetActive(true);
+    }
+    public void DesactivarColision(GameObject Col)
+    {
+        Col.SetActive(false);
+    }
 }
