@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Scr_ControladorBatalla : MonoBehaviour
 {
@@ -19,6 +21,8 @@ public class Scr_ControladorBatalla : MonoBehaviour
     bool ComenzarCuenta = false;
     bool ComenzoTiempo = false;
 
+    List<GameObject> Enemigos = new List<GameObject>();
+
     void Start()
     {
 
@@ -34,6 +38,26 @@ public class Scr_ControladorBatalla : MonoBehaviour
     {
         NumeroCuenta.gameObject.SetActive(true);
         ComenzarCuenta = true;
+
+        List<GameObject> Spawners = new List<GameObject>();
+
+        foreach (Transform Objeto in GameObject.Find("Mapa").transform.GetChild(0).GetComponentInChildren<Transform>())
+        {
+            if (Objeto.name.Contains("Spawner"))
+            {
+                Spawners.Add(Objeto.gameObject);
+            }
+        }
+
+        Scr_DatosSingletonBatalla DatosSingleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
+
+        for (int i = 0; i < DatosSingleton.CantidadDeEnemigos; i++)
+        {
+            int Posicion = Random.Range(0, Spawners.Count);
+
+            GameObject Enemigo = Instantiate(DatosSingleton.Enemigo, Spawners.ToArray()[Posicion].transform.position, Quaternion.identity, null);
+            Enemigos.Add(Enemigo);
+        }
     }
 
     private void Comienzo()
@@ -62,6 +86,14 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 Camera.main.transform.parent.GetComponent<Rigidbody>().useGravity = true;
                 Camera.main.GetComponent<Scr_GirarCamaraBatalla>().enabled = true;
                 ComenzoTiempo = true;
+
+                foreach (GameObject Enemigo in Enemigos)
+                {
+                    Enemigo.GetComponent<NavMeshAgent>().enabled = true;
+                    Enemigo.GetComponent<BoxCollider>().enabled = true;
+                }
+
+
             }
         }
     }
@@ -80,7 +112,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
                     }
                     else
                     {
-                        TextoSegundos.text = "0"+((int)Segundos).ToString();
+                        TextoSegundos.text = "0" + ((int)Segundos).ToString();
                     }
                     Segundos -= Time.deltaTime;
 

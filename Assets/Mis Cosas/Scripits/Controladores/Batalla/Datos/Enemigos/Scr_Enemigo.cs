@@ -29,7 +29,7 @@ public class Scr_Enemigo : MonoBehaviour
     public virtual void Mover()
     {
         // Movimiento básico hacia el jugador
-        if (GetComponent<NavMeshAgent>() != null)
+        if (GetComponent<NavMeshAgent>() != null && GetComponent<NavMeshAgent>().isActiveAndEnabled)
         {
             if (Objetivo != null)
             {

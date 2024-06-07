@@ -1,13 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 
 public class Scr_ActivadorPelea : MonoBehaviour
 {
     float tiempo = 0;
+
+    SpriteRenderer Color;
+
+    private void Start()
+    {
+        Color = GetComponent<SpriteRenderer>();
+    }
     private void Update()
     {
         if (tiempo < 0.5f)
@@ -15,6 +18,6 @@ public class Scr_ActivadorPelea : MonoBehaviour
             tiempo += Time.deltaTime;
         }
 
-        GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, tiempo*2);
+        GetComponent<SpriteRenderer>().color = new Color(Color.color.r, Color.color.g, Color.color.b, tiempo*2);
     }
 }
