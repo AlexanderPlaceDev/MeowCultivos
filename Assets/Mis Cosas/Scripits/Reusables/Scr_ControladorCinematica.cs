@@ -13,8 +13,10 @@ public class Scr_ControladorCinematica : MonoBehaviour
     [SerializeField] bool[] Easy;
     [SerializeField] float[] Tiempos;
     [SerializeField] public bool[] PausaAlTerminar;
+    [SerializeField] GameObject Enemigo;
+    [SerializeField] int CantidadEnemigos;
 
-    private UnityEngine.AsyncOperation Operacion;
+    private AsyncOperation Operacion;
 
     void Update()
     {
@@ -68,5 +70,11 @@ public class Scr_ControladorCinematica : MonoBehaviour
             // Espera un frame antes de volver a comprobar
             yield return null;
         }
+    }
+
+    public void AsignarSinleton()
+    {
+        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().Enemigo = Enemigo;
+        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().CantidadDeEnemigos = CantidadEnemigos;
     }
 }

@@ -12,6 +12,8 @@ public class Scr_Enemigo : MonoBehaviour
     public float DañoDistancia;
     public GameObject PrefabBala; // Prefab del proyectil para ataques a distancia
     public Transform SpawnBala; // Punto de inicio del proyectil
+    public Scr_CreadorObjetos[] Drops;
+    public float[] Probabilidades;
     public Transform Objetivo;
 
     private float TiempoCoolDown;
@@ -54,9 +56,6 @@ public class Scr_Enemigo : MonoBehaviour
         {
             TiempoCoolDown = 0;
             GetComponent<Animator>().Play("Ataque1");
-            // Implementar lógica de ataque cuerpo a cuerpo
-            Debug.Log("Melee attack performed");
-            // Ejemplo: aplicar daño al jugador si está en rango
         }
         else
         {

@@ -87,6 +87,8 @@ public class Scr_ConsolaComandos : MonoBehaviour
             case "borrar.datos":
                 {
                     Debug.Log("Datos Borrados");
+                    Camera.main.transform.GetChild(1).GetComponent<Scr_BarrasNegras>().Start();
+                    Camera.main.transform.GetChild(2).GetComponent<Scr_BarrasNegras>().Start();
                     PlayerPrefs.DeleteAll();
                     SceneManager.LoadScene(2);
                     break;

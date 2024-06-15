@@ -432,6 +432,12 @@ MonoBehaviour:
   "Da\xF1oDistancia": 0
   PrefabBala: {fileID: 0}
   SpawnBala: {fileID: 0}
+  Drops:
+  - {fileID: 11400000, guid: 6487fb8e7dd5c0b4abf46803d77c784c, type: 2}
+  - {fileID: 11400000, guid: a1dcbf004b25dc8478076e9ce3ec3b63, type: 2}
+  Probabilidades:
+  - 100
+  - 50
   Objetivo: {fileID: 0}
   tipoenemigo: 0
   tipocomportamiento: 0

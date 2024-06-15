@@ -10,6 +10,7 @@ public class Scr_CreadorObjetos : ScriptableObject
     public string Nombre;
     [SerializeField, TextArea(4, 6)] public string Descripcion;
     public Sprite Icono;
+    public Sprite IconoInventario;
     public Scr_CreadorObjetos[] MaterialesDeProduccion;
     public int[] CantidadMaterialesDeProduccion;
     public int TiempoDeProduccion;
