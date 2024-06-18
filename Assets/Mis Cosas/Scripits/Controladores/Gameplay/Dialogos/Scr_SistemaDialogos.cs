@@ -36,12 +36,10 @@ public class Scr_SistemaDialogos : MonoBehaviour
             {
                 if (Leyendo)
                 {
-                    Debug.Log("Entra2");
                     SaltarDialogo();
                 }
                 else
                 {
-                    Debug.Log("Entra1");
                     SiguienteLinea();
                 }
             }
@@ -77,7 +75,6 @@ public class Scr_SistemaDialogos : MonoBehaviour
 
         if (LineaActual < Dialogos[DialogoActual].Lineas.Length - 1) // Verificar si hay más líneas disponibles
         {
-            Debug.Log("Entra 4");
             LineaActual++; // Incrementar el índice de la línea actual
             Texto.text = ""; // Limpiar el texto antes de mostrar la siguiente línea
             currentCoroutine = StartCoroutine(ReadDialogue());
@@ -102,7 +99,6 @@ public class Scr_SistemaDialogos : MonoBehaviour
                 if (Texto.text == Dialogos[DialogoActual].Lineas[LineaActual])
                 {
                     Texto.text = ""; // Limpiar el texto antes de mostrar la siguiente línea
-                    Debug.Log("Entra 5");
                     LineaActual++; // Avanzar a la siguiente línea
                     if (LineaActual < Dialogos[DialogoActual].Lineas.Length)
                     {
@@ -123,7 +119,6 @@ public class Scr_SistemaDialogos : MonoBehaviour
                             //Guardar Dialogo
                             if (GetComponent<Scr_EventosGuardado>() != null)
                             {
-                                Debug.Log("Entra3");
                                 GetComponent<Scr_EventosGuardado>().EventoDialogo(DialogoActual, "Gusano");
                             }
                         }
@@ -138,7 +133,6 @@ public class Scr_SistemaDialogos : MonoBehaviour
                                     DialogoActual++; // Avanzar al siguiente diálogo
                                     if (GetComponent<Scr_EventosGuardado>() != null)
                                     {
-                                        Debug.Log("Entra2");
                                         GetComponent<Scr_EventosGuardado>().EventoDialogo(DialogoActual, "Gusano");
                                     }
 

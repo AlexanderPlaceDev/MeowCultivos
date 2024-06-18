@@ -5,12 +5,12 @@ using UnityEngine;
 public class Scr_ActivadorCinematica : MonoBehaviour
 {
     [SerializeField] GameObject Elementos;
+    [SerializeField] string Cinematica;
     private void OnTriggerEnter(Collider other)
     {
-        if(gameObject.transform.parent.tag != "Gata" && PlayerPrefs.GetString("Cinematica "+ gameObject.transform.parent.name,"No")== "No")
+        if(gameObject.transform.parent.tag != "Gata" && PlayerPrefs.GetString("Cinematica "+ Cinematica,"No")== "No")
         {
             Elementos.SetActive(true);
-            PlayerPrefs.SetString("Cinematica " + gameObject.transform.parent.name, "Si");
         }
     }
 }

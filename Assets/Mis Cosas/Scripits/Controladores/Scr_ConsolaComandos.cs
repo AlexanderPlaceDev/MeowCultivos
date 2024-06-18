@@ -74,13 +74,14 @@ public class Scr_ConsolaComandos : MonoBehaviour
                         {
                             if (int.TryParse(split[1], out int Resultado))
                             {
-                                
+
                             }
                         }
                     }
                 }
             }
         }
+
         //Casos Exactos
         switch (Palabra.ToLower().Trim())
         {
@@ -91,6 +92,12 @@ public class Scr_ConsolaComandos : MonoBehaviour
                     Camera.main.transform.GetChild(2).GetComponent<Scr_BarrasNegras>().Start();
                     PlayerPrefs.DeleteAll();
                     SceneManager.LoadScene(2);
+                    break;
+                }
+            case "borrar.cinematica=1":
+                {
+                    Debug.Log("Cinemagica Borrada");
+                    PlayerPrefs.SetString("Cinematica " + "Bony", "No");
                     break;
                 }
             default:

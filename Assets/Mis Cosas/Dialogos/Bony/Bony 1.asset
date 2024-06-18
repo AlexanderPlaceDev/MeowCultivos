@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfd7b7348ecdf544ab73fad30de2eac3, type: 3}
+  m_Name: Bony 1
+  m_EditorClassIdentifier: 
+  NumeroDialogo: 0
+  EsUnico: 1
+  EsMision: 0
+  Mision: {fileID: 0}
+  Lineas:
+  - Gracias por salvarme
+  - Esos monstruos han estado destruyendo mi base
+  - Yo soy Bony y estas son mis tierras
+  - He vivido aqui con mi padre desde que naci, pero hoy no esta aqui
+  - No lo he visto desde que se derrumbo el puente, pero prometi mantener todo en
+    orden
+  - 'Que tal si me ayudas construyendo algunas cosas '
+  - En el tablero azul puedes ver los proyectos que me encargo mi padre
+  LineasRadio: []
