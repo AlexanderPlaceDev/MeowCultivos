@@ -10,7 +10,6 @@ public class Scr_CreadorEstructuras : ScriptableObject
     public string Nombre;
     public Sprite Imagen;
     public string Descripcion;
-    public string[] Materiales;
-    public int[] Tamaños;
+    public Scr_CreadorObjetos[] Materiales;
     public int[] Cantidades;
 }

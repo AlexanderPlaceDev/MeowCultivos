@@ -12,7 +12,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
     [SerializeField] GameObject CinematicaInicial;
     [SerializeField] GameObject Gata;
     [SerializeField] GameObject Camara360;
-    [SerializeField] GameObject GusanoTutotial;
+    [SerializeField] GameObject[] Personajes;
     [SerializeField] GameObject Reloj;
     [SerializeField] GameObject Tablero;
 
@@ -31,7 +31,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
         }
         else
         {
-            if(CinematicaInicial.GetComponent<PlayableDirector>().enabled == false)
+            if (CinematicaInicial.GetComponent<PlayableDirector>().enabled == false)
             {
                 camara.GetComponent<CinemachineBrain>().m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.EaseInOut;
             }
@@ -55,36 +55,15 @@ public class Scr_CargadorGuardado : MonoBehaviour
             Reloj.SetActive(true);
         }
         //Inventario
-        
-        //Dialogos
-        GusanoTutotial.GetComponent<Scr_SistemaDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoGusano", 0);
-        //Tablero
-        Tablero.GetComponent<Scr_MenuTablero>().TipoActual = PlayerPrefs.GetInt("TipoTablero", 1);
-        Tablero.GetComponent<Scr_MenuTablero>().EstructuraActual = PlayerPrefs.GetInt("EstructuraTablero", 0);
-        for (int i = 0; i < 3; i++)
-        {
-            if (i == 0)
-            {
-                for (int i2 = 0; i2 < Tablero.GetComponent<Scr_MenuTablero>().EstructurasIndustrialesGuardadas.Length; i2++)
-                {
-                    if (PlayerPrefs.GetString(i.ToString() + i2.ToString(), "No") == "Si")
-                    {
-                        Tablero.GetComponent<Scr_MenuTablero>().EstructurasIndustrialesGuardadas[i2] = true;
-                    }
-                }
-            }
-            if (i == 1)
-            {
-                for (int i2 = 0; i2 < Tablero.GetComponent<Scr_MenuTablero>().EstructurasGranjaGuardadas.Length; i2++)
-                {
-                    if (PlayerPrefs.GetString(i.ToString() + i2.ToString(), "No") == "Si")
-                    {
-                        Tablero.GetComponent<Scr_MenuTablero>().EstructurasGranjaGuardadas[i2] = true;
-                    }
-                }
-            }
-        }
 
+        //Dialogos
+        Personajes[0].GetComponent<Scr_SistemaDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoGusano", 0);
+
+        //Activar personajes
+        if (PlayerPrefs.GetString("Cinematica " + "Bony", "No") == "Si")
+        {
+            Personajes[1].SetActive(true);
+        }
     }
 
     private void Update()

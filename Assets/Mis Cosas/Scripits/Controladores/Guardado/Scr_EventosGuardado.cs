@@ -70,15 +70,14 @@ public class Scr_EventosGuardado : MonoBehaviour
     }
 
     //Estructuras
-    public void GuardarTablero(int Tipo, int EstructuraActual)
+    public void GuardarTablero(int EstructuraActual)
     {
-        PlayerPrefs.SetInt("TipoTablero", Tipo);
         PlayerPrefs.SetInt("EstructuraTablero", EstructuraActual);
     }
 
-    public void GuardarEstructurasTablero(int Tipo, int EstructuraActual)
+    public void GuardarEstructurasTablero(int EstructuraActual)
     {
-        PlayerPrefs.SetString(Tipo.ToString() + EstructuraActual.ToString(), "Si");
+        PlayerPrefs.SetInt("Estructura"+EstructuraActual, 1);
 
     }
 }

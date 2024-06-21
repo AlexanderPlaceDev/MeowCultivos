@@ -49,8 +49,8 @@ public class Scr_Movimiento : MonoBehaviour
         Aire
     }
 
-    private float InputHor;
-    private float InputVer;
+    public float InputHor;
+    public float InputVer;
     private Vector3 Direccion;
     private Transform Origen;
     private Rigidbody RB;

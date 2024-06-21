@@ -16,7 +16,6 @@ MonoBehaviour:
   Imagen: {fileID: 21300000, guid: d29f65c57ff932448b9fd94171903970, type: 3}
   Descripcion: Se utiliza para conseguir nuevos materiales como carbon y escencia.
   Materiales:
-  - Piedra
-  - Tronco
-  "Tama\xF1os": 0400000002000000
-  Cantidades: 0200000003000000
+  - {fileID: 11400000, guid: 98bf319b9993e4e449955b29496b058f, type: 2}
+  - {fileID: 11400000, guid: 16d59de0d61659641a6f7c640e284942, type: 2}
+  Cantidades: 0100000002000000

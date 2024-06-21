@@ -12,16 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
   m_Name: Tronco
   m_EditorClassIdentifier: 
+  ID: 0
   Nombre: Tronco
   Descripcion: Recien Cortado y resistente
-  "Tama\xF1o": 2
-  "IconoTama\xF1o": {fileID: 21300000, guid: c7792e8f493118a40a56ef4222818766, type: 3}
-  "ColorTama\xF1o": {r: 0.9787495, g: 1, b: 0.3226415, a: 1}
-  Forma: 010100000000000000000000000000000000
   Icono: {fileID: 21300000, guid: c61d72d6fc01427449fe959c82634f76, type: 3}
-  IconosInventario:
-  - {fileID: 21300000, guid: 85027a3be5f86bd4284028d431e47f0a, type: 3}
-  - {fileID: 21300000, guid: 02aac81d1044a054aa6cf784020eccec, type: 3}
+  IconoInventario: {fileID: 21300000, guid: 36258059482dbab47bb29e1d8ed18800, type: 3}
   MaterialesDeProduccion: []
   CantidadMaterialesDeProduccion: 
   TiempoDeProduccion: 0

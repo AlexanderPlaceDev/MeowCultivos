@@ -7,22 +7,15 @@ using UnityEngine.UI;
 public class Scr_MenuTablero : MonoBehaviour
 {
     [Header("Estructuras")]
-    [SerializeField] Scr_CreadorEstructuras[] EstructurasIndustriales;
-    [SerializeField] GameObject[] ObjEstructurasIndustriales;
-    public bool[] EstructurasIndustrialesGuardadas;
-    [SerializeField] Scr_CreadorEstructuras[] EstructurasGranja;
-    [SerializeField] GameObject[] ObjEstructurasGranja;
-    public bool[] EstructurasGranjaGuardadas;
-    [SerializeField] Scr_CreadorEstructuras[] EstructurasArma;
-    [SerializeField] GameObject[] ObjEstructurasArma;
-    public bool[] EstructurasArmaGuardadas;
+    [SerializeField] Scr_CreadorEstructuras[] Estructuras;
+    [SerializeField] GameObject[] ObjEstructuras;
 
 
     [Header("Menu")]
-    [SerializeField] GameObject[] BotonesTipos;
     [SerializeField] TextMeshProUGUI Nombre;
     [SerializeField] TextMeshProUGUI Descripcion;
-    [SerializeField] GameObject BotonConstruir;
+    [SerializeField] public GameObject[] Botones;
+    [SerializeField] public Color32[] ColoresBotones;
     [SerializeField] GameObject ImagenConstruido;
     [SerializeField] Image Imagen;
     [SerializeField] Sprite[] TodosLosMateriales;
@@ -30,235 +23,202 @@ public class Scr_MenuTablero : MonoBehaviour
     [SerializeField] TextMeshProUGUI[] Cantidades;
 
     [Header("Inventario")]
-    public int TipoActual = 1;
+    [SerializeField] Scr_Inventario Inventario;
     public int EstructuraActual = 0;
-    float cont = 0;
     void Start()
     {
-        ActivarEstructuras(false);
+        ActivarEstructuras();
+        EstructuraActual = PlayerPrefs.GetInt("EstructuraTablero", 0);
     }
 
     void Update()
     {
-        RellenarCirculo();
         if (GetComponent<Scr_Tablero>().EstaDentro)
         {
             ActualizarEstructura();
-            GetComponent<Scr_EventosGuardado>().GuardarTablero(TipoActual, EstructuraActual);
-
-        }
-    }
-
-    private void RellenarCirculo()
-    {
-        //Esta parte Rellena el circulo
-        if (cont < 0.5f)
-        {
-            cont += Time.deltaTime;
-            BotonesTipos[TipoActual].transform.GetChild(0).GetComponent<Image>().fillAmount = cont * 2;
-        }
-        //Esta lo elimina de los que no estan seleccionados
-        for (int i = 0; i < BotonesTipos.Length; i++)
-        {
-            if (i != TipoActual)
-            {
-                BotonesTipos[i].transform.GetChild(0).GetComponent<Image>().fillAmount = 0;
-            }
+            GetComponent<Scr_EventosGuardado>().GuardarTablero(EstructuraActual);
         }
     }
 
     //Aqui se actualizan los datos de la estructura
     void ActualizarEstructura()
     {
-        switch (TipoActual)
+
+        //Actualiza si esta comprada la estructura
+        if (PlayerPrefs.GetInt("Estructura" + EstructuraActual, 0) == 1)
         {
-            case 0:
-                {
-                    //Actualiza si esta comprada la estructura
-                    if (EstructurasIndustrialesGuardadas[EstructuraActual])
-                    {
-                        BotonConstruir.SetActive(false);
-                        ImagenConstruido.SetActive(true);
-                    }
-                    else
-                    {
-                        BotonConstruir.SetActive(true);
-                        ImagenConstruido.SetActive(false);
-                    }
-
-
-                    //Para cada estructura en la lista de industrial
-                    for (int i = 0; i < EstructurasIndustriales.Length; i++)
-                    {
-                        //En caso de ser la estructura actual
-                        if (i == EstructuraActual)
-                        {
-                            //Actualiza los datos
-                            Nombre.text = EstructurasIndustriales[i].Nombre;
-                            Descripcion.text = EstructurasIndustriales[i].Descripcion;
-                            Imagen.sprite = EstructurasIndustriales[i].Imagen;
-
-                            //Actualiza los materiales
-                            //Para cada material
-                            foreach (Sprite Imagen in TodosLosMateriales)
-                            {
-                                //Para cada material en el tablero
-                                for (int j = 0; j < Materiales.Length; j++)
-                                {
-                                    //En caso de los materiales vacios
-                                    if (j >= EstructurasIndustriales[i].Materiales.Length)
-                                    {
-                                        Materiales[j].gameObject.SetActive(false);
-                                    }
-                                    else
-                                    {
-                                        //En caso de los materiales necesarios
-                                        if (Imagen.name == EstructurasIndustriales[i].Materiales[j])
-                                        {
-                                            Materiales[j].gameObject.SetActive(true);
-                                            Materiales[j].sprite = Imagen;
-                                            Cantidades[j].text = EstructurasIndustriales[i].Cantidades[j].ToString();
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        }
-                    }
-                    break;
-                }
-            case 1:
-                {
-                    //Actualiza si esta comprada la estructura
-                    if (EstructurasGranjaGuardadas[EstructuraActual])
-                    {
-                        BotonConstruir.SetActive(false);
-                        ImagenConstruido.SetActive(true);
-                    }
-                    else
-                    {
-                        BotonConstruir.SetActive(true);
-                        ImagenConstruido.SetActive(false);
-                    }
-
-                    //Para cada estructura en la lista de granja
-                    for (int i = 0; i < EstructurasGranja.Length; i++)
-                    {
-                        //En caso de ser la estructura actual
-                        if (i == EstructuraActual)
-                        {
-                            //Actualiza los datos
-                            Nombre.text = EstructurasGranja[i].Nombre;
-                            Descripcion.text = EstructurasGranja[i].Descripcion;
-                            Imagen.sprite = EstructurasGranja[i].Imagen;
-
-                            //Actualiza los materiales
-                            //Para cada material
-                            foreach (Sprite Imagen in TodosLosMateriales)
-                            {
-                                //Para cada material en el tablero
-                                for (int j = 0; j < Materiales.Length; j++)
-                                {
-                                    //En caso de los materiales vacios
-                                    if (j >= EstructurasGranja[i].Materiales.Length)
-                                    {
-                                        Materiales[j].gameObject.SetActive(false);
-                                    }
-                                    else
-                                    {
-                                        //En caso de los materiales necesarios
-                                        if (Imagen.name == EstructurasGranja[i].Materiales[j])
-                                        {
-                                            Materiales[j].gameObject.SetActive(true);
-                                            Materiales[j].sprite = Imagen;
-                                            Cantidades[j].text = EstructurasGranja[i].Cantidades[j].ToString();
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        }
-                    }
-                    break;
-                }
-        }
-
-    }
-
-
-    //Aqui se selecciona el tipo de estructura
-    public void SeleccionarTipo(int Tipo)
-    {
-        if (GetComponent<Scr_Tablero>().EstaDentro)
-        {
-            TipoActual = Tipo;
-            cont = 0;
-
-        }
-    }
-
-    public void ColorBoton(bool Entrada)
-    {
-        if (GetComponent<Scr_Tablero>().EstaDentro)
-        {
-            if (Entrada)
-            {
-                switch (TipoActual)
-                {
-                    case 0:
-                        {
-                            
-                            break;
-                        }
-                    case 1:
-                        {
-                            
-                            break;
-                        }
-                }
-            }
-            else
-            {
-                BotonConstruir.GetComponent<Image>().color = Color.white;
-                BotonConstruir.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
-            }
-        }
-    }
-
-    private void ActivarEstructuras(bool PrimeraCompra)
-    {
-        if (PrimeraCompra)
-        {
-            switch (TipoActual)
-            {
-                case 0:
-                    {
-                        ObjEstructurasIndustriales[EstructuraActual].SetActive(true);
-                        break;
-                    }
-                case 1:
-                    {
-                        ObjEstructurasGranja[EstructuraActual].SetActive(true);
-                        break;
-                    }
-            }
+            Botones[3].SetActive(false);
+            ImagenConstruido.SetActive(true);
         }
         else
         {
-            for (int i = 0; i < EstructurasIndustrialesGuardadas.Length; i++)
+            Botones[3].SetActive(true);
+            ImagenConstruido.SetActive(false);
+        }
+
+
+        //Para cada estructura en la lista
+        for (int i = 0; i < Estructuras.Length; i++)
+        {
+            //En caso de ser la estructura actual
+            if (i == EstructuraActual)
             {
-                if (EstructurasIndustrialesGuardadas[i])
+                //Actualiza los datos
+                Nombre.text = Estructuras[i].Nombre;
+                Descripcion.text = Estructuras[i].Descripcion;
+                Imagen.sprite = Estructuras[i].Imagen;
+
+                //Actualiza los materiales
+                //Para cada material
+                foreach (Sprite Imagen in TodosLosMateriales)
                 {
-                    ObjEstructurasIndustriales[i].SetActive(true);
+                    //Para cada material en el tablero
+                    for (int j = 0; j < Materiales.Length; j++)
+                    {
+                        //En caso de los materiales vacios
+                        if (j >= Estructuras[i].Materiales.Length)
+                        {
+                            Materiales[j].gameObject.SetActive(false);
+                        }
+                        else
+                        {
+                            //En caso de los materiales necesarios
+                            if (Imagen.name.Contains(Estructuras[i].Materiales[j].Nombre))
+                            {
+                                Materiales[j].gameObject.SetActive(true);
+                                Materiales[j].sprite = Imagen;
+                                Cantidades[j].text = Estructuras[i].Cantidades[j].ToString();
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    public void EntraColorBoton(int ID)
+    {
+        //El primero es el ID y el segundo es el color
+        if (GetComponent<Scr_Tablero>().EstaDentro)
+        {
+            Botones[ID].GetComponent<Image>().color = Color.white;
+            if (ID == 3)
+            {
+                if (CalcularObjetos(Estructuras[EstructuraActual].Materiales, Estructuras[EstructuraActual].Cantidades))
+                {
+                    Botones[ID].GetComponent<Image>().color = Color.green; Botones[ID].transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.green;
+                }
+                else
+                {
+                    Botones[ID].GetComponent<Image>().color = Color.red; Botones[ID].transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.red;
                 }
             }
-            for (int i = 0; i < EstructurasGranjaGuardadas.Length; i++)
+            if (Botones[ID].transform.childCount > 0)
             {
-                if (EstructurasGranjaGuardadas[i])
+                if (Botones[ID].transform.childCount > 2)
                 {
-                    ObjEstructurasGranja[i].SetActive(true);
+                    if (Botones[ID].transform.GetChild(1).GetComponent<TextMeshProUGUI>() != null)
+                    {
+                        Botones[ID].transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = Color.white;
+                    }
+                }
+
+            }
+        }
+    }
+    public void SaleColorBoton(int ID)
+    {
+        //El primero es el ID y el segundo es el color
+        if (GetComponent<Scr_Tablero>().EstaDentro)
+        {
+            Botones[ID].GetComponent<Image>().color = ColoresBotones[0];
+            if (ID == 3) { Botones[ID].GetComponent<Image>().color = Color.white; Botones[ID].transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white; }
+            if (Botones[ID].transform.childCount > 0)
+            {
+                if (Botones[ID].transform.childCount > 2)
+                {
+                    if (Botones[ID].transform.GetChild(1).GetComponent<TextMeshProUGUI>() != null)
+                    {
+                        Botones[ID].transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = ColoresBotones[1];
+                    }
                 }
             }
+
+        }
+    }
+
+    public void BotonComprar()
+    {
+        if (Botones[3].GetComponent<Image>().color == Color.green)
+        {
+            PlayerPrefs.SetInt("Estructura" + EstructuraActual, 1);
+            QuitarObjetos(Estructuras[EstructuraActual].Materiales, Estructuras[EstructuraActual].Cantidades);
+            ActualizarEstructura();
+            ActivarEstructuras();
+        }
+    }
+
+    private void ActivarEstructuras()
+    {
+        int i = 0;
+        foreach (GameObject Estructura in ObjEstructuras)
+        {
+            if (PlayerPrefs.GetInt("Estructura" + i, 0) == 1)
+            {
+                Estructura.SetActive(true);
+            }
+            i++;
+        }
+    }
+
+    private bool CalcularObjetos(Scr_CreadorObjetos[] ObjetosNecesarios, int[] CantidadesNecesarias)
+    {
+        int encontrados = 0;
+        int i = 0;
+        foreach (Scr_CreadorObjetos Objeto in ObjetosNecesarios)
+        {
+            int j = 0;
+            foreach (Scr_CreadorObjetos Item in Inventario.Objetos)
+            {
+                if (Item.Nombre == Objeto.Nombre)
+                {
+                    if (Inventario.Cantidades[j] >= CantidadesNecesarias[i])
+                    {
+                        encontrados++;
+                    }
+                }
+                j++;
+            }
+            i++;
+        }
+
+        if (encontrados >= ObjetosNecesarios.Length)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private void QuitarObjetos(Scr_CreadorObjetos[] ObjetosNecesarios, int[] CantidadesNecesarias)
+    {
+        int i = 0;
+        foreach (Scr_CreadorObjetos Objeto in ObjetosNecesarios)
+        {
+            int j = 0;
+            foreach (Scr_CreadorObjetos Item in Inventario.Objetos)
+            {
+                if (Item.Nombre == Objeto.Nombre)
+                {
+
+                    Inventario.Cantidades[j] -= CantidadesNecesarias[i];
+                }
+                j++;
+            }
+            i++;
         }
     }
 }

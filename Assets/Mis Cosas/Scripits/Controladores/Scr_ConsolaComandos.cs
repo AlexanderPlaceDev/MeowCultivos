@@ -100,6 +100,12 @@ public class Scr_ConsolaComandos : MonoBehaviour
                     PlayerPrefs.SetString("Cinematica " + "Bony", "No");
                     break;
                 }
+            case "borrar.estructura=0":
+                {
+                    Debug.Log("Estructura Borrada");
+                    PlayerPrefs.SetInt("Estructura0",0);
+                    break;
+                }
             default:
                 {
                     Debug.Log("No se encontro el comando");
