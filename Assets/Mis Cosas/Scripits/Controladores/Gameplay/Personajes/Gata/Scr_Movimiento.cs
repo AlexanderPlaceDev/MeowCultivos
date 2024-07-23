@@ -55,6 +55,7 @@ public class Scr_Movimiento : MonoBehaviour
     private Transform Origen;
     private Rigidbody RB;
     private float TiempoGuardado = 0;
+    public bool PuedeGuardarPosicion = true;
 
     private void Start()
     {
@@ -225,11 +226,14 @@ public class Scr_Movimiento : MonoBehaviour
 
     private void GuardarPosicionSiEsNecesario()
     {
-        TiempoGuardado += Time.deltaTime;
-        if (TiempoGuardado >= 5)
+        if (PuedeGuardarPosicion)
         {
-            TiempoGuardado = 0;
-            GuardaPosYRot();
+            TiempoGuardado += Time.deltaTime;
+            if (TiempoGuardado >= 5)
+            {
+                TiempoGuardado = 0;
+                GuardaPosYRot();
+            }
         }
     }
 

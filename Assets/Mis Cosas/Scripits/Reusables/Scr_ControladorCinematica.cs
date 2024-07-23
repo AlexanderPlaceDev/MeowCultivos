@@ -119,4 +119,14 @@ public class Scr_ControladorCinematica : MonoBehaviour
         PlayerPrefs.SetFloat("GataRotY", Trans.rotation.eulerAngles.y);
         PlayerPrefs.SetFloat("GataRotZ", Trans.rotation.eulerAngles.z);
     }
+
+    public void PermiteGuardarPosicion()
+    {
+        GameObject.Find("Gata").GetComponent<Scr_Movimiento>().PuedeGuardarPosicion = true;
+    }
+
+    public void DesactivaGuardarPosicion()
+    {
+        GameObject.Find("Gata").GetComponent<Scr_Movimiento>().PuedeGuardarPosicion = false;
+    }
 }

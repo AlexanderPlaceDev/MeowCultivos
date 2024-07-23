@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e1bb1519068a5649a5ec7108d58217e, type: 3}
+  m_Name: Forja
+  m_EditorClassIdentifier: 
+  Nombre: Forja
+  Imagen: {fileID: 21300000, guid: 02fe69933d5d17c45afa12d44eef1d88, type: 3}
+  Descripcion: Utiliza las piedras y minerales para crear materiales de alta resistencia
+  Materiales:
+  - {fileID: 11400000, guid: 39699c4a042de2247955bcd7f5e992f8, type: 2}
+  - {fileID: 11400000, guid: 98bf319b9993e4e449955b29496b058f, type: 2}
+  - {fileID: 11400000, guid: 2ae239e92871c5f40ab548eeda0a0ca0, type: 2}
+  Cantidades: 010000000200000003000000

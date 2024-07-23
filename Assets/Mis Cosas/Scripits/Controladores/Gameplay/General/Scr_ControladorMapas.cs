@@ -5,39 +5,23 @@ using UnityEngine;
 
 public class Scr_ControladorMapas : MonoBehaviour
 {
-    [SerializeField] bool Primero;
-    [SerializeField] GameObject[] Mapas;
-    [SerializeField] float Velocidad;
+    [SerializeField] GameObject[] MapasQueActiva;
+    [SerializeField] GameObject[] MapasQueDesactiva;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.name == "Gato Mesh")
         {
-            if (!Primero)
+
+            foreach(GameObject Mapa in MapasQueActiva)
             {
-                if (Mapas[0] != null)
-                {
-                    Mapas[0].SetActive(false);
-                }
-                if (Mapas[1] != null)
-                {
-                    Mapas[1].SetActive(true);
-                }
+                Mapa.SetActive(true);
             }
-            else
+            foreach (GameObject Mapa in MapasQueDesactiva)
             {
-                if (Mapas[0] != null)
-                {
-                    Mapas[0].SetActive(true);
-                }
-                if (Mapas[1] != null)
-                {
-                    Mapas[1].SetActive(false);
-                }
+                Mapa.SetActive(false);
             }
 
-            //Tween.PositionY(Mapas[0].transform, -100, Velocidad);
-            //Tween.PositionY(Mapas[1].transform, 0, Velocidad);
         }
     }
 }

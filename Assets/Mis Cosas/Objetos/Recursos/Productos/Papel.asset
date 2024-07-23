@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
+  m_Name: Papel
+  m_EditorClassIdentifier: 
+  ID: 0
+  Nombre: Papel
+  Descripcion: Fino y suave como un trasero frances
+  Icono: {fileID: 21300000, guid: ff81f19a8d8c8f246959caa3afb1d7aa, type: 3}
+  IconoInventario: {fileID: 21300000, guid: 7903633c4c9331e4a8dd16dc30135f18, type: 3}
+  MaterialesDeProduccion:
+  - {fileID: 11400000, guid: 3e315dfc6eeb7984e86ba4763756b3d5, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  CantidadMaterialesDeProduccion: 01000000
+  TiempoDeProduccion: 6

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -7,144 +6,142 @@ using UnityEngine.UI;
 public class Scr_MenuTablero : MonoBehaviour
 {
     [Header("Estructuras")]
-    [SerializeField] Scr_CreadorEstructuras[] Estructuras;
-    [SerializeField] GameObject[] ObjEstructuras;
+    [SerializeField] private Scr_CreadorEstructuras[] Estructuras;
+    [SerializeField] private GameObject[] ObjEstructuras;
 
-
-    [Header("Menu")]
-    [SerializeField] TextMeshProUGUI Nombre;
-    [SerializeField] TextMeshProUGUI Descripcion;
-    [SerializeField] public GameObject[] Botones;
-    [SerializeField] public Color32[] ColoresBotones;
-    [SerializeField] GameObject ImagenConstruido;
-    [SerializeField] Image Imagen;
-    [SerializeField] Sprite[] TodosLosMateriales;
-    [SerializeField] Image[] Materiales;
-    [SerializeField] TextMeshProUGUI[] Cantidades;
+    [Header("Menú")]
+    [SerializeField] private TextMeshProUGUI Nombre;
+    [SerializeField] private TextMeshProUGUI Descripcion;
+    [SerializeField] private GameObject[] Botones;
+    [SerializeField] private Color32[] ColoresBotones;
+    [SerializeField] private GameObject ImagenConstruido;
+    [SerializeField] private Image Imagen;
+    [SerializeField] private Image[] Materiales;
+    [SerializeField] private TextMeshProUGUI[] Cantidades;
 
     [Header("Inventario")]
-    [SerializeField] Scr_Inventario Inventario;
+    [SerializeField] private Scr_Inventario Inventario;
+
     public int EstructuraActual = 0;
-    void Start()
+
+    private Scr_ActivadorMenuEstructuraFijo Tablero => GetComponent<Scr_ActivadorMenuEstructuraFijo>();
+    private Scr_EventosGuardado EventosGuardado => GetComponent<Scr_EventosGuardado>();
+
+    private void Start()
     {
         ActivarEstructuras();
         EstructuraActual = PlayerPrefs.GetInt("EstructuraTablero", 0);
     }
 
-    void Update()
+    private void Update()
     {
-        if (GetComponent<Scr_Tablero>().EstaDentro)
+        if (Tablero.EstaDentro)
         {
             ActualizarEstructura();
-            GetComponent<Scr_EventosGuardado>().GuardarTablero(EstructuraActual);
+            EventosGuardado.GuardarTablero(EstructuraActual);
         }
     }
 
-    //Aqui se actualizan los datos de la estructura
-    void ActualizarEstructura()
+    private void ActualizarEstructura()
     {
+        bool estaComprada = PlayerPrefs.GetInt("Estructura" + EstructuraActual, 0) == 1;
+        Botones[3].SetActive(!estaComprada);
+        ImagenConstruido.SetActive(estaComprada);
 
-        //Actualiza si esta comprada la estructura
-        if (PlayerPrefs.GetInt("Estructura" + EstructuraActual, 0) == 1)
-        {
-            Botones[3].SetActive(false);
-            ImagenConstruido.SetActive(true);
-        }
-        else
-        {
-            Botones[3].SetActive(true);
-            ImagenConstruido.SetActive(false);
-        }
+        Scr_CreadorEstructuras estructura = Estructuras[EstructuraActual];
+        Nombre.text = estructura.Nombre;
+        Descripcion.text = estructura.Descripcion;
+        Imagen.sprite = estructura.Imagen;
 
+        Botones[1].SetActive(EstructuraActual != 0);
+        Botones[2].SetActive(EstructuraActual != Estructuras.Length - 1);
 
-        //Para cada estructura en la lista
-        for (int i = 0; i < Estructuras.Length; i++)
+        ActualizarMateriales(estructura);
+    }
+
+    private void ActualizarMateriales(Scr_CreadorEstructuras estructura)
+    {
+        for (int i = 0; i < Materiales.Length; i++)
         {
-            //En caso de ser la estructura actual
-            if (i == EstructuraActual)
+            if (i < estructura.Materiales.Length)
             {
-                //Actualiza los datos
-                Nombre.text = Estructuras[i].Nombre;
-                Descripcion.text = Estructuras[i].Descripcion;
-                Imagen.sprite = Estructuras[i].Imagen;
+                Materiales[i].gameObject.SetActive(true);
+                Materiales[i].sprite = BuscarSprite(estructura.Materiales[i].Nombre);
+                Cantidades[i].text = estructura.Cantidades[i].ToString();
 
-                //Actualiza los materiales
-                //Para cada material
-                foreach (Sprite Imagen in TodosLosMateriales)
-                {
-                    //Para cada material en el tablero
-                    for (int j = 0; j < Materiales.Length; j++)
-                    {
-                        //En caso de los materiales vacios
-                        if (j >= Estructuras[i].Materiales.Length)
-                        {
-                            Materiales[j].gameObject.SetActive(false);
-                        }
-                        else
-                        {
-                            //En caso de los materiales necesarios
-                            if (Imagen.name.Contains(Estructuras[i].Materiales[j].Nombre))
-                            {
-                                Materiales[j].gameObject.SetActive(true);
-                                Materiales[j].sprite = Imagen;
-                                Cantidades[j].text = Estructuras[i].Cantidades[j].ToString();
-                            }
-                        }
-                    }
-                }
-                break;
+                // Verificar si hay suficientes materiales
+                bool tieneMateriales = CalcularObjetos(new Scr_CreadorObjetos[] { estructura.Materiales[i] }, new int[] { estructura.Cantidades[i] });
+                Cantidades[i].color = tieneMateriales ? Color.white : Color.red;
+            }
+            else
+            {
+                Materiales[i].gameObject.SetActive(false);
             }
         }
+    }
+
+    private Sprite BuscarSprite(string nombreMaterial)
+    {
+
+        foreach (var Objeto in Inventario.Objetos)
+        {
+            if (Objeto.name.Contains(nombreMaterial))
+            {
+                return Objeto.Icono;
+            }
+        }
+        return null;
     }
 
     public void EntraColorBoton(int ID)
     {
-        //El primero es el ID y el segundo es el color
-        if (GetComponent<Scr_Tablero>().EstaDentro)
+        if (Tablero.EstaDentro)
         {
-            Botones[ID].GetComponent<Image>().color = Color.white;
-            if (ID == 3)
-            {
-                if (CalcularObjetos(Estructuras[EstructuraActual].Materiales, Estructuras[EstructuraActual].Cantidades))
-                {
-                    Botones[ID].GetComponent<Image>().color = Color.green; Botones[ID].transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.green;
-                }
-                else
-                {
-                    Botones[ID].GetComponent<Image>().color = Color.red; Botones[ID].transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.red;
-                }
-            }
-            if (Botones[ID].transform.childCount > 0)
-            {
-                if (Botones[ID].transform.childCount > 2)
-                {
-                    if (Botones[ID].transform.GetChild(1).GetComponent<TextMeshProUGUI>() != null)
-                    {
-                        Botones[ID].transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = Color.white;
-                    }
-                }
-
-            }
+            CambiarColorBoton(ID, Color.white, Color.green, Color.red);
         }
     }
+
     public void SaleColorBoton(int ID)
     {
-        //El primero es el ID y el segundo es el color
-        if (GetComponent<Scr_Tablero>().EstaDentro)
+        if (Tablero.EstaDentro)
         {
-            Botones[ID].GetComponent<Image>().color = ColoresBotones[0];
-            if (ID == 3) { Botones[ID].GetComponent<Image>().color = Color.white; Botones[ID].transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white; }
-            if (Botones[ID].transform.childCount > 0)
-            {
-                if (Botones[ID].transform.childCount > 2)
-                {
-                    if (Botones[ID].transform.GetChild(1).GetComponent<TextMeshProUGUI>() != null)
-                    {
-                        Botones[ID].transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = ColoresBotones[1];
-                    }
-                }
-            }
+            CambiarColorBoton(ID, ColoresBotones[0], Color.white, ColoresBotones[1]);
+        }
+    }
 
+    private void CambiarColorBoton(int ID, Color colorBoton, Color colorVerde, Color colorRojo)
+    {
+        Image botonImage = Botones[ID].GetComponent<Image>();
+        botonImage.color = colorBoton;
+
+        if (ID == 3)
+        {
+            botonImage.color = Color.white;
+            bool tieneMateriales = CalcularObjetos(Estructuras[EstructuraActual].Materiales, Estructuras[EstructuraActual].Cantidades);
+            Color colorTexto = tieneMateriales ? colorVerde : colorRojo;
+            if (colorRojo == ColoresBotones[1])
+            {
+                Botones[ID].transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
+            }
+            else
+            {
+                Botones[ID].GetComponent<Image>().color = colorTexto;
+                Botones[ID].transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = colorTexto;
+            }
+        }
+
+        if (ID == 0)
+        {
+            Botones[ID].transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = ColoresBotones[1];
+        }
+
+        if (Botones[ID].transform.childCount > 2)
+        {
+            TextMeshProUGUI texto = Botones[ID].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            if (texto != null)
+            {
+                texto.color = colorBoton == Color.white ? colorRojo : colorVerde;
+            }
         }
     }
 
@@ -159,66 +156,62 @@ public class Scr_MenuTablero : MonoBehaviour
         }
     }
 
-    private void ActivarEstructuras()
+    public void Flechas(bool Aumenta)
     {
-        int i = 0;
-        foreach (GameObject Estructura in ObjEstructuras)
+        if (Aumenta)
         {
-            if (PlayerPrefs.GetInt("Estructura" + i, 0) == 1)
+            if (EstructuraActual < Estructuras.Length - 1)
             {
-                Estructura.SetActive(true);
+                EstructuraActual++;
             }
-            i++;
-        }
-    }
-
-    private bool CalcularObjetos(Scr_CreadorObjetos[] ObjetosNecesarios, int[] CantidadesNecesarias)
-    {
-        int encontrados = 0;
-        int i = 0;
-        foreach (Scr_CreadorObjetos Objeto in ObjetosNecesarios)
-        {
-            int j = 0;
-            foreach (Scr_CreadorObjetos Item in Inventario.Objetos)
-            {
-                if (Item.Nombre == Objeto.Nombre)
-                {
-                    if (Inventario.Cantidades[j] >= CantidadesNecesarias[i])
-                    {
-                        encontrados++;
-                    }
-                }
-                j++;
-            }
-            i++;
-        }
-
-        if (encontrados >= ObjetosNecesarios.Length)
-        {
-            return true;
         }
         else
         {
-            return false;
+            if (EstructuraActual > 0)
+            {
+                EstructuraActual--;
+            }
+        }
+        ActualizarEstructura();
+    }
+
+    private void ActivarEstructuras()
+    {
+        for (int i = 0; i < ObjEstructuras.Length; i++)
+        {
+            ObjEstructuras[i].SetActive(PlayerPrefs.GetInt("Estructura" + i, 0) == 1);
         }
     }
 
-    private void QuitarObjetos(Scr_CreadorObjetos[] ObjetosNecesarios, int[] CantidadesNecesarias)
+    private bool CalcularObjetos(Scr_CreadorObjetos[] objetosNecesarios, int[] cantidadesNecesarias)
     {
-        int i = 0;
-        foreach (Scr_CreadorObjetos Objeto in ObjetosNecesarios)
+        int encontrados = 0;
+        for (int i = 0; i < objetosNecesarios.Length; i++)
         {
-            int j = 0;
-            foreach (Scr_CreadorObjetos Item in Inventario.Objetos)
+            for (int j = 0; j < Inventario.Objetos.Length; j++)
             {
-                if (Item.Nombre == Objeto.Nombre)
+                if (Inventario.Objetos[j].Nombre == objetosNecesarios[i].Nombre && Inventario.Cantidades[j] >= cantidadesNecesarias[i])
                 {
-
-                    Inventario.Cantidades[j] -= CantidadesNecesarias[i];
+                    encontrados++;
+                    break;
                 }
-                j++;
             }
-            i++;
+        }
+        return encontrados == objetosNecesarios.Length;
+    }
+
+    private void QuitarObjetos(Scr_CreadorObjetos[] objetosNecesarios, int[] cantidadesNecesarias)
+    {
+        for (int i = 0; i < objetosNecesarios.Length; i++)
+        {
+            for (int j = 0; j < Inventario.Objetos.Length; j++)
+            {
+                if (Inventario.Objetos[j].Nombre == objetosNecesarios[i].Nombre)
+                {
+                    Inventario.Cantidades[j] -= cantidadesNecesarias[i];
+                    break;
+                }
+            }
         }
     }
 }
