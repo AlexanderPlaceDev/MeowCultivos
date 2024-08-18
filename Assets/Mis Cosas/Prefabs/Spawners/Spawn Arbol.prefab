@@ -4757,6 +4757,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2179807135170286604}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4a18a70886b000d47aa3c23196538ab4,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2176744175888828974}
   m_SourcePrefab: {fileID: 100100000, guid: 4a18a70886b000d47aa3c23196538ab4, type: 3}
 --- !u!1 &3914581428246362578 stripped
 GameObject:
@@ -4798,15 +4802,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3c9489733de0c34d9f6a6815c9cef99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UsaPico: 0
-  UsaHacha: 1
   Icono: {fileID: 21300000, guid: 23cd88fecdba22d4a9a7495dbcf66af2, type: 3}
   Tecla: 
   TeclaIcono: {fileID: 21300000, guid: 1effa06f147261a4098395eb6a1c36d3, type: 3}
-  Vida: 1
   Distancia: 7
   ObjetoQueDa: {fileID: 11400000, guid: 39699c4a042de2247955bcd7f5e992f8, type: 2}
   MinimoMaximo: 0200000006000000
+  Vida: 1
+  UsaPico: 0
+  UsaHacha: 1
+--- !u!208 &2176744175888828974
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3914581428246362578}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.025, y: 0.025, z: 0.025}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!4 &4402466260223746920 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4a18a70886b000d47aa3c23196538ab4,

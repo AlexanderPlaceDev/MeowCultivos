@@ -31,12 +31,15 @@ public class Scr_ActivadorDialogos : MonoBehaviour
                 Gata.GetComponent<Scr_Movimiento>().Estado = Scr_Movimiento.Estados.Quieto;
                 Gata.GetComponent<Scr_Movimiento>().InputVer = 0;
                 Gata.GetComponent<Scr_Movimiento>().InputHor = 0;
-                Gata.GetComponent<Scr_Movimiento>().enabled = false;
+                Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
                 Gata.GetComponent<Rigidbody>().velocity = Vector3.zero;
             }
             else
             {
-                Gata.GetComponent<Scr_Movimiento>().enabled = true;
+                if (sistemaDialogos.Leido)
+                {
+                    Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
+                }
 
             }
 

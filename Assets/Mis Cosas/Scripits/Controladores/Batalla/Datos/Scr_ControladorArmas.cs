@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Scr_ControladorArmas : MonoBehaviour
@@ -9,14 +8,29 @@ public class Scr_ControladorArmas : MonoBehaviour
     int ArmaActual = 0;
     bool Atacando = false;
 
+    // Añadir la cadencia de disparo (tiempo entre disparos)
+    [SerializeField] float cadenciaDisparo = 0.5f;
+    private float tiempoUltimoDisparo;
+
     void Start()
     {
+        tiempoUltimoDisparo = -cadenciaDisparo; // Permitir disparar inmediatamente al inicio
 
+        // Verificar referencias
+        if (TodasLasArmas == null)
+        {
+            Debug.LogError("TodasLasArmas no está asignado en el Inspector.");
+        }
+        if (ObjetoArmas == null)
+        {
+            Debug.LogError("ObjetoArmas no está asignado en el Inspector.");
+        }
     }
 
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Mouse0) && !Atacando)
+        // Detectar si el botón del ratón está siendo mantenido
+        if (Input.GetKey(KeyCode.Mouse0) && Time.time >= tiempoUltimoDisparo + cadenciaDisparo)
         {
             Disparar();
         }
@@ -24,23 +38,52 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     void CambiarArma()
     {
-
+        // Implementar lógica para cambiar de arma si es necesario
     }
 
     void Disparar()
     {
-        if (ArmaActual == 0)
+        if (!Atacando)
         {
-            Animator Anim = ObjetoArmas.transform.GetChild(0).GetComponent<Animator>();
-            Anim.Play("Golpear");
-            float Duracion = GetAnimationClipDuration(Anim, "Brazos_Golpe");
-            StartCoroutine(EsperarAtaque(Duracion));
+            if (ArmaActual == 0)
+            {
+                if (ObjetoArmas != null)
+                {
+                    Transform childTransform = ObjetoArmas.transform.GetChild(0);
+                    if (childTransform != null)
+                    {
+                        Animator Anim = childTransform.GetComponent<Animator>();
+                        if (Anim != null)
+                        {
+                            Debug.Log("Disparando arma...");
+                            Anim.Play("Golpear");
+                            float Duracion = GetAnimationClipDuration(Anim, "Brazos_Golpe");
+                            StartCoroutine(EsperarAtaque(Duracion));
+                        }
+                        else
+                        {
+                            Debug.LogError("Animator no encontrado en el primer hijo de ObjetoArmas.");
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("ObjetoArmas no tiene hijos.");
+                    }
+                }
+                else
+                {
+                    Debug.LogError("ObjetoArmas es nulo.");
+                }
+            }
+
+            // Registrar el tiempo del último disparo
+            tiempoUltimoDisparo = Time.time;
         }
     }
 
     void Recargar()
     {
-
+        // Implementar lógica para recargar el arma si es necesario
     }
 
     IEnumerator EsperarAtaque(float Segundos)
@@ -52,13 +95,23 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     float GetAnimationClipDuration(Animator animator, string clipName)
     {
-        if (animator == null) return 0f;
+        if (animator == null)
+        {
+            Debug.LogError("Animator es nulo.");
+            return 0f;
+        }
 
-        // Obtén todos los clips del RuntimeAnimatorController
+        // Obtener todos los clips del RuntimeAnimatorController
         RuntimeAnimatorController runtimeController = animator.runtimeAnimatorController;
+        if (runtimeController == null)
+        {
+            Debug.LogError("RuntimeAnimatorController es nulo.");
+            return 0f;
+        }
+
         AnimationClip[] clips = runtimeController.animationClips;
 
-        // Encuentra el clip con el nombre especificado
+        // Encontrar el clip con el nombre especificado
         foreach (AnimationClip clip in clips)
         {
             if (clip.name == clipName)
@@ -73,10 +126,25 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     public void ActivarColision(GameObject Col)
     {
-        Col.SetActive(true);
+        if (Col != null)
+        {
+            Col.SetActive(true);
+        }
+        else
+        {
+            Debug.LogError("Col es nulo.");
+        }
     }
+
     public void DesactivarColision(GameObject Col)
     {
-        Col.SetActive(false);
+        if (Col != null)
+        {
+            Col.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("Col es nulo.");
+        }
     }
 }

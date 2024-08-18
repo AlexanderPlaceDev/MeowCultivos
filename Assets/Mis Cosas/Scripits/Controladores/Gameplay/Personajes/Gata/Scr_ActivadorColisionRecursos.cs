@@ -18,8 +18,7 @@ public class Scr_ActivadorColisionRecursos : MonoBehaviour
 
     public void ActivarMovimiento()
     {
-        transform.parent.GetComponent<Scr_Movimiento>().enabled=true;
-        transform.parent.GetComponent<Scr_GiroGata>().enabled=true;
+        transform.parent.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar=true;
     }
 
 }

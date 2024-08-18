@@ -12,7 +12,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
     [SerializeField] GameObject CinematicaInicial;
     [SerializeField] GameObject Gata;
     [SerializeField] GameObject Camara360;
-    [SerializeField] GameObject[] Personajes;
+    [SerializeField] public GameObject[] Personajes;
     [SerializeField] GameObject Reloj;
     [SerializeField] GameObject Tablero;
 
@@ -57,7 +57,12 @@ public class Scr_CargadorGuardado : MonoBehaviour
         //Inventario
 
         //Dialogos
+
         Personajes[0].GetComponent<Scr_SistemaDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoGusano", 0);
+        if (PlayerPrefs.GetInt("DialogoGusano", 0) != 0)
+        {
+            Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
+        }
 
         //Activar personajes
         if (PlayerPrefs.GetString("Cinematica " + "Bony", "No") == "Si")

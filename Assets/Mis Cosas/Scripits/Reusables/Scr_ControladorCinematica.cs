@@ -17,6 +17,7 @@ public class Scr_ControladorCinematica : MonoBehaviour
     [SerializeField] GameObject[] ObjetosEncender;
     [SerializeField] GameObject Enemigo;
     [SerializeField] int CantidadEnemigos;
+    [SerializeField] Animator[] Barras;
 
     private AsyncOperation Operacion;
 
@@ -68,6 +69,11 @@ public class Scr_ControladorCinematica : MonoBehaviour
         {
             Operacion.allowSceneActivation = true;
         }
+    }
+
+    public void CambiarEscenaForzada(int Escena)
+    {
+        SceneManager.LoadScene(Escena);
     }
 
     public void ActivadorPrecarga(int Escena)
@@ -129,4 +135,14 @@ public class Scr_ControladorCinematica : MonoBehaviour
     {
         GameObject.Find("Gata").GetComponent<Scr_Movimiento>().PuedeGuardarPosicion = false;
     }
+
+     public void CerrarBarras()
+    {
+        foreach(Animator Anim in Barras)
+        {
+            Anim.Play("Cerrar");
+        }
+    }
+
+
 }

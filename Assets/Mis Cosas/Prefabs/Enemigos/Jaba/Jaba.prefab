@@ -426,18 +426,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Vida: 5
   Velocidad: 1
-  Rango: 3
+  Rango: 2
   CoolDown: 2
   "Da\xF1oMelee": 0
   "Da\xF1oDistancia": 0
   PrefabBala: {fileID: 0}
   SpawnBala: {fileID: 0}
   Drops:
-  - {fileID: 11400000, guid: 6487fb8e7dd5c0b4abf46803d77c784c, type: 2}
-  - {fileID: 11400000, guid: a1dcbf004b25dc8478076e9ce3ec3b63, type: 2}
+  - {fileID: 11400000, guid: 4a1357594e65d8047b0e6ca45c64e293, type: 2}
+  - {fileID: 11400000, guid: a87d1159b0a18c04985e7dd619997811, type: 2}
   Probabilidades:
   - 100
-  - 50
+  - 30
   Objetivo: {fileID: 0}
   tipoenemigo: 0
   tipocomportamiento: 0
@@ -471,7 +471,7 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
+  m_Height: 2.2
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4

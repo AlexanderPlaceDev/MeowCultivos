@@ -28,7 +28,7 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
         if (EstaEnMenu)
         {
             // Desactiva los componentes de movimiento de la gata mientras está en el menú
-            Gata.GetComponent<Scr_Movimiento>().enabled = false;
+            Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
             Gata.GetComponent<Scr_GiroGata>().enabled = false;
 
             if (Input.GetKeyDown(KeyCode.Tab) && !Esperando)

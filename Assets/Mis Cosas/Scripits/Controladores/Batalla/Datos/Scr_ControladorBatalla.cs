@@ -24,6 +24,8 @@ public class Scr_ControladorBatalla : MonoBehaviour
     bool ComenzoTiempo = false;
 
     [SerializeField] private GameObject PanelFinal;
+    [SerializeField] Animator[] BarrasNegras;
+    [SerializeField] GameObject CirculoCarga;
 
     public List<GameObject> Enemigos = new List<GameObject>();
     private AsyncOperation Operacion;
@@ -151,39 +153,47 @@ public class Scr_ControladorBatalla : MonoBehaviour
     {
         Scr_Enemigo Enemigo = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().Enemigo.GetComponent<Scr_Enemigo>();
         float[] Recompensas = { 0, 0, 0, 0 };
-        int i = 0;
-        foreach (Scr_CreadorObjetos Objeto in Enemigo.Drops)
+        int i;
+
+        // Iterar sobre la cantidad de enemigos
+        for (int j = 0; j < GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().CantidadDeEnemigos; j++)
         {
-            if (UnityEngine.Random.Range(0, 100) <= Enemigo.Probabilidades[i])
+            i = 0;
+            foreach (Scr_CreadorObjetos Objeto in Enemigo.Drops)
             {
-                PanelFinal.transform.GetChild(0).GetChild(6).GetChild(i).GetComponent<Image>().sprite = Objeto.IconoInventario;
-                GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().ObjetosRecompensa.Add(Objeto);
-                Recompensas[i] = +1;
+                if (UnityEngine.Random.Range(0, 100) <= Enemigo.Probabilidades[i])
+                {
+                    PanelFinal.transform.GetChild(0).GetChild(6).GetChild(i).GetComponent<Image>().sprite = Objeto.IconoInventario;
+                    GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().ObjetosRecompensa.Add(Objeto);
+                    Recompensas[i] += 1;  // Incrementar la recompensa en lugar de establecerla
+                    Debug.Log($"Recompensa {i} obtenida: {Objeto.name} con probabilidad {Enemigo.Probabilidades[i]}%");
+                }
+                else
+                {
+                    Debug.Log($"Recompensa {i} NO obtenida: {Objeto.name} con probabilidad {Enemigo.Probabilidades[i]}%");
+                }
                 i++;
             }
         }
 
-        Recompensas[0] = Recompensas[0] * GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().CantidadDeEnemigos;
-        Recompensas[1] = Recompensas[1] * GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().CantidadDeEnemigos;
-        Recompensas[2] = Recompensas[2] * GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().CantidadDeEnemigos;
-        Recompensas[3] = Recompensas[3] * GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().CantidadDeEnemigos;
-
-        for (i = 0; i <= 3; i++)
+        // Actualizar la interfaz de usuario con las recompensas
+        for (i = 0; i < Recompensas.Length; i++)
         {
             if (Recompensas[i] != 0)
             {
                 PanelFinal.transform.GetChild(0).GetChild(6).GetChild(i).gameObject.SetActive(true);
                 PanelFinal.transform.GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = Recompensas[i].ToString();
-                GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().CantidadesRecompensa.Add( (int)Recompensas[i]);
-
+                GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().CantidadesRecompensa.Add((int)Recompensas[i]);
+                Debug.Log($"Recompensa {i} activada en la UI con cantidad: {Recompensas[i]}");
             }
             else
             {
                 PanelFinal.transform.GetChild(0).GetChild(6).GetChild(i).gameObject.SetActive(false);
+                Debug.Log($"Recompensa {i} no obtenida, no se activa en la UI.");
             }
         }
-
     }
+
 
     private void ActivarControles(bool activar)
     {
@@ -216,8 +226,20 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
     public void BotonAceptar()
     {
-        PanelFinal.GetComponent<Scr_CambiadorEscenas>().Operacion = Operacion;
+        foreach(Animator Anim in BarrasNegras)
+        {
+            Anim.Play("Cerrar");
+        }
+        StartCoroutine(EsperarCierre());
         PanelFinal.GetComponent<Animator>().Play("Cerrar");
 
+    }
+
+    IEnumerator EsperarCierre()
+    {
+        yield return new WaitForSeconds(1);
+        CirculoCarga.SetActive(true);
+        yield return new WaitForSeconds(3);
+        SceneManager.LoadScene(2);
     }
 }

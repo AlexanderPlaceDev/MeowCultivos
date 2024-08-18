@@ -88,8 +88,8 @@ public class Scr_ConsolaComandos : MonoBehaviour
             case "borrar.datos":
                 {
                     Debug.Log("Datos Borrados");
-                    Camera.main.transform.GetChild(1).GetComponent<Scr_BarrasNegras>().Start();
-                    Camera.main.transform.GetChild(2).GetComponent<Scr_BarrasNegras>().Start();
+                    Camera.main.transform.GetChild(0).GetComponent<Scr_BarrasNegras>().Awake();
+                    Camera.main.transform.GetChild(1).GetComponent<Scr_BarrasNegras>().Awake();
                     PlayerPrefs.DeleteAll();
                     SceneManager.LoadScene(2);
                     break;
@@ -98,6 +98,7 @@ public class Scr_ConsolaComandos : MonoBehaviour
                 {
                     Debug.Log("Cinemagica Borrada");
                     PlayerPrefs.SetString("Cinematica " + "Bony", "No");
+                    GameObject.Find("Gata").transform.GetChild(4).GetComponent<Scr_CargadorGuardado>().Personajes[1].SetActive(false);
                     break;
                 }
             case "borrar.estructura=0":

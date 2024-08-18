@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class Scr_BarrasNegras : MonoBehaviour
 {
-    public void Start()
+    public void Awake()
     {
-        GetComponent<Animator>().Play("Aparecer");
+        GetComponent<Animator>().Play("Abrir");
     }
 
-    
+    public void Start()
+    {
+        GetComponent<Animator>().Play("Abrir");
+    }
+
+
 }

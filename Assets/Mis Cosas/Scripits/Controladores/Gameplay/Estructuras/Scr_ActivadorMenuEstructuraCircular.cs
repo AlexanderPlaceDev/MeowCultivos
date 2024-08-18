@@ -100,7 +100,7 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
             EstaDentro = true;
             Camara360.SetActive(false);
             Gata.GetChild(2).gameObject.SetActive(false);
-            Gata.GetComponent<Scr_Movimiento>().enabled = false;
+            Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
             Gata.GetComponent<Scr_GiroGata>().enabled = false;
             transform.GetChild(1).gameObject.SetActive(true);
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetComponent<RectTransform>(), -200, 1);
@@ -135,7 +135,7 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
         EstaDentro = false;
         Camara360.SetActive(true);
         Gata.GetChild(2).gameObject.SetActive(true);
-        Gata.GetComponent<Scr_Movimiento>().enabled = true;
+        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
         Gata.GetComponent<Scr_GiroGata>().enabled = true;
         transform.GetChild(1).gameObject.SetActive(false);
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetComponent<RectTransform>(), 35, 1);
