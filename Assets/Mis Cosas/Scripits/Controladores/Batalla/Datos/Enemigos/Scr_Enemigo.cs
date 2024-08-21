@@ -1,5 +1,5 @@
-using Unity.VisualScripting;
 using UnityEngine;
+using System.Collections;
 using UnityEngine.AI;
 
 public class Scr_Enemigo : MonoBehaviour
@@ -15,8 +15,12 @@ public class Scr_Enemigo : MonoBehaviour
     public Scr_CreadorObjetos[] Drops;
     public float[] Probabilidades;
     public Transform Objetivo;
+    public Color ColorHerido;
+    public float DuracionCambioColor = 0.5f; // Duración del cambio de color en segundos
 
     private float TiempoCoolDown;
+    private Material[] materialesOriginales;
+    private bool cambiandoColor = false;
 
     public enum TipoEnemigo { Terrestre, Volador }
     public TipoEnemigo tipoenemigo;
@@ -27,10 +31,17 @@ public class Scr_Enemigo : MonoBehaviour
     private void Start()
     {
         TiempoCoolDown = CoolDown;
+
+        // Asumiendo que el material está en el segundo hijo
+        Renderer renderer = transform.GetChild(1).GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            materialesOriginales = renderer.materials;
+        }
     }
+
     public virtual void Mover()
     {
-        // Movimiento básico hacia el jugador
         if (GetComponent<NavMeshAgent>() != null && GetComponent<NavMeshAgent>().isActiveAndEnabled)
         {
             if (Objetivo != null)
@@ -41,7 +52,6 @@ public class Scr_Enemigo : MonoBehaviour
                 }
                 GetComponent<NavMeshAgent>().isStopped = false;
                 GetComponent<NavMeshAgent>().destination = Objetivo.position;
-
             }
             else
             {
@@ -56,18 +66,19 @@ public class Scr_Enemigo : MonoBehaviour
         {
             TiempoCoolDown = 0;
             GetComponent<Animator>().Play("Ataque1");
+            if (GameObject.Find("Controlador").GetComponent<Scr_ControladorBatalla>().VidaActual > 0)
+            {
+                GameObject.Find("Controlador").GetComponent<Scr_ControladorBatalla>().VidaActual -= (int)DañoMelee;
+            }
         }
         else
         {
             TiempoCoolDown += Time.deltaTime;
         }
-
-
     }
 
     public virtual void AtaqueDistancia()
     {
-        // Implementar lógica de ataque a distancia
         Debug.Log("Ranged attack performed");
         if (PrefabBala != null && SpawnBala != null)
         {
@@ -82,11 +93,17 @@ public class Scr_Enemigo : MonoBehaviour
         {
             Morir();
         }
+        else
+        {
+            if (!cambiandoColor)
+            {
+                StartCoroutine(ChangeMaterialColor());
+            }
+        }
     }
 
     public virtual void Morir()
     {
-        // Implementar la lógica de muerte del enemigo
         Destroy(gameObject);
     }
 
@@ -99,13 +116,60 @@ public class Scr_Enemigo : MonoBehaviour
     {
         if (other.gameObject.tag == "Bala")
         {
-
+            // Lógica para bala
         }
 
         if (other.gameObject.tag == "Golpe")
         {
             other.gameObject.SetActive(false);
             RecibirDaño(1);
+        }
+    }
+
+    private IEnumerator ChangeMaterialColor()
+    {
+        cambiandoColor = true;
+
+        Renderer renderer = transform.GetChild(1).GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            // Obtener los materiales actuales
+            Material[] materiales = renderer.materials;
+
+            // Guardar una copia de los materiales originales
+            Material[] materialesOriginales = new Material[materiales.Length];
+            for (int i = 0; i < materiales.Length; i++)
+            {
+                materialesOriginales[i] = new Material(materiales[i]);
+            }
+
+            // Crear copias modificadas de los materiales y cambiar el _BaseColor
+            Material[] materialesModificados = new Material[materiales.Length];
+            for (int i = 0; i < materiales.Length; i++)
+            {
+                materialesModificados[i] = new Material(materiales[i]);
+                materialesModificados[i].SetColor("_BaseColor", ColorHerido); // Cambiar el color a rojo
+            }
+
+            // Aplicar materiales modificados
+            renderer.materials = materialesModificados;
+
+            // Esperar el tiempo deseado
+            float tiempo = 0;
+            while (tiempo < DuracionCambioColor)
+            {
+                tiempo += Time.deltaTime;
+                yield return null;
+            }
+
+            // Restaurar materiales originales
+            renderer.materials = materialesOriginales;
+
+            cambiandoColor = false;
+        }
+        else
+        {
+            Debug.LogError("No se encontró el componente Renderer.");
         }
     }
 }

@@ -164,6 +164,6 @@ public class Scr_SistemaDialogos : MonoBehaviour
 
     public void AumentarDialogo()
     {
-        DialogoActual ++;
+        DialogoActual++;
     }
 }

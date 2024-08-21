@@ -28,7 +28,6 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
         if (EstaEnMenu)
         {
             // Desactiva los componentes de movimiento de la gata mientras está en el menú
-            Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
             Gata.GetComponent<Scr_GiroGata>().enabled = false;
 
             if (Input.GetKeyDown(KeyCode.Tab) && !Esperando)
@@ -39,6 +38,7 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
                 {
                     Esperando = true;
                     Menu.GetComponent<Animator>().Play("Cerrar");
+                    Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
                 }
                 else
                 {
@@ -55,6 +55,7 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
                 RestablecerColor();
                 Menu.SetActive(true);
                 Menu.GetComponent<Animator>().Play("Aparecer");
+                Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
             }
         }
 

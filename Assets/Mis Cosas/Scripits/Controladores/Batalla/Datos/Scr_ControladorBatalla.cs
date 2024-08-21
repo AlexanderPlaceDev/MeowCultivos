@@ -14,6 +14,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     [SerializeField] Scr_CreadorArmas Arma3;
 
     [SerializeField] TextMeshProUGUI NumeroCuenta;
+    [SerializeField] GameObject Mirilla;
 
     float Cuenta = 4;
     [SerializeField] TextMeshProUGUI TextoMinutos;
@@ -32,9 +33,12 @@ public class Scr_ControladorBatalla : MonoBehaviour
     private bool escenaPrecargada = false; // Nuevo flag para saber si la escena está precargada
     private bool DioRecompensa = false;
 
+    public int VidaAnterior = 10;
+    public int VidaActual = 10;
+
     void Start()
     {
-        // Aquí podrías iniciar cualquier configuración inicial
+        
     }
 
     void Update()
@@ -42,9 +46,23 @@ public class Scr_ControladorBatalla : MonoBehaviour
         Comienzo();
         Tiempo();
         RemoverEnemigosMuertos();
+        ActualizarVida();
         Terminar();
     }
 
+    private void ActualizarVida()
+    {
+        if (VidaActual != VidaAnterior)
+        {
+            VidaAnterior = VidaActual;
+            var asistente = GameObject.Find("Asistente").gameObject.GetComponent<Scr_ControladorAsistente>();
+            if (asistente != null && !asistente.OrdenDeEstados.Contains("Disparando"))
+            {
+                asistente.OrdenDeEstados.Add("Vida");
+            }
+
+        }
+    }
     private void RemoverEnemigosMuertos()
     {
         Enemigos.RemoveAll(enemigo => enemigo == null);
@@ -106,6 +124,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     {
         if (ComenzoTiempo)
         {
+            Mirilla.SetActive(true);
             if (Minutos > 0 || Segundos > 0)
             {
                 Segundos -= Time.deltaTime;
@@ -120,29 +139,44 @@ public class Scr_ControladorBatalla : MonoBehaviour
             else
             {
                 ComenzoTiempo = false;
-                FinalizarBatalla();
+                FinalizarBatalla(false);
             }
         }
     }
 
     private void Terminar()
     {
-        if ((Minutos <= 0 && Segundos <= 0) || (Enemigos.Count <= 0 && ComenzoTiempo))
+        if (VidaActual<=0)
         {
+            if (VidaActual < 0)
+            {
+                VidaActual= 0;
+            }
             ComenzoTiempo = false;
-            FinalizarBatalla();
+            FinalizarBatalla(false);
             if (Operacion == null)
             {
                 StartCoroutine(PrecargarEscena(2));
             }
         }
+        if (Enemigos.Count <= 0 && ComenzoTiempo)
+        {
+            ComenzoTiempo = false;
+            FinalizarBatalla(true);
+            if (Operacion == null)
+            {
+                StartCoroutine(PrecargarEscena(2));
+            }
+        }
+
     }
 
-    private void FinalizarBatalla()
+    private void FinalizarBatalla(bool Gano)
     {
         ActivarControles(false);
-        if (!DioRecompensa)
+        if (Gano && !DioRecompensa)
         {
+            PanelFinal.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = "VICTORIA";
             DioRecompensa = true;
             DarRecompensa();
         }
@@ -152,47 +186,75 @@ public class Scr_ControladorBatalla : MonoBehaviour
     private void DarRecompensa()
     {
         Scr_Enemigo Enemigo = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().Enemigo.GetComponent<Scr_Enemigo>();
-        float[] Recompensas = { 0, 0, 0, 0 };
-        int i;
 
-        // Iterar sobre la cantidad de enemigos
+        // Verificar la longitud de Drops y Probabilidades
+        if (Enemigo.Drops.Length != Enemigo.Probabilidades.Length)
+        {
+            Debug.LogError("La longitud de Drops y Probabilidades no coincide.");
+            return;
+        }
+
+        // Inicializar diccionario para contar recompensas
+        Dictionary<Scr_CreadorObjetos, float> recompensasDict = new Dictionary<Scr_CreadorObjetos, float>();
+
         for (int j = 0; j < GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().CantidadDeEnemigos; j++)
         {
-            i = 0;
-            foreach (Scr_CreadorObjetos Objeto in Enemigo.Drops)
+            for (int i = 0; i < Enemigo.Drops.Length; i++)
             {
+                // Generar probabilidad
                 if (UnityEngine.Random.Range(0, 100) <= Enemigo.Probabilidades[i])
                 {
-                    PanelFinal.transform.GetChild(0).GetChild(6).GetChild(i).GetComponent<Image>().sprite = Objeto.IconoInventario;
-                    GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().ObjetosRecompensa.Add(Objeto);
-                    Recompensas[i] += 1;  // Incrementar la recompensa en lugar de establecerla
-                    Debug.Log($"Recompensa {i} obtenida: {Objeto.name} con probabilidad {Enemigo.Probabilidades[i]}%");
+                    if (recompensasDict.ContainsKey(Enemigo.Drops[i]))
+                    {
+                        recompensasDict[Enemigo.Drops[i]] += 1;
+                    }
+                    else
+                    {
+                        recompensasDict.Add(Enemigo.Drops[i], 1);
+                    }
+
+                    Debug.Log($"Recompensa {i} obtenida: {Enemigo.Drops[i].name} con probabilidad {Enemigo.Probabilidades[i]}%");
                 }
                 else
                 {
-                    Debug.Log($"Recompensa {i} NO obtenida: {Objeto.name} con probabilidad {Enemigo.Probabilidades[i]}%");
+                    Debug.Log($"Recompensa {i} NO obtenida: {Enemigo.Drops[i].name} con probabilidad {Enemigo.Probabilidades[i]}%");
                 }
-                i++;
             }
         }
 
-        // Actualizar la interfaz de usuario con las recompensas
-        for (i = 0; i < Recompensas.Length; i++)
+        // Limpiar listas antes de llenarlas
+        Scr_DatosSingletonBatalla datos = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
+        datos.ObjetosRecompensa.Clear();
+        datos.CantidadesRecompensa.Clear();
+
+        // Convertir diccionario a listas
+        foreach (var kvp in recompensasDict)
         {
-            if (Recompensas[i] != 0)
-            {
-                PanelFinal.transform.GetChild(0).GetChild(6).GetChild(i).gameObject.SetActive(true);
-                PanelFinal.transform.GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = Recompensas[i].ToString();
-                GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().CantidadesRecompensa.Add((int)Recompensas[i]);
-                Debug.Log($"Recompensa {i} activada en la UI con cantidad: {Recompensas[i]}");
-            }
-            else
-            {
-                PanelFinal.transform.GetChild(0).GetChild(6).GetChild(i).gameObject.SetActive(false);
-                Debug.Log($"Recompensa {i} no obtenida, no se activa en la UI.");
-            }
+            datos.ObjetosRecompensa.Add(kvp.Key);
+            datos.CantidadesRecompensa.Add((int)kvp.Value);
+
+            // Actualizar UI
+            int index = datos.ObjetosRecompensa.Count - 1;
+            PanelFinal.transform.GetChild(0).GetChild(6).GetChild(index).GetComponent<Image>().sprite = kvp.Key.IconoInventario;
+            PanelFinal.transform.GetChild(0).GetChild(6).GetChild(index).gameObject.SetActive(true);
+            PanelFinal.transform.GetChild(0).GetChild(6).GetChild(index).GetComponent<Image>().color = Color.white;
+            PanelFinal.transform.GetChild(0).GetChild(6).GetChild(index).GetChild(1).gameObject.SetActive(true);
+            PanelFinal.transform.GetChild(0).GetChild(6).GetChild(index).GetChild(1).GetComponent<TextMeshProUGUI>().text = ((int)kvp.Value).ToString();
+
+            Debug.Log($"Recompensa {index} activada en la UI con cantidad: {kvp.Value}");
+        }
+
+        // Verificación final
+        if (datos.ObjetosRecompensa.Count != datos.CantidadesRecompensa.Count)
+        {
+            Debug.LogError("La cantidad de objetos y recompensas no coincide.");
         }
     }
+
+
+
+
+
 
 
     private void ActivarControles(bool activar)

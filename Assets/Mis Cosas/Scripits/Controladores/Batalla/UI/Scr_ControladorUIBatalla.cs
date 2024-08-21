@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -55,6 +56,8 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         ActualizarArma();
         ActualizarEspaciosArmas();
     }
+
+    
 
     private void ActualizarEspaciosArmas()
     {

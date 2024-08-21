@@ -63,17 +63,30 @@ public class Scr_ObjetosAgregados : MonoBehaviour
     {
         Scr_DatosSingletonBatalla Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
 
-        if (!objetosAgregados && Singleton.CantidadesRecompensa[0] != 0)
+        if (!objetosAgregados && Singleton.CantidadesRecompensa.Count > 0 && Singleton.CantidadesRecompensa[0] != 0)
         {
             for (int i = 0; i < Singleton.ObjetosRecompensa.Count; i++)
             {
+                if (i >= Singleton.CantidadesRecompensa.Count)
+                {
+                    Debug.LogError("Desajuste detectado entre ObjetosRecompensa y CantidadesRecompensa. ÍNDICE: " + i);
+                    break;
+                }
+
                 Scr_CreadorObjetos Objeto = Singleton.ObjetosRecompensa[i];
                 Lista.Add(Objeto);
                 Cantidades.Add(Singleton.CantidadesRecompensa[i]);
                 Singleton.ObjetosRecompensa[i] = null;
                 Singleton.CantidadesRecompensa[i] = 0;
             }
-            objetosAgregados = true; // Marcamos que los objetos ya fueron agregados
+            objetosAgregados = true;
+        }
+        else
+        {
+            Debug.Log("No se agregaron objetos porque la lista CantidadesRecompensa está vacía o su primer elemento es cero.");
+            Singleton.CantidadesRecompensa.Clear();
         }
     }
+
+
 }

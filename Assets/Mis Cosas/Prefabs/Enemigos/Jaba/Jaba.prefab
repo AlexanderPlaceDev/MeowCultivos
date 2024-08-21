@@ -188,6 +188,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Jaba
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: caa63f37c21c4064b93b00e85427ef29,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemigo
+      objectReference: {fileID: 0}
     - target: {fileID: 1048521751221743878, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
       propertyPath: m_CastShadows
@@ -426,9 +431,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Vida: 5
   Velocidad: 1
-  Rango: 2
-  CoolDown: 2
-  "Da\xF1oMelee": 0
+  Rango: 1.8
+  CoolDown: 8
+  "Da\xF1oMelee": 1
   "Da\xF1oDistancia": 0
   PrefabBala: {fileID: 0}
   SpawnBala: {fileID: 0}
@@ -439,6 +444,8 @@ MonoBehaviour:
   - 100
   - 30
   Objetivo: {fileID: 0}
+  ColorHerido: {r: 1, g: 0.57924527, b: 0.57924527, a: 1}
+  DuracionCambioColor: 0.5
   tipoenemigo: 0
   tipocomportamiento: 0
 --- !u!114 &1857877220275911522

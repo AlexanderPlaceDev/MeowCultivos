@@ -59,9 +59,11 @@ public class Scr_CargadorGuardado : MonoBehaviour
         //Dialogos
 
         Personajes[0].GetComponent<Scr_SistemaDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoGusano", 0);
-        if (PlayerPrefs.GetInt("DialogoGusano", 0) != 0)
+        Personajes[1].GetComponent<Scr_SistemaDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoBony", 0);
+        if (PlayerPrefs.GetInt("DialogoGusano", 0) > 0)
         {
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
+            Debug.Log("Se Activo el movimiento");
         }
 
         //Activar personajes
