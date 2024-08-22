@@ -8,7 +8,6 @@ public class Scr_CambiadorMenus : MonoBehaviour
     [SerializeField] Scr_CreadorTemas TemaActual;
     [SerializeField] GameObject Menu;
     [SerializeField] Image Fondo;
-    [SerializeField] Image AreaHora;
     [SerializeField] GameObject BarraIzquierda;
     [SerializeField] GameObject BarraDerecha;
     [SerializeField] float DuracionTransicion;
@@ -37,7 +36,6 @@ public class Scr_CambiadorMenus : MonoBehaviour
             {
                 float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
                 Fondo.color = Color.Lerp(TemaActual.ColoresMenu[2], TemaActual.ColoresHabilidades[2], t);
-                AreaHora.color = Color.Lerp(TemaActual.ColoresMenu[3], TemaActual.ColoresHabilidades[3], t);
 
                 BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[0], TemaActual.ColoresHabilidades[0], t);
                 BarraIzquierda.transform.GetChild(3).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[1], TemaActual.ColoresHabilidades[1], t);
@@ -50,6 +48,7 @@ public class Scr_CambiadorMenus : MonoBehaviour
             if (tiempoPasado >= DuracionTransicion + 1)
             {
                 CambiarHabilidades = false;
+                GetComponent<Scr_ControladorMenuHabilidades>().enabled = true;
             }
         }
 
@@ -61,7 +60,6 @@ public class Scr_CambiadorMenus : MonoBehaviour
             {
                 float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
                 Fondo.color = Color.Lerp(TemaActual.ColoresMenu[2], TemaActual.ColoresInventario[2], t);
-                AreaHora.color = Color.Lerp(TemaActual.ColoresMenu[3], TemaActual.ColoresInventario[3], t);
 
                 BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[0], TemaActual.ColoresInventario[0], t);
                 BarraIzquierda.transform.GetChild(3).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[1], TemaActual.ColoresInventario[1], t);
@@ -85,7 +83,6 @@ public class Scr_CambiadorMenus : MonoBehaviour
             {
                 float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
                 Fondo.color = Color.Lerp(TemaActual.ColoresMenu[2], TemaActual.ColoresOpciones[2], t);
-                AreaHora.color = Color.Lerp(TemaActual.ColoresMenu[3], TemaActual.ColoresOpciones[3], t);
 
                 BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[0], TemaActual.ColoresOpciones[0], t);
                 BarraIzquierda.transform.GetChild(3).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[1], TemaActual.ColoresOpciones[1], t);
@@ -109,7 +106,6 @@ public class Scr_CambiadorMenus : MonoBehaviour
             {
                 float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
                 Fondo.color = Color.Lerp(TemaActual.ColoresMenu[2], TemaActual.ColoresGuia[2], t);
-                AreaHora.color = Color.Lerp(TemaActual.ColoresMenu[3], TemaActual.ColoresGuia[3], t);
 
                 BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[0], TemaActual.ColoresGuia[0], t);
                 BarraIzquierda.transform.GetChild(3).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[1], TemaActual.ColoresGuia[1], t);
@@ -134,7 +130,6 @@ public class Scr_CambiadorMenus : MonoBehaviour
             {
                 float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
                 Fondo.color = Color.Lerp(TemaActual.ColoresHabilidades[2], TemaActual.ColoresMenu[2], t);
-                AreaHora.color = Color.Lerp(TemaActual.ColoresHabilidades[3], TemaActual.ColoresMenu[3], t);
 
                 BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresHabilidades[0], TemaActual.ColoresMenu[0], t);
                 BarraIzquierda.transform.GetChild(3).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresHabilidades[1], TemaActual.ColoresMenu[1], t);
@@ -147,6 +142,9 @@ public class Scr_CambiadorMenus : MonoBehaviour
             if (tiempoPasado >= DuracionTransicion + 1)
             {
                 RegresarHabilidades = false;
+                GetComponent<Scr_ControladorMenuHabilidades>().enabled = false;
+                GetComponent<Scr_ControladorMenuHabilidades>().HabilidadActual = "";
+                GetComponent<Scr_ControladorMenuHabilidades>().BotonActual = null;
             }
         }
 
@@ -158,7 +156,6 @@ public class Scr_CambiadorMenus : MonoBehaviour
             {
                 float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
                 Fondo.color = Color.Lerp(TemaActual.ColoresInventario[2], TemaActual.ColoresMenu[2], t);
-                AreaHora.color = Color.Lerp(TemaActual.ColoresInventario[3], TemaActual.ColoresMenu[3], t);
 
                 BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresInventario[0], TemaActual.ColoresMenu[0], t);
                 BarraIzquierda.transform.GetChild(3).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresInventario[1], TemaActual.ColoresMenu[1], t);
@@ -182,7 +179,6 @@ public class Scr_CambiadorMenus : MonoBehaviour
             {
                 float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
                 Fondo.color = Color.Lerp(TemaActual.ColoresOpciones[2], TemaActual.ColoresMenu[2], t);
-                AreaHora.color = Color.Lerp(TemaActual.ColoresOpciones[3], TemaActual.ColoresMenu[3], t);
 
                 BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresOpciones[0], TemaActual.ColoresMenu[0], t);
                 BarraIzquierda.transform.GetChild(3).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresOpciones[1], TemaActual.ColoresMenu[1], t);
@@ -206,7 +202,6 @@ public class Scr_CambiadorMenus : MonoBehaviour
             {
                 float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
                 Fondo.color = Color.Lerp(TemaActual.ColoresGuia[2], TemaActual.ColoresMenu[2], t);
-                AreaHora.color = Color.Lerp(TemaActual.ColoresGuia[3], TemaActual.ColoresMenu[3], t);
 
                 BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresGuia[0], TemaActual.ColoresMenu[0], t);
                 BarraIzquierda.transform.GetChild(3).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresGuia[1], TemaActual.ColoresMenu[1], t);

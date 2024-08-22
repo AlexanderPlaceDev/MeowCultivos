@@ -9,7 +9,6 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
     [SerializeField] float TiempoTransicion;
     [SerializeField] Scr_CreadorTemas TemaActual;
     [SerializeField] Image Fondo;
-    [SerializeField] Image AreaHora;
     [SerializeField] GameObject BarraIzquierda;
     [SerializeField] GameObject BarraDerecha;
     bool Esperando = false;
@@ -84,7 +83,6 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
     void RestablecerColor()
     {
         Fondo.color = TemaActual.ColoresMenu[2];
-        AreaHora.color = TemaActual.ColoresMenu[3];
 
         BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = TemaActual.ColoresMenu[0];
         BarraIzquierda.transform.GetChild(3).GetComponent<Image>().color = TemaActual.ColoresMenu[1];

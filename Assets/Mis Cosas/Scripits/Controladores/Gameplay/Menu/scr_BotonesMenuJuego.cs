@@ -38,6 +38,24 @@ public class scr_BotonesMenuJuego : MonoBehaviour
                         Asistente.GetComponent<Animator>().Play("Guia");
                         break;
                     }
+
+                case '3':
+                    {
+                        Asistente.GetComponent<Animator>().Play("Armas");
+                        break;
+                    }
+
+                case '4':
+                    {
+                        Asistente.GetComponent<Animator>().Play("Opciones");
+                        break;
+                    }
+
+                case '5':
+                    {
+                        Asistente.GetComponent<Animator>().Play("Salir");
+                        break;
+                    }
             }
 
         }
