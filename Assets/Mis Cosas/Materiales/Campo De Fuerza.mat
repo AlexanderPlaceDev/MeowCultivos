@@ -1,0 +1,196 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Campo De Fuerza
+  m_Shader: {fileID: -6465566751694194690, guid: e09918d083c96604584744a40dd450a3,
+    type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 1
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3050
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - Texture2D_79BA51A6:
+        m_Texture: {fileID: 2800000, guid: b271b752f88ea45478b526f9a8b763b0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BaseMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: e61a550a7ddc3304fbfe0a01919efe9c, type: 3}
+        m_Scale: {x: -3439.3, y: -25.6}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ScanLineTex:
+        m_Texture: {fileID: 2800000, guid: ee95c6682c9bfc84184687afe06f0aaf, type: 3}
+        m_Scale: {x: -15.36, y: -5.11}
+        m_Offset: {x: -31.67, y: 0}
+    - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _fillTexture:
+        m_Texture: {fileID: 2800000, guid: ee95c6682c9bfc84184687afe06f0aaf, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _scanlineTexture:
+        m_Texture: {fileID: 2800000, guid: ee95c6682c9bfc84184687afe06f0aaf, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - Vector1_37163E29: 166.56
+    - Vector1_AE9DFBD: 0.01
+    - Vector1_D65B033B: 101.92
+    - Vector1_E266B039: 0.05
+    - _AlphaClip: 0
+    - _AlphaToMask: 0
+    - _Blend: 0
+    - _BlendModePreserveSpecular: 1
+    - _BumpScale: 1
+    - _ClearCoatMask: 0
+    - _ClearCoatSmoothness: 0
+    - _Cull: 2
+    - _Cutoff: 0.5
+    - _DetailAlbedoMapScale: 1
+    - _DetailNormalMapScale: 1
+    - _DissolveAmount: 0
+    - _DstBlend: 0
+    - _DstBlendAlpha: 0
+    - _EdgeWidth: 0.05
+    - _EnvironmentReflections: 1
+    - _FresnelPower: 10
+    - _GlossMapScale: 0
+    - _Glossiness: 0
+    - _GlossyReflections: 0
+    - _GlowIntensity: 10
+    - _Metallic: 0
+    - _OcclusionStrength: 1
+    - _OutlineWidth: 0.25
+    - _Parallax: 0.005
+    - _QueueControl: 0
+    - _QueueOffset: 50
+    - _ReceiveShadows: 1
+    - _RimPower: -175.2
+    - _ScanLineSpeed: 50
+    - _ScanLineWidth: 358.88
+    - _Smoothness: 0.5
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _SrcBlendAlpha: 1
+    - _Surface: 0
+    - _WorkflowMode: 1
+    - _ZWrite: 1
+    - _enableFillTexture: 0
+    - _enableIntersection: 0
+    - _enableRimGlow: 0
+    - _enableRipple: 0
+    - _enableScanLine: 0
+    - _fill: 0.05
+    - _impactRippleAmplitude: 1.25
+    - _impactRippleMaxRadius: 0.73
+    - _impactRippleSpeed: 1.3
+    - _intersectionMultiplier: -2.34
+    - _intersectionOffset: 0.9
+    - _rimGlowNoiseDensity: 1
+    - _rimGlowNoiseSpeed: 2
+    - _rimPulseSpeed: 1
+    - _scanSize: 0.8
+    - _scanSpeed: 3.99
+    m_Colors:
+    - Color_63659391: {r: 0.09510379, g: 5.943986, b: 6.062866, a: 0}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0, g: 0.17313242, b: 1, a: 0.07450981}
+    - _EdgeColor: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GlowColor: {r: 0.5566037, g: 0.7887701, b: 1, a: 1}
+    - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
+    - _RimColor: {r: 0, g: 0.8941171, b: 1, a: 1}
+    - _ScrollDirection: {r: 0, g: 0, b: 0, a: 0}
+    - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _TextureScale: {r: 1, g: 1, b: 1, a: 1}
+    - _baseColor: {r: 0, g: 0.6269841, b: 1, a: 1}
+    - _fillOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _fillTiling: {r: 0, g: 0, b: 0, a: 0}
+    - _impactPoint: {r: 0, g: 0, b: 0, a: 0}
+    - _impactRippleDirection: {r: 2.8, g: 0, b: 1, a: 0}
+    - _rimColor: {r: 0, g: 0.07849776, b: 3.54475, a: 0}
+    - _rimPower: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
+--- !u!114 &8852183138306195742
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 7

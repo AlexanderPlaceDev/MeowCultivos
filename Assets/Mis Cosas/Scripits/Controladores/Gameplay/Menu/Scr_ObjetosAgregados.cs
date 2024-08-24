@@ -83,8 +83,11 @@ public class Scr_ObjetosAgregados : MonoBehaviour
         }
         else
         {
-            Debug.Log("No se agregaron objetos porque la lista CantidadesRecompensa está vacía o su primer elemento es cero.");
-            Singleton.CantidadesRecompensa.Clear();
+            if (Singleton.CantidadesRecompensa.ToArray()[0] > 0)
+            {
+                Singleton.CantidadesRecompensa.Clear();
+                Singleton.ObjetosRecompensa.Clear();
+            }
         }
     }
 

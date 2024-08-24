@@ -15,6 +15,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
     [SerializeField] public GameObject[] Personajes;
     [SerializeField] GameObject Reloj;
     [SerializeField] GameObject Tablero;
+    [SerializeField] GameObject MuroTutorial;
 
     [SerializeField] bool Moviendo;
 
@@ -64,6 +65,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
         {
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
             Debug.Log("Se Activo el movimiento");
+            MuroTutorial.SetActive(false);
         }
 
         //Activar personajes
