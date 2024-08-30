@@ -13,6 +13,8 @@ public class Scr_Enemigo : MonoBehaviour
     public GameObject PrefabBala; // Prefab del proyectil para ataques a distancia
     public Transform SpawnBala; // Punto de inicio del proyectil
     public Scr_CreadorObjetos[] Drops;
+    public int XPMinima;
+    public int XPMaxima;
     public float[] Probabilidades;
     public Transform Objetivo;
     public Color ColorHerido;

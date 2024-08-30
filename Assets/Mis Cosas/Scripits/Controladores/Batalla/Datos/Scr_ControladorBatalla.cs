@@ -9,6 +9,13 @@ using UnityEngine.UI;
 
 public class Scr_ControladorBatalla : MonoBehaviour
 {
+    [Header("Panel Final")]
+    [SerializeField] Color[] ColoresBoton;
+    [SerializeField] TextMeshProUGUI TextoNivel;
+    [SerializeField] TextMeshProUGUI TextoSiguienteNivel;
+    [SerializeField] Image Barra;
+
+
     [SerializeField] Scr_CreadorArmas Arma1;
     [SerializeField] Scr_CreadorArmas Arma2;
     [SerializeField] Scr_CreadorArmas Arma3;
@@ -38,11 +45,18 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F12))
+        {
+            PlayerPrefs.DeleteKey("Nivel");
+            PlayerPrefs.DeleteKey("XPActual");
+            PlayerPrefs.DeleteKey("XPSiguiente");
+        }
+
         Comienzo();
         Tiempo();
         RemoverEnemigosMuertos();
@@ -146,11 +160,11 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
     private void Terminar()
     {
-        if (VidaActual<=0)
+        if (VidaActual <= 0)
         {
             if (VidaActual < 0)
             {
-                VidaActual= 0;
+                VidaActual = 0;
             }
             ComenzoTiempo = false;
             FinalizarBatalla(false);
@@ -173,13 +187,30 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
     private void FinalizarBatalla(bool Gano)
     {
+
+
+
         ActivarControles(false);
         if (Gano && !DioRecompensa)
         {
-            PanelFinal.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = "VICTORIA";
             DioRecompensa = true;
             DarRecompensa();
         }
+
+        //Asigar Nivel
+
+        if (PlayerPrefs.GetInt("XPActual", 0) >= PlayerPrefs.GetInt("XPSiguiente", 10))
+        {
+            PlayerPrefs.SetInt("XPActual", PlayerPrefs.GetInt("XPActual", 0) - PlayerPrefs.GetInt("XPSiguiente", 10));
+            PlayerPrefs.SetInt("Nivel", PlayerPrefs.GetInt("Nivel", 0) + 1);
+            PlayerPrefs.SetInt("XPSiguiente", PlayerPrefs.GetInt("XPSiguiente", 10) * 2);
+            PlayerPrefs.SetInt("PuntosDeHabilidad", PlayerPrefs.GetInt("PuntosDeHabilidad", 0) + 3);
+        }
+
+        TextoNivel.text = PlayerPrefs.GetInt("Nivel", 0).ToString();
+        TextoSiguienteNivel.text = "Siguiente Nivel: " + PlayerPrefs.GetInt("XPActual", 0) + "/" + PlayerPrefs.GetInt("XPSiguiente", 10);
+        Barra.fillAmount = ((float)PlayerPrefs.GetInt("XPActual", 0) / (float)PlayerPrefs.GetInt("XPSiguiente", 10));
+
         PanelFinal.SetActive(true);
     }
 
@@ -219,8 +250,11 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 {
                     Debug.Log($"Recompensa {i} NO obtenida: {Enemigo.Drops[i].name} con probabilidad {Enemigo.Probabilidades[i]}%");
                 }
+                PlayerPrefs.SetInt("XPActual", PlayerPrefs.GetInt("XPActual") + UnityEngine.Random.Range(Enemigo.XPMinima, Enemigo.XPMaxima));
             }
         }
+
+        //Dar XP
 
         // Limpiar listas antes de llenarlas
         Scr_DatosSingletonBatalla datos = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
@@ -238,8 +272,8 @@ public class Scr_ControladorBatalla : MonoBehaviour
             PanelFinal.transform.GetChild(0).GetChild(6).GetChild(index).GetComponent<Image>().sprite = kvp.Key.IconoInventario;
             PanelFinal.transform.GetChild(0).GetChild(6).GetChild(index).gameObject.SetActive(true);
             PanelFinal.transform.GetChild(0).GetChild(6).GetChild(index).GetComponent<Image>().color = Color.white;
-            PanelFinal.transform.GetChild(0).GetChild(6).GetChild(index).GetChild(1).gameObject.SetActive(true);
-            PanelFinal.transform.GetChild(0).GetChild(6).GetChild(index).GetChild(1).GetComponent<TextMeshProUGUI>().text = ((int)kvp.Value).ToString();
+            PanelFinal.transform.GetChild(0).GetChild(6).GetChild(index).GetChild(0).gameObject.SetActive(true);
+            PanelFinal.transform.GetChild(0).GetChild(6).GetChild(index).GetChild(0).GetComponent<TextMeshProUGUI>().text = ((int)kvp.Value).ToString();
 
             Debug.Log($"Recompensa {index} activada en la UI con cantidad: {kvp.Value}");
         }
@@ -288,13 +322,25 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
     public void BotonAceptar()
     {
-        foreach(Animator Anim in BarrasNegras)
+        foreach (Animator Anim in BarrasNegras)
         {
             Anim.Play("Cerrar");
         }
         StartCoroutine(EsperarCierre());
         PanelFinal.GetComponent<Animator>().Play("Cerrar");
 
+    }
+
+    public void CambiarColorAceptar(bool Entra)
+    {
+        if (Entra)
+        {
+            PanelFinal.transform.GetChild(0).GetChild(5).GetComponent<Image>().color = ColoresBoton[0];
+        }
+        else
+        {
+            PanelFinal.transform.GetChild(0).GetChild(5).GetComponent<Image>().color = ColoresBoton[1];
+        }
     }
 
     IEnumerator EsperarCierre()

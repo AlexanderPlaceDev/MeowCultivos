@@ -33,7 +33,7 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
             {
                 Debug.Log("Entra");
 
-                if (GetComponent<Scr_CambiadorMenus>().MenuActual == "Menu")
+                if (Menu.transform.GetChild(2).gameObject.activeSelf)
                 {
                     Esperando = true;
                     Menu.GetComponent<Animator>().Play("Cerrar");
@@ -84,10 +84,10 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
     {
         Fondo.color = TemaActual.ColoresMenu[2];
 
-        BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = TemaActual.ColoresMenu[0];
-        BarraIzquierda.transform.GetChild(3).GetComponent<Image>().color = TemaActual.ColoresMenu[1];
+        BarraIzquierda.transform.GetChild(1).GetComponent<Image>().color = TemaActual.ColoresMenu[0];
+        BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = TemaActual.ColoresMenu[1];
 
-        BarraDerecha.transform.GetChild(2).GetComponent<Image>().color = TemaActual.ColoresMenu[0];
-        BarraDerecha.transform.GetChild(3).GetComponent<Image>().color = TemaActual.ColoresMenu[1];
+        BarraDerecha.transform.GetChild(1).GetComponent<Image>().color = TemaActual.ColoresMenu[0];
+        BarraDerecha.transform.GetChild(2).GetComponent<Image>().color = TemaActual.ColoresMenu[1];
     }
 }
