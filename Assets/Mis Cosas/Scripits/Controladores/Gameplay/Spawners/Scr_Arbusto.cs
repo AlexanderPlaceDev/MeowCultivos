@@ -14,6 +14,8 @@ public class Scr_Arbusto : MonoBehaviour
     [SerializeField] private float velocidadGiro;
     [SerializeField] private Scr_CreadorObjetos[] objetosQueDa;
     [SerializeField] private int[] minimoMaximo;
+    [SerializeField] string Habilidad;
+    [SerializeField] string Habilidad2;
 
     [Header("Estado del Arbusto")]
     private int tipoActual = 0;
@@ -69,28 +71,60 @@ public class Scr_Arbusto : MonoBehaviour
 
     IEnumerator Esperar()
     {
-        yield return new WaitForSeconds(5.22f);
+        float animSpeed = 1f; // Valor por defecto
+
+        // Verificar si la habilidad está activa o no
+        if (PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si" || string.IsNullOrEmpty(Habilidad))
+        {
+            animSpeed = 2f; // Doble de velocidad si la habilidad está activa
+        }
+
+        gata.GetChild(0).GetComponent<Animator>().speed = animSpeed;
+
+        // Ajusta el tiempo de espera según la velocidad de la animación
+        yield return new WaitForSeconds(5.22f / animSpeed);
+        gata.GetChild(0).GetComponent<Animator>().speed = 1;
+
+        gata.GetChild(0).GetComponent<Animator>().speed = 1f; // Restablece la velocidad de la animación a 1x
         recolectando = false;
         gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = false;
+
         if (tieneMoras)
         {
-            DarMoras();
-            DarFibra();
+            if (PlayerPrefs.GetString("Habilidad:" + Habilidad2, "No") == "Si" || string.IsNullOrEmpty(Habilidad2))
+            {
+                DarMoras(true);
+                DarFibra(true);
+
+            }
+            else
+            {
+                DarMoras(false);
+                DarFibra(false);
+            }
             tieneMoras = false;
         }
         tipoActual = 0;
         GetComponent<MeshRenderer>().material = tipos[tipoActual];
     }
 
-    void DarMoras()
+    void DarMoras(bool DaDoble)
     {
         int cantidad = Random.Range(minimoMaximo[0], minimoMaximo[1]);
+        if (DaDoble)
+        {
+            cantidad =cantidad* 2;
+        }
         ActualizarInventario(cantidad, objetosQueDa[tipoActual]);
     }
 
-    void DarFibra()
+    void DarFibra(bool DaDoble)
     {
         int cantidad = Random.Range(minimoMaximo[2], minimoMaximo[3]);
+        if (DaDoble)
+        {
+            cantidad = cantidad * 2;
+        }
         ActualizarInventario(cantidad, objetosQueDa[0]);
     }
 

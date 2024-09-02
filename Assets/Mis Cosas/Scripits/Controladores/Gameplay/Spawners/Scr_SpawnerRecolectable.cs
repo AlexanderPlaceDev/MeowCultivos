@@ -14,6 +14,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     [SerializeField] private float velocidadGiro;
     [SerializeField] private Scr_CreadorObjetos objetoQueDa;
     [SerializeField] private int[] minimoMaximo;
+    [SerializeField] string Habilidad;
 
     [Header("Estado del spawner")]
     private bool TieneObjeto = true;
@@ -73,7 +74,18 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
 
     IEnumerator Esperar()
     {
-        yield return new WaitForSeconds(5.22f);
+        float animSpeed = 1f; // Valor por defecto
+
+        // Verificar si la habilidad está activa o no
+        if (PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si" || string.IsNullOrEmpty(Habilidad))
+        {
+            animSpeed = 2f; // Doble de velocidad si la habilidad está activa
+        }
+        gata.GetChild(0).GetComponent<Animator>().speed = animSpeed;
+
+        yield return new WaitForSeconds(5.22f/animSpeed);
+        gata.GetChild(0).GetComponent<Animator>().speed = 1;
+
         recolectando = false;
         gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = false;
         if (TieneObjeto)

@@ -15,8 +15,10 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
     [SerializeField] GameObject ObjetoHabilidadSeleccionada;
     public GameObject BotonActual;
     public string HabilidadActual;
+    GameObject BotonSeleccionado;
     [SerializeField] Scr_CreadorHabilidades[] Habilidades;
     [SerializeField] TextMeshProUGUI Puntos;
+    [SerializeField] GameObject BotonAceptar;
 
     string HabilidadSeleccionada;
     bool YaSelecciono = false;
@@ -44,11 +46,8 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
         Puntos.text = PlayerPrefs.GetInt("PuntosDeHabilidad", 0).ToString();
         SeleccionarHabilidad();
 
-        if (HabilidadActual == null || HabilidadActual == "")
-        {
-            ActualizarArbol();
-        }
-        else
+        MoverYEscalarArbol();
+        if (HabilidadActual != null || HabilidadActual != "")
         {
             ActualizarHabilidad();
         }
@@ -59,13 +58,29 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
 
     private void SeleccionarHabilidad()
     {
-        Debug.Log(HabilidadSeleccionada + HabilidadActual + YaSelecciono);
         // Añade una verificación para asegurarte de que no se vuelva a seleccionar de inmediato
-        if (HabilidadSeleccionada == null && HabilidadActual != "" && Input.GetKeyDown(KeyCode.Mouse0) && !YaSelecciono)
+        if (HabilidadSeleccionada == null && HabilidadActual != "" && Input.GetKeyDown(KeyCode.Mouse0) && !YaSelecciono && ComprobarHabilidadAnterior())
         {
             YaSelecciono = true;
+            BotonSeleccionado = BotonActual;
             HabilidadSeleccionada = HabilidadActual;
             Debug.Log("Habilidad Seleccionada");
+
+            foreach (Scr_CreadorHabilidades Habilidad in Habilidades)
+            {
+                if (Habilidad.NombreBoton == HabilidadActual)
+                {
+                    if (PlayerPrefs.GetInt("PuntosDeHabilidad", 0) >= Habilidad.Costo && PlayerPrefs.GetString("Habilidad:" + HabilidadActual, "No") == "No")
+                    {
+                        BotonAceptar.SetActive(true);
+                    }
+                    else
+                    {
+                        BotonAceptar.SetActive(false);
+                    }
+                }
+            }
+
             ObjetoHabilidadSeleccionada.SetActive(true);
         }
     }
@@ -92,18 +107,17 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
             {
                 if (Habilidad.NombreBoton == BotonActual.name)
                 {
-                    ObjetoHabilidadSeleccionada.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text =Habilidad.Nombre;
-                    ObjetoHabilidadSeleccionada.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text =Habilidad.Descripcion;
-                    ObjetoHabilidadSeleccionada.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text ="Costo: "+Habilidad.Costo;
+                    ObjetoHabilidadSeleccionada.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = Habilidad.Nombre;
+                    ObjetoHabilidadSeleccionada.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = Habilidad.Descripcion;
+                    ObjetoHabilidadSeleccionada.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = "Costo: " + Habilidad.Costo;
 
                 }
             }
         }
     }
 
-    private void ActualizarArbol()
+    private void MoverYEscalarArbol()
     {
-        Debug.Log("Habilidad Seleccionada");
         // Cambiar tamaño del árbol con la rueda del mouse
         float scrollInput = Input.GetAxis("Mouse ScrollWheel");
         if (scrollInput != 0f)
@@ -132,10 +146,14 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
         {
             if (Boton.gameObject.name == HabilidadActual)
             {
-                Boton.GetComponent<Image>().color = Color.white;
-                Boton.transform.GetChild(0).GetComponent<Image>().color = Color.white;
-                Boton.transform.GetChild(1).gameObject.SetActive(true);
                 BotonActual = Boton;
+                if (ComprobarHabilidadAnterior())
+                {
+                    Boton.GetComponent<Image>().color = Color.white;
+                    Boton.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                    Boton.transform.GetChild(1).gameObject.SetActive(true);
+                }
+
                 break;
             }
         }
@@ -144,26 +162,106 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
     public void SaleHabilidad()
     {
         HabilidadActual = "";
-        BotonActual.transform.GetChild(1).gameObject.SetActive(false);
-
-        if (PlayerPrefs.GetString("Habilidad:" + BotonActual.name, "No") == "No")
+        if (BotonActual != null)
         {
-            BotonActual.GetComponent<Image>().color = new Color32(50, 50, 50, 255);
-            BotonActual.transform.GetChild(0).GetComponent<Image>().color = new Color32(50, 50, 50, 255);
+            BotonActual.transform.GetChild(1).gameObject.SetActive(false);
+            if (PlayerPrefs.GetString("Habilidad:" + BotonActual.name, "No") == "No")
+            {
+                BotonActual.GetComponent<Image>().color = new Color32(50, 50, 50, 255);
+                BotonActual.transform.GetChild(0).GetComponent<Image>().color = new Color32(50, 50, 50, 255);
+            }
+            BotonActual = null;
+
         }
-        BotonActual = null;
+
+
     }
 
     public void ComprarHabilidad()
     {
-        if (BotonActual != null)
+
+        if (HabilidadSeleccionada != null)
         {
-            if (PlayerPrefs.GetString("Habilidad:" + BotonActual.name, "No") == "No")
+            foreach (Scr_CreadorHabilidades Habilidad in Habilidades)
             {
-                PlayerPrefs.SetString("Habilidad:" + BotonActual.name, "Si");
+                Debug.Log(Habilidad.NombreBoton + HabilidadSeleccionada);
+                if (Habilidad.NombreBoton == HabilidadSeleccionada)
+                {
+                    int puntosActuales = PlayerPrefs.GetInt("PuntosDeHabilidad", 0);
+                    int puntosRestantes = puntosActuales - Habilidad.Costo;
+
+                    // Asegúrate de que los puntos no sean negativos
+                    if (puntosRestantes >= 0)
+                    {
+                        PlayerPrefs.SetInt("PuntosDeHabilidad", puntosRestantes);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("No tienes suficientes puntos para comprar esta habilidad.");
+                        return;
+                    }
+                }
+            }
+
+            if (PlayerPrefs.GetString("Habilidad:" + HabilidadSeleccionada, "No") == "No")
+            {
+
+
+                PlayerPrefs.SetString("Habilidad:" + HabilidadSeleccionada, "Si");
+                BotonSeleccionado.GetComponent<Image>().color = Color.white;
+                BotonSeleccionado.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+
+                // Desactiva la selección de habilidad y resetea la variable de control
+                YaSelecciono = false;
+
+                // Asegúrate de que la UI relacionada con la selección de habilidad se oculte
+                ObjetoHabilidadSeleccionada.SetActive(false);
+
+                // Asegúrate de que la habilidad seleccionada se deseleccione
+                HabilidadSeleccionada = null;
             }
         }
     }
 
+    bool ComprobarHabilidadAnterior()
+    {
+        foreach (Scr_CreadorHabilidades Habilidad in Habilidades)
+        {
 
+            if (Habilidad.NombreBoton == BotonActual.name)
+            {
+
+                // Si la habilidad anterior es una cadena vacía, se permite seleccionar la habilidad actual
+                if (Habilidad.HabilidadesAnteriores.Length == 0)
+                {
+                    Debug.Log("1");
+                    return true;
+                }
+
+                foreach (string HabilidadAnterior in Habilidad.HabilidadesAnteriores)
+                {
+                    // Comprobar si la habilidad anterior ha sido comprada
+                    if (PlayerPrefs.GetString("Habilidad:" + HabilidadAnterior, "No") == "Si")
+                    {
+                        Debug.Log("2");
+                        return true;
+                    }
+                    else
+                    {
+                        Debug.Log("3");
+                        return false;
+                    }
+                }
+            }
+        }
+
+        // Si no se encuentra la habilidad actual en la lista de habilidades, se retorna false
+        Debug.Log("No se encontró una habilidad coincidente para el botón actual");
+        return false;
+    }
+
+    private void ActivarHabilidad()
+    {
+
+    }
 }

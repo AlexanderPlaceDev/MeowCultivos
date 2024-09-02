@@ -107,6 +107,13 @@ public class Scr_ConsolaComandos : MonoBehaviour
                     PlayerPrefs.SetInt("Estructura0",0);
                     break;
                 }
+
+            case "+10":
+                {
+                    Debug.Log("Puntos Adquiridos");
+                    PlayerPrefs.SetInt("PuntosDeHabilidad", PlayerPrefs.GetInt("PuntosDeHabilidad",0)+3);
+                    break;
+                }
             default:
                 {
                     Debug.Log("No se encontro el comando");

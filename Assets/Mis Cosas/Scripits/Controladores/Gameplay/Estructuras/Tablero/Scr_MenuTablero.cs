@@ -9,6 +9,9 @@ public class Scr_MenuTablero : MonoBehaviour
     [SerializeField] private Scr_CreadorEstructuras[] Estructuras;
     [SerializeField] private GameObject[] ObjEstructuras;
 
+    private List<Scr_CreadorEstructuras> estructurasFiltradas = new List<Scr_CreadorEstructuras>();
+    private List<GameObject> objEstructurasFiltradas = new List<GameObject>();
+
     [Header("Menú")]
     [SerializeField] private TextMeshProUGUI Nombre;
     [SerializeField] private TextMeshProUGUI Descripcion;
@@ -29,7 +32,7 @@ public class Scr_MenuTablero : MonoBehaviour
 
     private void Start()
     {
-        ActivarEstructuras();
+        ActualizarEstructurasFiltradas();
         EstructuraActual = PlayerPrefs.GetInt("EstructuraTablero", 0);
     }
 
@@ -42,19 +45,62 @@ public class Scr_MenuTablero : MonoBehaviour
         }
     }
 
+    private void ActualizarEstructurasFiltradas()
+    {
+        estructurasFiltradas.Clear();
+        objEstructurasFiltradas.Clear();
+
+        for (int i = 0; i < Estructuras.Length; i++)
+        {
+            if (VerificarEstructura(Estructuras[i].HabilidadRequerida))
+            {
+                estructurasFiltradas.Add(Estructuras[i]);
+                objEstructurasFiltradas.Add(ObjEstructuras[i]);
+            }
+        }
+    }
+
+    private void ActivarEstructuras()
+    {
+        ActualizarEstructurasFiltradas();
+
+        for (int i = 0; i < ObjEstructuras.Length; i++)
+        {
+            ObjEstructuras[i].SetActive(false); // Desactiva todas las estructuras inicialmente
+        }
+
+        for (int i = 0; i < objEstructurasFiltradas.Count; i++)
+        {
+            objEstructurasFiltradas[i].SetActive(true);
+        }
+    }
+
     private void ActualizarEstructura()
     {
+        ActualizarEstructurasFiltradas();
+
+        if (estructurasFiltradas.Count == 0)
+        {
+            Debug.LogError("No hay estructuras disponibles.");
+            return;
+        }
+
+        if (EstructuraActual >= estructurasFiltradas.Count)
+        {
+            EstructuraActual = 0;
+        }
+
         bool estaComprada = PlayerPrefs.GetInt("Estructura" + EstructuraActual, 0) == 1;
         Botones[3].SetActive(!estaComprada);
         ImagenConstruido.SetActive(estaComprada);
 
-        Scr_CreadorEstructuras estructura = Estructuras[EstructuraActual];
+        Scr_CreadorEstructuras estructura = estructurasFiltradas[EstructuraActual];
         Nombre.text = estructura.Nombre;
         Descripcion.text = estructura.Descripcion;
         Imagen.sprite = estructura.Imagen;
 
         Botones[1].SetActive(EstructuraActual != 0);
-        Botones[2].SetActive(EstructuraActual != Estructuras.Length - 1);
+        Botones[2].SetActive(EstructuraActual != estructurasFiltradas.Count - 1);
 
         ActualizarMateriales(estructura);
     }
@@ -69,7 +115,6 @@ public class Scr_MenuTablero : MonoBehaviour
                 Materiales[i].sprite = BuscarSprite(estructura.Materiales[i].Nombre);
                 Cantidades[i].text = estructura.Cantidades[i].ToString();
 
-                // Verificar si hay suficientes materiales
                 bool tieneMateriales = CalcularObjetos(new Scr_CreadorObjetos[] { estructura.Materiales[i] }, new int[] { estructura.Cantidades[i] });
                 Cantidades[i].color = tieneMateriales ? Color.white : Color.red;
             }
@@ -82,7 +127,6 @@ public class Scr_MenuTablero : MonoBehaviour
 
     private Sprite BuscarSprite(string nombreMaterial)
     {
-
         foreach (var Objeto in Inventario.Objetos)
         {
             if (Objeto.name.Contains(nombreMaterial))
@@ -117,7 +161,7 @@ public class Scr_MenuTablero : MonoBehaviour
         if (ID == 3)
         {
             botonImage.color = Color.white;
-            bool tieneMateriales = CalcularObjetos(Estructuras[EstructuraActual].Materiales, Estructuras[EstructuraActual].Cantidades);
+            bool tieneMateriales = CalcularObjetos(estructurasFiltradas[EstructuraActual].Materiales, estructurasFiltradas[EstructuraActual].Cantidades);
             Color colorTexto = tieneMateriales ? colorVerde : colorRojo;
             if (colorRojo == ColoresBotones[1])
             {
@@ -150,7 +194,7 @@ public class Scr_MenuTablero : MonoBehaviour
         if (Botones[3].GetComponent<Image>().color == Color.green)
         {
             PlayerPrefs.SetInt("Estructura" + EstructuraActual, 1);
-            QuitarObjetos(Estructuras[EstructuraActual].Materiales, Estructuras[EstructuraActual].Cantidades);
+            QuitarObjetos(estructurasFiltradas[EstructuraActual].Materiales, estructurasFiltradas[EstructuraActual].Cantidades);
             ActualizarEstructura();
             ActivarEstructuras();
         }
@@ -158,9 +202,11 @@ public class Scr_MenuTablero : MonoBehaviour
 
     public void Flechas(bool Aumenta)
     {
+        ActualizarEstructurasFiltradas();
+
         if (Aumenta)
         {
-            if (EstructuraActual < Estructuras.Length - 1)
+            if (EstructuraActual < estructurasFiltradas.Count - 1)
             {
                 EstructuraActual++;
             }
@@ -173,14 +219,6 @@ public class Scr_MenuTablero : MonoBehaviour
             }
         }
         ActualizarEstructura();
-    }
-
-    private void ActivarEstructuras()
-    {
-        for (int i = 0; i < ObjEstructuras.Length; i++)
-        {
-            ObjEstructuras[i].SetActive(PlayerPrefs.GetInt("Estructura" + i, 0) == 1);
-        }
     }
 
     private bool CalcularObjetos(Scr_CreadorObjetos[] objetosNecesarios, int[] cantidadesNecesarias)
@@ -212,6 +250,18 @@ public class Scr_MenuTablero : MonoBehaviour
                     break;
                 }
             }
+        }
+    }
+
+    private bool VerificarEstructura(string Habilidad)
+    {
+        if (PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si" || string.IsNullOrEmpty(Habilidad))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

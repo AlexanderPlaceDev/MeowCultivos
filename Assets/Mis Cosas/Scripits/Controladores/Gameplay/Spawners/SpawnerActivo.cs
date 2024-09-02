@@ -14,7 +14,8 @@ public class SpawnerActivo : MonoBehaviour
     [SerializeField] public int Vida;
     [SerializeField] public bool UsaPico;
     [SerializeField] public bool UsaHacha;
-
+    [SerializeField] string HabilidadRequerida;
+    [SerializeField] string HabilidadRequerida2;
     private GameObject Herramienta;
     private Transform Gata;
     private bool estaLejos;
@@ -28,21 +29,25 @@ public class SpawnerActivo : MonoBehaviour
 
     void Update()
     {
-        if (Vector3.Distance(Gata.position, transform.position) < Distancia && GetComponent<MeshRenderer>().enabled)
+        if (PlayerPrefs.GetString("Habilidad:" + HabilidadRequerida, "No") == "Si" || HabilidadRequerida == null || HabilidadRequerida == "")
         {
-            SpawnearHerramienta();
-            ActivarUI();
-            estaLejos = false;
-        }
-        else
-        {
-            if (!estaLejos)
+            if (Vector3.Distance(Gata.position, transform.position) < Distancia && GetComponent<MeshRenderer>().enabled)
             {
-                DesactivarUI();
-                Herramienta.SetActive(false);
-                estaLejos = true;
+                SpawnearHerramienta();
+                ActivarUI();
+                estaLejos = false;
+            }
+            else
+            {
+                if (!estaLejos)
+                {
+                    DesactivarUI();
+                    Herramienta.SetActive(false);
+                    estaLejos = true;
+                }
             }
         }
+
 
         if (Vida <= 0)
         {
@@ -62,7 +67,14 @@ public class SpawnerActivo : MonoBehaviour
             {
                 objetoAgregado = true;
                 int cantidad = Random.Range(MinimoMaximo[0], MinimoMaximo[1]);
-                AgregarObjetoInventario(cantidad,ObjetoQueDa);
+                if (PlayerPrefs.GetString("Habilidad:" + HabilidadRequerida2, "No") == "Si" || string.IsNullOrEmpty(HabilidadRequerida2))
+                {
+                    AgregarObjetoInventario(cantidad*2, ObjetoQueDa);
+                }
+                else
+                {
+                    AgregarObjetoInventario(cantidad, ObjetoQueDa);
+                }
             }
             // Esperar hasta que el sistema de partículas termine para destruir el objeto
             StartCoroutine(DestruirDespuesDeParticulas(particleSystem));

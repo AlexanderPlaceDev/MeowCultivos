@@ -47,6 +47,7 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
             else
             {
                 Anim.SetBool("Recolectar", false);
+                PuedeCaminar= true;
 
                 if (Mov.Estado == Scr_Movimiento.Estados.Caminar)
                 {
