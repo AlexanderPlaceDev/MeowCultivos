@@ -25,8 +25,7 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
 
     private RectTransform arbolRectTransform;
 
-
-    void Start()
+    private void Awake()
     {
         moveSpeed = moveSpeed * 1000;
         arbolRectTransform = Arbol.GetComponent<RectTransform>();
@@ -39,6 +38,19 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
                 Boton.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             }
         }
+
+        foreach (Scr_CreadorHabilidades Habilidad in Habilidades)
+        {
+            if (PlayerPrefs.GetString("Habilidad:" + Habilidad.NombreBoton, "No") == "Si")
+            {
+                ActivarBarra(Habilidad.NombresBarrasCarga);
+            }
+        }
+    }
+
+    void Start()
+    {
+
     }
 
     void Update()
@@ -260,8 +272,29 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
         return false;
     }
 
-    private void ActivarHabilidad()
+    void ActivarBarra(string[] NombresBarra)
     {
+        // Obtén todos los transform de los hijos (incluyendo descendientes)
+        Transform[] todasLasBarras = Arbol.GetComponentsInChildren<Transform>();
 
+        foreach (string NombreBarra in NombresBarra)
+        {
+            foreach (Transform Barra in todasLasBarras)
+            {
+                if (Barra.gameObject.name == NombreBarra)
+                {
+                    // Asegúrate de que estás accediendo al hijo correcto y llenando la barra
+                    Image imagenBarra = Barra.GetChild(0).GetComponent<Image>();
+                    if (imagenBarra != null)
+                    {
+                        imagenBarra.fillAmount = 1;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"No se encontró un componente Image en {Barra.gameObject.name}");
+                    }
+                }
+            }
+        }
     }
 }

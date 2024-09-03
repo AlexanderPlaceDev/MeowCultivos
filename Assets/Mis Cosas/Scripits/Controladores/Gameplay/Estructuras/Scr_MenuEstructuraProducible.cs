@@ -114,9 +114,12 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
                 var cantidadText = casilla.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
                 cantidadText.text = objetoActual.CantidadMaterialesDeProduccion[i].ToString();
 
-                var inventario = GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_Inventario>();
-                var cantidadEnInventario = inventario.Cantidades[Array.IndexOf(inventario.Objetos, material)];
-                cantidadText.color = cantidadEnInventario < objetoActual.CantidadMaterialesDeProduccion[i] ? Color.red : Color.white;
+                if (GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_Inventario>() !=null)
+                {
+                    var inventario = GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_Inventario>();
+                    var cantidadEnInventario = inventario.Cantidades[Array.IndexOf(inventario.Objetos, material)];
+                    cantidadText.color = cantidadEnInventario < objetoActual.CantidadMaterialesDeProduccion[i] ? Color.red : Color.white;
+                }
             }
             else
             {

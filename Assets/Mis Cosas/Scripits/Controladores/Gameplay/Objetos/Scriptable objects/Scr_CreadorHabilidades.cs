@@ -9,5 +9,6 @@ public class Scr_CreadorHabilidades : ScriptableObject
     public string NombreBoton;
     public string Descripcion;
     public string[] HabilidadesAnteriores;
+    public string[] NombresBarrasCarga;
     public int Costo;
 }

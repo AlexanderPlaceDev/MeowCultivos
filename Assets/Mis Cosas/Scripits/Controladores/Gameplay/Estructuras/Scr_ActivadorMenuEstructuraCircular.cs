@@ -20,7 +20,7 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
     float TiempoMaterial = 0;
     float TiempoCamara = 0;
 
-    void Start()
+    void Awake()
     {
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
         Camara360 = GameObject.Find("Camara 360");
@@ -97,6 +97,12 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
 
         if (!EstaLejos && Input.GetKeyDown(KeyCode.E) && !EstaDentro)
         {
+
+            if (Camara360 == null)
+            {
+                Camara360 = GameObject.Find("Camara 360");
+            }
+
             EstaDentro = true;
             Camara360.SetActive(false);
             Gata.GetChild(2).gameObject.SetActive(false);

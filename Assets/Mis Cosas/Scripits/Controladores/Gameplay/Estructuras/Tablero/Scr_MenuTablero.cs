@@ -33,6 +33,10 @@ public class Scr_MenuTablero : MonoBehaviour
     private void Start()
     {
         ActualizarEstructurasFiltradas();
+        for (int i = 0; i < ObjEstructuras.Length; i++)
+        {
+            ObjEstructuras[i].SetActive(PlayerPrefs.GetInt("Estructura" + i, 0) == 1);
+        }
         EstructuraActual = PlayerPrefs.GetInt("EstructuraTablero", 0);
     }
 
@@ -62,16 +66,9 @@ public class Scr_MenuTablero : MonoBehaviour
 
     private void ActivarEstructuras()
     {
-        ActualizarEstructurasFiltradas();
-
         for (int i = 0; i < ObjEstructuras.Length; i++)
         {
-            ObjEstructuras[i].SetActive(false); // Desactiva todas las estructuras inicialmente
-        }
-
-        for (int i = 0; i < objEstructurasFiltradas.Count; i++)
-        {
-            objEstructurasFiltradas[i].SetActive(true);
+            ObjEstructuras[i].SetActive(PlayerPrefs.GetInt("Estructura" + i, 0) == 1);
         }
     }
 
