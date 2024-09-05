@@ -31,6 +31,7 @@ public class Scr_EventosGuardado : MonoBehaviour
                 {
                     if(UltimoDialogo == 0)
                     {
+                        Debug.Log("Entra1");
                         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
                     }
                     if (UltimoDialogo == 2)

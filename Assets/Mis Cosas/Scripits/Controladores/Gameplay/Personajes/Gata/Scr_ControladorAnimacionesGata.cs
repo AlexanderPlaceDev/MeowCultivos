@@ -9,14 +9,18 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
 
     public KeyCode Talar = KeyCode.Mouse0;
     public KeyCode Recolectar = KeyCode.F;
+    public KeyCode Regar = KeyCode.F;
     public bool PuedeCaminar;
     public bool PuedeTalar;
     public bool PuedeRecolectar;
+    public bool PuedeRegar;
     public float TiempoRecoleccion;
+    public float TiempoRegar;
     public float TiempoTalar;
 
     bool Talando;
     public bool Recolectando;
+    public bool Regando;
 
     void Start()
     {
@@ -31,10 +35,11 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
 
         if (Talando)
         {
-            
-                Anim.SetBool("Talar", true);
+
+            Anim.SetBool("Talar", true);
+            Debug.Log("Entra8");
             PuedeCaminar = false;
-            
+
         }
         else
         {
@@ -42,29 +47,44 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
             if (Recolectando)
             {
                 Anim.SetBool("Recolectar", true);
+                Debug.Log("Entra7");
                 PuedeCaminar = false;
             }
             else
             {
                 Anim.SetBool("Recolectar", false);
-                PuedeCaminar= true;
+                Debug.Log("Entra6");
 
-                if (Mov.Estado == Scr_Movimiento.Estados.Caminar)
+
+
+                if (Regando)
                 {
-                    Anim.SetBool("Caminar", true);
+                    Anim.SetBool("Regar", true);
+                    PuedeCaminar = false;
                 }
                 else
                 {
-                    Anim.SetBool("Caminar", false);
+                    Anim.SetBool("Regar", false);
+                    if (Mov.Estado == Scr_Movimiento.Estados.Caminar)
+                    {
+                        Anim.SetBool("Caminar", true);
+                    }
+                    else
+                    {
+                        Anim.SetBool("Caminar", false);
+                    }
+                    if (Mov.Estado == Scr_Movimiento.Estados.Correr)
+                    {
+                        Anim.SetBool("Correr", true);
+                    }
+                    else
+                    {
+                        Anim.SetBool("Correr", false);
+                    }
                 }
-                if (Mov.Estado == Scr_Movimiento.Estados.Correr)
-                {
-                    Anim.SetBool("Correr", true);
-                }
-                else
-                {
-                    Anim.SetBool("Correr", false);
-                }
+
+
+
             }
         }
 
@@ -84,36 +104,74 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
 
     public void Inputs()
     {
-        if(PuedeTalar && Time.timeScale==1)
+
+
+        if (!Talando && !Recolectando && !Regando)
         {
-            if (Input.GetKeyDown(Talar) && !Recolectando)
+            if (PuedeTalar)
             {
-                Talando = true;
-                StartCoroutine(EsperarTalar());
+                if (Input.GetKeyDown(Talar) && !Recolectando)
+                {
+                    Talando = true;
+                    StartCoroutine(EsperarTalar());
+                }
+            }
+            if (PuedeRecolectar)
+            {
+                if (Input.GetKeyDown(Recolectar))
+                {
+                    Recolectando = true;
+                    StartCoroutine(EsperarRecolectar());
+                }
+            }
+            if (PuedeRegar)
+            {
+                if (Input.GetKeyDown(Regar))
+                {
+                    Regando = true;
+                    StartCoroutine(EsperarRegar());
+                }
             }
         }
-        
-        if(PuedeRecolectar && Time.timeScale == 1)
-        {
-            if (Input.GetKeyDown(Recolectar) && !Talando)
-            {
-                Recolectando = true;
-                StartCoroutine(EsperarRecolectar());
-            }
-        }
-        
+
+
+
+
+
+
+
+
     }
 
     public IEnumerator EsperarRecolectar()
     {
-        yield return new WaitForSeconds(TiempoRecoleccion);
+        int Tiempo = 1;
+        if (PlayerPrefs.GetString("Habilidad:Guante", "No") == "Si")
+        {
+            Tiempo = 2;
+        }
+        yield return new WaitForSeconds(TiempoRecoleccion / Tiempo);
+        Debug.Log("Entra5");
         PuedeCaminar = true;
-        Recolectando =false;
+        Recolectando = false;
+    }
+
+    public IEnumerator EsperarRegar()
+    {
+        int Tiempo = 1;
+        if (PlayerPrefs.GetString("Habilidad:Guante", "No") == "Si")
+        {
+            Tiempo = 2;
+        }
+        yield return new WaitForSeconds(TiempoRegar / Tiempo);
+        PuedeCaminar = true;
+        Regando = false;
     }
     public IEnumerator EsperarTalar()
     {
         yield return new WaitForSeconds(TiempoTalar);
+        Debug.Log("Entra4");
         PuedeCaminar = true;
-        Talando =false;
+        Talando = false;
     }
 }

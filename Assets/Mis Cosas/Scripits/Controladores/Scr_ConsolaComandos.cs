@@ -114,6 +114,13 @@ public class Scr_ConsolaComandos : MonoBehaviour
                     PlayerPrefs.SetInt("PuntosDeHabilidad", PlayerPrefs.GetInt("PuntosDeHabilidad",0)+3);
                     break;
                 }
+
+            case "borrar.agua":
+                {
+                    Debug.Log("Sin Agua");
+                    PlayerPrefs.SetInt("CantidadAgua", 0);
+                    break;
+                }
             default:
                 {
                     Debug.Log("No se encontro el comando");

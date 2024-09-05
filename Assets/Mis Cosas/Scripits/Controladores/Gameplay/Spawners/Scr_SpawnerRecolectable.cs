@@ -17,7 +17,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     [SerializeField] string Habilidad;
 
     [Header("Estado del spawner")]
-    private bool TieneObjeto = true;
+    public bool TieneObjeto = true;
     private bool recolectando;
     private bool estaLejos;
 
@@ -77,7 +77,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
         float animSpeed = 1f; // Valor por defecto
 
         // Verificar si la habilidad está activa o no
-        if (PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si" || string.IsNullOrEmpty(Habilidad))
+        if (PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si" && !string.IsNullOrEmpty(Habilidad))
         {
             animSpeed = 2f; // Doble de velocidad si la habilidad está activa
         }
@@ -91,6 +91,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
         if (TieneObjeto)
         {
             DarObjeto();
+            GetComponent<Collider>().enabled = false;
             TieneObjeto = false;
         }
     }

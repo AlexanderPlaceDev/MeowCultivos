@@ -48,7 +48,7 @@ public class Scr_ObjetosAgregados : MonoBehaviour
             Icono.GetComponent<Image>().color = new Color(1, 1, 1, Tiempo[i]);
             Icono.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, Tiempo[i]);
 
-            if (Tiempo[i] <= 0)
+            if (Tiempo[i] <= 0 && Lista.Count>0)
             {
                 Icono.GetComponent<Image>().sprite = null;
                 Lista.RemoveAt(0);
