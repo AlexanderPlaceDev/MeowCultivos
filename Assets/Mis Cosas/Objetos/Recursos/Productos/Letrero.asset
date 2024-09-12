@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
+  m_Name: Letrero
+  m_EditorClassIdentifier: 
+  Nombre: Letrero
+  Descripcion: Sirve para ver informacion
+  Icono: {fileID: 21300000, guid: 31d12ce17e5d68d48a718ef62162c6ce, type: 3}
+  IconoInventario: {fileID: 21300000, guid: 3622bb9ebaea51e40b70cbce78cf7eff, type: 3}
+  MaterialesDeProduccion:
+  - {fileID: 11400000, guid: 3e315dfc6eeb7984e86ba4763756b3d5, type: 2}
+  - {fileID: 11400000, guid: 6285dd7ac81f2b54ab9b413bc37fa082, type: 2}
+  - {fileID: 11400000, guid: 740c58367a40ae940ade92993534e932, type: 2}
+  - {fileID: 0}
+  CantidadMaterialesDeProduccion: 020000000200000001000000
+  TiempoDeProduccion: 10

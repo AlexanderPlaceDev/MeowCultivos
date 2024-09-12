@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class Scr_CreadorObjetos : ScriptableObject
     public Scr_CreadorObjetos[] MaterialesDeProduccion;
     public int[] CantidadMaterialesDeProduccion;
     public int TiempoDeProduccion;
+    public float ValorComposta;
 
 }
 
