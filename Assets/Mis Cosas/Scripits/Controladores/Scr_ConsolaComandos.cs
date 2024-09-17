@@ -121,6 +121,12 @@ public class Scr_ConsolaComandos : MonoBehaviour
                     PlayerPrefs.SetInt("CantidadAgua", 0);
                     break;
                 }
+            case "agua+10":
+                {
+                    Debug.Log("Agrega Agua");
+                    PlayerPrefs.SetInt("CantidadAgua", 10);
+                    break;
+                }
             default:
                 {
                     Debug.Log("No se encontro el comando");

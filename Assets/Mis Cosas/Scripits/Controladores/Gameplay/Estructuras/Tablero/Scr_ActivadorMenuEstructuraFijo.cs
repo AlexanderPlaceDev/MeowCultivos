@@ -40,7 +40,8 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
             Gata.GetComponent<Scr_GiroGata>().enabled = false;
             transform.GetChild(0).gameObject.SetActive(true);
-            Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetComponent<RectTransform>(), -200, 1);
+            Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), -200, 1);
+            Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), -200, 1);
         }
         else
         {
@@ -121,6 +122,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         transform.GetChild(0).gameObject.SetActive(false);
         BotonCerrar.GetComponent<Image>().color = ColorBotones[0];
         BotonCerrar.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = ColorBotones[1];
-        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetComponent<RectTransform>(), 35, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), 0, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 0, 1);
     }
 }
