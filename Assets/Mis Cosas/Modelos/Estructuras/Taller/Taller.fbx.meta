@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9c899d0ae15203f49930aec9d45ba957
+guid: d87d2dc6aea15c240af418d3e5f8a22f
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,23 +7,73 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Madera
-    second: {fileID: 2100000, guid: e4a27a01ae6caab4ea7807b04cdedf38, type: 2}
+      name: Blueprint
+    second: {fileID: 2100000, guid: e529cdded79c9974f9e0ebcd724625cf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Color Amarillo
+    second: {fileID: 2100000, guid: 0e2bb97ea8810d0499ede047c7c0648d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Color Ebras
+    second: {fileID: 2100000, guid: 394f3e8813e72ca48bccbaf34f4974fa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Color Naranja
+    second: {fileID: 2100000, guid: 75b1d7e4abda7de40898ae6dae50231e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Color Negro
+    second: {fileID: 2100000, guid: 04005898c0df11340a7a282d8c369155, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Color Rojo
+    second: {fileID: 2100000, guid: 18a69e46df3d6604aabed2ce4208d927, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Color Rosa
+    second: {fileID: 2100000, guid: 8f31d9a92077f004cb963df47addbfb7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Color Verde
+    second: {fileID: 2100000, guid: 7acbfbe4867dec347aee7aedfe9713af, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Madera Puente
-    second: {fileID: 2100000, guid: 1c1f8ee538d787b49a99337fae7d5a35, type: 2}
+    second: {fileID: 2100000, guid: 976471043d48dc745a8ff2fea7b2ffda, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Metal
-    second: {fileID: 2100000, guid: 5d115ef0df0434b4b9f42795bf811cb0, type: 2}
+    second: {fileID: 2100000, guid: ac653c13e6e2e864fb0ff6f052a8c936, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Piedras
-    second: {fileID: 2100000, guid: 17f98cc9936888c4aa8f4d2a4aa24157, type: 2}
+      name: Tronco
+    second: {fileID: 2100000, guid: 2eff86338439d6a43a99b3854ed663ce, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Textura Blueprint
+    second: {fileID: 2800000, guid: 6193d3b24af9cff4395444cb52fd59ca, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Textura Puente
+    second: {fileID: 2800000, guid: 1ab1bbe0a4422144fafd6143aee9679e, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Textura Tronco
+    second: {fileID: 2800000, guid: 6d24fe1f084c722429c64bd453f0e63f, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

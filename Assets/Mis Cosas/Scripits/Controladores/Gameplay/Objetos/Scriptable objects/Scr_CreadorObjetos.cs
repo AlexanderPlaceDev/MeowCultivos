@@ -8,6 +8,7 @@ using UnityEngine;
 public class Scr_CreadorObjetos : ScriptableObject 
 {
     public string Nombre;
+    public string TipoPlanta;
     [SerializeField, TextArea(4, 6)] public string Descripcion;
     public Sprite Icono;
     public Sprite IconoInventario;
@@ -15,6 +16,7 @@ public class Scr_CreadorObjetos : ScriptableObject
     public int[] CantidadMaterialesDeProduccion;
     public int TiempoDeProduccion;
     public float ValorComposta;
+    public int[] MinimoMaximoSembradio;
 
 }
 

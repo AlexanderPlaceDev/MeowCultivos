@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class Scr_ControladorMapas : MonoBehaviour
 {
-    [SerializeField] bool EsMapa;
+    [SerializeField] public bool EsMapa;
     [SerializeField] GameObject[] MapasQueActiva;
     [SerializeField] GameObject[] MapasQueDesactiva;
 
 
-    private void Start()
+    public void Start()
     {
         if (EsMapa)
         {
@@ -28,10 +28,7 @@ public class Scr_ControladorMapas : MonoBehaviour
                 }
                 else
                 {
-                    if (PlayerPrefs.GetString("CinematicaInicial", "No") == "Si")
-                    {
-                        child.gameObject.SetActive(false);
-                    }
+                    child.gameObject.SetActive(false);
                 }
             }
         }
@@ -75,6 +72,30 @@ public class Scr_ControladorMapas : MonoBehaviour
                 Mapa.SetActive(false);
             }
 
+        }
+    }
+
+    public void ActualizarMapas()
+    {
+        if (EsMapa)
+        {
+            // Obtenemos la cantidad de hijos directos del objeto
+            int childCount = transform.childCount;
+
+            // Recorremos cada hijo directo
+            for (int i = 0; i < childCount; i++)
+            {
+                // Obtenemos el hijo en la posición i
+                Transform child = transform.GetChild(i);
+                if (PlayerPrefs.GetString("MapaActivo:" + child.name, "No") == "Si")
+                {
+                    child.gameObject.SetActive(true);
+                }
+                else
+                {
+                    child.gameObject.SetActive(false);
+                }
+            }
         }
     }
 }

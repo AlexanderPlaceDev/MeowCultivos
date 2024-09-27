@@ -47,7 +47,6 @@ public class Scr_CargadorGuardado : MonoBehaviour
         //Movimiento
         if (PlayerPrefs.GetString("Movimiento", "No") == "Si")
         {
-            Debug.Log("Entra3");
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
         }
 
@@ -64,9 +63,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
         Personajes[1].GetComponent<Scr_SistemaDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoBony", 0);
         if (PlayerPrefs.GetInt("DialogoGusano", 0) > 0)
         {
-            Debug.Log("Entra2");
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
-            Debug.Log("Se Activo el movimiento");
             MuroTutorial.SetActive(false);
         }
 

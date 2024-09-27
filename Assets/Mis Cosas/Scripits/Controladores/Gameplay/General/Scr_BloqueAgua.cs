@@ -98,7 +98,7 @@ public class Scr_BloqueAgua : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
      
-        if(other.tag == "Gata")
+        if(other.tag == "Gata" && PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si")
         {
             EstaDentro = true;
             SpawnearHerramienta();

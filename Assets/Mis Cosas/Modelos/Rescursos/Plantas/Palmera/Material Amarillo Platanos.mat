@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Material Amarillo Platanos
-  m_Shader: {fileID: -6465566751694194690, guid: 587acb4bde38b7b419552a3e6f531b8d,
+  m_Shader: {fileID: -6465566751694194690, guid: f1a80ebebdae43e4788a156cfa9fb32d,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -38,6 +38,10 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Base_Texture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -102,6 +106,7 @@ Material:
     - _Alpha: 1
     - _AlphaClip: 0
     - _AlphaToMask: 0
+    - _Ambient_Light_Strength: 0.5
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _Brillo_Max: 1.38
@@ -120,6 +125,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _Intensidad: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -129,6 +135,7 @@ Material:
     - _ReceiveShadows: 1
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
+    - _Specular: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
@@ -138,7 +145,11 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.79637474, g: 0.7876776, b: 0.32913297, a: 1}
+    - _Base_Color: {r: 0.85490197, g: 0.84705883, b: 0.2509804, a: 1}
     - _Color: {r: 0.85660374, g: 0.84641737, b: 0.25051606, a: 1}
+    - _Cutoff_Thresholds: {r: -0.05, g: 0.05, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
+    - _HDR: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _Tresshold: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

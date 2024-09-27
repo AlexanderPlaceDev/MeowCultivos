@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Baya Roja
   m_EditorClassIdentifier: 
   Nombre: Baya Roja
+  TipoPlanta: Arbusto
   Descripcion: Jugosa pero picosa
   Icono: {fileID: 21300000, guid: a02cc10f2019aec4494f83b0e433f1db, type: 3}
-  IconoInventario: {fileID: 0}
+  IconoInventario: {fileID: 21300000, guid: 9599768e711ee2641abea3ef3a167c83, type: 3}
   MaterialesDeProduccion: []
   CantidadMaterialesDeProduccion: 
   TiempoDeProduccion: 0
   ValorComposta: 1
+  MinimoMaximoSembradio: 

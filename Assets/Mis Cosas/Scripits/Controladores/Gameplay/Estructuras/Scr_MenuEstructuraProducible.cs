@@ -35,6 +35,7 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
     private float TiempoProduciendo = 0;
     private int cantidadAProducir = 0;
     private int cantidadProducida = 0;
+    public bool Produciendo=false;
 
     void Start()
     {
@@ -135,10 +136,12 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
         if (cantidadAProducir > 0 && barraPositionY == -755)
         {
             Tween.UIAnchoredPosition3DY(barraRect, -275, DuracionBarra);
+            Produciendo = true;
         }
         else if (cantidadAProducir == 0 && barraPositionY == -275)
         {
             Tween.UIAnchoredPosition3DY(barraRect, -755, DuracionBarra);
+            Produciendo = false;
         }
     }
 

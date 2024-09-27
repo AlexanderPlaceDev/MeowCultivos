@@ -7,26 +7,43 @@ using UnityEngine.UI;
 public class Scr_ControladorTiempo : MonoBehaviour
 {
     public int DuracionDelDiaPorHora; // Duración en segundos de una hora en el juego
-    public string DiaActual = "Lunes"; // Día inicial del juego
-    public int HoraActual = 6; // Hora inicial, por ejemplo 6:00 AM
+    public string DiaActual = "LUN"; // Día inicial del juego
+    public int HoraActual = 6; // Hora inicial, por ejemplo, 6:00 AM
     public float MinutoActual = 0; // Minuto actual, avanza en intervalos de 10 minutos
-    [SerializeField] Sprite[] IconosClima; // Iconos del clima para representar visualmente
     [SerializeField] Image ImagenClima;
+    [SerializeField] int[] HorasClima; // Horas en las que cambia el icono del clima
+    [SerializeField] Sprite[] IconosClima; // Iconos del clima para representar visualmente
     [SerializeField] TextMeshProUGUI TextoFecha; // Texto que muestra la fecha actual
     [SerializeField] TextMeshProUGUI TextoHora; // Texto que muestra la hora actual
+    [SerializeField] Light Sol; // Direccional Light que representa el sol
+    [SerializeField] Color[] ColoresDelDia; // Array de colores para cada parte del día
+
+    // Variables para el Skybox
+    public Material SkyboxDia; // Skybox para el día
+    public Material SkyboxNoche; // Skybox para la noche
+    public int HoraInicioDia = 6; // Hora en la que empieza el día (6 AM)
+    public int HoraInicioNoche = 18; // Hora en la que empieza la noche (6 PM)
+
+    private float rotacionSkybox = 0f; // Controlar la rotación del Skybox
 
     private float tiempoTranscurrido = 0; // Controla el tiempo que pasa entre frames
     private int[] intervalosMinutos = { 0, 10, 20, 30, 40, 50 }; // Intervalos de 10 minutos
 
-    void Start()
+    void Awake()
     {
         // Cargar la fecha y hora desde PlayerPrefs si ya existen
-        DiaActual = PlayerPrefs.GetString("DiaActual", "Lunes");
+        DiaActual = PlayerPrefs.GetString("DiaActual", "LUN");
         HoraActual = PlayerPrefs.GetInt("HoraActual", 6);
         MinutoActual = PlayerPrefs.GetFloat("MinutoActual", 0);
 
         ActualizarTextoFecha();
         ActualizarTextoHora();
+
+        // Actualizar el icono del clima al iniciar
+        ActualizarIconoClima();
+
+        // Actualizar el Skybox inicial
+        ActualizarSkybox();
     }
 
     void Update()
@@ -49,21 +66,30 @@ public class Scr_ControladorTiempo : MonoBehaviour
 
             // Guardar la fecha y hora actualizadas en PlayerPrefs
             GuardarTiempo();
+
+            // Actualizar el icono del clima
+            ActualizarIconoClima();
         }
+
+        // Cambia el color del sol dependiendo de la hora del día
+        ActualizarColorSol();
+
+        // Cambia el skybox dependiendo de si es de día o de noche
+        ActualizarSkybox();
+
+        // Actualizar la rotación del Skybox
+        RotarSkybox();
     }
 
     void ActualizarMinuto()
     {
-        // Encuentra el siguiente intervalo de minutos
         int indexMinutos = System.Array.IndexOf(intervalosMinutos, (int)MinutoActual);
         if (indexMinutos < intervalosMinutos.Length - 1)
         {
-            // Avanza al siguiente intervalo de 10 minutos
             MinutoActual = intervalosMinutos[indexMinutos + 1];
         }
         else
         {
-            // Si ya llegó a 50 minutos, avanza la hora
             MinutoActual = 0;
             ActualizarHora();
         }
@@ -71,10 +97,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
 
     void ActualizarHora()
     {
-        // Avanza la hora
         HoraActual++;
-
-        // Si pasa de las 24 horas, reinicia el día
         if (HoraActual >= 24)
         {
             HoraActual = 0;
@@ -84,22 +107,18 @@ public class Scr_ControladorTiempo : MonoBehaviour
 
     void ActualizarDia()
     {
-        // Cambiar de día cuando termina el ciclo de 24 horas
         string[] dias = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
         int diaActualIndex = System.Array.IndexOf(dias, DiaActual);
-
-        DiaActual = dias[(diaActualIndex + 1) % dias.Length]; // Cambia al siguiente día
+        DiaActual = dias[(diaActualIndex + 1) % dias.Length];
     }
 
     void ActualizarTextoFecha()
     {
-        // Actualiza el texto de la fecha con el día actual
         TextoFecha.text = DiaActual;
     }
 
     void ActualizarTextoHora()
     {
-        // Formatear la hora para que siempre muestre dos dígitos
         string horaFormateada = HoraActual.ToString("00");
         string minutoFormateado = ((int)MinutoActual).ToString("00");
         TextoHora.text = horaFormateada + ":" + minutoFormateado;
@@ -107,12 +126,66 @@ public class Scr_ControladorTiempo : MonoBehaviour
 
     void GuardarTiempo()
     {
-        // Guardar los datos en PlayerPrefs
         PlayerPrefs.SetString("DiaActual", DiaActual);
         PlayerPrefs.SetInt("HoraActual", HoraActual);
         PlayerPrefs.SetFloat("MinutoActual", MinutoActual);
-
-        // Asegurar que los datos se guardan
         PlayerPrefs.Save();
+    }
+
+    void ActualizarColorSol()
+    {
+        float horaFraccionada = HoraActual + (MinutoActual / 60f);
+        int indiceColorActual = Mathf.FloorToInt(horaFraccionada / (24f / ColoresDelDia.Length));
+        int indiceSiguienteColor = (indiceColorActual + 1) % ColoresDelDia.Length;
+        float t = (horaFraccionada % (24f / ColoresDelDia.Length)) / (24f / ColoresDelDia.Length);
+        Color colorActual = Color.Lerp(ColoresDelDia[indiceColorActual], ColoresDelDia[indiceSiguienteColor], t);
+        Sol.color = colorActual;
+    }
+
+    void ActualizarIconoClima()
+    {
+        if (HorasClima.Length != IconosClima.Length || HorasClima.Length == 0)
+        {
+            Debug.LogError("El tamaño de HorasClima y IconosClima no coincide o están vacíos.");
+            return;
+        }
+
+        float horaFraccionada = HoraActual + (MinutoActual / 60f);
+        int indiceIcono = 0;
+        for (int i = 0; i < HorasClima.Length; i++)
+        {
+            if (HoraActual >= HorasClima[i])
+            {
+                indiceIcono = i;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        indiceIcono = Mathf.Clamp(indiceIcono, 0, IconosClima.Length - 1);
+        ImagenClima.sprite = IconosClima[indiceIcono];
+    }
+
+    // Función para cambiar el skybox entre día y noche
+    void ActualizarSkybox()
+    {
+        if (HoraActual >= HoraInicioDia && HoraActual < HoraInicioNoche)
+        {
+            RenderSettings.skybox = SkyboxDia; // Cambiar al skybox de día
+        }
+        else
+        {
+            RenderSettings.skybox = SkyboxNoche; // Cambiar al skybox de noche
+        }
+    }
+
+    // Función para rotar el skybox suavemente
+    void RotarSkybox()
+    {
+        // Rotar el skybox un poco cada frame
+        rotacionSkybox += Time.deltaTime * 1f; // Cambia el valor de 1f para ajustar la velocidad de rotación
+        RenderSettings.skybox.SetFloat("_Rotation", rotacionSkybox);
     }
 }

@@ -37,7 +37,6 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
         {
 
             Anim.SetBool("Talar", true);
-            Debug.Log("Entra8");
             PuedeCaminar = false;
 
         }
@@ -47,13 +46,11 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
             if (Recolectando)
             {
                 Anim.SetBool("Recolectar", true);
-                Debug.Log("Entra7");
                 PuedeCaminar = false;
             }
             else
             {
                 Anim.SetBool("Recolectar", false);
-                Debug.Log("Entra6");
 
 
 

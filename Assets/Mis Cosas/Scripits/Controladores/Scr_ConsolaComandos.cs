@@ -88,9 +88,41 @@ public class Scr_ConsolaComandos : MonoBehaviour
             case "borrar.datos":
                 {
                     Debug.Log("Datos Borrados");
+
+                    // Borrar todos los datos guardados
+                    PlayerPrefs.DeleteAll();
+
+                    // Aquí vamos a activar manualmente los primeros 4 mapas
+                    int numeroMapasActivos = 5; // La cantidad de mapas que queremos mantener activos
+                    Scr_ControladorMapas controladorMapas = FindObjectOfType<Scr_ControladorMapas>(); // Asegúrate que el script está en la escena
+
+                    if (controladorMapas != null && controladorMapas.EsMapa)
+                    {
+                        // Iteramos a través de los hijos del objeto que contiene los mapas
+                        for (int i = 0; i < controladorMapas.transform.childCount; i++)
+                        {
+                            Transform child = controladorMapas.transform.GetChild(i);
+                            GameObject mapa = child.gameObject;
+
+                            // Si es uno de los primeros 4 mapas, lo activamos y guardamos su estado
+                            if (i < numeroMapasActivos)
+                            {
+                                mapa.SetActive(true);
+                                PlayerPrefs.SetString("MapaActivo:" + mapa.name, "Si"); // Guardamos el estado como activo
+                            }
+                            else
+                            {
+                                mapa.SetActive(false);
+                                PlayerPrefs.SetString("MapaActivo:" + mapa.name, "No"); // Guardamos el estado como desactivado
+                            }
+                        }
+                    }
+
+                    // Otras acciones relacionadas con la eliminación de datos
                     Camera.main.transform.GetChild(0).GetComponent<Scr_BarrasNegras>().Awake();
                     Camera.main.transform.GetChild(1).GetComponent<Scr_BarrasNegras>().Awake();
-                    PlayerPrefs.DeleteAll();
+
+                    // Recargar la escena (opcional)
                     SceneManager.LoadScene(2);
                     break;
                 }

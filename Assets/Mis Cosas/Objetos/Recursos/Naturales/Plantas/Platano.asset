@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Platano
   m_EditorClassIdentifier: 
   Nombre: Platano
+  TipoPlanta: Platano
   Descripcion: Una gran fuente de potasio o plomo
   Icono: {fileID: 21300000, guid: b39eb708864d9514dacbf02cbcd03ced, type: 3}
   IconoInventario: {fileID: 21300000, guid: d90df63e57a17f24bb38122b1ac2388e, type: 3}
@@ -20,3 +21,4 @@ MonoBehaviour:
   CantidadMaterialesDeProduccion: 
   TiempoDeProduccion: 0
   ValorComposta: 2
+  MinimoMaximoSembradio: 0300000006000000
