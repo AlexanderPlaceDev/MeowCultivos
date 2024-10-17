@@ -91,7 +91,6 @@ public class Scr_ConsolaComandos : MonoBehaviour
 
                     // Borrar todos los datos guardados
                     PlayerPrefs.DeleteAll();
-
                     // Aquí vamos a activar manualmente los primeros 4 mapas
                     int numeroMapasActivos = 5; // La cantidad de mapas que queremos mantener activos
                     Scr_ControladorMapas controladorMapas = FindObjectOfType<Scr_ControladorMapas>(); // Asegúrate que el script está en la escena

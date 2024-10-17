@@ -45,8 +45,25 @@ public class scr_BotonesMenuJuego : MonoBehaviour
                 }
                 else
                 {
-                    Botones[2].transform.GetChild(0).GetComponent<Image>().color = Colores[0];
-                    Botones[2].transform.GetChild(1).GetComponent<Image>().color = Colores[0];
+                    if (BotonySi[2] == '1')
+                    {
+                        Botones[3].transform.GetChild(0).GetComponent<Image>().color = Colores[0];
+                        Botones[3].transform.GetChild(1).GetComponent<Image>().color = Colores[0];
+                    }
+                    else
+                    {
+                        if (BotonySi[2] == '2')
+                        {
+                            Botones[2].transform.GetChild(0).GetComponent<Image>().color = Colores[0];
+                            Botones[2].transform.GetChild(1).GetComponent<Image>().color = Colores[0];
+                        }
+                        else
+                        {
+                            Botones[1].transform.GetChild(0).GetComponent<Image>().color = Colores[0];
+                            Botones[1].transform.GetChild(1).GetComponent<Image>().color = Colores[0];
+                        }
+                    }
+
                 }
             }
         }
@@ -54,8 +71,14 @@ public class scr_BotonesMenuJuego : MonoBehaviour
         {
             Botones[4].GetComponent<Image>().color = Colores[1];
             Botones[5].GetComponent<Image>().color = Colores[1];
+            Botones[0].transform.GetChild(0).GetComponent<Image>().color = Colores[1];
+            Botones[0].transform.GetChild(1).GetComponent<Image>().color = Colores[1];
+            Botones[1].transform.GetChild(0).GetComponent<Image>().color = Colores[1];
+            Botones[1].transform.GetChild(1).GetComponent<Image>().color = Colores[1];
             Botones[2].transform.GetChild(0).GetComponent<Image>().color = Colores[1];
             Botones[2].transform.GetChild(1).GetComponent<Image>().color = Colores[1];
+            Botones[3].transform.GetChild(0).GetComponent<Image>().color = Colores[1];
+            Botones[3].transform.GetChild(1).GetComponent<Image>().color = Colores[1];
         }
     }
 
@@ -156,7 +179,7 @@ public class scr_BotonesMenuJuego : MonoBehaviour
         Esperando = false;
     }
 
-    void Girar(bool Sube)
+    public void Girar(bool Sube)
     {
         if (Sube)
         {

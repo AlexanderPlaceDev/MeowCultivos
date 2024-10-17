@@ -15,8 +15,9 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
     [SerializeField] Sprite IconoTecla;
     [SerializeField] string Letra;
     [SerializeField] Sprite Tecla;
-    [SerializeField] GameObject BotonCerrar; 
-    [SerializeField] Color[] ColorBotones; 
+    [SerializeField] GameObject BotonCerrar;
+    [SerializeField] Color[] ColorBotones;
+    [SerializeField] GameObject CanvasMenu;
     Transform Gata;
     float Tiempo = 0;
     public bool EstaDentro = false;
@@ -34,6 +35,10 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E) && EstaEnRango && !EstaDentro)
         {
+            if (CanvasMenu != null)
+            {
+                CanvasMenu.SetActive(true);
+            }
             EstaDentro = true;
             Camara360.SetActive(false);
             Gata.GetChild(2).gameObject.SetActive(false);
@@ -47,6 +52,10 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.E) && EstaEnRango && EstaDentro)
             {
+                if (CanvasMenu != null)
+                {
+                    CanvasMenu.SetActive(false);
+                }
                 CerrarTablero();
             }
 
@@ -82,8 +91,8 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         {
             EstaEnRango = true;
             Gata.GetChild(2).gameObject.SetActive(true);
-            Gata.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text=Letra;
-            Gata.GetChild(2).GetChild(0).GetComponent<Image>().sprite=IconoTecla;
+            Gata.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Letra;
+            Gata.GetChild(2).GetChild(0).GetComponent<Image>().sprite = IconoTecla;
 
         }
     }

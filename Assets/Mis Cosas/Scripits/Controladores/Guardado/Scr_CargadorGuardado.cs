@@ -54,6 +54,11 @@ public class Scr_CargadorGuardado : MonoBehaviour
         if (PlayerPrefs.GetString("Reloj", "No") == "Si")
         {
             Reloj.SetActive(true);
+            Gata.transform.GetChild(5).GetComponent<Scr_ControladorMenuGameplay>().enabled = true;
+        }
+        else
+        {
+            Gata.transform.GetChild(5).GetComponent<Scr_ControladorMenuGameplay>().enabled = false;
         }
         //Inventario
 

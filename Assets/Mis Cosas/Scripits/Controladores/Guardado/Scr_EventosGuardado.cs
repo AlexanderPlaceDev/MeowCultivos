@@ -40,6 +40,7 @@ public class Scr_EventosGuardado : MonoBehaviour
                         PlayerPrefs.SetString("Movimiento", "Si");
                         GameObject.Find("Canvas").transform.GetChild(2).gameObject.SetActive(true);
                         PlayerPrefs.SetString("Reloj", "Si");
+                        Gata.transform.GetChild(5).GetComponent<Scr_ControladorMenuGameplay>().enabled = true;
                     }
                     PlayerPrefs.SetInt("DialogoGusano", UltimoDialogo);
                     break;

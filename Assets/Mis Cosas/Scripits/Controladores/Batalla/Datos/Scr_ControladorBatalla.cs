@@ -36,7 +36,6 @@ public class Scr_ControladorBatalla : MonoBehaviour
     [SerializeField] GameObject CirculoCarga;
 
     public List<GameObject> Enemigos = new List<GameObject>();
-    private AsyncOperation Operacion;
     private bool escenaPrecargada = false; // Nuevo flag para saber si la escena está precargada
     private bool DioRecompensa = false;
 
@@ -168,19 +167,13 @@ public class Scr_ControladorBatalla : MonoBehaviour
             }
             ComenzoTiempo = false;
             FinalizarBatalla(false);
-            if (Operacion == null)
-            {
-                StartCoroutine(PrecargarEscena(2));
-            }
+           
         }
         if (Enemigos.Count <= 0 && ComenzoTiempo)
         {
             ComenzoTiempo = false;
             FinalizarBatalla(true);
-            if (Operacion == null)
-            {
-                StartCoroutine(PrecargarEscena(2));
-            }
+            
         }
 
     }
@@ -300,24 +293,6 @@ public class Scr_ControladorBatalla : MonoBehaviour
         camara.GetComponent<Scr_GirarCamaraBatalla>().enabled = activar;
         camara.transform.parent.GetComponent<Rigidbody>().useGravity = activar;
         camara.transform.parent.GetComponent<Scr_Movimiento>().enabled = activar;
-    }
-
-    private IEnumerator PrecargarEscena(int escena)
-    {
-        // Inicia la carga asíncrona de la escena
-        Operacion = SceneManager.LoadSceneAsync(escena);
-        // No permitas que la escena se active automáticamente cuando termine de cargar
-        Operacion.allowSceneActivation = false;
-
-        // Opcional: Espera hasta que la escena esté completamente cargada
-        while (!Operacion.isDone)
-        {
-            if (Operacion.progress >= 0.9f && !escenaPrecargada)
-            {
-                escenaPrecargada = true; // Marca la escena como precargada
-            }
-            yield return null;
-        }
     }
 
     public void BotonAceptar()

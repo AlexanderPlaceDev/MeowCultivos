@@ -8,7 +8,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
 {
     public int DuracionDelDiaPorHora; // Duración en segundos de una hora en el juego
     public string DiaActual = "LUN"; // Día inicial del juego
-    public int HoraActual = 6; // Hora inicial, por ejemplo, 6:00 AM
+    public int HoraActual = 10; // Hora inicial, por ejemplo, 6:00 AM
     public float MinutoActual = 0; // Minuto actual, avanza en intervalos de 10 minutos
     [SerializeField] Image ImagenClima;
     [SerializeField] int[] HorasClima; // Horas en las que cambia el icono del clima
@@ -33,7 +33,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
     {
         // Cargar la fecha y hora desde PlayerPrefs si ya existen
         DiaActual = PlayerPrefs.GetString("DiaActual", "LUN");
-        HoraActual = PlayerPrefs.GetInt("HoraActual", 6);
+        HoraActual = PlayerPrefs.GetInt("HoraActual", 11);
         MinutoActual = PlayerPrefs.GetFloat("MinutoActual", 0);
 
         ActualizarTextoFecha();
