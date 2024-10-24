@@ -109,6 +109,8 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
+    - _EsPlanta: 1
+    - _Fuerza_Del_Viento: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -126,6 +128,7 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
+    - _Velocidad_Del_Viento: 0.5
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
@@ -133,6 +136,7 @@ Material:
     - _Base_Color: {r: 0.050951567, g: 0.5245282, b: 0.022762487, a: 1}
     - _Color: {r: 0.023529414, g: 0.427451, b: 0.027450982, a: 1}
     - _Cutoff_Thresholds: {r: 0.1, g: 0.23, b: 0, a: 0}
+    - _Direccion_Del_Viento: {r: 1, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _HDR: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}

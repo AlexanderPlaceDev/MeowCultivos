@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Scr_VisionEnemigosFuera : MonoBehaviour
 {
-
-
     Scr_MovimientoEnemigosFuera Movimiento;
 
     private void Start()

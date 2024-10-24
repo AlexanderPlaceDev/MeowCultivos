@@ -87,10 +87,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 3289256590479329287}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: caa63f37c21c4064b93b00e85427ef29,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7900944253765434130}
   m_SourcePrefab: {fileID: 100100000, guid: caa63f37c21c4064b93b00e85427ef29, type: 3}
 --- !u!1 &3487781784868600075 stripped
 GameObject:
@@ -155,7 +151,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 3487781784868600075}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 2.46
+  m_Radius: 2.02
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 99
@@ -180,27 +176,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aede89c8e2820504a826c70d4028433f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 178227796199041654, guid: 56ec785b842568445b4122069a02dfb7, type: 3}
-  SeEstaMoviendo: 0
-  wanderRadius: 30
-  wanderTimer: 12
   Jugador: {fileID: 0}
+  radioDeambulacion: 10
+  tiempoEspera: 5
   velocidad: 10
-  DistanciaDeFrenado: 3.5
---- !u!114 &7900944253765434130
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3487781784868600075}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 575ceb9cc8b6a1d44b65bab44720e924, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Iddle: Jabaddle
-  Mover: Mover
+  SeEstaMoviendo: 0
 --- !u!4 &4264002443657601969 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: caa63f37c21c4064b93b00e85427ef29,
@@ -283,6 +263,11 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 4e29b528754e83e4088f4e671aac08de,
         type: 3}
       propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 4e29b528754e83e4088f4e671aac08de,
+        type: 3}
+      propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4e29b528754e83e4088f4e671aac08de,

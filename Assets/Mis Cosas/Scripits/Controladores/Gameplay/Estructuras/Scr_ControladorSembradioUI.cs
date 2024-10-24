@@ -2,7 +2,6 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class Scr_ControladorSembradioUI : MonoBehaviour
 {
