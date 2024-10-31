@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
   m_Name: Clavo
   m_EditorClassIdentifier: 
-  ID: 0
   Nombre: Clavo
+  TipoPlanta: 
   Descripcion: Permite sostener cosas
   Icono: {fileID: 21300000, guid: 04036f527fcbf1d458c98a53bc3accae, type: 3}
   IconoInventario: {fileID: 21300000, guid: c1b80c13edc030146b069316425befa7, type: 3}
@@ -24,3 +24,6 @@ MonoBehaviour:
   - {fileID: 0}
   CantidadMaterialesDeProduccion: 0100000001000000
   TiempoDeProduccion: 1
+  ValorComposta: 0
+  MinimoMaximoSembradio: 
+  XPRecolecta: 3

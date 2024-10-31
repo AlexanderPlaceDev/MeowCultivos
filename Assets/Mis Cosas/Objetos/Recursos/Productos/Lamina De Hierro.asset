@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
   m_Name: Lamina De Hierro
   m_EditorClassIdentifier: 
-  ID: 0
   Nombre: Lamina De Hierro
+  TipoPlanta: 
   Descripcion: Sirve para construir otros objetos
   Icono: {fileID: 21300000, guid: 378ee444dd443a548b0de7ca5bec0e65, type: 3}
   IconoInventario: {fileID: 21300000, guid: aaeefaf1db90fc14592e830694728365, type: 3}
@@ -24,3 +24,6 @@ MonoBehaviour:
   - {fileID: 0}
   CantidadMaterialesDeProduccion: 0300000001000000
   TiempoDeProduccion: 4
+  ValorComposta: 0
+  MinimoMaximoSembradio: 
+  XPRecolecta: 7

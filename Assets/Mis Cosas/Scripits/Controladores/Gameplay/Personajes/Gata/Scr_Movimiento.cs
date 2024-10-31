@@ -85,6 +85,8 @@ public class Scr_Movimiento : MonoBehaviour
     {
         float alturaVerificacion = AlturaPersonaje * 0.5f * transform.localScale.y + 0.2f;
         EstaEnElSuelo = Physics.Raycast(transform.position, Vector3.down, alturaVerificacion, Suelo);
+        Debug.DrawRay(transform.position, Vector3.down * alturaVerificacion, Color.red);
+
     }
 
     private void CapturarInputs()

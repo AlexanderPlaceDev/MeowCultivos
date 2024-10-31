@@ -6,7 +6,7 @@ public class Scr_DatosSingletonBatalla : MonoBehaviour
 {
     public GameObject Enemigo;
     public int CantidadDeEnemigos;
-    public GameObject Mapa;
+    public string NombreMapa;
 
     [Header("Recompensa")]
     public List<Scr_CreadorObjetos> ObjetosRecompensa = new List<Scr_CreadorObjetos>();

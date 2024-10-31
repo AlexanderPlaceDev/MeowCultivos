@@ -12,11 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
   m_Name: Rama
   m_EditorClassIdentifier: 
-  ID: 0
   Nombre: Rama
+  TipoPlanta: 
   Descripcion: huele a naturaleza
   Icono: {fileID: 21300000, guid: 25818aa97f4896f419b2a12b34ff0392, type: 3}
   IconoInventario: {fileID: 21300000, guid: a16dd6d72b7110e4db01eb9e89fbed7c, type: 3}
   MaterialesDeProduccion: []
   CantidadMaterialesDeProduccion: 
   TiempoDeProduccion: 0
+  ValorComposta: 0
+  MinimoMaximoSembradio: 
+  XPRecolecta: 1

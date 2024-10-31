@@ -93,6 +93,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 33.094624
       objectReference: {fileID: 0}
+    - target: {fileID: -8620046039990860381, guid: caa63f37c21c4064b93b00e85427ef29,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -8620046039990860381, guid: caa63f37c21c4064b93b00e85427ef29,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -8620046039990860381, guid: caa63f37c21c4064b93b00e85427ef29,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: -8413743817938631839, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -280,8 +295,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8879528566716807029, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 8879528566716807029, guid: caa63f37c21c4064b93b00e85427ef29,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 8879528566716807029, guid: caa63f37c21c4064b93b00e85427ef29,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 8879528566716807029, guid: caa63f37c21c4064b93b00e85427ef29,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8879528566716807029, guid: caa63f37c21c4064b93b00e85427ef29,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9197374587994906612, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
@@ -440,8 +475,8 @@ MonoBehaviour:
   Drops:
   - {fileID: 11400000, guid: 4a1357594e65d8047b0e6ca45c64e293, type: 2}
   - {fileID: 11400000, guid: a87d1159b0a18c04985e7dd619997811, type: 2}
-  XPMinima: 1
-  XPMaxima: 2
+  XPMinima: 2
+  XPMaxima: 5
   Probabilidades:
   - 100
   - 30

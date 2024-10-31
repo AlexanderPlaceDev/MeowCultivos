@@ -150,7 +150,7 @@ public class Scr_Enemigo : MonoBehaviour
             for (int i = 0; i < materiales.Length; i++)
             {
                 materialesModificados[i] = new Material(materiales[i]);
-                materialesModificados[i].SetColor("_BaseColor", ColorHerido); // Cambiar el color a rojo
+                materialesModificados[i].SetFloat("_RecibeDa_o", 1); // Cambiar el color a rojo
             }
 
             // Aplicar materiales modificados
@@ -166,12 +166,13 @@ public class Scr_Enemigo : MonoBehaviour
 
             // Restaurar materiales originales
             renderer.materials = materialesOriginales;
+            foreach (Material Mat in renderer.materials)
+            {
+                Mat.SetFloat("_RecibeDa_o", 0); // Cambiar el color a rojo
+            }
+
 
             cambiandoColor = false;
-        }
-        else
-        {
-            Debug.LogError("No se encontró el componente Renderer.");
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
@@ -36,15 +37,16 @@ public class Scr_ControladorBatalla : MonoBehaviour
     [SerializeField] GameObject CirculoCarga;
 
     public List<GameObject> Enemigos = new List<GameObject>();
-    private bool escenaPrecargada = false; // Nuevo flag para saber si la escena está precargada
     private bool DioRecompensa = false;
 
     public int VidaAnterior = 10;
     public int VidaActual = 10;
 
+    private Scr_DatosSingletonBatalla Singleton;
+
     void Start()
     {
-
+        Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
     }
 
     void Update()
@@ -83,18 +85,28 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
     public void CuentaAtras()
     {
+        List<GameObject> Spawners = new List<GameObject>();
+        foreach (Transform Mapa in GameObject.Find("Mapa").transform.GetComponentInChildren<Transform>(true))
+        {
+            if (Mapa.name == Singleton.NombreMapa)
+            {
+                Mapa.gameObject.SetActive(true);
+                foreach (Transform Objeto in Mapa.GetComponentInChildren<Transform>(true))
+                {
+                    if (Objeto.name.Contains("Spawner"))
+                    {
+                        Spawners.Add(Objeto.gameObject);
+                    }
+                }
+            }
+        }
         NumeroCuenta.gameObject.SetActive(true);
         ComenzarCuenta = true;
 
-        List<GameObject> Spawners = new List<GameObject>();
 
-        foreach (Transform Objeto in GameObject.Find("Mapa").transform.GetChild(0).GetComponentInChildren<Transform>())
-        {
-            if (Objeto.name.Contains("Spawner"))
-            {
-                Spawners.Add(Objeto.gameObject);
-            }
-        }
+
+
+
 
         Scr_DatosSingletonBatalla DatosSingleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
 
@@ -167,13 +179,13 @@ public class Scr_ControladorBatalla : MonoBehaviour
             }
             ComenzoTiempo = false;
             FinalizarBatalla(false);
-           
+
         }
         if (Enemigos.Count <= 0 && ComenzoTiempo)
         {
             ComenzoTiempo = false;
             FinalizarBatalla(true);
-            
+
         }
 
     }

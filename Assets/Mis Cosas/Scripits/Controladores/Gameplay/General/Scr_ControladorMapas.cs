@@ -8,6 +8,7 @@ public class Scr_ControladorMapas : MonoBehaviour
     [SerializeField] public bool EsMapa;
     [SerializeField] GameObject[] MapasQueActiva;
     [SerializeField] GameObject[] MapasQueDesactiva;
+    [SerializeField] string NombreMapaBatalla;
 
 
     public void Start()
@@ -62,7 +63,7 @@ public class Scr_ControladorMapas : MonoBehaviour
     {
         if (other.name == "Gato Mesh")
         {
-
+            GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().NombreMapa = NombreMapaBatalla;
             foreach (GameObject Mapa in MapasQueActiva)
             {
                 Mapa.SetActive(true);

@@ -121,6 +121,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _RecibeDa_o: 0
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _Specular: 0
@@ -136,7 +137,7 @@ Material:
     - _Base_Color: {r: 0.050951567, g: 0.5245282, b: 0.022762487, a: 1}
     - _Color: {r: 0.023529414, g: 0.427451, b: 0.027450982, a: 1}
     - _Cutoff_Thresholds: {r: 0.1, g: 0.23, b: 0, a: 0}
-    - _Direccion_Del_Viento: {r: 1, g: 0, b: 0, a: 0}
+    - _Direccion_Del_Viento: {r: 0.005, g: 0.001, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _HDR: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}

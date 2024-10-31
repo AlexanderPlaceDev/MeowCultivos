@@ -17,7 +17,7 @@ public class Scr_CreadorObjetos : ScriptableObject
     public int TiempoDeProduccion;
     public float ValorComposta;
     public int[] MinimoMaximoSembradio;
-
+    public int XPRecolecta;
 }
 
 

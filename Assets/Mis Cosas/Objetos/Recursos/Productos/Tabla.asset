@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
   m_Name: Tabla
   m_EditorClassIdentifier: 
-  ID: 0
   Nombre: Tabla
+  TipoPlanta: 
   Descripcion: "\xBFSera pino o roble?"
   Icono: {fileID: 21300000, guid: 0571de70ed4770b48ba63706c9388c7e, type: 3}
   IconoInventario: {fileID: 21300000, guid: 7596517cb7c1afb43b2e0131033d3cdb, type: 3}
@@ -24,3 +24,6 @@ MonoBehaviour:
   - {fileID: 0}
   CantidadMaterialesDeProduccion: 01000000
   TiempoDeProduccion: 3
+  ValorComposta: 0
+  MinimoMaximoSembradio: 
+  XPRecolecta: 3

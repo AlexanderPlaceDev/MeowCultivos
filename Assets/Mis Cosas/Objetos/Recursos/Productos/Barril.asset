@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
   m_Name: Barril
   m_EditorClassIdentifier: 
-  ID: 0
   Nombre: Barril
+  TipoPlanta: 
   Descripcion: Almacena cosas dentro
   Icono: {fileID: 21300000, guid: 302c6ee65d26a7748a03b9689508655d, type: 3}
   IconoInventario: {fileID: 21300000, guid: 48d5ec23d1ebbad4799edfb4da1b422c, type: 3}
@@ -24,3 +24,6 @@ MonoBehaviour:
   - {fileID: 0}
   CantidadMaterialesDeProduccion: 050000000200000005000000
   TiempoDeProduccion: 10
+  ValorComposta: 0
+  MinimoMaximoSembradio: 
+  XPRecolecta: 5

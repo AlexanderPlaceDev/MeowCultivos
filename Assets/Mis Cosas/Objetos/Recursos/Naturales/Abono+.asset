@@ -13,9 +13,13 @@ MonoBehaviour:
   m_Name: Abono+
   m_EditorClassIdentifier: 
   Nombre: Abono+
+  TipoPlanta: 
   Descripcion: Huele no tan raro
   Icono: {fileID: 21300000, guid: 09dd0afbe9e08514bab26c6d972a5ee3, type: 3}
   IconoInventario: {fileID: 21300000, guid: 2b02a206775b5b2448e80f4510302c30, type: 3}
   MaterialesDeProduccion: []
   CantidadMaterialesDeProduccion: 
   TiempoDeProduccion: 0
+  ValorComposta: 0
+  MinimoMaximoSembradio: 
+  XPRecolecta: 5

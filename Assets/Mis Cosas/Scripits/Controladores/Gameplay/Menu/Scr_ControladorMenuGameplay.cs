@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,12 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
     [SerializeField] Image Fondo;
     [SerializeField] GameObject BarraIzquierda;
     [SerializeField] GameObject BarraDerecha;
+    [SerializeField] TextMeshProUGUI Hora;
+    [SerializeField] TextMeshProUGUI Dia;
+    [SerializeField] TextMeshProUGUI Nivel;
+    [SerializeField] TextMeshProUGUI XP;
+    [SerializeField] TextMeshProUGUI Dinero;
+
     bool Esperando = false;
     bool EstaEnMenu = false;
     float TiempoDeEspera = 0;
@@ -24,11 +31,11 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
     void Update()
     {
 
+        ActualizarInfoPrincipal(Hora, Dia, Nivel, XP, Dinero);
         if (EstaEnMenu)
         {
             // Desactiva los componentes de movimiento de la gata mientras está en el menú
             Gata.GetComponent<Scr_GiroGata>().enabled = false;
-
             if (Input.GetKeyDown(KeyCode.Tab) && !Esperando)
             {
                 Debug.Log("Entra");
@@ -89,5 +96,21 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
 
         BarraDerecha.transform.GetChild(1).GetComponent<Image>().color = TemaActual.ColoresMenu[0];
         BarraDerecha.transform.GetChild(2).GetComponent<Image>().color = TemaActual.ColoresMenu[1];
+    }
+
+    void ActualizarInfoPrincipal(TextMeshProUGUI Hora, TextMeshProUGUI Dia, TextMeshProUGUI Nivel, TextMeshProUGUI XP, TextMeshProUGUI Dinero)
+    {
+        if (GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().MinutoActual == 0)
+        {
+            Hora.text = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().HoraActual + ":00";
+        }
+        else
+        {
+            Hora.text = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().HoraActual + ":" + GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().MinutoActual;
+        }
+        Dia.text = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().DiaActual;
+        Nivel.text = "Lv." + PlayerPrefs.GetInt("Nivel", 0);
+        XP.text = PlayerPrefs.GetInt("XPActual", 0) + " / " + PlayerPrefs.GetInt("XPSiguiente", 10) + " :XP";
+        Dinero.text = "$" + PlayerPrefs.GetInt("Dinero", 0);
     }
 }

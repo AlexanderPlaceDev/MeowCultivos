@@ -15,7 +15,10 @@ public class Scr_VisionEnemigosFuera : MonoBehaviour
     {
         if (other.tag == "Gata")
         {
-            Movimiento.Jugador = other.gameObject.transform.parent.gameObject;
+            if (Movimiento != null)
+            {
+                Movimiento.Jugador = other.gameObject.transform.parent.gameObject;
+            }
         }
     }
 

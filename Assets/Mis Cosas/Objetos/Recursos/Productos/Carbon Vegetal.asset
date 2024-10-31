@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
   m_Name: Carbon Vegetal
   m_EditorClassIdentifier: 
-  ID: 0
   Nombre: Carbon Vegetal
+  TipoPlanta: 
   Descripcion: Buena fuente de combustible
   Icono: {fileID: 21300000, guid: 5444534c64733b646a46171d388bb5d1, type: 3}
   IconoInventario: {fileID: 0}
@@ -24,3 +24,6 @@ MonoBehaviour:
   - {fileID: 0}
   CantidadMaterialesDeProduccion: 01000000
   TiempoDeProduccion: 3
+  ValorComposta: 0
+  MinimoMaximoSembradio: 
+  XPRecolecta: 3

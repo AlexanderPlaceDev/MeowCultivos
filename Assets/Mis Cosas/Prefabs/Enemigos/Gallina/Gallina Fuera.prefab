@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6697481814189933142}
   - component: {fileID: 6571587575937097591}
   - component: {fileID: 8018444704786153461}
+  - component: {fileID: 4329079422545794711}
   m_Layer: 0
   m_Name: CamposVision
   m_TagString: Untagged
@@ -107,6 +108,18 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!114 &4329079422545794711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4558459899582950716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52ad67d4cb37ef240948b54443405073, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3459955246206149927
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -224,6 +237,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2220173084234599581}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ce1986922dd10542b8084a299567b99,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4639460410834878364}
   m_SourcePrefab: {fileID: 100100000, guid: 6ce1986922dd10542b8084a299567b99, type: 3}
 --- !u!4 &4003281753990005452 stripped
 Transform:
@@ -320,11 +337,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Jugador: {fileID: 0}
-  radioDeambulacion: 30
-  tiempoEspera: 5
-  velocidad: 100
-  Huye: 0
-  distanciaHuir: 30
+  radioDeambulacion: 50
+  tiempoEspera: 30
+  velocidad: 30
+  Huye: 1
+  distanciaHuir: 50
   SeEstaMoviendo: 0
   estaEnPausa: 0
   estadoActual: 0
+--- !u!114 &4639460410834878364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4378997640072845430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5be3fbe55668cb74d8a905ea881511af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DistanciaDeCargadoCerca: 3
+  DistanciaDeCargadoLejos: 5
+  PrefabEnemigo: {fileID: 8087238990687637167, guid: 59a42bf95c534e84bbf65ac346775e94,
+    type: 3}
+  CantidadEnemigosMinima: 1
+  CantidadEnemigosMaxima: 3

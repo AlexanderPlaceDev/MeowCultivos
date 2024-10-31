@@ -108,7 +108,10 @@ public class Scr_MovimientoEnemigosFuera : MonoBehaviour
             MoverAUnaNuevaPosicion();
             temporizador = 0;
             SeEstaMoviendo = true;
-            Animador.SetBool("Caminando", true);
+            if (Animador != null)
+            {
+                Animador.SetBool("Caminando", true);
+            }
         }
 
         if (agente.remainingDistance <= agente.stoppingDistance && !agente.pathPending)
@@ -123,7 +126,10 @@ public class Scr_MovimientoEnemigosFuera : MonoBehaviour
         SeEstaMoviendo = true;
         agente.isStopped = false;
         agente.SetDestination(Jugador.transform.position);
-        Animador.SetBool("Caminando", true);
+        if (Animador != null)
+        {
+            Animador.SetBool("Caminando", true);
+        }
 
         // Cambiar a disparar si está suficientemente cerca
         if (Vector3.Distance(transform.position, Jugador.transform.position) <= 5f)
@@ -138,7 +144,10 @@ public class Scr_MovimientoEnemigosFuera : MonoBehaviour
         agente.isStopped = false;
         Vector3 posicionCobertura = EncontrarCobertura();
         agente.SetDestination(posicionCobertura);
-        Animador.SetBool("Caminando", true);
+        if (Animador != null)
+        {
+            Animador.SetBool("Caminando", true);
+        }
     }
 
     // Estado de huir
@@ -153,7 +162,10 @@ public class Scr_MovimientoEnemigosFuera : MonoBehaviour
             agente.isStopped = false;
             MoverAUnaNuevaPosicion();
             temporizador = 0;
-            Animador.SetBool("Caminando", true);
+            if (Animador != null)
+            {
+                Animador.SetBool("Caminando", true);
+            }
 
             // Cambiar a disparar si está suficientemente cerca
             if (Vector3.Distance(transform.position, Jugador.transform.position) <= 5f)
@@ -169,7 +181,10 @@ public class Scr_MovimientoEnemigosFuera : MonoBehaviour
     void Disparar()
     {
         agente.isStopped = true;
-        Animador.SetBool("Caminando", false);
+        if (Animador != null)
+        {
+            Animador.SetBool("Caminando", false);
+        }
         Debug.Log("Disparando al jugador!");
     }
 
@@ -195,7 +210,10 @@ public class Scr_MovimientoEnemigosFuera : MonoBehaviour
     {
         SeEstaMoviendo = false;
         agente.isStopped = true;
-        Animador.SetBool("Caminando", false);
+        if (Animador != null)
+        {
+            Animador.SetBool("Caminando", false);
+        }
         estaEnPausa = true;
 
         float tiempoPausa = Random.Range(2f, 5f);

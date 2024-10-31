@@ -57,13 +57,13 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         ActualizarEspaciosArmas();
     }
 
-    
+
 
     private void ActualizarEspaciosArmas()
     {
-        for(int i = 0; i <= EspaciosArmas.Length; i++)
+        for (int i = 0; i <= EspaciosArmas.Length; i++)
         {
-            if(PlayerPrefs.GetString("Espacio Arma" + i, "No") == "Si")
+            if (PlayerPrefs.GetString("Espacio Arma" + i, "No") == "Si")
             {
                 EspaciosArmas[i].SetActive(true);
             }
@@ -168,7 +168,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         //Actualizar Imagen
         if (!Armas[ArmaActual].activeSelf)
         {
-            foreach(GameObject Arma in Armas)
+            foreach (GameObject Arma in Armas)
             {
                 Arma.SetActive(false);
             }
@@ -318,7 +318,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         CanvasSeleccionDeArmas.SetActive(false);
         CanvasGameplay.SetActive(true);
         ObjetosArmas.SetActive(true);
-        Mapa.SetActive(true);
         GetComponent<Scr_ControladorBatalla>().CuentaAtras();
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;

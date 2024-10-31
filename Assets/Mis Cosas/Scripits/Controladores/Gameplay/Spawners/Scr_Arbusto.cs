@@ -16,6 +16,7 @@ public class Scr_Arbusto : MonoBehaviour
     [SerializeField] private int[] minimoMaximo;
     [SerializeField] string Habilidad;
     [SerializeField] string Habilidad2;
+    [SerializeField] int XPQueDa = 1;
 
     [Header("Estado del Arbusto")]
     private int tipoActual = 0;
@@ -84,7 +85,6 @@ public class Scr_Arbusto : MonoBehaviour
         // Ajusta el tiempo de espera según la velocidad de la animación
         yield return new WaitForSeconds(5.22f / animSpeed);
         gata.GetChild(0).GetComponent<Animator>().speed = 1;
-
         gata.GetChild(0).GetComponent<Animator>().speed = 1f; // Restablece la velocidad de la animación a 1x
         recolectando = false;
         gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = false;
@@ -113,7 +113,7 @@ public class Scr_Arbusto : MonoBehaviour
         int cantidad = Random.Range(minimoMaximo[0], minimoMaximo[1]);
         if (DaDoble)
         {
-            cantidad =cantidad* 2;
+            cantidad = cantidad * 2;
         }
         ActualizarInventario(cantidad, objetosQueDa[tipoActual]);
     }

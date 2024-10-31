@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Letrero
   m_EditorClassIdentifier: 
   Nombre: Letrero
+  TipoPlanta: 
   Descripcion: Sirve para ver informacion
   Icono: {fileID: 21300000, guid: 31d12ce17e5d68d48a718ef62162c6ce, type: 3}
   IconoInventario: {fileID: 21300000, guid: 3622bb9ebaea51e40b70cbce78cf7eff, type: 3}
@@ -23,3 +24,6 @@ MonoBehaviour:
   - {fileID: 0}
   CantidadMaterialesDeProduccion: 020000000200000001000000
   TiempoDeProduccion: 10
+  ValorComposta: 0
+  MinimoMaximoSembradio: 
+  XPRecolecta: 5

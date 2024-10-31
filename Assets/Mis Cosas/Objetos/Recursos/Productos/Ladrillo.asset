@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
   m_Name: Ladrillo
   m_EditorClassIdentifier: 
-  ID: 0
   Nombre: Ladrillo
+  TipoPlanta: 
   Descripcion: Sirve para construir objetos estables
   Icono: {fileID: 21300000, guid: 5a76da2cfdd40cc4fb50dd3715b8e791, type: 3}
   IconoInventario: {fileID: 21300000, guid: a41d8f9488f39254392962cbc690de86, type: 3}
@@ -24,3 +24,6 @@ MonoBehaviour:
   - {fileID: 0}
   CantidadMaterialesDeProduccion: 0100000003000000
   TiempoDeProduccion: 4
+  ValorComposta: 0
+  MinimoMaximoSembradio: 
+  XPRecolecta: 6

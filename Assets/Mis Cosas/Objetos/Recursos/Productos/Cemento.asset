@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
   m_Name: Cemento
   m_EditorClassIdentifier: 
-  ID: 0
   Nombre: Cemento
+  TipoPlanta: 
   Descripcion: De alta resistencia
   Icono: {fileID: 21300000, guid: 26db3d67b9b07e2428bf8fcc3736c9dd, type: 3}
   IconoInventario: {fileID: 21300000, guid: 09d5c226dda758b4b8896c7affbdb877, type: 3}
@@ -24,3 +24,6 @@ MonoBehaviour:
   - {fileID: 0}
   CantidadMaterialesDeProduccion: 0500000002000000
   TiempoDeProduccion: 4
+  ValorComposta: 0
+  MinimoMaximoSembradio: 
+  XPRecolecta: 5

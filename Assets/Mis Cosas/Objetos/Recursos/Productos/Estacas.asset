@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
   m_Name: Estacas
   m_EditorClassIdentifier: 
-  ID: 0
   Nombre: Estacas
+  TipoPlanta: 
   Descripcion: Ayudan a mantener cosas juntas por poco tiempo
   Icono: {fileID: 21300000, guid: 90bf3b2158dc133458f7eb5de64cf174, type: 3}
   IconoInventario: {fileID: 21300000, guid: 4834209a200bbd648a55b65b785418a3, type: 3}
@@ -24,3 +24,6 @@ MonoBehaviour:
   - {fileID: 0}
   CantidadMaterialesDeProduccion: 05000000
   TiempoDeProduccion: 5
+  ValorComposta: 0
+  MinimoMaximoSembradio: 
+  XPRecolecta: 4

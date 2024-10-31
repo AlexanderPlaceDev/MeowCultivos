@@ -9,6 +9,8 @@ public class Scr_ObjetosAgregados : MonoBehaviour
     public List<int> Cantidades = new List<int>();
     [SerializeField] GameObject[] Iconos;
     public float[] Tiempo = { 2, 2, 2, 2 };
+    int xptotal = 0;
+    [SerializeField] string HabilidadXP;
 
     // Bandera para evitar agregar objetos repetidamente
     private bool objetosAgregados = false;
@@ -23,7 +25,13 @@ public class Scr_ObjetosAgregados : MonoBehaviour
 
         if (Lista.Count > 0)
         {
+            Debug.Log("Entra2");
+            if (!GameObject.Find("Canvas XP").GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Desaparecer"))
+            {
+                GameObject.Find("Canvas XP").GetComponent<Animator>().Play("Desaparecer");
+            }
             int ObjetoActual = 0;
+            xptotal = 0;
             foreach (Scr_CreadorObjetos Objeto in Lista)
             {
                 if (ObjetoActual == 4 || Lista[ObjetoActual] == null)
@@ -32,10 +40,34 @@ public class Scr_ObjetosAgregados : MonoBehaviour
                 }
                 else
                 {
+                    xptotal += Objeto.XPRecolecta;
                     Iconos[ObjetoActual].GetComponent<Image>().sprite = Lista[ObjetoActual].Icono;
                     Iconos[ObjetoActual].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "+" + Cantidades[ObjetoActual].ToString();
                 }
                 ObjetoActual++;
+            }
+
+            if (Iconos[0].GetComponent<Image>().sprite != null && GameObject.Find("Canvas XP").transform.GetChild(0).GetComponent<TextMeshProUGUI>().color.a == 0)
+            {
+                Debug.Log("Entra");
+                if (PlayerPrefs.GetString("Habilidad:" + HabilidadXP, "No") == "Si")
+                {
+                    xptotal = xptotal * 2;
+                }
+                PlayerPrefs.SetInt("XPActual", PlayerPrefs.GetInt("XPActual") + xptotal);
+                if (PlayerPrefs.GetInt("XPActual", 0) >= PlayerPrefs.GetInt("XPSiguiente", 10))
+                {
+                    PlayerPrefs.SetInt("XPActual", PlayerPrefs.GetInt("XPActual", 0) - PlayerPrefs.GetInt("XPSiguiente", 10));
+                    PlayerPrefs.SetInt("Nivel", PlayerPrefs.GetInt("Nivel", 0) + 1);
+                    PlayerPrefs.SetInt("XPSiguiente", PlayerPrefs.GetInt("XPSiguiente", 10) * 2);
+                    PlayerPrefs.SetInt("PuntosDeHabilidad", PlayerPrefs.GetInt("PuntosDeHabilidad", 0) + 3);
+                    GameObject.Find("Canvas XP").transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "LV.+1";
+                }
+                else
+                {
+                    GameObject.Find("Canvas XP").transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "XP + " + xptotal;
+                }
+
             }
         }
 
@@ -47,13 +79,16 @@ public class Scr_ObjetosAgregados : MonoBehaviour
             Tiempo[i] -= Time.deltaTime;
             Icono.GetComponent<Image>().color = new Color(1, 1, 1, Tiempo[i]);
             Icono.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, Tiempo[i]);
-
-            if (Tiempo[i] <= 0 && Lista.Count>0)
+            if (Tiempo[i] <= 0 && Lista.Count > 0)
             {
                 Icono.GetComponent<Image>().sprite = null;
                 Lista.RemoveAt(0);
                 Cantidades.RemoveAt(0);
                 Tiempo[i] = 2;
+
+
+
+
             }
             i++;
         }

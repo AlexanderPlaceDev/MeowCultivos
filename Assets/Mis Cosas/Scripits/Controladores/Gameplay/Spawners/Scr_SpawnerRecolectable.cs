@@ -15,6 +15,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     [SerializeField] private Scr_CreadorObjetos objetoQueDa;
     [SerializeField] private int[] minimoMaximo;
     [SerializeField] string Habilidad;
+    [SerializeField] string Habilidad2;
 
     [Header("Estado del spawner")]
     public bool TieneObjeto = true;
@@ -99,6 +100,10 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     void DarObjeto()
     {
         int cantidad = Random.Range(minimoMaximo[0], minimoMaximo[1]);
+        if (PlayerPrefs.GetString("Habilidad:" + Habilidad2, "No") == "Si")
+        {
+            cantidad = cantidad * 2;
+        }
         ActualizarInventario(cantidad, objetoQueDa);
     }
 
