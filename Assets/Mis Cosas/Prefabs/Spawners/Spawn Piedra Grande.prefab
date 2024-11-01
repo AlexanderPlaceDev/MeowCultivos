@@ -4774,10 +4774,14 @@ MonoBehaviour:
   ObjetoQueDa: {fileID: 11400000, guid: 98bf319b9993e4e449955b29496b058f, type: 2}
   MinimoMaximo: 0100000004000000
   Vida: 1
+  VidaMaxima: 1
   UsaPico: 1
   UsaHacha: 0
   HabilidadRequerida: Pico Madera
   HabilidadRequerida2: Piedras
+  TiempoRespawn:
+  - 240
+  - 600
 --- !u!208 &4611189947637854436
 NavMeshObstacle:
   m_ObjectHideFlags: 0

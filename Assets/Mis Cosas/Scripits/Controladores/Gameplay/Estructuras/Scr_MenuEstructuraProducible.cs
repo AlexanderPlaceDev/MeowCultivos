@@ -89,7 +89,7 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
 
     private void GenerarObjeto()
     {
-        cantidadProducida++;
+        cantidadProducida += ObjetosQueProduce[ObjetoActual].CantidadProducto;
         var objetoTransform = ObjetoCreado.transform;
         objetoTransform.GetChild(0).GetComponent<Image>().sprite = ObjetosQueProduce[ObjetoActual].Icono;
         objetoTransform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = cantidadProducida.ToString();
@@ -231,6 +231,8 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
     public void RecolectarItem()
     {
         DarObjeto(ObjetosQueProduce[ObjetoActual], cantidadProducida);
+        GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>().Lista.Add(ObjetosQueProduce[ObjetoActual]);
+        GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>().Cantidades.Add(cantidadProducida);
         cantidadProducida = 0;
     }
 

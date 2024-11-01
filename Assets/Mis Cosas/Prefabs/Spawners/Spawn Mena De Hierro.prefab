@@ -4751,15 +4751,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3c9489733de0c34d9f6a6815c9cef99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UsaPico: 1
-  UsaHacha: 0
   Icono: {fileID: 21300000, guid: 23cd88fecdba22d4a9a7495dbcf66af2, type: 3}
   Tecla: 
   TeclaIcono: {fileID: 21300000, guid: 1effa06f147261a4098395eb6a1c36d3, type: 3}
-  Vida: 1
   Distancia: 8
   ObjetoQueDa: {fileID: 11400000, guid: ab3fae46fc55fa94b85f9e97b27f36a6, type: 2}
   MinimoMaximo: 0100000003000000
+  Vida: 1
+  VidaMaxima: 0
+  UsaPico: 1
+  UsaHacha: 0
+  HabilidadRequerida: 
+  HabilidadRequerida2: 
+  TiempoRespawn:
+  - 5
+  - 10
 --- !u!64 &3724193180367822749
 MeshCollider:
   m_ObjectHideFlags: 0

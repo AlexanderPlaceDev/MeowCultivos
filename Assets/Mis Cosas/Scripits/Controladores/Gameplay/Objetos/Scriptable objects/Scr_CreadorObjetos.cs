@@ -14,6 +14,7 @@ public class Scr_CreadorObjetos : ScriptableObject
     public Sprite IconoInventario;
     public Scr_CreadorObjetos[] MaterialesDeProduccion;
     public int[] CantidadMaterialesDeProduccion;
+    public int CantidadProducto; 
     public int TiempoDeProduccion;
     public float ValorComposta;
     public int[] MinimoMaximoSembradio;

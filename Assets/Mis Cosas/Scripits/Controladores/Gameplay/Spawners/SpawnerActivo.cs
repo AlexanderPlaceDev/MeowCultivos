@@ -12,72 +12,98 @@ public class SpawnerActivo : MonoBehaviour
     [SerializeField] private Scr_CreadorObjetos ObjetoQueDa;
     [SerializeField] private int[] MinimoMaximo;
     [SerializeField] public int Vida;
+    [SerializeField] public int VidaMaxima;
     [SerializeField] public bool UsaPico;
     [SerializeField] public bool UsaHacha;
     [SerializeField] string HabilidadRequerida;
     [SerializeField] string HabilidadRequerida2;
+    [SerializeField] float[] TiempoRespawn;
+
     private GameObject Herramienta;
     private Transform Gata;
     private bool estaLejos;
-    private bool objetoAgregado = false; // Variable para controlar si se ha agregado el objeto al inventario
+    private bool objetoAgregado = false;
+    private float Tiempo;
+    private float TiempoRespawnAleatorio;
+
+    private MeshRenderer meshRenderer;
+    private Collider Col;
+    private ParticleSystem Particulas;
+
+    private bool particulasReproducidas = false; // Evitar repetición de partículas
 
     void Start()
     {
+        Vida = VidaMaxima;
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
-        Herramienta = Gata.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(2).gameObject;
+        TiempoRespawnAleatorio = Random.Range(TiempoRespawn[0], TiempoRespawn[1]);
+
+        Herramienta = Gata.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1)
+            .GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(2).gameObject;
+
+        meshRenderer = GetComponent<MeshRenderer>();
+        Col = GetComponent<Collider>();
+        Particulas = transform.GetChild(0).GetComponent<ParticleSystem>();
     }
 
     void Update()
     {
-        if (PlayerPrefs.GetString("Habilidad:" + HabilidadRequerida, "No") == "Si" || HabilidadRequerida == null || HabilidadRequerida == "")
+        if (PlayerPrefs.GetString("Habilidad:" + HabilidadRequerida, "No") == "Si" || string.IsNullOrEmpty(HabilidadRequerida))
         {
-            if (Vector3.Distance(Gata.position, transform.position) < Distancia && GetComponent<MeshRenderer>().enabled)
+            if (Vector3.Distance(Gata.position, transform.position) < Distancia && meshRenderer.enabled)
             {
                 SpawnearHerramienta();
                 ActivarUI();
                 estaLejos = false;
             }
-            else
+            else if (!estaLejos)
             {
-                if (!estaLejos)
-                {
-                    DesactivarUI();
-                    Herramienta.SetActive(false);
-                    estaLejos = true;
-                }
+                DesactivarUI();
+                Herramienta.SetActive(false);
+                estaLejos = true;
             }
         }
 
-
         if (Vida <= 0)
         {
-            //Desactivar Mesh
-            GetComponent<MeshRenderer>().enabled = false;
-            GetComponent<MeshCollider>().enabled = false;
-            // Reproducir efecto de partículas
-            ParticleSystem particleSystem = transform.GetChild(0).GetComponent<ParticleSystem>();
-            if (!particleSystem.isPlaying)
+            Tiempo += Time.deltaTime;
+            if (Tiempo >= TiempoRespawnAleatorio)
             {
-                particleSystem.Play();
+                Tiempo = 0;
+                Vida = VidaMaxima;
+                meshRenderer.enabled = true;
+                Col.enabled = true;
+                particulasReproducidas = false; // Resetea el estado de las partículas
+                objetoAgregado = false;
             }
-            Herramienta.SetActive(false);
-            DesactivarUI();
-            // Incrementar la cantidad de objetos en el inventario solo si no se ha agregado antes
-            if (!objetoAgregado)
+            else
             {
-                objetoAgregado = true;
-                int cantidad = Random.Range(MinimoMaximo[0], MinimoMaximo[1]);
-                if (PlayerPrefs.GetString("Habilidad:" + HabilidadRequerida2, "No") == "Si" || string.IsNullOrEmpty(HabilidadRequerida2))
+                if (!particulasReproducidas && !Particulas.isPlaying)
                 {
-                    AgregarObjetoInventario(cantidad*2, ObjetoQueDa);
+                    Particulas.Play();
+                    particulasReproducidas = true;
+                DesactivarUI();
+                Herramienta.SetActive(false);
                 }
-                else
+
+                meshRenderer.enabled = false;
+                Col.enabled = false;
+
+
+                if (!objetoAgregado)
                 {
-                    AgregarObjetoInventario(cantidad, ObjetoQueDa);
+                    objetoAgregado = true;
+                    int cantidad = Random.Range(MinimoMaximo[0], MinimoMaximo[1]);
+                    if (PlayerPrefs.GetString("Habilidad:" + HabilidadRequerida2, "No") == "Si" || string.IsNullOrEmpty(HabilidadRequerida2))
+                    {
+                        AgregarObjetoInventario(cantidad * 2, ObjetoQueDa);
+                    }
+                    else
+                    {
+                        AgregarObjetoInventario(cantidad, ObjetoQueDa);
+                    }
                 }
             }
-            // Esperar hasta que el sistema de partículas termine para destruir el objeto
-            StartCoroutine(DestruirDespuesDeParticulas(particleSystem));
         }
     }
 
@@ -104,36 +130,6 @@ public class SpawnerActivo : MonoBehaviour
     }
 
     void AgregarObjetoInventario(int cantidad, Scr_CreadorObjetos objeto)
-    {
-        Scr_Inventario inventario = Gata.GetChild(6).GetComponent<Scr_Inventario>();
-        inventario.AgregarObjeto(cantidad, objeto.Nombre);
-        Scr_ObjetosAgregados controlador = GameObject.Find("Canvas").transform.GetChild(4).GetComponent<Scr_ObjetosAgregados>();
-        if (controlador.Lista.Contains(objeto))
-        {
-            int indice = controlador.Lista.IndexOf(objeto);
-            controlador.Cantidades[indice] += cantidad;
-            if (indice <= 3)
-            {
-                controlador.Tiempo[indice] = 2;
-            }
-        }
-        else
-        {
-            controlador.Lista.Add(objeto);
-            controlador.Cantidades.Add(cantidad);
-        }
-    }
-
-    IEnumerator DestruirDespuesDeParticulas(ParticleSystem particleSystem)
-    {
-        // Esperar hasta que el sistema de partículas termine
-        yield return new WaitForSeconds(particleSystem.main.duration);
-
-        // Destruir el objeto actual después de que termine el sistema de partículas
-        Destroy(gameObject);
-    }
-
-    void ActualizarInventario(int cantidad, Scr_CreadorObjetos objeto)
     {
         Scr_Inventario inventario = Gata.GetChild(6).GetComponent<Scr_Inventario>();
         inventario.AgregarObjeto(cantidad, objeto.Nombre);

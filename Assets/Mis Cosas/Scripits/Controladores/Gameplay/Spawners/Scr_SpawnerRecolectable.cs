@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class Scr_SpawnerRecolectable : MonoBehaviour
 {
     [Header("Configuración del spawner")]
+    [SerializeField] bool OcupaPadre;
+    [SerializeField] GameObject Padre;
     [SerializeField] private Sprite icono;
     [SerializeField] private string tecla;
     [SerializeField] private Sprite teclaIcono;
@@ -16,17 +18,21 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     [SerializeField] private int[] minimoMaximo;
     [SerializeField] string Habilidad;
     [SerializeField] string Habilidad2;
+    [SerializeField] float[] TiempoRespawn;
+
 
     [Header("Estado del spawner")]
     public bool TieneObjeto = true;
     private bool recolectando;
     private bool estaLejos;
-
+    private float Tiempo;
+    private float TiempoRespawnAleatorio;
     private Transform gata;
 
     void Start()
     {
         gata = GameObject.Find("Gata").GetComponent<Transform>();
+        TiempoRespawnAleatorio = Random.Range(TiempoRespawn[0], TiempoRespawn[1]);
     }
 
     void Update()
@@ -61,8 +67,58 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
         }
         else
         {
-            GetComponent<Collider>().enabled = false;
-            GetComponent<MeshRenderer>().enabled = false;
+            Tiempo += Time.deltaTime;
+            if (Tiempo >= TiempoRespawnAleatorio)
+            {
+                Tiempo = 0;
+
+                if (OcupaPadre && Padre.GetComponent<MeshRenderer>().enabled)
+                {
+                    TieneObjeto = true;
+                    try
+                    {
+                        GetComponent<Collider>().enabled = true;
+                        GetComponent<MeshRenderer>().enabled = true;
+                    }
+                    catch
+                    {
+                        foreach (Transform Hijo in transform.GetComponentInChildren<Transform>())
+                        {
+                            if (Hijo.GetComponent<Collider>())
+                            {
+                                Hijo.GetComponent<Collider>().enabled = true;
+                            }
+                            if (Hijo.GetComponent<SkinnedMeshRenderer>())
+                            {
+                                Hijo.GetComponent<SkinnedMeshRenderer>().enabled = true;
+                            }
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                try
+                {
+                    GetComponent<Collider>().enabled = false;
+                    GetComponent<MeshRenderer>().enabled = false;
+                }
+                catch
+                {
+                    foreach (Transform Hijo in transform.GetComponentInChildren<Transform>())
+                    {
+                        if (Hijo.GetComponent<Collider>())
+                        {
+                            Hijo.GetComponent<Collider>().enabled = false;
+                        }
+                        if (Hijo.GetComponent<SkinnedMeshRenderer>())
+                        {
+                            Hijo.GetComponent<SkinnedMeshRenderer>().enabled = false;
+                        }
+                    }
+                }
+            }
         }
 
         if (recolectando)
@@ -84,7 +140,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
         }
         gata.GetChild(0).GetComponent<Animator>().speed = animSpeed;
 
-        yield return new WaitForSeconds(5.22f/animSpeed);
+        yield return new WaitForSeconds(5.22f / animSpeed);
         gata.GetChild(0).GetComponent<Animator>().speed = 1;
 
         recolectando = false;
@@ -92,7 +148,6 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
         if (TieneObjeto)
         {
             DarObjeto();
-            GetComponent<Collider>().enabled = false;
             TieneObjeto = false;
         }
     }

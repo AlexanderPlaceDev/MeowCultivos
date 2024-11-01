@@ -8,6 +8,28 @@ public class Scr_Inventario : MonoBehaviour
     [SerializeField] public int[] Cantidades;
     [SerializeField] int Limite;
 
+    private void Start()
+    {
+        // Cargar las cantidades desde PlayerPrefs al iniciar
+        for (int i = 0; i < Objetos.Length; i++)
+        {
+            string key = Objetos[i].Nombre + "_Cantidad";
+            if (PlayerPrefs.HasKey(key))
+            {
+                Cantidades[i] = PlayerPrefs.GetInt(key);
+            }
+            else
+            {
+                PlayerPrefs.SetInt(key, Cantidades[i]); // Guardar inicial si no existe
+            }
+        }
+    }
+
+    private void Update()
+    {
+        // Guardar automáticamente los valores actualizados
+        GuardarInventario();
+    }
 
     public void AgregarObjeto(int Cantidad, string Nombre)
     {
@@ -45,10 +67,28 @@ public class Scr_Inventario : MonoBehaviour
                 {
                     Cantidades[i] = 0;
                 }
-
                 break;
             }
             i++;
         }
+    }
+
+    private void GuardarInventario()
+    {
+        for (int i = 0; i < Objetos.Length; i++)
+        {
+            string key = Objetos[i].Nombre + "_Cantidad";
+            // Comprobar si el valor actual es diferente al almacenado en PlayerPrefs
+            if (PlayerPrefs.GetInt(key) != Cantidades[i])
+            {
+                PlayerPrefs.SetInt(key, Cantidades[i]); // Actualizar PlayerPrefs
+            }
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        // Guardar inventario al salir de la aplicación
+        GuardarInventario();
     }
 }

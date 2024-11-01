@@ -16,7 +16,6 @@ public class Scr_Arbusto : MonoBehaviour
     [SerializeField] private int[] minimoMaximo;
     [SerializeField] string Habilidad;
     [SerializeField] string Habilidad2;
-    [SerializeField] int XPQueDa = 1;
 
     [Header("Estado del Arbusto")]
     private int tipoActual = 0;

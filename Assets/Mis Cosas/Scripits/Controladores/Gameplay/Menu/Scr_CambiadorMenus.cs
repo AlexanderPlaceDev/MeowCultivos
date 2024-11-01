@@ -20,7 +20,6 @@ public class Scr_CambiadorMenus : MonoBehaviour
     bool CambiarGuia = false;
     bool CambiarHabilidades = false;
     bool RegresarInventario = false;
-    bool RegresarArmas = false;
     bool RegresarOpciones = false;
     bool RegresarGuia = false;
     bool RegresarHabilidades = false;
