@@ -2,41 +2,53 @@ using UnityEngine;
 
 public class Scr_GirarCamaraBatalla : MonoBehaviour
 {
-    public float mouseSensitivity = 100f; // Sensibilidad del ratón
+    public float mouseSensitivity = 100f;
+    public float smoothTime = 0.1f; // Ajusta según el nivel de suavizado deseado
 
     private float xRotation = 0f;
+    private float yRotation = 0f;
+    private float currentXVelocity;
+    private float currentYVelocity;
     private Transform playerBody;
 
+    float targetMouseX = 0;
+    float targetMouseY = 0;
     void Start()
     {
-        // Bloquea el cursor en el centro de la pantalla y lo hace invisible
         Cursor.lockState = CursorLockMode.Locked;
-        playerBody = transform.parent; // Asumiendo que la cámara es hija del objeto del personaje
+        playerBody = transform.parent;
 
-        // Verificar que playerBody no sea nulo
         if (playerBody == null)
         {
-            Debug.LogError("La cámara no tiene un objeto padre asignado. Asegúrate de que la cámara es hija del personaje.");
+            Debug.LogError("La cámara no tiene un objeto padre asignado.");
         }
     }
 
     void Update()
     {
-        // Verificar que playerBody no sea nulo antes de continuar
-        if (playerBody == null) return;
+        // Obtener la entrada del ratón
+        targetMouseX += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        targetMouseY += Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        // Obtener el movimiento del ratón
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        
+    }
 
-        // Ajustar la rotación en el eje X (vertical) e invertir el movimiento del ratón
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f); // Limitar la rotación para evitar voltear la cámara
+    private void FixedUpdate()
+    {
+        // Calcular la rotación en el eje Y (horizontal) suavizada
+        yRotation += targetMouseX;
+        float smoothYRotation = Mathf.SmoothDampAngle(playerBody.eulerAngles.y, yRotation, ref currentYVelocity, smoothTime);
 
-        // Ajustar la rotación en el eje Y (horizontal) del objeto padre (personaje)
-        playerBody.Rotate(Vector3.up * mouseX);
+        // Calcular la rotación en el eje X (vertical) suavizada y limitar el ángulo
+        xRotation -= targetMouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        float smoothXRotation = Mathf.SmoothDampAngle(transform.localEulerAngles.x, xRotation, ref currentXVelocity, smoothTime);
 
-        // Aplicar la rotación en el eje X a la cámara
-        transform.localEulerAngles = new Vector3(xRotation, 0f, 0f);
+        // Aplicar rotaciones suavizadas
+        transform.localRotation = Quaternion.Euler(smoothXRotation, 0f, 0f);
+        playerBody.rotation = Quaternion.Euler(0f, smoothYRotation, 0f);
+
+        targetMouseX = 0;
+        targetMouseY = 0;
     }
 }

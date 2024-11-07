@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,8 @@ public class Scr_Movimiento : MonoBehaviour
     public float Velocidad;
     public float VelCaminar;
     public float VelCorrer;
+    public float AumentoDeFov;
+    public float VelocidadFov;
     public float Arrastre;
     [SerializeField] bool GuardaPosicion;
 
@@ -56,13 +59,15 @@ public class Scr_Movimiento : MonoBehaviour
     private Rigidbody RB;
     private float TiempoGuardado = 0;
     public bool PuedeGuardarPosicion = true;
+    float FovOriginal;
+    float NFov = 0;
 
     private void Start()
     {
         Origen = GetComponent<Transform>();
         RB = GetComponent<Rigidbody>();
         RB.freezeRotation = true;
-
+        FovOriginal = Camera.main.fieldOfView;
         EscalaInicialY = transform.localScale.y;
     }
 
@@ -74,11 +79,59 @@ public class Scr_Movimiento : MonoBehaviour
         ActualizarEstado();
         GuardarPosicionSiEsNecesario();
         AplicarArrastre();
+        AplicarFovAlCorrer();
+    }
+
+    private void AplicarFovAlCorrer()
+    {
+        if (Estado == Estados.Correr || (Estado == Estados.Aire &&Input.GetKey(CorrerTecla)))
+        {
+            if (NFov < AumentoDeFov)
+            {
+                NFov += Time.deltaTime * VelocidadFov;
+            }
+            else
+            {
+                NFov = AumentoDeFov;
+            }
+        }
+        else
+        {
+            if (NFov > 0)
+            {
+                NFov -= Time.deltaTime * VelocidadFov;
+            }
+            else
+            {
+                NFov = 0;
+            }
+        }
+        Camera.main.fieldOfView = FovOriginal + NFov;
     }
 
     private void FixedUpdate()
     {
         Mover();
+        AplicarGravedad();
+    }
+
+    private void AplicarGravedad()
+    {
+        // Si el personaje no está en el suelo, aplicar gravedad
+        if (!EstaEnElSuelo)  // Solo aplica gravedad si no está en el suelo
+        {
+            RB.drag = 0;
+            RB.velocity = new Vector3(RB.velocity.x, RB.velocity.y - Gravedad * Time.deltaTime, RB.velocity.z);
+        }
+        else
+        {
+            RB.drag = Arrastre;
+            // Si está en el suelo, aseguramos que no siga cayendo
+            if (RB.velocity.y < 0)
+            {
+                RB.velocity = new Vector3(RB.velocity.x, 0, RB.velocity.z);
+            }
+        }
     }
 
     private void VerificarSuelo()
@@ -135,9 +188,17 @@ public class Scr_Movimiento : MonoBehaviour
         {
             Estado = Estados.Correr;
             Velocidad = VelCorrer;
+            if (Camera.main.fieldOfView != Camera.main.fieldOfView + AumentoDeFov)
+            {
+                Camera.main.fieldOfView += AumentoDeFov;
+            }
         }
         else if (EstaEnElSuelo || Subiendo())
         {
+            if (Camera.main.fieldOfView == Camera.main.fieldOfView + AumentoDeFov)
+            {
+                Camera.main.fieldOfView -= AumentoDeFov;
+            }
             if (InputHor == 0 && InputVer == 0)
             {
                 Estado = Estados.Quieto;

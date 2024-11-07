@@ -49,7 +49,8 @@ public class Scr_CargadorGuardado : MonoBehaviour
         {
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
         }
-
+        //Mapa Batalla
+        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().NombreMapa = PlayerPrefs.GetString("Mapa Actual", "Batalla Verde 1");
         //Reloj
         if (PlayerPrefs.GetString("Reloj", "No") == "Si")
         {

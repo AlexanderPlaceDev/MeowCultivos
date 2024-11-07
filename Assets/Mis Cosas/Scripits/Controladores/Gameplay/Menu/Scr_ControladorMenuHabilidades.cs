@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Scr_ControladorMenuHabilidades : MonoBehaviour
@@ -205,6 +201,7 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
                     // Asegúrate de que los puntos no sean negativos
                     if (puntosRestantes >= 0)
                     {
+                        ActivarBarra(Habilidad.NombresBarrasCarga);
                         PlayerPrefs.SetInt("PuntosDeHabilidad", puntosRestantes);
                     }
                     else

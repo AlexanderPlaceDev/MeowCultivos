@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.AI.Navigation;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -100,6 +101,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 }
             }
         }
+        GameObject.Find("NavMesh Surface").GetComponent<NavMeshSurface>().BuildNavMesh();
         NumeroCuenta.gameObject.SetActive(true);
         ComenzarCuenta = true;
 

@@ -1,7 +1,15 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Scr_EnemigoTerrestre : Scr_Enemigo
 {
+    private void Start()
+    {
+        if (GetComponent<NavMeshAgent>())
+        {
+            GetComponent<NavMeshAgent>().speed = Velocidad;
+        }
+    }
     public override void Mover()
     {
         // Movimiento terrestre

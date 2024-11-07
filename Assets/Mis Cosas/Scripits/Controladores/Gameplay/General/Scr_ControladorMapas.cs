@@ -64,6 +64,7 @@ public class Scr_ControladorMapas : MonoBehaviour
         if (other.name == "Gato Mesh")
         {
             GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().NombreMapa = NombreMapaBatalla;
+            PlayerPrefs.SetString("Mapa Actual", NombreMapaBatalla);
             foreach (GameObject Mapa in MapasQueActiva)
             {
                 Mapa.SetActive(true);

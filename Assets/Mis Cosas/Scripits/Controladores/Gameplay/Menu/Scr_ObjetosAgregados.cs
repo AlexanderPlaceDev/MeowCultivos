@@ -100,25 +100,18 @@ public class Scr_ObjetosAgregados : MonoBehaviour
 
         if (!objetosAgregados && Singleton.CantidadesRecompensa.Count > 0 && Singleton.CantidadesRecompensa[0] != 0)
         {
-            for (int i = 0; i < Singleton.ObjetosRecompensa.Count; i++)
+            for (int i = 0; i < Mathf.Min(Singleton.ObjetosRecompensa.Count, Singleton.CantidadesRecompensa.Count); i++)
             {
-                if (i >= Singleton.CantidadesRecompensa.Count)
-                {
-                    Debug.LogError("Desajuste detectado entre ObjetosRecompensa y CantidadesRecompensa. ÍNDICE: " + i);
-                    break;
-                }
-
                 Scr_CreadorObjetos Objeto = Singleton.ObjetosRecompensa[i];
                 Lista.Add(Objeto);
                 Cantidades.Add(Singleton.CantidadesRecompensa[i]);
-                Singleton.ObjetosRecompensa[i] = null;
-                Singleton.CantidadesRecompensa[i] = 0;
             }
             objetosAgregados = true;
         }
         else
         {
-            if (Singleton.CantidadesRecompensa.ToArray()[0] > 0)
+            // Verifica si la lista no está vacía antes de acceder al primer índice
+            if (Singleton.CantidadesRecompensa.Count > 0 && Singleton.CantidadesRecompensa[0] > 0)
             {
                 Singleton.CantidadesRecompensa.Clear();
                 Singleton.ObjetosRecompensa.Clear();

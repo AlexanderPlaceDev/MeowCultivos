@@ -22,10 +22,12 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
     bool EstaEnMenu = false;
     float TiempoDeEspera = 0;
     GameObject Gata;
+    private Animator animator;
     void Start()
     {
         // Busca y guarda una referencia al objeto de la gata
         Gata = GameObject.Find("Gata");
+        animator = Menu.GetComponent<Animator>();
     }
 
     void Update()
@@ -36,9 +38,8 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
         {
             // Desactiva los componentes de movimiento de la gata mientras está en el menú
             Gata.GetComponent<Scr_GiroGata>().enabled = false;
-            if (Input.GetKeyDown(KeyCode.Tab) && !Esperando)
+            if (Input.GetKeyDown(KeyCode.Tab) && !Esperando && !EstaReproduciendoAnimacion())
             {
-                Debug.Log("Entra");
 
                 if (Menu.transform.GetChild(2).gameObject.activeSelf)
                 {
@@ -55,7 +56,7 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.Tab) && !Esperando)
+            if (Input.GetKeyDown(KeyCode.Tab) && !Esperando && !EstaReproduciendoAnimacion())
             {
                 Esperando = true;
                 RestablecerColor();
@@ -85,6 +86,22 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
 
             }
         }
+    }
+
+    public bool EstaReproduciendoAnimacion()
+    {
+        // Comprobar todas las capas del Animator
+        for (int i = 0; i < animator.layerCount; i++)
+        {
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(i);
+
+            // Comprobar si el Animator está en algún estado que no sea el predeterminado
+            if (stateInfo.normalizedTime < 1f && !stateInfo.IsName("Idle"))
+            {
+                return true;  // Si está en una animación activa
+            }
+        }
+        return false;  // No se está reproduciendo ninguna animación activa
     }
 
     void RestablecerColor()

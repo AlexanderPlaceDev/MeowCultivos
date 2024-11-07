@@ -9,6 +9,7 @@ public class Scr_CambiadorBatalla : MonoBehaviour
     [SerializeField] GameObject PrefabEnemigo;
     [SerializeField] float CantidadEnemigosMinima;
     [SerializeField] float CantidadEnemigosMaxima;
+    public bool Cambiando;
     private Scr_MovimientoEnemigosFuera Mov;
     GameObject Carga;
     GameObject Reloj;
@@ -45,6 +46,7 @@ public class Scr_CambiadorBatalla : MonoBehaviour
 
     IEnumerator CargarEscena(string tipoCarga)
     {
+        Cambiando = true;
         // Marca la escena como cargada para evitar que otros enemigos la carguen
         escenaCargada = true;
 

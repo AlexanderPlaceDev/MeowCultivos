@@ -223,166 +223,181 @@ public class Scr_CambiadorMenus : MonoBehaviour
 
     public void Cambiar()
     {
-        tiempoPasado = 0;
-        switch (MenuActual)
+        if (!GetComponent<Scr_ControladorMenuGameplay>().EstaReproduciendoAnimacion())
         {
-            case "Inventario":
-                {
-                    CambiarInventario = true;
-                    MenuActual = "Inventario";
-                    Menu.GetComponent<Animator>().Play("Cerrar 0");
-                    break;
-                }
+            tiempoPasado = 0;
+            switch (MenuActual)
+            {
+                case "Inventario":
+                    {
+                        CambiarInventario = true;
+                        MenuActual = "Inventario";
+                        Menu.GetComponent<Animator>().Play("Cerrar 0");
+                        break;
+                    }
 
-            case "Armas":
-                {
-                    CambiarArmas = true;
-                    MenuActual = "Armas";
-                    Menu.GetComponent<Animator>().Play("Cerrar 1");
-                    break;
-                }
+                case "Armas":
+                    {
+                        CambiarArmas = true;
+                        MenuActual = "Armas";
+                        Menu.GetComponent<Animator>().Play("Cerrar 1");
+                        break;
+                    }
 
-            case "Guia":
-                {
-                    CambiarGuia = true;
-                    MenuActual = "Guia";
-                    Menu.GetComponent<Animator>().Play("Cerrar 3");
-                    break;
-                }
+                case "Guia":
+                    {
+                        CambiarGuia = true;
+                        MenuActual = "Guia";
+                        Menu.GetComponent<Animator>().Play("Cerrar 3");
+                        break;
+                    }
 
-            case "Habilidades":
-                {
-                    CambiarHabilidades = true;
-                    MenuActual = "Habilidades";
-                    Menu.GetComponent<Animator>().Play("Cerrar 4");
-                    break;
-                }
+                case "Habilidades":
+                    {
+                        CambiarHabilidades = true;
+                        MenuActual = "Habilidades";
+                        Menu.GetComponent<Animator>().Play("Cerrar 4");
+                        break;
+                    }
 
-            case "Opciones":
-                {
-                    CambiarOpciones = true;
-                    MenuActual = "Opciones";
-                    Menu.GetComponent<Animator>().Play("Cerrar 2");
-                    break;
-                }
+                case "Opciones":
+                    {
+                        CambiarOpciones = true;
+                        MenuActual = "Opciones";
+                        Menu.GetComponent<Animator>().Play("Cerrar 2");
+                        break;
+                    }
 
-            case "Salir":
-                {
-                    SceneManager.LoadScene(0);
-                    break;
-                }
+                case "Salir":
+                    {
+                        SceneManager.LoadScene(0);
+                        break;
+                    }
 
-
+                default:
+                    {
+                        Debug.Log("No encontre el menu");
+                        break;
+                    }
+            }
         }
+
     }
+
     public void CambiarArriba()
     {
-        BotonesMenu.GetComponent<scr_BotonesMenuJuego>().ClicFlecha(true);
-        tiempoPasado = 0;
-        switch (MenuActual)
+        if (!GetComponent<Scr_ControladorMenuGameplay>().EstaReproduciendoAnimacion())
         {
-            case "Inventario":
-                {
-                    CambiarHabilidades = true;
-                    MenuActual = "Habilidades";
-                    Menu.GetComponent<Animator>().Play("Cerrar 4");
-                    break;
-                }
+            BotonesMenu.GetComponent<scr_BotonesMenuJuego>().ClicFlecha(true);
+            tiempoPasado = 0;
+            switch (MenuActual)
+            {
+                case "Inventario":
+                    {
+                        CambiarHabilidades = true;
+                        MenuActual = "Habilidades";
+                        Menu.GetComponent<Animator>().Play("Cerrar 4");
+                        break;
+                    }
 
-            case "Armas":
-                {
-                    CambiarGuia = true;
-                    MenuActual = "Guia";
-                    Menu.GetComponent<Animator>().Play("Cerrar 3");
-                    break;
-                }
+                case "Armas":
+                    {
+                        CambiarGuia = true;
+                        MenuActual = "Guia";
+                        Menu.GetComponent<Animator>().Play("Cerrar 3");
+                        break;
+                    }
 
-            case "Guia":
-                {
-                    CambiarInventario = true;
-                    MenuActual = "Inventario";
-                    Menu.GetComponent<Animator>().Play("Cerrar 0");
-                    break;
-                }
+                case "Guia":
+                    {
+                        CambiarInventario = true;
+                        MenuActual = "Inventario";
+                        Menu.GetComponent<Animator>().Play("Cerrar 0");
+                        break;
+                    }
 
-            case "Habilidades":
-                {
-                    SceneManager.LoadScene(0);
-                    break;
-                }
+                case "Habilidades":
+                    {
+                        SceneManager.LoadScene(0);
+                        break;
+                    }
 
-            case "Opciones":
-                {
-                    CambiarArmas = true;
-                    MenuActual = "Armas";
-                    Menu.GetComponent<Animator>().Play("Cerrar 1");
-                    break;
-                }
+                case "Opciones":
+                    {
+                        CambiarArmas = true;
+                        MenuActual = "Armas";
+                        Menu.GetComponent<Animator>().Play("Cerrar 1");
+                        break;
+                    }
 
-            case "Salir":
-                {
-                    CambiarOpciones = true;
-                    MenuActual = "Opciones";
-                    Menu.GetComponent<Animator>().Play("Cerrar 2");
-                    break;
-                }
+                case "Salir":
+                    {
+                        CambiarOpciones = true;
+                        MenuActual = "Opciones";
+                        Menu.GetComponent<Animator>().Play("Cerrar 2");
+                        break;
+                    }
+            }
         }
     }
     public void CambiarAbajo()
     {
-        BotonesMenu.GetComponent<scr_BotonesMenuJuego>().ClicFlecha(false);
-        tiempoPasado = 0;
-        switch (MenuActual)
+        if (!GetComponent<Scr_ControladorMenuGameplay>().EstaReproduciendoAnimacion())
         {
-            case "Inventario":
-                {
-                    
-                    CambiarGuia = true;
-                    MenuActual = "Guia";
-                    Menu.GetComponent<Animator>().Play("Cerrar 3");
-                    break;
-                }
+            BotonesMenu.GetComponent<scr_BotonesMenuJuego>().ClicFlecha(false);
+            tiempoPasado = 0;
+            switch (MenuActual)
+            {
+                case "Inventario":
+                    {
 
-            case "Armas":
-                {
-                    CambiarOpciones = true;
-                    MenuActual = "Opciones";
-                    Menu.GetComponent<Animator>().Play("Cerrar 2");
-                    
-                    break;
-                }
+                        CambiarGuia = true;
+                        MenuActual = "Guia";
+                        Menu.GetComponent<Animator>().Play("Cerrar 3");
+                        break;
+                    }
 
-            case "Guia":
-                {
-                    CambiarArmas = true;
-                    MenuActual = "Armas";
-                    Menu.GetComponent<Animator>().Play("Cerrar 1");
-                    break;
-                }
+                case "Armas":
+                    {
+                        CambiarOpciones = true;
+                        MenuActual = "Opciones";
+                        Menu.GetComponent<Animator>().Play("Cerrar 2");
 
-            case "Habilidades":
-                {
-                    CambiarInventario = true;
-                    MenuActual = "Inventario";
-                    Menu.GetComponent<Animator>().Play("Cerrar 0");
-                    break;
-                }
+                        break;
+                    }
 
-            case "Opciones":
-                {
-                    SceneManager.LoadScene(0);
-                    
-                    break;
-                }
+                case "Guia":
+                    {
+                        CambiarArmas = true;
+                        MenuActual = "Armas";
+                        Menu.GetComponent<Animator>().Play("Cerrar 1");
+                        break;
+                    }
 
-            case "Salir":
-                {
-                    CambiarHabilidades = true;
-                    MenuActual = "Habilidades";
-                    Menu.GetComponent<Animator>().Play("Cerrar 4");
-                    
-                    break;
-                }
+                case "Habilidades":
+                    {
+                        CambiarInventario = true;
+                        MenuActual = "Inventario";
+                        Menu.GetComponent<Animator>().Play("Cerrar 0");
+                        break;
+                    }
+
+                case "Opciones":
+                    {
+                        SceneManager.LoadScene(0);
+
+                        break;
+                    }
+
+                case "Salir":
+                    {
+                        CambiarHabilidades = true;
+                        MenuActual = "Habilidades";
+                        Menu.GetComponent<Animator>().Play("Cerrar 4");
+
+                        break;
+                    }
+            }
         }
     }
 
