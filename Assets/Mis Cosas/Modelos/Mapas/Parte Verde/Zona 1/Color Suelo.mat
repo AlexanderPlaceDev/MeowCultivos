@@ -87,14 +87,18 @@ Material:
     - _Clipped: 0
     - _ColBright: 0
     - _ColIntense: 1
+    - _EsPlanta: 0
+    - _Fuerza_Del_Viento: 10
     - _Intensidad: 1
     - _Lumin: 0
     - _MaxLight: 1
     - _MinLight: 0
     - _Offset: 0
+    - _Opacidad_Ruido: -0.06
     - _OutlineWidth: 0.15
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _RecibeDa_o: 0
     - _RimStep: 0
     - _RimStepSmooth: 0
     - _Segmented: 1
@@ -109,6 +113,7 @@ Material:
     - _SpecularStepSmooth: 0
     - _Steps: 3
     - _StpSmooth: 0.031
+    - _Velocidad_Del_Viento: 1
     m_Colors:
     - Color_6A162E48: {r: 0.16659501, g: 0.4037736, b: 0.08456391, a: 0}
     - Color_6C9C775A: {r: 1, g: 1, b: 1, a: 0}
@@ -119,6 +124,8 @@ Material:
     - _Base_Color: {r: 0.13124545, g: 0.4943396, b: 0.081146285, a: 1}
     - _Color: {r: 0.18864878, g: 0.5018867, b: 0.07480948, a: 0}
     - _Cutoff_Thresholds: {r: -2, g: -2, b: 0, a: 0}
+    - _Direccion_Del_Viento: {r: 0, g: 0, b: 0, a: 0}
+    - _Escala_Ruido: {r: 3, g: 1.24, b: 0, a: 0}
     - _HDR: {r: 0, g: 0, b: 0, a: 0}
     - _L1_color: {r: 1, g: 1, b: 1, a: 0.99}
     - _L1_dir: {r: -0.43115383, g: 0.7038568, b: 0.5645281, a: 0}
@@ -132,6 +139,7 @@ Material:
     - _L5_dir: {r: 0, g: 1, b: 0, a: 0}
     - _L6_color: {r: 0, g: 0, b: 0, a: 1}
     - _L6_dir: {r: 0, g: 1, b: 0, a: 0}
+    - _Offset_Ruido: {r: 0, g: 0, b: 0, a: 0}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _ShnColor: {r: 1, g: 1, b: 0, a: 1}

@@ -12,11 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
   m_Name: Piel
   m_EditorClassIdentifier: 
-  ID: 0
   Nombre: Piel
+  TipoPlanta: 
   Descripcion: Un material poco resistente pero comodo
   Icono: {fileID: 21300000, guid: f1e2c9d4d1f05c04fb42258cd4f2f153, type: 3}
   IconoInventario: {fileID: 21300000, guid: 016c70cca435a4f449ddaf1f68348483, type: 3}
   MaterialesDeProduccion: []
   CantidadMaterialesDeProduccion: 
+  CantidadProducto: 0
   TiempoDeProduccion: 0
+  ValorComposta: 0
+  MinimoMaximoSembradio: 
+  XPRecolecta: 5

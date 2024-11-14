@@ -12,11 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
   m_Name: Cuerno
   m_EditorClassIdentifier: 
-  ID: 0
   Nombre: Cuerno
+  TipoPlanta: 
   Descripcion: No parece ser muy util, es mas como un recuerdo
   Icono: {fileID: 21300000, guid: 552f50fdaa9806e4085402c6bccc31c0, type: 3}
   IconoInventario: {fileID: 21300000, guid: af0345a652905f7408a648f68c1afcf3, type: 3}
   MaterialesDeProduccion: []
   CantidadMaterialesDeProduccion: 
+  CantidadProducto: 0
   TiempoDeProduccion: 0
+  ValorComposta: 0
+  MinimoMaximoSembradio: 
+  XPRecolecta: 7

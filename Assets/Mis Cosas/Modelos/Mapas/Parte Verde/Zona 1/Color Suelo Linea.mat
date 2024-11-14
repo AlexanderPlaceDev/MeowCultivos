@@ -130,6 +130,7 @@ Material:
     - _Intensidad: 1
     - _Metallic: 0
     - _OcclusionStrength: 1
+    - _Opacidad_Ruido: -0.05
     - _OutlineWidth: 0.5
     - _Parallax: 0.005
     - _QueueControl: 0
@@ -156,8 +157,10 @@ Material:
     - _Base_Color: {r: 0.09827694, g: 0.4867924, b: 0.12507108, a: 1}
     - _Color: {r: 0.023529414, g: 0.4784314, b: 0.054901965, a: 1}
     - _Cutoff_Thresholds: {r: -1.74, g: 1.29, b: 0, a: 0}
-    - _Direccion_Del_Viento: {r: 1, g: 0, b: 0, a: 0}
+    - _Direccion_Del_Viento: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Escala_Ruido: {r: 1, g: 1, b: 0, a: 0}
+    - _Offset_Ruido: {r: 0.41, g: 0, b: 0, a: 0}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}

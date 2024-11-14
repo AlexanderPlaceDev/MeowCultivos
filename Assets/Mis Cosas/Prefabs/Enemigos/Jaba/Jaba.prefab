@@ -338,10 +338,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: -5369800396206004237}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: caa63f37c21c4064b93b00e85427ef29,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 4900658720287335753}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
@@ -355,6 +351,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2931335976828785527}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: caa63f37c21c4064b93b00e85427ef29,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2224818979977880925}
   m_SourcePrefab: {fileID: 100100000, guid: caa63f37c21c4064b93b00e85427ef29, type: 3}
 --- !u!1 &178227796199041654 stripped
 GameObject:
@@ -404,27 +404,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 2.3938036
   m_Center: {x: -0.043555982, y: 2.1939921, z: 0.28512073}
---- !u!65 &-5369800396206004237
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 178227796199041654}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 1.89, y: 1.89, z: 1.72}
-  m_Center: {x: 0, y: 2.32, z: 0}
 --- !u!54 &4900658720287335753
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -465,7 +444,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Vida: 5
-  Velocidad: 1
+  Velocidad: 3
   Rango: 1.8
   CoolDown: 8
   "Da\xF1oMelee": 1
@@ -497,6 +476,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a1ffac9ef8d0ce4388bbb25832aa4aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  radioDeambulacion: 10
+  TiempoRecalcularDestino: 3
+  distanciaMinimaDestino: 1
 --- !u!195 &2931335976828785527
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -519,3 +501,26 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!136 &2224818979977880925
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 178227796199041654}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.8
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.6, z: 0}

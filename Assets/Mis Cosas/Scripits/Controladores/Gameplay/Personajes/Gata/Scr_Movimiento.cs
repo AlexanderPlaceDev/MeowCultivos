@@ -28,6 +28,12 @@ public class Scr_Movimiento : MonoBehaviour
     public float Gravedad;
     private bool ListoParaSaltar = true;
 
+    [Header("Tiempo en el aire")]
+    public float TiempoEnAireMaximo = 5f; // Tiempo máximo en el aire antes de desactivar el collider
+    private float tiempoEnAire = 0f;
+    private bool colisionDesactivada = false;
+    private Collider colisionador;
+
     [Header("Agachar")]
     public float VelAgachado;
     public float EscalaAgachadoY;
@@ -67,6 +73,7 @@ public class Scr_Movimiento : MonoBehaviour
         Origen = GetComponent<Transform>();
         RB = GetComponent<Rigidbody>();
         RB.freezeRotation = true;
+        colisionador = GetComponent<Collider>();
         FovOriginal = Camera.main.fieldOfView;
         EscalaInicialY = transform.localScale.y;
     }
@@ -74,6 +81,7 @@ public class Scr_Movimiento : MonoBehaviour
     private void Update()
     {
         VerificarSuelo();
+        ControlarColisionAerea();
         CapturarInputs();
         ControlarVelocidad();
         ActualizarEstado();
@@ -140,6 +148,33 @@ public class Scr_Movimiento : MonoBehaviour
         EstaEnElSuelo = Physics.Raycast(transform.position, Vector3.down, alturaVerificacion, Suelo);
         Debug.DrawRay(transform.position, Vector3.down * alturaVerificacion, Color.red);
 
+        // Si está en el suelo, reinicia el tiempo en el aire y activa el collider si estaba desactivado
+        if (EstaEnElSuelo)
+        {
+            tiempoEnAire = 0f;
+
+            if (colisionDesactivada)
+            {
+                colisionador.enabled = true; // Reactivamos la colisión
+                colisionDesactivada = false;
+            }
+        }
+    }
+
+    private void ControlarColisionAerea()
+    {
+        // Si el personaje no está en el suelo, aumenta el tiempo en el aire
+        if (!EstaEnElSuelo)
+        {
+            tiempoEnAire += Time.deltaTime;
+
+            // Si ha estado en el aire más del tiempo máximo, desactiva el collider
+            if (tiempoEnAire >= TiempoEnAireMaximo && !colisionDesactivada)
+            {
+                colisionador.enabled = false; // Desactivar colisión
+                colisionDesactivada = true;
+            }
+        }
     }
 
     private void CapturarInputs()
@@ -217,19 +252,26 @@ public class Scr_Movimiento : MonoBehaviour
 
     private void Mover()
     {
+        // Dirección de movimiento basada en la entrada
         Direccion = transform.forward * InputVer + transform.right * InputHor;
 
-        // Mantener la velocidad constante
-        Vector3 velocidadDeseada = Direccion.normalized * Velocidad;
+        if (EstaEnElSuelo)
+        {
+            // Movimiento en el suelo
+            Vector3 velocidadDeseada = Direccion.normalized * Velocidad;
+            RB.velocity = new Vector3(velocidadDeseada.x, RB.velocity.y, velocidadDeseada.z);
+        }
+        else
+        {
+            // Movimiento en el aire (menos controlado)
+            Vector3 velocidadAerea = Direccion.normalized * Velocidad * MultiplicadorDeAire;
+            RB.velocity += new Vector3(velocidadAerea.x, 0, velocidadAerea.z) * Time.deltaTime;
+        }
 
-        // Aplicar movimiento en la dirección del personaje
-        RB.velocity = new Vector3(velocidadDeseada.x, RB.velocity.y, velocidadDeseada.z);
-
+        // Si estás en una rampa, ajustar la dirección del movimiento
         if (Subiendo())
         {
-            // Calcular la dirección de la pendiente
             Vector3 direccionRampa = DireccionRampa();
-            // Aplicar la dirección de la pendiente a la velocidad
             RB.velocity += direccionRampa * Velocidad * Time.deltaTime;
         }
     }

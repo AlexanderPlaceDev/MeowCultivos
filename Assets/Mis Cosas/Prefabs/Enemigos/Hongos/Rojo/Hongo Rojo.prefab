@@ -477,11 +477,11 @@ GameObject:
   - component: {fileID: 3568592847623427287}
   - component: {fileID: 2578431720610527958}
   - component: {fileID: 8094381591236309628}
-  - component: {fileID: 4494253536565642896}
   - component: {fileID: 8155441507092292764}
   - component: {fileID: 2917940850256541031}
   - component: {fileID: 5873130551250030902}
   - component: {fileID: 6791227833606508630}
+  - component: {fileID: 4827612159909046589}
   m_Layer: 0
   m_Name: Hongo Rojo
   m_TagString: Enemigo
@@ -548,27 +548,6 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.14
-  m_Center: {x: 0, y: 0.12, z: 0}
---- !u!65 &4494253536565642896
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4237290099586911853}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 0.1, y: 0.1, z: 0.1}
   m_Center: {x: 0, y: 0.12, z: 0}
 --- !u!54 &8155441507092292764
 Rigidbody:
@@ -665,6 +644,29 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!136 &4827612159909046589
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4237290099586911853}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.1
+  m_Height: 0.12
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.1, z: 0}
 --- !u!1 &4827143715985445481
 GameObject:
   m_ObjectHideFlags: 0

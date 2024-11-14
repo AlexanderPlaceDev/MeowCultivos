@@ -60,12 +60,15 @@ Material:
     - _EsPlanta: 1
     - _Fuerza_Del_Viento: 1
     - _Intensidad: 1
+    - _Opacidad_Ruido: 0
     - _QueueControl: 0
     - _QueueOffset: 0
     - _RecibeDa_o: 0
     - _Velocidad_Del_Viento: 1
     m_Colors:
-    - _Base_Color: {r: 0.65567327, g: 0.90188676, b: 0.4135065, a: 1}
+    - _Base_Color: {r: 0.07968652, g: 0.5698112, b: 0.06773225, a: 1}
     - _Cutoff_Thresholds: {r: -0.78, g: 0.05, b: 0, a: 0}
     - _Direccion_Del_Viento: {r: 0.1, g: 0, b: 0, a: 0}
+    - _Escala_Ruido: {r: 0, g: 0, b: 0, a: 0}
+    - _Offset_Ruido: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
