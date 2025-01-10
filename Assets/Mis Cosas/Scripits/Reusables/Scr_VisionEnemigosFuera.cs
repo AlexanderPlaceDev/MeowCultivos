@@ -17,7 +17,7 @@ public class Scr_VisionEnemigosFuera : MonoBehaviour
         {
             if (Movimiento != null)
             {
-                Movimiento.Jugador = other.gameObject.transform.parent.gameObject;
+                Movimiento.Jugador = other.gameObject;
             }
         }
     }

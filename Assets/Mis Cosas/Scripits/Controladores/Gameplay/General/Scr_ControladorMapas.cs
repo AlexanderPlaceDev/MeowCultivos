@@ -61,7 +61,7 @@ public class Scr_ControladorMapas : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.name == "Gato Mesh")
+        if (other.name == "Gata")
         {
             GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().NombreMapa = NombreMapaBatalla;
             PlayerPrefs.SetString("Mapa Actual", NombreMapaBatalla);

@@ -20,7 +20,7 @@ Material:
   m_LightmapFlags: 6
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2999
+  m_CustomRenderQueue: 3001
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: _AmbientCol
@@ -93,7 +93,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alpha: 1
+    - _Alpha: 0.81
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _AmbientCol: 0.341
@@ -118,6 +118,8 @@ Material:
     - _DstBlend: 10
     - _DstBlendAlpha: 10
     - _EnvironmentReflections: 1
+    - _EsPlanta: 0
+    - _Fuerza_Del_Viento: 10
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -132,14 +134,16 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Offset: -0.22
+    - _Opacidad_Ruido: 0
     - _OtlWidth: 1
     - _Outline: 0
     - _OutlineWidth: 0.15
     - _Parallax: 0.02
     - _QueueControl: 0
-    - _QueueOffset: -1
+    - _QueueOffset: 1
     - _ReadMask: 255
     - _ReceiveShadows: 1
+    - _RecibeDa_o: 0
     - _RimStep: 0.65
     - _RimStepSmooth: 0.4
     - _Segmented: 1
@@ -167,6 +171,7 @@ Material:
     - _StpSmooth: 0.405
     - _Surface: 1
     - _UVSec: 0
+    - _Velocidad_Del_Viento: 1
     - _WorkflowMode: 0
     - _WriteMask: 255
     - _ZTest: 4
@@ -176,8 +181,11 @@ Material:
     - _Base_Color: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 0.9063317, g: 0.9063317, b: 0.9063317, a: 1}
     - _Cutoff_Thresholds: {r: -0.05, g: 0.05, b: 0, a: 0}
+    - _Direccion_Del_Viento: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Escala_Ruido: {r: 0, g: 0, b: 0, a: 0}
     - _HDR: {r: 0, g: 0, b: 0, a: 0}
+    - _Offset_Ruido: {r: 0, g: 0, b: 0, a: 0}
     - _OtlColor: {r: 0, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}

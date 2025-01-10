@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.00615565, g: 0.064536184, b: 0.21628615, a: 1}
+  m_IndirectSpecularColor: {r: 0.006160562, g: 0.06454073, b: 0.21630026, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7375,7 +7375,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 34f4ead3165966e4b96eb78bc39d8fcc,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 34f4ead3165966e4b96eb78bc39d8fcc,
         type: 3}
@@ -15916,6 +15916,7 @@ MonoBehaviour:
   GuardaPosicion: 0
   EstaEnElSuelo: 0
   AlturaPersonaje: 1.7
+  OffsetY: 0
   Suelo:
     serializedVersion: 2
     m_Bits: 8

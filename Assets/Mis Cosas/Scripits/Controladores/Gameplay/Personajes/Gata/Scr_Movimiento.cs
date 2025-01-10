@@ -19,6 +19,7 @@ public class Scr_Movimiento : MonoBehaviour
     [Header("Checar Suelo")]
     public bool EstaEnElSuelo;
     public float AlturaPersonaje;
+    public float OffsetY;
     public LayerMask Suelo;
 
     [Header("Salto")]
@@ -145,8 +146,8 @@ public class Scr_Movimiento : MonoBehaviour
     private void VerificarSuelo()
     {
         float alturaVerificacion = AlturaPersonaje * 0.5f * transform.localScale.y + 0.2f;
-        EstaEnElSuelo = Physics.Raycast(transform.position, Vector3.down, alturaVerificacion, Suelo);
-        Debug.DrawRay(transform.position, Vector3.down * alturaVerificacion, Color.red);
+        EstaEnElSuelo = Physics.Raycast(transform.position + new Vector3(0, OffsetY, 0), Vector3.down, alturaVerificacion, Suelo);
+        Debug.DrawRay(transform.position + new Vector3(0, OffsetY, 0), Vector3.down * alturaVerificacion, Color.red);
 
         // Si está en el suelo, reinicia el tiempo en el aire y activa el collider si estaba desactivado
         if (EstaEnElSuelo)

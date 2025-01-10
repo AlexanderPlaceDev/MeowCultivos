@@ -8,7 +8,7 @@ public class Scr_ActivadorCinematica : MonoBehaviour
     [SerializeField] string Cinematica;
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.transform.parent.tag == "Gata" && PlayerPrefs.GetString("Cinematica "+ Cinematica,"No")== "No")
+        if(other.gameObject.tag == "Gata" && PlayerPrefs.GetString("Cinematica "+ Cinematica,"No")== "No")
         {
             Elementos.SetActive(true);
         }
