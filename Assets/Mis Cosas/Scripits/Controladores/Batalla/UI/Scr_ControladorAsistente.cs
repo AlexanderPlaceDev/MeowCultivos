@@ -47,7 +47,7 @@ public class Scr_ControladorAsistente : MonoBehaviour
             }
             else
             {
-                ActualizarVida(GameObject.Find("Controlador").GetComponent<Scr_ControladorBatalla>().VidaActual);
+
             }
         }
     }
@@ -62,45 +62,4 @@ public class Scr_ControladorAsistente : MonoBehaviour
         Esperando = false;
     }
 
-    void ActualizarVida(int Vida)
-    {
-        transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = Vida.ToString();
-        transform.GetChild(0).gameObject.SetActive(true);
-        if (Vida > 7)
-        {
-            GetComponent<Image>().sprite = ImagenesVida[0];
-            transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Colores[0];
-
-        }
-        else
-        {
-
-            if (Vida > 5)
-            {
-                GetComponent<Image>().sprite = ImagenesVida[1];
-                transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Colores[2];
-            }
-            else
-            {
-
-                if (Vida > 2)
-                {
-                    GetComponent<Image>().sprite = ImagenesVida[2];
-                    transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Colores[3];
-
-                }
-                else
-                {
-                    GetComponent<Image>().sprite = ImagenesVida[3];
-                    transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Colores[4];
-
-                }
-            }
-        }
-        if (!Esperando)
-        {
-            StartCoroutine(Esperar());
-
-        }
-    }
 }

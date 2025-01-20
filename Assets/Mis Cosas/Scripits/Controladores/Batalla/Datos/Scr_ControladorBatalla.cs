@@ -38,8 +38,15 @@ public class Scr_ControladorBatalla : MonoBehaviour
     public List<GameObject> Enemigos = new List<GameObject>();
     private bool DioRecompensa = false;
 
-    public int VidaAnterior = 10;
-    public int VidaActual = 10;
+    [SerializeField] GameObject Vidas;
+    [SerializeField] GameObject BarraVida;
+    [SerializeField] GameObject BarraVidaAmarilla;
+    [SerializeField] GameObject BarraVidaRoja;
+    [SerializeField] GameObject BarraVidaVacia;
+    [SerializeField] TextMeshProUGUI TextoVidas;
+    [SerializeField] float VidaMaxima;
+    public float VidaAnterior = 3;
+    public float VidaActual = 3;
 
     private Scr_DatosSingletonBatalla Singleton;
 
@@ -66,12 +73,45 @@ public class Scr_ControladorBatalla : MonoBehaviour
     {
         if (VidaActual != VidaAnterior)
         {
+            // Actualizar el valor de VidaAnterior
             VidaAnterior = VidaActual;
-            var asistente = GameObject.Find("Asistente")?.GetComponent<Scr_ControladorAsistente>();
-            if (asistente != null && !asistente.OrdenDeEstados.Contains("Disparando"))
+
+            TextoVidas.text = VidaActual.ToString() + "/" + VidaMaxima.ToString();
+
+            // Destruir los hijos actuales de "Vidas"
+            foreach (Transform hijo in Vidas.GetComponentInChildren<Transform>())
             {
-                asistente.OrdenDeEstados.Add("Vida");
+                Destroy(hijo.gameObject);
             }
+
+            // Crear las nuevas barras de vida según VidaActual
+            for (int i = 0; i < VidaMaxima; i++)
+            {
+                if (i < VidaActual)
+                {
+                    // Instancia el objeto "BarraVida" como hijo de "Vidas"
+                    if (VidaActual > VidaMaxima / 100 * 50)
+                    {
+                        GameObject nuevaBarra = Instantiate(BarraVida, Vidas.transform);
+                    }
+                    else
+                    {
+                        if (VidaActual > VidaMaxima / 100 * 20)
+                        {
+                            GameObject nuevaBarra = Instantiate(BarraVidaAmarilla, Vidas.transform);
+                        }
+                        else
+                        {
+                            GameObject nuevaBarra = Instantiate(BarraVidaRoja, Vidas.transform);
+                        }
+                    }
+                }
+                else
+                {
+                    GameObject nuevaBarra = Instantiate(BarraVidaVacia, Vidas.transform);
+                }
+            }
+
         }
     }
 
