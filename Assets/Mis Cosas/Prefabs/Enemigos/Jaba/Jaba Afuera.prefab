@@ -202,11 +202,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DistanciaDeCargadoCerca: 5
-  DistanciaDeCargadoLejos: 5
   PrefabEnemigo: {fileID: 178227796199041654, guid: 56ec785b842568445b4122069a02dfb7,
     type: 3}
   CantidadEnemigosMinima: 1
   CantidadEnemigosMaxima: 3
+  Cambiando: 0
 --- !u!4 &4264002443657601969 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: caa63f37c21c4064b93b00e85427ef29,
@@ -224,7 +224,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4e29b528754e83e4088f4e671aac08de,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4e29b528754e83e4088f4e671aac08de,
         type: 3}
@@ -249,7 +249,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4e29b528754e83e4088f4e671aac08de,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 10.82
+      value: 6.93
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4e29b528754e83e4088f4e671aac08de,
         type: 3}

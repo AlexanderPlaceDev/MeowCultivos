@@ -11,6 +11,9 @@ public class Scr_DatosSingletonBatalla : MonoBehaviour
     public Color ColorMision;
     public string Complemento;
     public string Item;
+    public string Habilidad1;
+    public string Habilidad2;
+    public string HabilidadEspecial;
     public Color ColorItem;
 
     [Header("Recompensa")]

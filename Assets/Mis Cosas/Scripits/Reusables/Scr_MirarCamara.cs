@@ -26,6 +26,11 @@ public class Scr_MirarCamara : MonoBehaviour
 
     void Update()
     {
+        if (target == null)
+        {
+            target = Camera.main.transform;
+        }
+
         NTarget = target.position;
         if (IgnoraX)
         {

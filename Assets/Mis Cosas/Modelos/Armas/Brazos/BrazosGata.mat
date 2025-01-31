@@ -42,7 +42,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Base_Texture:
-        m_Texture: {fileID: 2800000, guid: 22a0365a99e45eb46aea985ca908a0fa, type: 3}
+        m_Texture: {fileID: 2800000, guid: 2560dd93240af1e438c74fe31788c666, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -131,11 +131,13 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
+    - _Opacidad_Ruido: 0
     - _OutlineWidth: 0.001
     - _Parallax: 0.02
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _RecibeDa_o: 0
     - _RimStep: 0
     - _RimStepSmooth: 0
     - _ShadowStep: 0
@@ -159,6 +161,8 @@ Material:
     - _Cutoff_Thresholds: {r: -2.61, g: 3.67, b: 0, a: 0}
     - _Direccion_Del_Viento: {r: 1, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Escala_Ruido: {r: 0, g: 0, b: 0, a: 0}
+    - _Offset_Ruido: {r: 0, g: 0, b: 0, a: 0}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}

@@ -40,6 +40,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     [SerializeField] GameObject ObjetosArmas;
     [SerializeField] GameObject Mapa;
 
+
     [Header("Generales")]
     public int BotonActual = -1;
     GameObject Singleton;
@@ -319,6 +320,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         CanvasGameplay.SetActive(true);
         ObjetosArmas.SetActive(true);
         GetComponent<Scr_ControladorBatalla>().CuentaAtras();
+        GetComponent<Scr_ControladorBatalla>().ArmaActual = Armas[ArmaActual];
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }

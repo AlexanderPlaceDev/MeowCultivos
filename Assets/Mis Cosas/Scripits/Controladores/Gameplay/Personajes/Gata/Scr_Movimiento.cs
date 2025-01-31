@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Scr_Movimiento : MonoBehaviour
@@ -84,7 +85,6 @@ public class Scr_Movimiento : MonoBehaviour
         VerificarSuelo();
         ControlarColisionAerea();
         CapturarInputs();
-        ControlarVelocidad();
         ActualizarEstado();
         GuardarPosicionSiEsNecesario();
         AplicarArrastre();
@@ -93,7 +93,7 @@ public class Scr_Movimiento : MonoBehaviour
 
     private void AplicarFovAlCorrer()
     {
-        if (Estado == Estados.Correr || (Estado == Estados.Aire &&Input.GetKey(CorrerTecla)))
+        if (Estado == Estados.Correr || (Estado == Estados.Aire && Input.GetKey(CorrerTecla)))
         {
             if (NFov < AumentoDeFov)
             {
@@ -122,6 +122,7 @@ public class Scr_Movimiento : MonoBehaviour
     {
         Mover();
         AplicarGravedad();
+        ControlarVelocidad();
     }
 
     private void AplicarGravedad()
@@ -156,7 +157,7 @@ public class Scr_Movimiento : MonoBehaviour
 
             if (colisionDesactivada)
             {
-                colisionador.enabled = true; // Reactivamos la colisión
+                //colisionador.enabled = true; // Reactivamos la colisión
                 colisionDesactivada = false;
             }
         }
@@ -172,7 +173,7 @@ public class Scr_Movimiento : MonoBehaviour
             // Si ha estado en el aire más del tiempo máximo, desactiva el collider
             if (tiempoEnAire >= TiempoEnAireMaximo && !colisionDesactivada)
             {
-                colisionador.enabled = false; // Desactivar colisión
+                //colisionador.enabled = false; // Desactivar colisión
                 colisionDesactivada = true;
             }
         }
@@ -287,10 +288,18 @@ public class Scr_Movimiento : MonoBehaviour
             RB.velocity = new Vector3(velocidadLimite.x, RB.velocity.y, velocidadLimite.z);
         }
 
-        if (RB.velocity.y < -50f)
+        if (FuerzaSalto != 0)
         {
-            RB.velocity = new Vector3(RB.velocity.x, -50f, RB.velocity.z);
+            if (RB.velocity.y < -FuerzaSalto)
+            {
+                RB.velocity = new Vector3(RB.velocity.x, -FuerzaSalto, RB.velocity.z);
+            }
+            if (RB.velocity.y > FuerzaSalto)
+            {
+                RB.velocity = new Vector3(RB.velocity.x, FuerzaSalto, RB.velocity.z);
+            }
         }
+
     }
 
     private void Saltar()

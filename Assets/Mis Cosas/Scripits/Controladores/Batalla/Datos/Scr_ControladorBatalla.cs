@@ -16,9 +16,10 @@ public class Scr_ControladorBatalla : MonoBehaviour
     [SerializeField] TextMeshProUGUI TextoSiguienteNivel;
     [SerializeField] Image Barra;
 
-    [SerializeField] Scr_CreadorArmas Arma1;
-    [SerializeField] Scr_CreadorArmas Arma2;
-    [SerializeField] Scr_CreadorArmas Arma3;
+    public GameObject ArmaActual;
+    public string Habilidad1;
+    public string Habilidad2;
+    public string HabilidadEspecial;
 
     [SerializeField] TextMeshProUGUI NumeroCuenta;
     [SerializeField] GameObject Mirilla;
@@ -47,12 +48,16 @@ public class Scr_ControladorBatalla : MonoBehaviour
     [SerializeField] float VidaMaxima;
     public float VidaAnterior = 3;
     public float VidaActual = 3;
+    public float PuntosActualesHabilidad = 0;
 
     private Scr_DatosSingletonBatalla Singleton;
 
     void Start()
     {
         Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
+        Habilidad1 = PlayerPrefs.GetString("Habilidad1", "Ojo");
+        Habilidad2 = PlayerPrefs.GetString("Habilidad2", "Rugido");
+        HabilidadEspecial = PlayerPrefs.GetString("Habilidad2", "Garras");
     }
 
     void Update()
@@ -147,8 +152,33 @@ public class Scr_ControladorBatalla : MonoBehaviour
         for (int i = 0; i < Singleton.CantidadDeEnemigos; i++)
         {
             int pos = UnityEngine.Random.Range(0, Spawners.Count);
-            GameObject enemigo = Instantiate(Singleton.Enemigo, Spawners[pos].transform.position, Quaternion.identity);
+
+            // Obtener posición del Spawner y añadir una variación aleatoria
+            Vector3 spawnPosition = Spawners[pos].transform.position;
+            Vector3 offset = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f));
+            spawnPosition += offset;
+
+            // Ajustar la posición al NavMesh más cercano
+            NavMeshHit navHit;
+            if (NavMesh.SamplePosition(spawnPosition, out navHit, 2f, NavMesh.AllAreas))
+            {
+                spawnPosition = navHit.position;
+            }
+
+            // Instanciar enemigo en la posición ajustada
+            GameObject enemigo = Instantiate(Singleton.Enemigo, spawnPosition, Quaternion.identity);
             Enemigos.Add(enemigo);
+
+            // Verificar y habilitar NavMeshAgent
+            NavMeshAgent agent = enemigo.GetComponent<NavMeshAgent>();
+            if (agent != null && agent.isOnNavMesh)
+            {
+                agent.enabled = true;
+            }
+            else
+            {
+                Debug.LogWarning("El enemigo no está en el NavMesh.");
+            }
         }
     }
 

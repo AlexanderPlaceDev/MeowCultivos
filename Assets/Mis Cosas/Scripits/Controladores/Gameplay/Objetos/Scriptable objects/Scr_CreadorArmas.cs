@@ -13,7 +13,7 @@ public class Scr_CreadorArmas : ScriptableObject
     public int CapacidadTotal;
     public int Alcance;
     public int Daño;
+    public float PuntosXGolpe;
     public int Velocidad;
     public bool DobleMano;
-
 }
