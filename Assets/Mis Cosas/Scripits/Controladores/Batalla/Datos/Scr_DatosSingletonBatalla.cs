@@ -11,10 +11,10 @@ public class Scr_DatosSingletonBatalla : MonoBehaviour
     public Color ColorMision;
     public string Complemento;
     public string Item;
+    public Color ColorItem;
     public string Habilidad1;
     public string Habilidad2;
     public string HabilidadEspecial;
-    public Color ColorItem;
 
     [Header("Recompensa")]
     public List<Scr_CreadorObjetos> ObjetosRecompensa = new List<Scr_CreadorObjetos>();

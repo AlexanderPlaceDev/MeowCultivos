@@ -1,36 +1,38 @@
+Ôªøusing PrimeTween;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Scr_EnemigoJaba : Scr_Enemigo
+public class Scr_EnemigoComun : Scr_Enemigo
 {
     public float CoolDownAtaque;
-    private float TiempoCoolDownAtaque;
 
     [SerializeField] Scr_VisionEnemigosPelea Vision;
     [SerializeField] float RadioDeambulacion;
     [SerializeField] float TiempoDeEsperaMin;
     [SerializeField] float TiempoDeEsperaMax;
+    [SerializeField] float TiempoDeEsperaEntreAtaque;
     [SerializeField] Animator Anim;
 
-    [Header("ConfiguraciÛn de Raycast")]
+    [Header("Configuraci√≥n de Raycast")]
     [SerializeField] float OffsetOrigen = 1f; // Altura del enemigo
     [SerializeField] float OffsetDestino = 1f; // Altura de la gata
 
-    private Transform Objetivo;
     private NavMeshAgent agente;
     private float temporizadorEspera;
-    private bool esperando = false; // Indica si el enemigo est· esperando
+    private bool esperando = false; // Indica si el enemigo est√° esperando
+    private bool Atacando = false; // Indica si el enemigo est√° Atacando
 
     void Start()
     {
         agente = GetComponent<NavMeshAgent>();
-
-        // Verifica si el agente est· sobre el NavMesh antes de asignarle un destino
+        // Verifica si el agente est√° sobre el NavMesh antes de asignarle un destino
+        temporizadorEspera = Random.Range(TiempoDeEsperaMin, TiempoDeEsperaMax);
         if (agente.isOnNavMesh)
         {
             MoverANuevaPosicion();
         }
-        temporizadorEspera = 0;
     }
 
     void Update()
@@ -40,30 +42,44 @@ public class Scr_EnemigoJaba : Scr_Enemigo
             if (PuedeVerGata())
             {
                 Objetivo = Vision.Gata.transform;
+                Debug.Log("Gata detectada, asignando objetivo: " + Objetivo.name);
 
-                // Verifica que el agente est· en el NavMesh antes de llamar a remainingDistance
-                if (agente.isOnNavMesh && !agente.pathPending && agente.remainingDistance <= agente.stoppingDistance)
+                float distancia = Vector3.Distance(transform.position, Objetivo.position);
+                Debug.Log("Distancia a la gata: " + distancia);
+
+                if (distancia <= agente.stoppingDistance)
                 {
-                    //atacar
+                    Debug.Log("Listo para atacar");
+                    agente.isStopped = true;
+
+                    if (!Atacando)
+                    {
+                        StartCoroutine(Atacar());
+                    }
                 }
                 else
                 {
-                    Mover(); // Persigue al jugador
-
+                    Debug.Log("Entra en persecuci√≥n");
+                    agente.isStopped = false;
+                    Mover();
                 }
             }
             else
             {
+                Debug.Log("No puede ver a la gata, patrullando...");
                 Objetivo = null;
-                Deambular(); // Modo de patrullaje aleatorio
+                Deambular();
             }
         }
         else
         {
+            Debug.Log("No hay gata en la escena, patrullando...");
             Objetivo = null;
-            Deambular(); // Modo de patrullaje aleatorio
+            Deambular();
+
         }
     }
+
 
     void Mover()
     {
@@ -87,7 +103,7 @@ public class Scr_EnemigoJaba : Scr_Enemigo
 
     void Deambular()
     {
-        // Si el enemigo est· esperando, cuenta el tiempo
+        // Si el enemigo est√° esperando, cuenta el tiempo
         if (esperando)
         {
             temporizadorEspera -= Time.deltaTime;
@@ -99,7 +115,7 @@ public class Scr_EnemigoJaba : Scr_Enemigo
             return; // No hace nada hasta que termine la espera
         }
 
-        // Verifica que el agente est· en el NavMesh antes de llamar a remainingDistance
+        // Verifica que el agente est√° en el NavMesh antes de llamar a remainingDistance
         if (agente.isOnNavMesh && !agente.pathPending && agente.remainingDistance <= agente.stoppingDistance)
         {
             Anim.SetBool("Caminando", false);
@@ -110,25 +126,27 @@ public class Scr_EnemigoJaba : Scr_Enemigo
 
     void MoverANuevaPosicion()
     {
-        Vector3 randomDirection = Random.insideUnitSphere * RadioDeambulacion;
-        randomDirection += transform.position;
-        NavMeshHit hit;
+        int intentos = 0;
+        while (intentos < 10)
+        {
+            Vector3 randomDirection = Random.insideUnitSphere * RadioDeambulacion;
+            randomDirection += transform.position;
+            NavMeshHit hit;
 
-        // Busca un punto en el NavMesh cercano a la posiciÛn aleatoria
-        if (NavMesh.SamplePosition(randomDirection, out hit, RadioDeambulacion, NavMesh.AllAreas))
-        {
-            // Si el punto est· en el NavMesh, se mueve ahÌ
-            if (agente.isOnNavMesh)
+            if (NavMesh.SamplePosition(randomDirection, out hit, RadioDeambulacion, NavMesh.AllAreas))
             {
-                agente.SetDestination(hit.position);
-                Anim.SetBool("Caminando", true);
+                if (agente.isOnNavMesh)
+                {
+                    agente.isStopped = false;  // üîπ ¬°IMPORTANTE! Asegurar que se mueva
+                    agente.SetDestination(hit.position);
+                    Anim.SetBool("Caminando", true);
+                    Debug.Log("Movi√©ndose a nueva posici√≥n: " + hit.position);
+                    return;
+                }
             }
+            intentos++;
         }
-        else
-        {
-            // Si no encontrÛ un punto v·lido, intenta otra vez
-            MoverANuevaPosicion();
-        }
+        Debug.LogWarning("No se encontr√≥ un punto v√°lido en el NavMesh despu√©s de varios intentos.");
     }
 
     bool PuedeVerGata()
@@ -145,14 +163,31 @@ public class Scr_EnemigoJaba : Scr_Enemigo
             if (hit.collider.CompareTag("Gata"))
             {
                 Debug.DrawLine(origenRaycast, destinoRaycast, Color.green); // Debug en la escena
-                return true; // No hay obst·culos
+                return true; // No hay obst√°culos
             }
             else
             {
                 Debug.DrawLine(origenRaycast, hit.point, Color.red); // Debug en la escena
-                return false; // Algo est· bloqueando la vista
+                return false; // Algo est√° bloqueando la vista
             }
         }
         return false;
+    }
+
+    IEnumerator Atacar()
+    {
+        Tween.ShakeCamera(Camera.main, 3);
+        Atacando = true;
+        Anim.Play("Ataque1");
+        if (Controlador.GetComponent<Scr_ControladorBatalla>().VidaActual >= Da√±oMelee)
+        {
+            Controlador.GetComponent<Scr_ControladorBatalla>().VidaActual -= Da√±oMelee;
+        }
+        else
+        {
+            Controlador.GetComponent<Scr_ControladorBatalla>().VidaActual -= Controlador.GetComponent<Scr_ControladorBatalla>().VidaActual;
+        }
+        yield return new WaitForSeconds(TiempoDeEsperaEntreAtaque);
+        Atacando = false;
     }
 }

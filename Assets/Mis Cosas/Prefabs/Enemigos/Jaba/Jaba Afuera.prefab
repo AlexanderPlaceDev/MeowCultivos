@@ -86,11 +86,11 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3289256590479329287}
+      addedObject: {fileID: -6890234062132662426}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7991620248696668053}
+      addedObject: {fileID: 4820251949468916691}
   m_SourcePrefab: {fileID: 100100000, guid: caa63f37c21c4064b93b00e85427ef29, type: 3}
 --- !u!1 &3487781784868600075 stripped
 GameObject:
@@ -128,8 +128,8 @@ Rigidbody:
   m_GameObject: {fileID: 3487781784868600075}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 100
-  m_AngularDrag: 100
+  m_Drag: 1
+  m_AngularDrag: 1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -155,12 +155,12 @@ NavMeshAgent:
   m_GameObject: {fileID: 3487781784868600075}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 2.02
-  m_Speed: 3.5
-  m_Acceleration: 8
+  m_Radius: 1
+  m_Speed: 10
+  m_Acceleration: 200
   avoidancePriority: 99
-  m_AngularSpeed: 120
-  m_StoppingDistance: 1
+  m_AngularSpeed: 200
+  m_StoppingDistance: 0.2
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -168,7 +168,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &3289256590479329287
+--- !u!114 &-6890234062132662426
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -177,19 +177,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 3487781784868600075}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aede89c8e2820504a826c70d4028433f, type: 3}
+  m_Script: {fileID: 11500000, guid: 8a896db0b4a83c548957cd7b9747b0a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Jugador: {fileID: 0}
-  radioDeambulacion: 10
-  tiempoEspera: 5
-  velocidad: 10
-  Huye: 0
-  distanciaHuir: 15
-  SeEstaMoviendo: 0
-  estaEnPausa: 0
-  estadoActual: 0
---- !u!114 &7991620248696668053
+  VidaActual: 30
+  VidaMaxima: 30
+  Velocidad: 10
+  RadioDeDeambulacion: 30
+  Vision: {fileID: 601461299706959612}
+  offsetZInicio: 2
+  offsetZFinal: 3
+  TiempoLimitePersiguiendo: 5
+--- !u!114 &4820251949468916691
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -201,11 +200,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5be3fbe55668cb74d8a905ea881511af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DistanciaDeCargadoCerca: 5
+  DistanciaDeCargadoCerca: 3
   PrefabEnemigo: {fileID: 178227796199041654, guid: 56ec785b842568445b4122069a02dfb7,
     type: 3}
   CantidadEnemigosMinima: 1
   CantidadEnemigosMaxima: 3
+  Mision: Elimina
+  ColorMision: {r: 1, g: 0, b: 0, a: 1}
+  Complemento: todos los
+  Item: Jaba
+  ColorItem: {r: 0.56905526, g: 0.08967595, b: 0.86415094, a: 1}
   Cambiando: 0
 --- !u!4 &4264002443657601969 stripped
 Transform:
@@ -224,17 +228,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4e29b528754e83e4088f4e671aac08de,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 15
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4e29b528754e83e4088f4e671aac08de,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 10
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4e29b528754e83e4088f4e671aac08de,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 3
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4e29b528754e83e4088f4e671aac08de,
         type: 3}
@@ -354,6 +358,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52ad67d4cb37ef240948b54443405073, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Gata: {fileID: 0}
 --- !u!4 &5203015362697685260 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4e29b528754e83e4088f4e671aac08de,

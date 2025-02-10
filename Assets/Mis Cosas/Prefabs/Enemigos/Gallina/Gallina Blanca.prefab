@@ -237,19 +237,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ce1986922dd10542b8084a299567b99,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3236691561940425217}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ce1986922dd10542b8084a299567b99,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4241715373314864828}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ce1986922dd10542b8084a299567b99,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 7273261624466696423}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ce1986922dd10542b8084a299567b99,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 3915592300455912783}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ce1986922dd10542b8084a299567b99,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9100983522031994789}
   m_SourcePrefab: {fileID: 100100000, guid: 6ce1986922dd10542b8084a299567b99, type: 3}
 --- !u!1 &8087238990687637167 stripped
 GameObject:
@@ -326,59 +322,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 2
---- !u!114 &3236691561940425217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8087238990687637167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 354afa46c52eb5843a376e33cedb7b23, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Vida: 3
-  Velocidad: 5
-  Rango: 1.8
-  CoolDown: 8
-  "Da\xF1oMelee": 1
-  "Da\xF1oDistancia": 0
-  PrefabBala: {fileID: 0}
-  SpawnBala: {fileID: 0}
-  Drops:
-  - {fileID: 11400000, guid: e2e5c9ac1c1b77d4b91658849ea31af6, type: 2}
-  - {fileID: 11400000, guid: 0addce6000cff2f459b2151a8a308c97, type: 2}
-  XPMinima: 1
-  XPMaxima: 4
-  Probabilidades:
-  - 70
-  - 40
-  Objetivo: {fileID: 0}
-  ColorHerido: {r: 1, g: 0.57924527, b: 0.57924527, a: 1}
-  DuracionCambioColor: 0.5
-  tipoenemigo: 0
-  tipocomportamiento: 1
-  Controlador: {fileID: 0}
-  "CanvasDa\xF1o": {fileID: 8855847776912535175, guid: c2c9e7e03a15dbc42b7d969aee7d9fbc,
-    type: 3}
-  "PosInicialDa\xF1o": {fileID: 1109766315112578472}
-  "PosFinalDa\xF1o": {fileID: 5364119962153704884}
---- !u!114 &4241715373314864828
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8087238990687637167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a1ffac9ef8d0ce4388bbb25832aa4aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radioDeambulacion: 15
-  TiempoRecalcularDestino: 3
-  distanciaMinimaDestino: 1
 --- !u!195 &7273261624466696423
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -418,12 +361,49 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.23
   m_Height: 0.59
   m_Direction: 1
   m_Center: {x: 0, y: 0.25, z: 0}
+--- !u!114 &9100983522031994789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8087238990687637167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cec5f89194b62b44ea90a458ddaa18b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Vida: 10
+  Velocidad: 5
+  "Da\xF1oMelee": 0
+  "Da\xF1oDistancia": 0
+  PrefabBala: {fileID: 0}
+  SpawnBala: {fileID: 0}
+  Drops:
+  - {fileID: 11400000, guid: 0addce6000cff2f459b2151a8a308c97, type: 2}
+  - {fileID: 11400000, guid: e2e5c9ac1c1b77d4b91658849ea31af6, type: 2}
+  XPMinima: 2
+  XPMaxima: 3
+  Probabilidades:
+  - 50
+  - 50
+  Objetivo: {fileID: 0}
+  ColorHerido: {r: 1, g: 0.5803922, b: 0.5803922, a: 1}
+  DuracionCambioColor: 0.5
+  tipoenemigo: 0
+  tipocomportamiento: 1
+  Controlador: {fileID: 0}
+  "CanvasDa\xF1o": {fileID: 8855847776912535175, guid: c2c9e7e03a15dbc42b7d969aee7d9fbc,
+    type: 3}
+  "PosInicialDa\xF1o": {fileID: 1109766315112578472}
+  "PosFinalDa\xF1o": {fileID: 5364119962153704884}
+  RadioDeambulacion: 30
 --- !u!4 &8894738658789184533 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6ce1986922dd10542b8084a299567b99,

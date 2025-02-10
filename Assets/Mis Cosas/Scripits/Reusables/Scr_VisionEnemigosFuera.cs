@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class Scr_VisionEnemigosFuera : MonoBehaviour
 {
-    Scr_MovimientoEnemigosFuera Movimiento;
+    public GameObject Gata;
 
-    private void Start()
+    private void OnTriggerStay(Collider other)
     {
-        Movimiento = transform.parent.GetComponent<Scr_MovimientoEnemigosFuera>();
+        if (other.tag == "Gata")
+        {
+            Gata = other.gameObject;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Gata")
         {
-            if (Movimiento != null)
-            {
-                Movimiento.Jugador = other.gameObject;
-            }
+            Gata = other.gameObject;
         }
     }
 
@@ -26,7 +26,7 @@ public class Scr_VisionEnemigosFuera : MonoBehaviour
     {
         if (other.tag == "Gata")
         {
-            Movimiento.Jugador = null;
+            Gata = null;
         }
     }
 }

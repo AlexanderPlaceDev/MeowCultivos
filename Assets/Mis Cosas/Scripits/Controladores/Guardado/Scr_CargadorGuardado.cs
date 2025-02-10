@@ -1,7 +1,9 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Playables;
 using UnityEngine.UI;
 using UnityEngine.UIElements.Experimental;
@@ -50,7 +52,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
         }
         //Mapa Batalla
-        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().NombreMapa = PlayerPrefs.GetString("Mapa Actual", "Batalla Verde 1");
+        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().NombreMapa = PlayerPrefs.GetString("Mapa Actual", "Mapa Estacion Batalla");
         //Reloj
         if (PlayerPrefs.GetString("Reloj", "No") == "Si")
         {
@@ -71,6 +73,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
         {
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
             MuroTutorial.SetActive(false);
+            FindObjectOfType<NavMeshSurface>().BuildNavMesh();
         }
 
         //Activar personajes

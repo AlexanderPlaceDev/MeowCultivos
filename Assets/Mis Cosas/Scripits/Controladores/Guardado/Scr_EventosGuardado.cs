@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.UI;
 
 public class Scr_EventosGuardado : MonoBehaviour
@@ -19,6 +20,7 @@ public class Scr_EventosGuardado : MonoBehaviour
     public void GuardarCinematicaInicial()
     {
         PlayerPrefs.SetString("CinematicaInicial", "Si");
+        GetComponent<PlayableDirector>().enabled = false;
         Camera.main.GetComponent<CinemachineBrain>().m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.EaseInOut;
     }
 

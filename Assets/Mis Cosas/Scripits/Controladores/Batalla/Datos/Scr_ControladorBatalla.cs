@@ -41,23 +41,35 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
     [SerializeField] GameObject Vidas;
     [SerializeField] GameObject BarraVida;
-    [SerializeField] GameObject BarraVidaAmarilla;
-    [SerializeField] GameObject BarraVidaRoja;
-    [SerializeField] GameObject BarraVidaVacia;
+    [SerializeField] GameObject BarraVida1;
+    [SerializeField] GameObject BarraVidaIzq;
+    [SerializeField] GameObject BarraVidaDer;
     [SerializeField] TextMeshProUGUI TextoVidas;
     [SerializeField] float VidaMaxima;
+
     public float VidaAnterior = 3;
     public float VidaActual = 3;
     public float PuntosActualesHabilidad = 0;
+
+    [Header("Objetivo")]
+    [SerializeField] TextMeshProUGUI Mision;
+    [SerializeField] TextMeshProUGUI Complemento;
+    [SerializeField] TextMeshProUGUI Item;
 
     private Scr_DatosSingletonBatalla Singleton;
 
     void Start()
     {
         Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
+        Mision.text = Singleton.Mision;
+        Mision.color = Singleton.ColorMision;
+        Complemento.text = Singleton.Complemento;
+        Item.text = Singleton.Item;
+        Item.color = Singleton.ColorItem;
         Habilidad1 = PlayerPrefs.GetString("Habilidad1", "Ojo");
         Habilidad2 = PlayerPrefs.GetString("Habilidad2", "Rugido");
         HabilidadEspecial = PlayerPrefs.GetString("Habilidad2", "Garras");
+
     }
 
     void Update()
@@ -89,31 +101,26 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 Destroy(hijo.gameObject);
             }
 
-            // Crear las nuevas barras de vida según VidaActual
-            for (int i = 0; i < VidaMaxima; i++)
+            // Crear la barra de vida correctamente
+            for (int i = 0; i < VidaActual; i++)
             {
-                if (i < VidaActual)
+                GameObject nuevaBarra;
+
+                if (VidaActual == 1) // Si solo hay 1 de vida
                 {
-                    // Instancia el objeto "BarraVida" como hijo de "Vidas"
-                    if (VidaActual > VidaMaxima / 100 * 50)
-                    {
-                        GameObject nuevaBarra = Instantiate(BarraVida, Vidas.transform);
-                    }
-                    else
-                    {
-                        if (VidaActual > VidaMaxima / 100 * 20)
-                        {
-                            GameObject nuevaBarra = Instantiate(BarraVidaAmarilla, Vidas.transform);
-                        }
-                        else
-                        {
-                            GameObject nuevaBarra = Instantiate(BarraVidaRoja, Vidas.transform);
-                        }
-                    }
+                    nuevaBarra = Instantiate(BarraVida1, Vidas.transform);
                 }
-                else
+                else if (i == 0) // Primera barra
                 {
-                    GameObject nuevaBarra = Instantiate(BarraVidaVacia, Vidas.transform);
+                    nuevaBarra = Instantiate(BarraVidaIzq, Vidas.transform);
+                }
+                else if (i == VidaActual - 1) // Última barra
+                {
+                    nuevaBarra = Instantiate(BarraVidaDer, Vidas.transform);
+                }
+                else // Barras intermedias
+                {
+                    nuevaBarra = Instantiate(BarraVida, Vidas.transform);
                 }
             }
 
@@ -140,6 +147,11 @@ public class Scr_ControladorBatalla : MonoBehaviour
                     if (objeto.name.Contains("Spawner"))
                     {
                         Spawners.Add(objeto.gameObject);
+                    }
+                    if(objeto.name.Contains("Posicion Inicial"))
+                    {
+                        GameObject.Find("Personaje").transform.position = objeto.transform.position;
+                        GameObject.Find("Personaje").transform.rotation = objeto.transform.rotation;
                     }
                 }
             }

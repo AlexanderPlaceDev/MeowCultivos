@@ -120,6 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52ad67d4cb37ef240948b54443405073, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Gata: {fileID: 0}
 --- !u!1001 &3459955246206149927
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -241,11 +242,11 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ce1986922dd10542b8084a299567b99,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2220173084234599581}
+      addedObject: {fileID: 4777368008468282384}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ce1986922dd10542b8084a299567b99,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4777368008468282384}
+      addedObject: {fileID: 5436192836225687068}
   m_SourcePrefab: {fileID: 100100000, guid: 6ce1986922dd10542b8084a299567b99, type: 3}
 --- !u!4 &4003281753990005452 stripped
 Transform:
@@ -317,10 +318,10 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 30
+  m_Speed: 30
+  m_Acceleration: 200
   avoidancePriority: 99
-  m_AngularSpeed: 120
+  m_AngularSpeed: 300
   m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -329,27 +330,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &2220173084234599581
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4378997640072845430}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aede89c8e2820504a826c70d4028433f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Jugador: {fileID: 0}
-  radioDeambulacion: 50
-  tiempoEspera: 30
-  velocidad: 30
-  Huye: 1
-  distanciaHuir: 50
-  SeEstaMoviendo: 0
-  estaEnPausa: 0
-  estadoActual: 0
 --- !u!114 &4777368008468282384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,8 +343,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DistanciaDeCargadoCerca: 3
-  DistanciaDeCargadoLejos: 5
   PrefabEnemigo: {fileID: 8087238990687637167, guid: 7753c54fedebba2449c1d58e0fbc31a1,
     type: 3}
   CantidadEnemigosMinima: 1
   CantidadEnemigosMaxima: 3
+  Mision: Captura
+  ColorMision: {r: 0.37254903, g: 0.6156863, b: 0.09803922, a: 1}
+  Complemento: a las
+  Item: Pollodras
+  ColorItem: {r: 0.8037735, g: 0.8037735, b: 0.8037735, a: 1}
+  Cambiando: 0
+--- !u!114 &5436192836225687068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4378997640072845430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e8b99dc99e29a84098ba073e7363af0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VidaActual: 5
+  VidaMaxima: 5
+  Velocidad: 30
+  RadioDeDeambulacion: 60
+  Vision: {fileID: 805248987780407467}
+  TiempoLimitePersiguiendo: 3

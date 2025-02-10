@@ -104,7 +104,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5000001
+  m_Radius: 3
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
@@ -120,6 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52ad67d4cb37ef240948b54443405073, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Gata: {fileID: 0}
 --- !u!1001 &2427470498013504197
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -131,17 +132,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: c13b4e736d226c04f9abc2e8882821bf,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -497.13766
+      value: 46.382366
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c13b4e736d226c04f9abc2e8882821bf,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 57.784138
+      value: 4.185242
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c13b4e736d226c04f9abc2e8882821bf,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 7.208604
+      value: 109.8273
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c13b4e736d226c04f9abc2e8882821bf,
         type: 3}
@@ -206,11 +207,11 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c13b4e736d226c04f9abc2e8882821bf,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7955072303424630116}
+      addedObject: {fileID: 5671454901148049450}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c13b4e736d226c04f9abc2e8882821bf,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5671454901148049450}
+      addedObject: {fileID: 216644989329223784}
   m_SourcePrefab: {fileID: 100100000, guid: c13b4e736d226c04f9abc2e8882821bf, type: 3}
 --- !u!4 &2754693290919494958 stripped
 Transform:
@@ -286,7 +287,7 @@ NavMeshAgent:
   m_Acceleration: 30
   avoidancePriority: 99
   m_AngularSpeed: 120
-  m_StoppingDistance: 1
+  m_StoppingDistance: 0.2
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -294,27 +295,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &7955072303424630116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3274524158114455444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aede89c8e2820504a826c70d4028433f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Jugador: {fileID: 0}
-  radioDeambulacion: 20
-  tiempoEspera: 60
-  velocidad: 4
-  Huye: 1
-  distanciaHuir: 20
-  SeEstaMoviendo: 0
-  estaEnPausa: 0
-  estadoActual: 0
 --- !u!114 &5671454901148049450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,8 +308,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DistanciaDeCargadoCerca: 3
-  DistanciaDeCargadoLejos: 5
   PrefabEnemigo: {fileID: 4237290099586911853, guid: 977863dd8dbc5b6479f1411e0db643a6,
     type: 3}
   CantidadEnemigosMinima: 1
   CantidadEnemigosMaxima: 3
+  Mision: Captura
+  ColorMision: {r: 0.3707499, g: 0.6150943, b: 0.09632604, a: 1}
+  Complemento: a los
+  Item: Hongos Rojos
+  ColorItem: {r: 0.87058824, g: 0.20392156, b: 0.21316393, a: 1}
+  Cambiando: 0
+--- !u!114 &216644989329223784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3274524158114455444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 296be4012fd31854094511d37a1ade38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VidaActual: 2
+  VidaMaxima: 2
+  Velocidad: 2
+  RadioDeDeambulacion: 10
+  Vision: {fileID: 6272541813334949376}
+  TiempoLimitePersiguiendo: 5

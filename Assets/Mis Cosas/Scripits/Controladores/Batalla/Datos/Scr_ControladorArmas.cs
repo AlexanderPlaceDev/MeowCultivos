@@ -1,4 +1,4 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,45 +11,40 @@ public class Scr_ControladorArmas : MonoBehaviour
     [SerializeField] Color[] ColoresMirillas;
     [SerializeField] float LongitudRaycast;
     [SerializeField] Vector3 origenRaycast;
-    [SerializeField] bool mostrarRaycast = false;  // Nueva variable para activar/desactivar visualizaciÛn del Raycast
+    [SerializeField] bool mostrarRaycast = false;
 
     int ArmaActual = 0;
-    bool Atacando = false;
+    bool Atacando = false;  // Evita que se interrumpa la animaci√≥n actual
     public int CantBalasActual = 0;
 
-    [SerializeField] float cadenciaDisparo = 0.5f;
-    private float tiempoUltimoDisparo;
+    private float tiempoDesdeUltimoGolpe = 0f;
+    private int numGolpe = 1;
 
     GameObject Gata;
+
     void Start()
     {
         Gata = GameObject.Find("Personaje");
         CantBalasActual = TodasLasArmas[ArmaActual].Capacidad;
-        tiempoUltimoDisparo = -cadenciaDisparo;
-
-        VerificarReferencias();
+        Physics.IgnoreLayerCollision(7, 8);
     }
 
     void Update()
     {
-        // Verificar colisiÛn con el Raycast
-        VerificarEnemigoConRaycast();
+        // Contador de tiempo para resetear el combo
+        if (tiempoDesdeUltimoGolpe > 0)
+        {
+            tiempoDesdeUltimoGolpe -= Time.deltaTime;
+            if (tiempoDesdeUltimoGolpe <= 0)
+            {
+                numGolpe = 1; // Si pasan m√°s de 5s sin atacar, vuelve a Golpe 1
+            }
+        }
 
-        if (Input.GetKey(KeyCode.Mouse0) && Time.time >= tiempoUltimoDisparo + cadenciaDisparo && PuedeDisparar())
+        // Solo permite atacar si no est√° atacando y puede disparar
+        if (Input.GetKey(KeyCode.Mouse0) && !Atacando && PuedeDisparar())
         {
             Disparar();
-        }
-    }
-
-    void VerificarReferencias()
-    {
-        if (TodasLasArmas == null || TodasLasArmas.Length == 0)
-        {
-            Debug.LogError("TodasLasArmas no est· asignado o est· vacÌo en el Inspector.");
-        }
-        if (ObjetoArmas == null)
-        {
-            Debug.LogError("ObjetoArmas no est· asignado en el Inspector.");
         }
     }
 
@@ -60,151 +55,50 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     void Disparar()
     {
-        if (!Atacando && ObjetoArmas != null)
-        {
-            Transform ArmaAct = ObjetoArmas.transform.GetChild(ArmaActual);
-            if (ArmaAct != null)
-            {
-                Animator Anim = ArmaAct.GetComponent<Animator>();
-                if (Anim != null)
-                {
-                    EjecutarAtaque(Anim);
-                }
-                else
-                {
-                    Debug.LogError("Animator no encontrado en el hijo de ObjetoArmas.");
-                }
-            }
-            else
-            {
-                Debug.LogError("ObjetoArmas no tiene hijos.");
-            }
+        if (ObjetoArmas == null) return;
 
-            tiempoUltimoDisparo = Time.time;
-        }
+        Transform ArmaAct = ObjetoArmas.transform.GetChild(ArmaActual);
+        if (ArmaAct == null) return;
+
+        Animator Anim = ArmaAct.GetComponent<Animator>();
+        if (Anim == null) return;
+
+        EjecutarAtaque(Anim);
     }
 
     void EjecutarAtaque(Animator Anim)
     {
-        Debug.Log("Disparando arma...");
-
-        if (CantBalasActual > 0 && TodasLasArmas[ArmaActual].Tipo != "Cuerpo a Cuerpo")
-        {
-            CantBalasActual--;
-        }
-
-        Anim.Play("Golpear");
-        float Duracion = GetAnimationClipDuration(Anim, "Brazos_Golpe");
-        StartCoroutine(EsperarAtaque(Duracion));
-
-        if (TodasLasArmas[ArmaActual].Tipo != "Cuerpo a Cuerpo")
-        {
-            ActualizarAsistente();
-        }
-    }
-
-    void ActualizarAsistente()
-    {
-        var asistente = GameObject.Find("Asistente").gameObject.GetComponent<Scr_ControladorAsistente>();
-        if (asistente != null && !asistente.OrdenDeEstados.Contains("Disparando"))
-        {
-            asistente.Balas = CantBalasActual;
-            asistente.OrdenDeEstados.Add("Disparando");
-        }
-    }
-
-    void VerificarEnemigoConRaycast()
-    {
-
-        RaycastHit hit;
-        Vector3 origen = Gata.transform.position + origenRaycast;
-        Vector3 direccion = Gata.transform.GetChild(0).forward;
-
-        // Dibujar Raycast en el editor si est· habilitado
-        if (mostrarRaycast)
-        {
-            Debug.DrawRay(origen, direccion * LongitudRaycast, Color.red);
-        }
-
-        if (Physics.Raycast(origen, direccion, out hit, LongitudRaycast))
-        {
-            if (hit.collider.CompareTag("Enemigo"))
-            {
-                Mira.sprite = Mirillas[1];
-                Mira.color = ColoresMirillas[1];
-                return;
-            }
-        }
-
-        Mira.color = ColoresMirillas[0];
-        Mira.sprite = Mirillas[0];
-    }
-
-    void CambiarArma()
-    {
-        // Implementar lÛgica para cambiar de arma si es necesario
-    }
-
-    void Recargar()
-    {
-        // Implementar lÛgica para recargar el arma si es necesario
-    }
-
-    IEnumerator EsperarAtaque(float Segundos)
-    {
+        // Bloquea el ataque hasta que termine la animaci√≥n
         Atacando = true;
-        yield return new WaitForSeconds(Segundos);
-        Atacando = false;
+
+        // Selecciona la animaci√≥n seg√∫n el golpe actual
+        string animacion = "Golpe " + numGolpe;
+        Anim.Play(animacion);
+
+        // Obtiene la duraci√≥n del golpe y espera antes de permitir otro ataque
+        float duracion = GetAnimationClipDuration(Anim, animacion);
+        StartCoroutine(EsperarAtaque(duracion));
+
+        // Avanza en la secuencia de golpes
+        numGolpe = (numGolpe % 3) + 1;
+
+        // Reinicia el contador de tiempo
+        tiempoDesdeUltimoGolpe = 5f;
+    }
+
+    IEnumerator EsperarAtaque(float segundos)
+    {
+        yield return new WaitForSeconds(segundos);
+        Atacando = false;  // Ahora puede volver a atacar
     }
 
     float GetAnimationClipDuration(Animator animator, string clipName)
     {
-        if (animator == null)
+        if (animator == null) return 0f;
+        foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
         {
-            Debug.LogError("Animator es nulo.");
-            return 0f;
+            if (clip.name == clipName) return clip.length;
         }
-
-        RuntimeAnimatorController runtimeController = animator.runtimeAnimatorController;
-        if (runtimeController == null)
-        {
-            Debug.LogError("RuntimeAnimatorController es nulo.");
-            return 0f;
-        }
-
-        foreach (AnimationClip clip in runtimeController.animationClips)
-        {
-            if (clip.name == clipName)
-            {
-                return clip.length;
-            }
-        }
-
-        Debug.LogWarning("Clip no encontrado: " + clipName);
         return 0f;
-    }
-
-    public void ActivarColision(GameObject Col)
-    {
-        if (Col != null)
-        {
-            Col.SetActive(true);
-        }
-        else
-        {
-            Debug.LogError("Col es nulo.");
-        }
-    }
-
-    public void DesactivarColision(GameObject Col)
-    {
-        if (Col != null)
-        {
-            Col.SetActive(false);
-        }
-        else
-        {
-            Debug.LogError("Col es nulo.");
-        }
     }
 }

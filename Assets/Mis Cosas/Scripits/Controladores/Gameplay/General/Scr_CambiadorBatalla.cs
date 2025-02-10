@@ -9,8 +9,13 @@ public class Scr_CambiadorBatalla : MonoBehaviour
     [SerializeField] GameObject PrefabEnemigo;
     [SerializeField] float CantidadEnemigosMinima;
     [SerializeField] float CantidadEnemigosMaxima;
+    [SerializeField] string Mision;
+    [SerializeField] Color ColorMision;
+    [SerializeField] string Complemento;
+    [SerializeField] string Item;
+    [SerializeField] Color ColorItem;
     public bool Cambiando;
-    private Scr_MovimientoEnemigosFuera Mov;
+    private Transform Gata;
     GameObject Carga;
     GameObject Reloj;
 
@@ -21,15 +26,15 @@ public class Scr_CambiadorBatalla : MonoBehaviour
     {
         Reloj = GameObject.Find("Canvas").transform.GetChild(2).gameObject;
         Carga = GameObject.Find("Canvas").transform.GetChild(6).gameObject;
-        Mov = GetComponent<Scr_MovimientoEnemigosFuera>();
+        Gata = GameObject.Find("Gata").GetComponent<Transform>();
     }
 
     void Update()
     {
-        if (Mov.Jugador != null && !escenaCargada)
+        if (Gata != null && !escenaCargada)
         {
             // Distancia al jugador
-            float distanciaAlJugador = Vector3.Distance(transform.position, Mov.Jugador.transform.position);
+            float distanciaAlJugador = Vector3.Distance(transform.position, Gata.position);
 
             // Verificar si está dentro de la distancia cercana
             if (distanciaAlJugador < DistanciaDeCargadoCerca)
@@ -56,7 +61,12 @@ public class Scr_CambiadorBatalla : MonoBehaviour
         Camera.main.gameObject.GetComponent<Transform>().GetChild(1).GetComponent<Animator>().Play("Cerrar");
         Reloj.SetActive(false);
         GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().Enemigo = PrefabEnemigo;
-        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().CantidadDeEnemigos = (int)Random.Range(CantidadEnemigosMinima,CantidadEnemigosMaxima);
+        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().CantidadDeEnemigos = (int)Random.Range(CantidadEnemigosMinima, CantidadEnemigosMaxima);
+        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().Mision = Mision;
+        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().ColorMision = ColorMision;
+        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().Complemento = Complemento;
+        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().Item = Item;
+        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().ColorItem = ColorItem;
         // Activar la pantalla de carga o hacer lo que sea necesario
         if (Carga != null)
         {
