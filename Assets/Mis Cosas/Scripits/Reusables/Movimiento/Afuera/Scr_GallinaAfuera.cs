@@ -28,11 +28,9 @@ public class Scr_GallinaAfuera : Scr_EnemigoFuera
             GetComponent<NavMeshAgent>().enabled = true;
             Anim.SetBool("Caminando", true);
             Esperando = false;
-            Debug.Log("Entra4");
 
             if (Vector3.Distance(transform.position, Destino) <= agente.stoppingDistance || Destino == Vector3.zero)
             {
-                Debug.Log("Entra2");
                 MoverANuevaPosicion();
             }
             else
@@ -49,13 +47,11 @@ public class Scr_GallinaAfuera : Scr_EnemigoFuera
         }
         else
         {
-            Debug.Log("Entra1");
             if (!Esperando)
             {
                 Anim.SetBool("Caminando", true);
                 if (Vector3.Distance(transform.position, Destino) <= agente.stoppingDistance || Destino == Vector3.zero)
                 {
-                    Debug.Log("Entra2");
                     switch (Random.Range(0, 5))
                     {
                         case 0:

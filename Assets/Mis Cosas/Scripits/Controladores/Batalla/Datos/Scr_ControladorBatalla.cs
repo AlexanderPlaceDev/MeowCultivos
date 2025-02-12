@@ -214,7 +214,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 foreach (GameObject enemigo in Enemigos)
                 {
                     enemigo.GetComponent<NavMeshAgent>().enabled = true;
-                    enemigo.GetComponent<CapsuleCollider>().enabled = true;
+                    enemigo.GetComponent<Collider>().enabled = true;
                 }
             }
         }

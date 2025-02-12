@@ -35,7 +35,6 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
         {
             if (Enemigos.Count < CantidadDeEnemigos) // Si faltan enemigos
             {
-                Debug.Log($"Faltan {CantidadDeEnemigos - Enemigos.Count} enemigos, esperando {TiempoRestanteSpawn} segundos.");
                 yield return new WaitForSeconds(TiempoRestanteSpawn);
 
                 // Spawnear un enemigo

@@ -30,20 +30,17 @@ public class Scr_JabaAfuera : Scr_EnemigoFuera
             GetComponent<NavMeshAgent>().enabled = true;
             Anim.SetBool("Caminando", true);
             Esperando = false;
-            Debug.Log("Entra4");
 
             Destino = Vision.Gata.transform.position;
             Mover();
         }
         else
         {
-            Debug.Log("Entra1");
             if (!Esperando)
             {
                 Anim.SetBool("Caminando", true);
                 if (Vector3.Distance(transform.position, Destino) <= agente.stoppingDistance || Destino == Vector3.zero)
                 {
-                    Debug.Log("Entra2");
                     switch (Random.Range(0, 2))
                     {
                         case 0:
