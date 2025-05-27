@@ -1,11 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Scr_CambiadorBatalla : MonoBehaviour
 {
-    [SerializeField] float DistanciaDeCargadoCerca = 1f; // Distancia para detecci�n cercana
+    [SerializeField] float DistanciaDeCargadoCerca = 1f;
     [SerializeField] GameObject PrefabEnemigo;
     [SerializeField] float CantidadEnemigosMinima;
     [SerializeField] float CantidadEnemigosMaxima;
@@ -14,68 +14,129 @@ public class Scr_CambiadorBatalla : MonoBehaviour
     [SerializeField] string Complemento;
     [SerializeField] string Item;
     [SerializeField] Color ColorItem;
+
     public bool Cambiando;
     private Transform Gata;
     GameObject Carga;
     GameObject Reloj;
 
-    // Variable est�tica para asegurarnos que solo un enemigo cargue la escena
     private static bool escenaCargada = false;
 
     void Start()
     {
-        Reloj = GameObject.Find("Canvas").transform.GetChild(2).gameObject;
-        Carga = GameObject.Find("Canvas").transform.GetChild(6).gameObject;
-        Gata = GameObject.Find("Gata").GetComponent<Transform>();
+        escenaCargada = false;
+        Reloj = GameObject.Find("Canvas")?.transform.GetChild(2).gameObject;
+        Carga = GameObject.Find("Canvas")?.transform.GetChild(6).gameObject;
+        Gata = GameObject.Find("Gata")?.GetComponent<Transform>();
+
+        if (Gata == null)
+        {
+            Debug.LogError("❌ No se encontró el objeto 'Gata' en la escena.");
+        }
     }
 
     void Update()
     {
         if (Gata != null && !escenaCargada)
         {
-            // Distancia al jugador
             float distanciaAlJugador = Vector3.Distance(transform.position, Gata.position);
 
-            // Verificar si est� dentro de la distancia cercana
             if (distanciaAlJugador < DistanciaDeCargadoCerca)
             {
-                StartCoroutine(CargarEscena("cerca"));
+                StartCoroutine(CargarEscena());
             }
-            /* Verificar si est� dentro de la distancia lejana
-            else if (distanciaAlJugador < DistanciaDeCargadoLejos)
-            {
-                CargarEscena("lejos");
-            }*/
         }
     }
 
-    IEnumerator CargarEscena(string tipoCarga)
+    IEnumerator CargarEscena()
     {
+        if (Cambiando || escenaCargada)
+        {
+            Debug.LogWarning("⚠️ La escena ya está cambiando. Cancelando nueva carga.");
+            yield break;
+        }
+
         Cambiando = true;
-        // Marca la escena como cargada para evitar que otros enemigos la carguen
         escenaCargada = true;
 
-        // Aqu� puedes cargar la escena de la batalla u otra l�gica
-        Debug.Log("Escena cargada por " + gameObject.name + " a distancia: " + tipoCarga);
-        Camera.main.gameObject.GetComponent<Transform>().GetChild(0).GetComponent<Animator>().Play("Cerrar");
-        Camera.main.gameObject.GetComponent<Transform>().GetChild(1).GetComponent<Animator>().Play("Cerrar");
-        Reloj.SetActive(false);
-        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().Enemigo = PrefabEnemigo;
-        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().CantidadDeEnemigos = (int)Random.Range(CantidadEnemigosMinima, CantidadEnemigosMaxima);
-        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().Mision = Mision;
-        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().ColorMision = ColorMision;
-        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().Complemento = Complemento;
-        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().Item = Item;
-        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().ColorItem = ColorItem;
-        // Activar la pantalla de carga o hacer lo que sea necesario
+        Debug.Log("✅ Cargando escena por " + gameObject.name);
+
+        var mainCamera = Camera.main;
+        if (mainCamera != null)
+        {
+            Debug.Log("🎥 Cámara encontrada. Reproduciendo animaciones.");
+
+            var animador1 = mainCamera.transform.GetChild(0)?.GetComponent<Animator>();
+            var animador2 = mainCamera.transform.GetChild(1)?.GetComponent<Animator>();
+
+            if (animador1 != null) animador1.Play("Cerrar");
+            if (animador2 != null) animador2.Play("Cerrar");
+        }
+        else
+        {
+            Debug.LogError("❌ No se encontró la cámara principal.");
+        }
+
+        if (Reloj != null)
+        {
+            Debug.Log("⏳ Desactivando reloj.");
+            Reloj.SetActive(false);
+        }
+
+        var singleton = GameObject.Find("Singleton")?.GetComponent<Scr_DatosSingletonBatalla>();
+        if (singleton == null)
+        {
+            Debug.LogError("❌ No se encontró el Singleton. No se puede continuar.");
+            Cambiando = false;
+            yield break;
+        }
+
+        Debug.Log("📦 Asignando valores al Singleton.");
+        singleton.Enemigo = PrefabEnemigo;
+        singleton.CantidadDeEnemigos = (int)Random.Range(CantidadEnemigosMinima, CantidadEnemigosMaxima);
+        singleton.Mision = Mision;
+        singleton.ColorMision = ColorMision;
+        singleton.Complemento = Complemento;
+        singleton.Item = Item;
+        singleton.ColorItem = ColorItem;
+
         if (Carga != null)
         {
+            Debug.Log("📊 Activando pantalla de carga.");
             Carga.SetActive(true);
         }
+
+        Debug.Log("⏳ Esperando 1 segundo antes de comenzar la carga asíncrona.");
         yield return new WaitForSeconds(1);
-        escenaCargada = false;
-        SceneManager.LoadScene(3);
-        // Aqu� puedes agregar el c�digo para cargar la escena, por ejemplo:
-        // SceneManager.LoadScene("NombreDeLaEscena");
+
+        if (SceneManager.sceneCountInBuildSettings > 3)
+        {
+            Debug.Log("✅ Iniciando carga asíncrona de la escena 3...");
+
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(3);
+            asyncLoad.allowSceneActivation = false;
+
+            while (!asyncLoad.isDone)
+            {
+                Debug.Log($"📡 Progreso de carga: {asyncLoad.progress * 100}%");
+
+                // Cuando la carga llegue al 90% (casi lista), activamos la escena
+                if (asyncLoad.progress >= 0.9f)
+                {
+                    Debug.Log("✅ Escena 3 cargada al 90%. Activando...");
+                    asyncLoad.allowSceneActivation = true;
+                }
+
+                yield return null;
+            }
+
+            Debug.Log("✅ Escena 3 activada correctamente.");
+        }
+        else
+        {
+            Debug.LogError("❌ La escena 3 no está en los Build Settings.");
+        }
     }
+
+
 }

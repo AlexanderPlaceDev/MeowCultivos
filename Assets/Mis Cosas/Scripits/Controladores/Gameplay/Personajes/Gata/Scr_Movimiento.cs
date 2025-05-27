@@ -55,6 +55,7 @@ public class Scr_Movimiento : MonoBehaviour
     {
         Quieto,
         Caminar,
+        Retroceder,
         Correr,
         Agachado,
         Aire
@@ -242,9 +243,18 @@ public class Scr_Movimiento : MonoBehaviour
             }
             else
             {
-                Estado = Estados.Caminar;
+                if (InputVer > 0)
+                {
+                    Estado = Estados.Caminar;
+                    Velocidad = VelCaminar;
+
+                }
+                if (InputVer < 0)
+                {
+                    Estado = Estados.Retroceder;
+                    Velocidad = VelCaminar/3;
+                }
             }
-            Velocidad = VelCaminar;
         }
         else
         {

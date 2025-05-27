@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NumeroDialogo: 1
   EsUnico: 1
-  EsMision: 0
-  Mision: {fileID: 0}
+  EsMision: 1
+  Mision: {fileID: 11400000, guid: 08088d704a70fd64dadb4876a21dfa19, type: 2}
   Lineas:
   - Muy bien!, antes que empieces a explorar quiero darte algo importante
   - 'es algo que compre con nuestros ahorros,
@@ -23,7 +23,3 @@ MonoBehaviour:
     espero no te moleste'
   - Es un reloj con el que podemos estar comunicados por si nos alejamos
   - Ademas puedes ver informacion importante en el
-  LineasRadio:
-  - Hola
-  - Probando
-  - me copias???

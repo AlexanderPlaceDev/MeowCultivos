@@ -24,7 +24,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
     {
         if (GameObject.Find("Gata"))
         {
-            ControladorMisiones = GameObject.Find("Gata").transform.GetChild(3).GetComponent<Scr_ControladorMisiones>();
+            ControladorMisiones = GameObject.Find("Gata").transform.GetChild(4).GetComponent<Scr_ControladorMisiones>();
         }
     }
 
@@ -119,7 +119,12 @@ public class Scr_SistemaDialogos : MonoBehaviour
                             //Guardar Dialogo
                             if (GetComponent<Scr_EventosGuardado>() != null)
                             {
+                                Debug.Log("Activa Evento");
                                 GetComponent<Scr_EventosGuardado>().EventoDialogo(DialogoActual, "Gusano");
+                            }
+                            if (Dialogos[DialogoActual].Mision.EsContinua)
+                            {
+                                DialogoActual++;
                             }
                         }
 

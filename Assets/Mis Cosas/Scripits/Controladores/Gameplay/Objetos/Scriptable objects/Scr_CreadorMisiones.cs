@@ -6,12 +6,23 @@ using UnityEngine;
 public class Scr_CreadorMisiones : ScriptableObject
 {
 
-    public string Nombre;
-    public string Tipo;
+    public string Descripcion;
+    public string DescripcionFinal;
+    public enum Tipos
+    {
+        Exploracion,
+        Teclas,
+        Recoleccion,
+        Caza
+    }
+    public Tipos Tipo;
     public KeyCode[] Teclas;
+    public bool EsContinua;
     public bool QuitaObjetos;
-    public string[] Objetos;
-    public int[] Cantidades;
-    public int[] Tamaños;
+    public bool DaObjetos;
+    public string[] ObjetosQueQuita;
+    public string[] ObjetosQueDa;
+    public int[] CantidadesQuita;
+    public int[] CantidadesDa;
 }
 

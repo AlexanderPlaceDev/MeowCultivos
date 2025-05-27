@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea24d2bc748133d448a419af8bc82e61, type: 3}
   m_Name: Moverse
   m_EditorClassIdentifier: 
-  Nombre: Utiliza W, A y D para moverte
-  Tipo: Teclas
+  Descripcion: Vamos a estirar las piernas!!
+  DescripcionFinal: Regresa con Erik
+  Tipo: 1
   Teclas: 610000007700000064000000
   QuitaObjetos: 0
-  Objetos: []
-  Cantidades: 
-  "Tama\xF1os": 
+  DaObjetos: 0
+  ObjetosQueQuita: []
+  ObjetosQueDa: []
+  CantidadesQuita: 
+  CantidadesDa: 

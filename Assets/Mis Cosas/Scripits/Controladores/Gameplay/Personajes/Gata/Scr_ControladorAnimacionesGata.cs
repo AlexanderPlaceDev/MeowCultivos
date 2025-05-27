@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Scr_ControladorAnimacionesGata : MonoBehaviour
@@ -10,10 +9,12 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
     public KeyCode Talar = KeyCode.Mouse0;
     public KeyCode Recolectar = KeyCode.F;
     public KeyCode Regar = KeyCode.F;
+
     public bool PuedeCaminar;
     public bool PuedeTalar;
     public bool PuedeRecolectar;
     public bool PuedeRegar;
+
     public float TiempoRecoleccion;
     public float TiempoRegar;
     public float TiempoTalar;
@@ -24,7 +25,7 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
 
     void Start()
     {
-        Anim = gameObject.transform.GetChild(0).GetComponent<Animator>();
+        Anim = transform.GetComponent<Animator>();
         Mov = GetComponent<Scr_Movimiento>();
     }
 
@@ -32,143 +33,75 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
     {
         Inputs();
 
-
-        if (Talando)
-        {
-
-            Anim.SetBool("Talar", true);
-            PuedeCaminar = false;
-
-        }
-        else
-        {
-            Anim.SetBool("Talar", false);
-            if (Recolectando)
-            {
-                Anim.SetBool("Recolectar", true);
-                PuedeCaminar = false;
-            }
-            else
-            {
-                Anim.SetBool("Recolectar", false);
-
-
-
-                if (Regando)
-                {
-                    Anim.SetBool("Regar", true);
-                    PuedeCaminar = false;
-                }
-                else
-                {
-                    Anim.SetBool("Regar", false);
-                    if (Mov.Estado == Scr_Movimiento.Estados.Caminar)
-                    {
-                        Anim.SetBool("Caminar", true);
-                    }
-                    else
-                    {
-                        Anim.SetBool("Caminar", false);
-                    }
-                    if (Mov.Estado == Scr_Movimiento.Estados.Correr)
-                    {
-                        Anim.SetBool("Correr", true);
-                    }
-                    else
-                    {
-                        Anim.SetBool("Correr", false);
-                    }
-                }
-
-
-
-            }
-        }
-
-        if (PuedeCaminar)
-        {
-            GetComponent<Scr_Movimiento>().enabled = true;
-            GetComponent<Scr_GiroGata>().enabled = true;
-        }
-        else
-        {
-            GetComponent<Scr_Movimiento>().enabled = false;
-            GetComponent<Scr_GiroGata>().enabled = false;
-        }
-
-    }
-
-
-    public void Inputs()
-    {
-
+        // Actualizar parámetros del Animator
+        Anim.SetBool("Talando", Talando);
+        Anim.SetBool("Recolectando", Recolectando);
+        Anim.SetBool("Regando", Regando);
 
         if (!Talando && !Recolectando && !Regando)
         {
-            if (PuedeTalar)
-            {
-                if (Input.GetKeyDown(Talar) && !Recolectando)
-                {
-                    Talando = true;
-                    StartCoroutine(EsperarTalar());
-                }
-            }
-            if (PuedeRecolectar)
-            {
-                if (Input.GetKeyDown(Recolectar))
-                {
-                    Recolectando = true;
-                    StartCoroutine(EsperarRecolectar());
-                }
-            }
-            if (PuedeRegar)
-            {
-                if (Input.GetKeyDown(Regar))
-                {
-                    Regando = true;
-                    StartCoroutine(EsperarRegar());
-                }
-            }
+            Anim.SetBool("Caminando", Mov.Estado == Scr_Movimiento.Estados.Caminar);
+            Anim.SetBool("Corriendo", Mov.Estado == Scr_Movimiento.Estados.Correr);
+            Anim.SetBool("Retrocediendo", Mov.Estado == Scr_Movimiento.Estados.Retroceder);
+        }
+        else
+        {
+            // Detener movimiento si se está en alguna acción
+            Anim.SetBool("Caminando", false);
+            Anim.SetBool("Caminando", false);
+            Anim.SetBool("Retrocediendo", false);
         }
 
-
-
-
-
-
-
-
+        // Habilitar o deshabilitar movimiento según estado
+        bool puedeMoverse = !Talando && !Recolectando && !Regando;
+        GetComponent<Scr_Movimiento>().enabled = puedeMoverse;
+        GetComponent<Scr_GiroGata>().enabled = puedeMoverse;
     }
 
-    public IEnumerator EsperarRecolectar()
+    void Inputs()
     {
-        int Tiempo = 1;
-        if (PlayerPrefs.GetString("Habilidad:Guante", "No") == "Si")
+        if (!Talando && !Recolectando && !Regando)
         {
-            Tiempo = 2;
+            if (PuedeTalar && Input.GetKeyDown(Talar))
+            {
+                Talando = true;
+                StartCoroutine(EsperarTalar());
+            }
+
+            if (PuedeRecolectar && Input.GetKeyDown(Recolectar))
+            {
+                Recolectando = true;
+                StartCoroutine(EsperarRecolectar());
+            }
+
+            if (PuedeRegar && Input.GetKeyDown(Regar))
+            {
+                Regando = true;
+                StartCoroutine(EsperarRegar());
+            }
         }
-        yield return new WaitForSeconds(TiempoRecoleccion / Tiempo);
-        Debug.Log("Entra5");
-        PuedeCaminar = true;
+    }
+
+    IEnumerator EsperarTalar()
+    {
+        yield return new WaitForSeconds(TiempoTalar);
+        Debug.Log("Terminó de talar");
+        Talando = false;
+    }
+
+    IEnumerator EsperarRecolectar()
+    {
+        int tiempo = PlayerPrefs.GetString("Habilidad:Guante", "No") == "Si" ? 2 : 1;
+        yield return new WaitForSeconds(TiempoRecoleccion / tiempo);
+        Debug.Log("Terminó de recolectar");
         Recolectando = false;
     }
 
-    public IEnumerator EsperarRegar()
+    IEnumerator EsperarRegar()
     {
-        int Tiempo = 1;
-        if (PlayerPrefs.GetString("Habilidad:Guante", "No") == "Si")
-        {
-            Tiempo = 2;
-        }
-        yield return new WaitForSeconds(TiempoRegar / Tiempo);
-        PuedeCaminar = true;
+        int tiempo = PlayerPrefs.GetString("Habilidad:Guante", "No") == "Si" ? 2 : 1;
+        yield return new WaitForSeconds(TiempoRegar / tiempo);
+        Debug.Log("Terminó de regar");
         Regando = false;
-    }
-    public IEnumerator EsperarTalar()
-    {
-        yield return new WaitForSeconds(TiempoTalar);
-        Debug.Log("Entra4");
-        PuedeCaminar = true;
-        Talando = false;
     }
 }

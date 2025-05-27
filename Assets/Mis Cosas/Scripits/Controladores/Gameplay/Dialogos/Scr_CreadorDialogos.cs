@@ -11,4 +11,5 @@ public class Scr_CreadorDialogos : ScriptableObject
     public bool EsMision;
     public Scr_CreadorMisiones Mision;
     [SerializeField,TextArea(4,6)] public string[] Lineas;
+    [SerializeField,TextArea(4,6)] public string[] LineasSecundarias;
 }

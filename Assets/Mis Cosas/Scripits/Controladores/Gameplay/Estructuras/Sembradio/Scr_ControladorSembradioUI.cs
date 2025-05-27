@@ -30,7 +30,7 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
     void Start()
     {
         Vacio = Producto.GetComponent<Image>().sprite;
-        Inventario = GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_Inventario>();
+        Inventario = GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>();
         DiasPlantado = PlayerPrefs.GetInt("DiasPlantado:" + ID, 0);
         diaAnterior = PlayerPrefs.GetString("DiaAnterior:" + ID, "LUN");
 

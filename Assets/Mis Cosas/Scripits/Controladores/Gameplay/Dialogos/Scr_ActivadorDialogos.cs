@@ -1,14 +1,19 @@
+using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
-
 public class Scr_ActivadorDialogos : MonoBehaviour
 {
-    bool estaAdentro = false;
-    [SerializeField] GameObject panelDialogo;
-    [SerializeField] GameObject[] iconos;
-    [SerializeField] GameObject camara;
-    [SerializeField] GameObject camaraGata;
+    private bool estaAdentro = false;
+
+    [SerializeField] private GameObject panelDialogo;
+    [SerializeField] private GameObject[] iconos;
+    [SerializeField] private GameObject camara;
+    [SerializeField] private GameObject camaraGata;
+    [SerializeField] private GameObject CanvasNPC;
+
+    private bool CanvasActivo = false;
     private Scr_SistemaDialogos sistemaDialogos;
     private Scr_ControladorMisiones ControladorMisiones;
     private Transform Gata;
@@ -16,57 +21,101 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     private void Start()
     {
         Gata = GameObject.Find("Gata").transform;
-        camaraGata = GameObject.Find("Camara 360");
+        camaraGata = GameObject.Find("Camara 360")?.gameObject; // Asegurar que sea un GameObject válido
         sistemaDialogos = GetComponent<Scr_SistemaDialogos>();
-        ControladorMisiones = GameObject.Find("Gata").transform.GetChild(3).GetComponent<Scr_ControladorMisiones>();
+        ControladorMisiones = Gata.GetChild(4).GetComponent<Scr_ControladorMisiones>();
     }
 
-    void Update()
+    private void Update()
     {
-        if (estaAdentro)
+        if (!estaAdentro)
+        {
+            sistemaDialogos.EnPausa = true;
+            return;
+        }
+
+        if (panelDialogo.activeSelf)
+        {
+            ControlarGata();
+        }
+        else if (sistemaDialogos.Leido)
+        {
+            Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
         {
             if (panelDialogo.activeSelf)
             {
-                Girar();
-                Gata.GetComponent<Scr_Movimiento>().Estado = Scr_Movimiento.Estados.Quieto;
-                Gata.GetComponent<Scr_Movimiento>().InputVer = 0;
-                Gata.GetComponent<Scr_Movimiento>().InputHor = 0;
-                Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
-                Gata.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                ComprobarMision();
+                ActivarDialogo();
             }
             else
             {
-                if (sistemaDialogos.Leido)
-                {
-                    Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
-                }
-
-            }
-
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                ComprobarMision();
-
-                ActivarDialogo();
-            }
-
-            if (sistemaDialogos.Leido && !sistemaDialogos.Leyendo && !panelDialogo.activeSelf)
-            {
-                DesactivarDialogo();
+                CanvasActivo = true;
+                StartCoroutine(EsperarCamara());
+                CambiarACamaraDialogo();
             }
         }
-        else
+
+        if (sistemaDialogos.Leido && !sistemaDialogos.Leyendo && !panelDialogo.activeSelf && !CanvasActivo)
         {
-            sistemaDialogos.EnPausa = true;
+            CanvasActivo = false;
+            DesactivarDialogo();
         }
     }
 
-    void ActivarDialogo()
+    private void ControlarGata()
     {
-        iconos[0].SetActive(false);
-        iconos[1].SetActive(false);
+        Girar();
+        var movimiento = Gata.GetComponent<Scr_Movimiento>();
+        movimiento.Estado = Scr_Movimiento.Estados.Quieto;
+        movimiento.InputVer = 0;
+        movimiento.InputHor = 0;
+
+        var animaciones = Gata.GetComponent<Scr_ControladorAnimacionesGata>();
+        animaciones.PuedeCaminar = false;
+
+        Gata.GetComponent<Rigidbody>().velocity = Vector3.zero;
+    }
+
+    private void CambiarACamaraDialogo()
+    {
+        Debug.Log("Cambiando a camara de dialogo");
         camara.SetActive(true);
         camaraGata.SetActive(false);
+        iconos[0].SetActive(false);
+        iconos[1].SetActive(false);
+    }
+
+    private IEnumerator EsperarCamara()
+    {
+        yield return new WaitForSeconds(2);
+        CanvasNPC.SetActive(true);
+    }
+
+    public void BotonHablar()
+    {
+        CanvasActivo = false;
+        CanvasNPC.SetActive(false);
+        ComprobarMision();
+        ActivarDialogo();
+    }
+
+    public void Salir()
+    {
+        CanvasActivo = false;
+        CanvasNPC.SetActive(false);
+        camara.SetActive(true);
+        camaraGata.SetActive(true);
+    }
+
+    private void ActivarDialogo()
+    {
+        Debug.Log("Activando dialogo y desactivando camaraGata");
+        camaraGata.SetActive(false); // Asegurar que se apaga al iniciar diálogo
+        camara.SetActive(true);
+
         if (!panelDialogo.activeSelf)
         {
             panelDialogo.SetActive(true);
@@ -81,7 +130,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             }
             else
             {
-                if (sistemaDialogos.Dialogos[sistemaDialogos.DialogoActual].Lineas[sistemaDialogos.LineaActual] == panelDialogo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text)
+                string textoActual = panelDialogo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text;
+                if (sistemaDialogos.Dialogos[sistemaDialogos.DialogoActual].Lineas[sistemaDialogos.LineaActual] == textoActual)
                 {
                     sistemaDialogos.SiguienteLinea();
                 }
@@ -93,57 +143,55 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         }
     }
 
-    void Girar()
+    private void DesactivarDialogo()
     {
-        Quaternion Objetivo = Quaternion.LookRotation(new Vector3(transform.position.x, Gata.position.y, transform.position.z) - Gata.position);
-        Gata.rotation = Quaternion.RotateTowards(Gata.rotation, Objetivo, 200 * Time.deltaTime);
-    }
-
-    void DesactivarDialogo()
-    {
+        Debug.Log("Desactivando dialogo y cambiando a camaraGata");
         camara.SetActive(false);
         camaraGata.SetActive(true);
         iconos[0].SetActive(true);
         iconos[1].SetActive(true);
     }
 
-    void ComprobarMision()
+    private void Girar()
     {
-        if (ControladorMisiones.MisionActual != null)
+        Quaternion objetivo = Quaternion.LookRotation(new Vector3(transform.position.x, Gata.position.y, transform.position.z) - Gata.position);
+        Gata.rotation = Quaternion.RotateTowards(Gata.rotation, objetivo, 200 * Time.deltaTime);
+    }
+
+    private void ComprobarMision()
+    {
+        if (ControladorMisiones.MisionActual == null) return;
+
+        if (ControladorMisiones.MisionCompleta)
         {
-            if (ControladorMisiones.MisionCompleta)
+            if (GetComponent<Scr_EventosGuardado>() != null)
             {
-                //Guardar Dialogo
-                if (GetComponent<Scr_EventosGuardado>() != null)
-                {
-                    Debug.Log("Entra1");
-                    GetComponent<Scr_EventosGuardado>().EventoDialogo(sistemaDialogos.DialogoActual, "Gusano");
-                }
-                ControladorMisiones.MisionActual = null;
-                sistemaDialogos.LineaActual = 0;
-                sistemaDialogos.Leido = false;
-                sistemaDialogos.DialogoActual++; // Avanzar al siguiente diálogo
+                Debug.Log("Guardando progreso de diálogo");
+                GetComponent<Scr_EventosGuardado>().EventoDialogo(sistemaDialogos.DialogoActual, "Gusano");
             }
+
+            ControladorMisiones.MisionActual = null;
+            sistemaDialogos.LineaActual = 0;
+            sistemaDialogos.Leido = false;
+            sistemaDialogos.DialogoActual++;
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Gata"))
-        {
-            iconos[0].SetActive(true);
-            iconos[1].SetActive(true);
-            estaAdentro = true;
-        }
+        if (!other.CompareTag("Gata")) return;
+
+        iconos[0].SetActive(true);
+        iconos[1].SetActive(true);
+        estaAdentro = true;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Gata"))
-        {
-            iconos[0].SetActive(false);
-            iconos[1].SetActive(false);
-            estaAdentro = false;
-        }
+        if (!other.CompareTag("Gata")) return;
+
+        iconos[0].SetActive(false);
+        iconos[1].SetActive(false);
+        estaAdentro = false;
     }
 }

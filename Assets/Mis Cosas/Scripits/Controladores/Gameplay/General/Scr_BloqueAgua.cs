@@ -20,10 +20,11 @@ public class Scr_BloqueAgua : MonoBehaviour
     private GameObject Herramienta;
     private Transform gata;
 
-    void Start()
+    void Awake()
     {
         gata = GameObject.Find("Gata").GetComponent<Transform>();
-        Herramienta = gata.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(2).gameObject;
+        Herramienta = gata.GetChild(0).GetChild(0).GetChild(0).GetChild(1)
+            .GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(2).gameObject;
     }
 
     void Update()
@@ -37,7 +38,7 @@ public class Scr_BloqueAgua : MonoBehaviour
                 estaLejos = false;
                 ActivarUI();
                 SpawnearHerramienta();
-                if (gata.GetChild(0).GetComponent<Animator>().GetBool("Regar"))
+                if (gata.GetComponent<Animator>().GetBool("Regando"))
                 {
                     gata.GetComponent<Scr_ControladorAnimacionesGata>().Regando = true;
                     recolectando = true;
@@ -66,7 +67,7 @@ public class Scr_BloqueAgua : MonoBehaviour
     IEnumerator Esperar()
     {
         yield return new WaitForSeconds(3f);
-        gata.GetChild(0).GetComponent<Animator>().speed = 1;
+        gata.GetComponent<Animator>().speed = 1;
 
         recolectando = false;
         gata.GetComponent<Scr_ControladorAnimacionesGata>().Regando = false;
@@ -83,22 +84,22 @@ public class Scr_BloqueAgua : MonoBehaviour
     void ActivarUI()
     {
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRegar = true;
-        gata.GetChild(2).gameObject.SetActive(true);
-        gata.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
-        gata.GetChild(2).GetChild(0).GetComponent<Image>().sprite = teclaIcono;
-        gata.GetChild(2).GetChild(1).GetComponent<Image>().sprite = icono;
+        gata.GetChild(3).gameObject.SetActive(true);
+        gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
+        gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = teclaIcono;
+        gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = icono;
     }
 
     void DesactivarUI()
     {
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRegar = false;
-        gata.GetChild(2).gameObject.SetActive(false);
+        gata.GetChild(3).gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-     
-        if(other.tag == "Gata" && PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si")
+
+        if (other.tag == "Gata" && PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si")
         {
             EstaDentro = true;
             SpawnearHerramienta();
@@ -110,6 +111,7 @@ public class Scr_BloqueAgua : MonoBehaviour
         if (other.tag == "Gata")
         {
             Herramienta.SetActive(false);
+            Herramienta.transform.GetChild(2).gameObject.SetActive(false);
             EstaDentro = false;
         }
     }

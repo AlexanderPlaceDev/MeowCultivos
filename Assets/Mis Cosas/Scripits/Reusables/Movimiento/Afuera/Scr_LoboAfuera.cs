@@ -29,19 +29,16 @@ public class Scr_LoboAfuera : Scr_EnemigoFuera
             GetComponent<NavMeshAgent>().enabled = true;
             Anim.Play("Mover");
             Esperando = false;
-            Debug.Log("Entra4");
 
             Destino = Vision.Gata.transform.position;
             Mover();
         }
         else
         {
-            Debug.Log("Entra1");
             if (!Esperando)
             {
                 if (Vector3.Distance(transform.position, Destino) <= agente.stoppingDistance || Destino == Vector3.zero)
                 {
-                    Debug.Log("Entra2");
                     switch (Random.Range(0, 6))
                     {
                         case 0:
@@ -98,7 +95,6 @@ public class Scr_LoboAfuera : Scr_EnemigoFuera
             }
         }
 
-        Debug.Log("No la mira");
         return false;
     }
 

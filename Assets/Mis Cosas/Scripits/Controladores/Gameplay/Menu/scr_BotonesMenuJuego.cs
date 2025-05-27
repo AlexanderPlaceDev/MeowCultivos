@@ -125,7 +125,7 @@ public class scr_BotonesMenuJuego : MonoBehaviour
         {
             case 0:
                 Asistente.GetComponent<Animator>().Play("Inventario");
-                GameObject.Find("Gata").transform.GetChild(5).GetComponent<Scr_CambiadorMenus>().MenuActual = "Inventario";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuActual = "Inventario";
                 Botones[2].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Inventario";
                 Botones[1].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[1];
                 Botones[2].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[0];
@@ -133,7 +133,7 @@ public class scr_BotonesMenuJuego : MonoBehaviour
                 break;
             case 1:
                 Asistente.GetComponent<Animator>().Play("Habilidades");
-                GameObject.Find("Gata").transform.GetChild(5).GetComponent<Scr_CambiadorMenus>().MenuActual = "Habilidades";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuActual = "Habilidades";
                 Botones[2].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Habilidades";
                 Botones[1].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[2];
                 Botones[2].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[1];
@@ -141,7 +141,7 @@ public class scr_BotonesMenuJuego : MonoBehaviour
                 break;
             case 2:
                 Asistente.GetComponent<Animator>().Play("Salir");
-                GameObject.Find("Gata").transform.GetChild(5).GetComponent<Scr_CambiadorMenus>().MenuActual = "Salir";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuActual = "Salir";
                 Botones[2].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Salir";
                 Botones[1].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[3];
                 Botones[2].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[2];
@@ -149,7 +149,7 @@ public class scr_BotonesMenuJuego : MonoBehaviour
                 break;
             case 3:
                 Asistente.GetComponent<Animator>().Play("Opciones");
-                GameObject.Find("Gata").transform.GetChild(5).GetComponent<Scr_CambiadorMenus>().MenuActual = "Opciones";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuActual = "Opciones";
                 Botones[2].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Opciones";
                 Botones[1].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[4];
                 Botones[2].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[3];
@@ -157,7 +157,7 @@ public class scr_BotonesMenuJuego : MonoBehaviour
                 break;
             case 4:
                 Asistente.GetComponent<Animator>().Play("Armas");
-                GameObject.Find("Gata").transform.GetChild(5).GetComponent<Scr_CambiadorMenus>().MenuActual = "Armas";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuActual = "Armas";
                 Botones[2].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Armas";
                 Botones[1].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[5];
                 Botones[2].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[4];
@@ -165,7 +165,7 @@ public class scr_BotonesMenuJuego : MonoBehaviour
                 break;
             case 5:
                 Asistente.GetComponent<Animator>().Play("Guia");
-                GameObject.Find("Gata").transform.GetChild(5).GetComponent<Scr_CambiadorMenus>().MenuActual = "Guia";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuActual = "Guia";
                 Botones[2].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Guia";
                 Botones[1].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[0];
                 Botones[2].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[5];

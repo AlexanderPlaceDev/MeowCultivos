@@ -24,7 +24,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
     GameObject Camara360;
     GameObject Canvas;
 
-    void Start()
+    void Awake()
     {
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
         Camara360 = GameObject.Find("Camara 360");
@@ -63,9 +63,9 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
 
         if (EstaDentro && Tiempo < Duracion)
         {
-            Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            Gata.GetChild(1).GetComponent<SkinnedMeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             Tiempo += Time.deltaTime;
-            foreach (Material Mat in Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().materials)
+            foreach (Material Mat in Gata.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials)
             {
                 CambiarMaterial(Mat);
             }
@@ -76,11 +76,11 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
             if (Tiempo > 0)
             {
                 Tiempo -= Time.deltaTime;
-                foreach (Material Mat in Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().materials)
+                foreach (Material Mat in Gata.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials)
                 {
                     CambiarMaterial(Mat);
                 }
-                Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+                Gata.GetChild(1).GetComponent<SkinnedMeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
             }
         }
     }
@@ -90,9 +90,9 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         if (other.name == "Gata" || other.name == "Gato Mesh")
         {
             EstaEnRango = true;
-            Gata.GetChild(2).gameObject.SetActive(true);
-            Gata.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Letra;
-            Gata.GetChild(2).GetChild(0).GetComponent<Image>().sprite = IconoTecla;
+            Gata.GetChild(3).gameObject.SetActive(true);
+            Gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Letra;
+            Gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = IconoTecla;
 
         }
     }
@@ -102,7 +102,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         if (other.name == "Gata" || other.name == "Gato Mesh")
         {
             EstaEnRango = false;
-            Gata.GetChild(2).gameObject.SetActive(false);
+            Gata.GetChild(3).gameObject.SetActive(false);
         }
     }
 
@@ -111,11 +111,11 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         Mat.SetFloat("_Alpha", Mathf.Lerp(1, 0, Tiempo / Duracion));
         if (Mat.GetFloat("_Alpha") == 0)
         {
-            GameObject.Find("Gata").transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().enabled = false;
+            GameObject.Find("Gata").transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().enabled = false;
         }
         else
         {
-            GameObject.Find("Gata").transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().enabled = true;
+            GameObject.Find("Gata").transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().enabled = true;
         }
 
     }

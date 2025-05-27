@@ -34,7 +34,6 @@ public class Scr_CosaAfuera : Scr_EnemigoFuera
     private void Update()
     {
         float distancia = Vector3.Distance(Gata.transform.position, transform.position);
-        Debug.Log(distancia);
 
         if (distancia < DistanciaDisparo)
         {
@@ -99,5 +98,7 @@ public class Scr_CosaAfuera : Scr_EnemigoFuera
 
         // Agrega fuerza en la dirección correcta
         Bala.GetComponent<Rigidbody>().AddForce(transform.forward * VelocidadBala);
+
+        Bala.GetComponent<Scr_BalaAfuera>().Padre = gameObject;
     }
 }

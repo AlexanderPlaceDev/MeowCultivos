@@ -67,7 +67,7 @@ public class Scr_ControladorMenuInventario : MonoBehaviour
         if (!InventarioActualizado)
         {
             int i = 0;
-            foreach (int cantidad in Gata.transform.GetChild(6).GetComponent<Scr_Inventario>().Cantidades)
+            foreach (int cantidad in Gata.transform.GetChild(7).GetComponent<Scr_Inventario>().Cantidades)
             {
                 Transform casilla = ObjetosDelInventario[0].GetChild(0).GetChild(i);
                 casilla.gameObject.SetActive(cantidad != 0);
@@ -90,8 +90,8 @@ public class Scr_ControladorMenuInventario : MonoBehaviour
         else
         {
             descripcion.gameObject.SetActive(true);
-            descripcion.GetChild(0).GetComponent<TextMeshProUGUI>().text = Gata.transform.GetChild(6).GetComponent<Scr_Inventario>().Objetos[numeroDeObjeto].Nombre;
-            descripcion.GetChild(1).GetComponent<TextMeshProUGUI>().text = Gata.transform.GetChild(6).GetComponent<Scr_Inventario>().Objetos[numeroDeObjeto].Descripcion;
+            descripcion.GetChild(0).GetComponent<TextMeshProUGUI>().text = Gata.transform.GetChild(7).GetComponent<Scr_Inventario>().Objetos[numeroDeObjeto].Nombre;
+            descripcion.GetChild(1).GetComponent<TextMeshProUGUI>().text = Gata.transform.GetChild(7).GetComponent<Scr_Inventario>().Objetos[numeroDeObjeto].Descripcion;
         }
     }
 }

@@ -36,13 +36,13 @@ public class Scr_EventosGuardado : MonoBehaviour
                         Debug.Log("Entra1");
                         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
                     }
-                    if (UltimoDialogo == 2)
+                    if (UltimoDialogo == 1)
                     {
                         Debug.Log("Se guardo el movimiento");
                         PlayerPrefs.SetString("Movimiento", "Si");
                         GameObject.Find("Canvas").transform.GetChild(2).gameObject.SetActive(true);
                         PlayerPrefs.SetString("Reloj", "Si");
-                        Gata.transform.GetChild(5).GetComponent<Scr_ControladorMenuGameplay>().enabled = true;
+                        Gata.transform.GetChild(6).GetComponent<Scr_ControladorMenuGameplay>().enabled = true;
                     }
                     PlayerPrefs.SetInt("DialogoGusano", UltimoDialogo);
                     break;

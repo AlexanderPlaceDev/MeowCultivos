@@ -18,8 +18,8 @@ public class SpawnerActivo : MonoBehaviour
     [SerializeField] string HabilidadRequerida;
     [SerializeField] string HabilidadRequerida2;
     [SerializeField] float[] TiempoRespawn;
+    [SerializeField] GameObject Herramienta;
 
-    private GameObject Herramienta;
     private Transform Gata;
     private bool estaLejos;
     private bool objetoAgregado = false;
@@ -38,7 +38,7 @@ public class SpawnerActivo : MonoBehaviour
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
         TiempoRespawnAleatorio = Random.Range(TiempoRespawn[0], TiempoRespawn[1]);
 
-        Herramienta = Gata.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1)
+        Herramienta = Gata.GetChild(0).GetChild(0).GetChild(0).GetChild(1)
             .GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(2).gameObject;
 
         meshRenderer = GetComponent<MeshRenderer>();
@@ -60,6 +60,8 @@ public class SpawnerActivo : MonoBehaviour
             {
                 DesactivarUI();
                 Herramienta.SetActive(false);
+                Herramienta.transform.GetChild(0).gameObject.SetActive(false);
+                Herramienta.transform.GetChild(1).gameObject.SetActive(false);
                 estaLejos = true;
             }
         }
@@ -116,22 +118,22 @@ public class SpawnerActivo : MonoBehaviour
 
     void ActivarUI()
     {
-        Gata.GetChild(2).gameObject.SetActive(true);
-        Gata.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Tecla;
-        Gata.GetChild(2).GetChild(0).GetComponent<Image>().sprite = TeclaIcono;
-        Gata.GetChild(2).GetChild(1).GetComponent<Image>().sprite = Icono;
+        Gata.GetChild(3).gameObject.SetActive(true);
+        Gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Tecla;
+        Gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = TeclaIcono;
+        Gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = Icono;
         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeTalar = true;
     }
 
     void DesactivarUI()
     {
-        Gata.GetChild(2).gameObject.SetActive(false);
+        Gata.GetChild(3).gameObject.SetActive(false);
         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeTalar = false;
     }
 
     void AgregarObjetoInventario(int cantidad, Scr_CreadorObjetos objeto)
     {
-        Scr_Inventario inventario = Gata.GetChild(6).GetComponent<Scr_Inventario>();
+        Scr_Inventario inventario = Gata.GetChild(7).GetComponent<Scr_Inventario>();
         inventario.AgregarObjeto(cantidad, objeto.Nombre);
         Scr_ObjetosAgregados controlador = GameObject.Find("Canvas").transform.GetChild(4).GetComponent<Scr_ObjetosAgregados>();
         if (controlador.Lista.Contains(objeto))

@@ -29,7 +29,7 @@ public class Scr_EnemigoJaba : Scr_Enemigo
         float distancia = Vector3.Distance(transform.position, Objetivo.position);
         Debug.Log("Distancia a la gata: " + distancia);
 
-        if (distancia <= agente.stoppingDistance+1f)
+        if (distancia <= agente.stoppingDistance + 1f)
         {
             Debug.Log("Listo para atacar");
             agente.isStopped = true;
@@ -42,8 +42,12 @@ public class Scr_EnemigoJaba : Scr_Enemigo
         else
         {
             Debug.Log("Entra en persecución");
-            agente.isStopped = false;
-            Mover();
+            if (agente.isOnNavMesh)
+            {
+                agente.isStopped = false;
+                Mover();
+
+            }
         }
 
 

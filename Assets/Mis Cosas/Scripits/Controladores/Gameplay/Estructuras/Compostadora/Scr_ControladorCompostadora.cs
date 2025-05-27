@@ -27,7 +27,7 @@ public class Scr_ControladorCompostadora : MonoBehaviour
     void Start()
     {
         ObjetosAgregados = GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>();
-        Inventario = GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_Inventario>();
+        Inventario = GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>();
 
         // Guarda la referencia de la semilla
         Abono = transform.GetChild(2).gameObject;
