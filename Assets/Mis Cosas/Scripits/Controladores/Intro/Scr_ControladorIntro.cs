@@ -40,7 +40,7 @@ public class Scr_ControladorIntro : MonoBehaviour
     void Update()
     {
 
-        Rutina();
+        //Rutina();
         Pereodico();
 
        

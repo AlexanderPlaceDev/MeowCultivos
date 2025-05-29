@@ -145,7 +145,6 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
     private void DesactivarDialogo()
     {
-        Debug.Log("Desactivando dialogo y cambiando a camaraGata");
         camara.SetActive(false);
         camaraGata.SetActive(true);
         iconos[0].SetActive(true);

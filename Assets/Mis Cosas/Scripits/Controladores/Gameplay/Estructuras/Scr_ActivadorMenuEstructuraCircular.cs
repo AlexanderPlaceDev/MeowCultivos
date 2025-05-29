@@ -39,14 +39,14 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
         if (Vector3.Distance(Gata.position, transform.position) < Distancia && !EstaDentro)
         {
             EstaLejos = false;
-            Gata.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Tecla;
-            Gata.GetChild(2).GetChild(0).GetComponent<Image>().sprite = IconoTecla;
-            Gata.GetChild(2).GetChild(1).GetComponent<Image>().sprite = Icono;
-            Gata.GetChild(2).gameObject.SetActive(true);
+            Gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Tecla;
+            Gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = IconoTecla;
+            Gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = Icono;
+            Gata.GetChild(3).gameObject.SetActive(true);
         }
         if (Vector3.Distance(Gata.position, transform.position) > Distancia && !EstaLejos)
         {
-            Gata.GetChild(2).gameObject.SetActive(false);
+            Gata.GetChild(3).gameObject.SetActive(false);
             EstaLejos = true;
         }
     }
@@ -57,9 +57,9 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
         {
             if (TiempoMaterial < DuracionMaterial)
             {
-                Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                Gata.GetChild(1).GetComponent<SkinnedMeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                 TiempoMaterial += Time.deltaTime;
-                foreach (Material Mat in Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().materials)
+                foreach (Material Mat in Gata.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials)
                 {
                     CambiarMaterial(Mat);
                 }
@@ -80,11 +80,11 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
             if (TiempoMaterial > 0)
             {
                 TiempoMaterial -= Time.deltaTime;
-                foreach (Material Mat in Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().materials)
+                foreach (Material Mat in Gata.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials)
                 {
                     CambiarMaterial(Mat);
                 }
-                Gata.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+                Gata.GetChild(1).GetComponent<SkinnedMeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
             }
 
             if (TiempoCamara > 0)
@@ -95,7 +95,7 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
         }
 
 
-        if (!EstaLejos && Input.GetKeyDown(KeyCode.E) && !EstaDentro)
+        if (!EstaLejos && Input.GetKeyDown(KeyCode.E))
         {
 
             if (Camara360 == null)
@@ -105,12 +105,13 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
 
             EstaDentro = true;
             Camara360.SetActive(false);
-            Gata.GetChild(2).gameObject.SetActive(false);
+            Gata.GetChild(3).gameObject.SetActive(false);
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
             Gata.GetComponent<Scr_GiroGata>().enabled = false;
             transform.GetChild(1).gameObject.SetActive(true);
-            Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), -200, 1);
-            Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 0, 1);
+            Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(3).GetChild(0).GetComponent<RectTransform>(), -250, 1);
+            Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(3).GetChild(1).GetComponent<RectTransform>(), 250, 1);
+            Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(3).GetChild(2).GetComponent<RectTransform>(), -850, 1);
         }
         else
         {
@@ -127,11 +128,11 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
 
         if (Mat.GetFloat("_Alpha") == 0)
         {
-            Gata.transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().enabled = false;
+            Gata.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().enabled = false;
         }
         else
         {
-            Gata.transform.GetChild(0).GetChild(0).GetComponent<SkinnedMeshRenderer>().enabled = true;
+            Gata.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().enabled = true;
         }
 
 
@@ -141,11 +142,12 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
     {
         EstaDentro = false;
         Camara360.SetActive(true);
-        Gata.GetChild(2).gameObject.SetActive(true);
+        Gata.GetChild(3).gameObject.SetActive(true);
         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
         Gata.GetComponent<Scr_GiroGata>().enabled = true;
         transform.GetChild(1).gameObject.SetActive(false);
-        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), 0, 1);
-        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), -230, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(3).GetChild(0).GetComponent<RectTransform>(), 30, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(3).GetChild(1).GetComponent<RectTransform>(), 0, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(3).GetChild(2).GetComponent<RectTransform>(), -610, 1);
     }
 }

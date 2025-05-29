@@ -85,7 +85,6 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
     IEnumerator EsperarTalar()
     {
         yield return new WaitForSeconds(TiempoTalar);
-        Debug.Log("Terminó de talar");
         Talando = false;
     }
 

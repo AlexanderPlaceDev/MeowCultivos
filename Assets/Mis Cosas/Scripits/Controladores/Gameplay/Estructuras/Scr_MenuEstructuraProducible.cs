@@ -185,7 +185,7 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
 
     private bool TieneMaterialesNecesarios()
     {
-        var inventario = GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_Inventario>();
+        var inventario = GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>();
         for (int i = 0; i < ObjetosQueProduce[ObjetoActual].MaterialesDeProduccion.Length; i++)
         {
             var material = ObjetosQueProduce[ObjetoActual].MaterialesDeProduccion[i];
@@ -322,7 +322,7 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
 
     private int ObtenerCantidadMinima()
     {
-        var inventario = GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_Inventario>();
+        var inventario = GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>();
         var cantidadesMinimas = ObjetosQueProduce[ObjetoActual].MaterialesDeProduccion
             .Select((material, i) => material == null ? int.MaxValue : inventario.Cantidades[Array.IndexOf(inventario.Objetos, material)] / ObjetosQueProduce[ObjetoActual].CantidadMaterialesDeProduccion[i])
             .ToArray();
@@ -331,14 +331,14 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
 
     private void QuitarObjeto(Scr_CreadorObjetos Objeto, int cantidad)
     {
-        var inventario = GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_Inventario>();
+        var inventario = GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>();
         int index = Array.IndexOf(inventario.Objetos, Objeto);
         if (index >= 0) inventario.Cantidades[index] -= cantidad;
     }
 
     private void DarObjeto(Scr_CreadorObjetos Objeto, int cantidad)
     {
-        var inventario = GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_Inventario>();
+        var inventario = GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>();
         int index = Array.IndexOf(inventario.Objetos, Objeto);
         if (index >= 0) inventario.Cantidades[index] += cantidad;
     }

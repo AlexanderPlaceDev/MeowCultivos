@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Scr_CinematicaIntroPereodico : MonoBehaviour
 {
@@ -8,10 +6,6 @@ public class Scr_CinematicaIntroPereodico : MonoBehaviour
     [SerializeField] GameObject PereodicoGrande;
     [SerializeField] Scr_ControladorCinematica Cinematica;
     int cont = 0;
-    void Start()
-    {
-
-    }
 
     void Update()
     {
@@ -26,9 +20,12 @@ public class Scr_CinematicaIntroPereodico : MonoBehaviour
                 }
                 else
                 {
+                    cont = 2;
                     PereodicoGrande.SetActive(false);
                     Iconos.SetActive(false);
-                    Cinematica.PausaAlTerminar[3] = false;
+
+                    // ✅ Reanuda la cinemática desde la posición pausada
+                    Cinematica.PausaAlTerminar[4] = false;
                 }
             }
         }

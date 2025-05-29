@@ -49,7 +49,6 @@ public class Scr_ObjetosAgregados : MonoBehaviour
 
             if (Iconos[0].GetComponent<Image>().sprite != null && GameObject.Find("Canvas XP").transform.GetChild(0).GetComponent<TextMeshProUGUI>().color.a == 0)
             {
-                Debug.Log("Entra");
                 if (PlayerPrefs.GetString("Habilidad:" + HabilidadXP, "No") == "Si")
                 {
                     xptotal = xptotal * 2;
