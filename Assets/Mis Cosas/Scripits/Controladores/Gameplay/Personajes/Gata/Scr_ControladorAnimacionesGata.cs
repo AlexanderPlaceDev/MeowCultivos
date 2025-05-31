@@ -53,9 +53,9 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
         }
 
         // Habilitar o deshabilitar movimiento según estado
-        bool puedeMoverse = !Talando && !Recolectando && !Regando;
-        GetComponent<Scr_Movimiento>().enabled = puedeMoverse;
-        GetComponent<Scr_GiroGata>().enabled = puedeMoverse;
+        
+        GetComponent<Scr_Movimiento>().enabled = PuedeCaminar;
+        GetComponent<Scr_GiroGata>().enabled = PuedeCaminar;
     }
 
     void Inputs()

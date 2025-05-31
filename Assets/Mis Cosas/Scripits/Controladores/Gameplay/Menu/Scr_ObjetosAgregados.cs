@@ -36,6 +36,7 @@ public class Scr_ObjetosAgregados : MonoBehaviour
             {
                 if (ObjetoActual == 4 || Lista[ObjetoActual] == null)
                 {
+                    Debug.Log("Objeto numero 4 rompe ciclo");
                     break;
                 }
                 else

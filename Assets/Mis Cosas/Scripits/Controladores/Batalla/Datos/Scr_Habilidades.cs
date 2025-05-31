@@ -26,6 +26,7 @@ public class Scr_Habilidades : MonoBehaviour
     private Coroutine vignetteCoroutine; // Manejo de Vignette
     private Coroutine colorAdjustmentsCoroutine; // Manejo de ColorAdjustments
     private Coroutine LensCoroutine; // Manejo de ColorAdjustments
+    private float DañoAnterior = 0;
 
     private void Start()
     {
@@ -87,8 +88,14 @@ public class Scr_Habilidades : MonoBehaviour
 
     IEnumerator HabilidadGarras()
     {
+        //Guardamos el daño que tenia
+        DañoAnterior = Singleton.GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño;
+        //Multiplicamos el daño x 4
+        Singleton.GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño=(int)(DañoAnterior*4);
+        //Se activan las colisiones
         AreasGarras[0].SetActive(true);
         AreasGarras[1].SetActive(true);
+        //Realiza animacion de quitar guantes
         Armas.transform.GetChild(0).GetComponent<Animator>().Play("DesaparecerBrazos1");
         yield return new WaitForSeconds(0.1f);
 
@@ -110,7 +117,10 @@ public class Scr_Habilidades : MonoBehaviour
         AreasGarras[0].SetActive(true);
         AreasGarras[1].SetActive(true);
         yield return new WaitForSeconds(0.75f / 2f);
+        //Reasignamos el daño
+        Singleton.GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño=(int)DañoAnterior;
         Armas.transform.GetChild(0).gameObject.SetActive(true);
+
         Personaje.GetComponent<Scr_Movimiento>().enabled = true;
         Armas.transform.GetChild(0).GetComponent<Animator>().Play("AparecerBrazos1");
         Armas.transform.GetChild(1).gameObject.SetActive(false);

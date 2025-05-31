@@ -31,7 +31,8 @@ public class Scr_EventosGuardado : MonoBehaviour
         {
             case "Gusano":
                 {
-                    if(UltimoDialogo == 0)
+                    Debug.Log("Evento:" + Personaje + " " + UltimoDialogo + " guardado");
+                    if (UltimoDialogo == 0)
                     {
                         Debug.Log("Entra1");
                         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
@@ -81,7 +82,7 @@ public class Scr_EventosGuardado : MonoBehaviour
 
     public void GuardarEstructurasTablero(int EstructuraActual)
     {
-        PlayerPrefs.SetInt("Estructura"+EstructuraActual, 1);
+        PlayerPrefs.SetInt("Estructura" + EstructuraActual, 1);
 
     }
 }
