@@ -81,6 +81,19 @@ public class Scr_ControladorTiempo : MonoBehaviour
         RotarSkybox();
     }
 
+    public void Descansar(float m, int h)
+    {
+        tiempoTranscurrido = 0;
+        MinutoActual = m;
+        HoraActual = h;
+        ActualizarDia();
+
+        ActualizarTextoFecha();
+        ActualizarTextoHora();
+        
+        GuardarTiempo();
+        ActualizarIconoClima();
+    }
     void ActualizarMinuto()
     {
         int indexMinutos = System.Array.IndexOf(intervalosMinutos, (int)MinutoActual);
