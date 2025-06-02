@@ -26,7 +26,7 @@ public class Carpas : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && !openUI)
+        if (Input.GetKeyDown(KeyCode.E) && !openUI && EstaEnRango)
         {
             carpaUI.SetActive(true);
             openUI = true;
