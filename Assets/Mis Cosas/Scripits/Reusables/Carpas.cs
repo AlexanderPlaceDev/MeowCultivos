@@ -14,7 +14,7 @@ public class Carpas : MonoBehaviour
     public CambioTiempo cam;
     Transform Gata;
     public bool openUI=false;
-    bool EstaEnRango;
+    bool EstaEnRango = false;
     // Start is called before the first frame update
     void Start()
     {

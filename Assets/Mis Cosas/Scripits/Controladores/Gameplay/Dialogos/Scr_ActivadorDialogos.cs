@@ -1,3 +1,4 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using TMPro;
@@ -18,10 +19,18 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     private Scr_ControladorMisiones ControladorMisiones;
     private Transform Gata;
 
+    private CinemachineBrain brain;
+    private float TransicionDuracion = 1f;
     private void Start()
     {
         Gata = GameObject.Find("Gata").transform;
         camaraGata = GameObject.Find("Camara 360")?.gameObject; // Asegurar que sea un GameObject válido
+        brain = Camera.main.GetComponent<CinemachineBrain>();
+        if (brain != null)
+        {
+            // Cambiar duración del blend por defecto
+            brain.m_DefaultBlend.m_Time = TransicionDuracion;
+        }
         sistemaDialogos = GetComponent<Scr_SistemaDialogos>();
         ControladorMisiones = Gata.GetChild(4).GetComponent<Scr_ControladorMisiones>();
     }
@@ -90,7 +99,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
     private IEnumerator EsperarCamara()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(TransicionDuracion);
         CanvasNPC.SetActive(true);
     }
 
