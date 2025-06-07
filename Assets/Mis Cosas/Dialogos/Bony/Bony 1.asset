@@ -15,7 +15,7 @@ MonoBehaviour:
   NumeroDialogo: 0
   EsUnico: 1
   EsMision: 0
-  Mision: {fileID: 0}
+  Mision: {fileID: 11400000, guid: 26cf91a577a461e4a8375203ef1dbc92, type: 2}
   Lineas:
   - Gracias por salvarme
   - Esos monstruos han estado destruyendo mi base
@@ -24,5 +24,6 @@ MonoBehaviour:
   - No lo he visto desde que se derrumbo el puente, pero prometi mantener todo en
     orden
   - 'Que tal si me ayudas construyendo algunas cosas '
-  - En el tablero azul puedes ver los proyectos que me encargo mi padre
-  LineasRadio: []
+  - En el tablero azul que esta a la ezquierda puedes ver los proyectos que me encargo
+    mi padre
+  LineasSecundarias: []

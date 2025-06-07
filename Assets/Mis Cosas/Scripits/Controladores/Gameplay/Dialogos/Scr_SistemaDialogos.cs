@@ -19,13 +19,14 @@ public class Scr_SistemaDialogos : MonoBehaviour
     public int LineaActual = 0;
     private Coroutine currentCoroutine;
     private Scr_ControladorMisiones ControladorMisiones;
-
+    private Scr_ActivadorDialogos activadorDialogos;
     private void Start()
     {
         if (GameObject.Find("Gata"))
         {
             ControladorMisiones = GameObject.Find("Gata").transform.GetChild(4).GetComponent<Scr_ControladorMisiones>();
         }
+        activadorDialogos=GetComponent<Scr_ActivadorDialogos>();
     }
 
     private void Update()
@@ -115,7 +116,9 @@ public class Scr_SistemaDialogos : MonoBehaviour
                         //Asignar Mision
                         if (Dialogos[DialogoActual].EsMision)
                         {
+                            activadorDialogos.Misionesqueespera = Dialogos[DialogoActual].Mision;
                             ControladorMisiones.MisionActual = Dialogos[DialogoActual].Mision;
+                            ControladorMisiones.MisionPrincipal = Dialogos[DialogoActual].Mision;
                             //Guardar Dialogo
                             if (GetComponent<Scr_EventosGuardado>() != null)
                             {

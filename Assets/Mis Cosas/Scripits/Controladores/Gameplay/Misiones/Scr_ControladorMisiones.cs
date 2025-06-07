@@ -1,16 +1,25 @@
 using PrimeTween;
 using System.Collections.Generic;
+using System.Diagnostics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static Scr_CreadorMisiones;
 
 public class Scr_ControladorMisiones : MonoBehaviour
 {
     public Scr_CreadorMisiones MisionActual;
-    public List<Scr_CreadorMisiones> MisionesExtra;
+    public Scr_CreadorMisiones MisionPrincipal;
     public bool MisionCompleta;
-    [SerializeField] Scr_CreadorMisiones[] TodasLasMisiones;
-
+    public bool MisionPCompleta;
+    public List<Scr_CreadorMisiones> MisionesExtra;
+    public MisionesData MisionData;
+    public Scr_CreadorMisiones[] TodasLasMisiones;
+    public List<bool> MisionesPcompletas;
+    public List<bool> MisionesScompletas;
+    public int[] enemigosEliminados;
+    private Scr_Inventario inventario;
+    private Transform Gata;
     [SerializeField] GameObject BotonesUI;
     [SerializeField] GameObject PanelMisiones;
     [SerializeField] TextMeshProUGUI TextoDescripcion;
@@ -23,15 +32,30 @@ public class Scr_ControladorMisiones : MonoBehaviour
     private float[] TiempoTeclas;
     private bool Oculto = true;
 
+    public string[] NameEnemiCazado;
+    public int[] cazados;
+
+
+    public string[] TargetExplorados;
     void Start()
     {
-        CargarMisiones();
+
+        Gata = GameObject.Find("Gata").transform;
+        inventario = Gata.GetChild(7).GetComponent<Scr_Inventario>();
+        //CargarMisiones();
+        ActualizarInfo();
     }
 
     void Update()
     {
-        ComprobarMision();
+        //ComprobarMision();
         ActualizarInfo();
+
+        if (MisionActual != null && MisionActual.Tipo == Scr_CreadorMisiones.Tipos.Teclas)
+        {
+            ActualizarMisionTeclas();
+            BotonesUI.SetActive(!MisionCompleta);
+        }
 
         if (Input.GetKeyDown(Tecla))
         {
@@ -107,7 +131,193 @@ public class Scr_ControladorMisiones : MonoBehaviour
             }
         }
 
-        MisionCompleta = System.Array.TrueForAll(TeclasPresionadas, t => t);
+        MisionPCompleta = System.Array.TrueForAll(TeclasPresionadas, t => t);
+        if (MisionActual != null && MisionPrincipal==MisionActual) 
+        {
+            MisionCompleta = MisionPCompleta;
+        }
+    }
+
+    public void SeleccionMisionActual(Scr_CreadorMisiones nuevaMision, bool complete)
+    {
+        MisionActual = nuevaMision;
+        MisionCompleta = complete;
+    }
+
+    public bool revisarMisionPrincipal()
+    {
+        if (MisionPrincipal == null)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public void Terminar_MisionPrincipal()
+    {
+        if (MisionPrincipal != null && MisionPCompleta)
+        {
+            MisionesPcompletas.Add(MisionActual);
+            MisionPrincipal = null;
+            MisionPCompleta = false;
+        }
+    }
+
+    public void RevisarTodasLasMisionesSecundarias()
+    {
+        // Misión Principal
+        /*
+        if (MisionPrincipal != null && !MisionPCompleta)
+        {
+            ComprobarProgreso(MisionPrincipal, ref MisionPCompleta);
+
+        }*/
+
+        // Misiones Secundarias
+        for (int i = 0; i < MisionesExtra.Count; i++)
+        {
+            if (!MisionesScompletas[i])
+            {
+                bool completada = false;
+                ComprobarProgreso(MisionesExtra[i], ref completada);
+                if (completada)
+                {
+                    MisionesScompletas[i] = true;
+                    
+                }
+            }
+        }
+
+        ActualizarInfo(); // Refresca el panel de UI si es necesario
+    }
+
+    public void TerminarMisionSexundaria(Scr_CreadorMisiones mision)
+    {
+        for (int i = 0; i < MisionesExtra.Count; i++)
+        {
+            if (mision == MisionesExtra[i])
+            {
+                MisionesExtra.RemoveAt(i);
+                MisionesScompletas.RemoveAt(i);
+                break;
+            }
+        }
+    }
+
+    void ComprobarProgreso(Scr_CreadorMisiones mision, ref bool completada)
+    {
+        /*if (mision.prioridad == prioridadM.Principal)
+        {
+
+        }
+        else 
+        {
+            
+        }*/
+
+        switch (mision.Tipo)
+        {
+            case Tipos.Caza:
+                completada = VerificarCaza(mision);
+                break;
+            case Tipos.Recoleccion:
+                completada = VerificarRecoleccion(mision);
+                break;
+            case Tipos.Exploracion:
+                completada = VerificarExploracion(mision);
+                break;
+        }
+    }
+
+    private List<bool> valido;
+    public bool VerificarCaza(Scr_CreadorMisiones mision)
+    {
+        valido.Clear();
+        for (int i = 0; i < mision.Objetivocaza.Length; i++)
+        {
+            for (int u = 0; u < NameEnemiCazado.Length; u++)
+            {
+                if (mision.Objetivocaza[i].ToString() == NameEnemiCazado[u])
+                {
+                    if (cazados[u] >= mision.cantidad_caza[i])
+                    {
+                        valido.Add(true);
+                    }
+                    else
+                    {
+                        valido.Add(false);
+                    }
+
+                }
+            }
+        }
+        int e=0;
+        for (int s = 0; s < valido.Count; s++) 
+        {
+            if(valido[s] == true)
+            {
+                e++;
+            }
+        }
+        if(e == valido.Count)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public bool VerificarRecoleccion(Scr_CreadorMisiones mision)
+    {
+        valido.Clear();
+        for (int i = 0; i < mision.ObjetosNecesarios.Length; i++)
+        {
+            for (int u = 0; u < inventario.Objetos.Length; u++)
+            {
+                if (mision.ObjetosNecesarios[i]== inventario.Objetos[u])
+                {
+                    if (inventario.Cantidades[u] >=mision.CantidadesQuita[i])
+                    {
+                        valido.Add(true);
+                    }
+                    else
+                    {
+                        valido.Add(false);
+                    }
+
+                }
+            }
+        }
+        int e = 0;
+        for (int s = 0; s < valido.Count; s++)
+        {
+            if (valido[s] == true)
+            {
+                e++;
+            }
+        }
+        if (e == valido.Count)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public bool VerificarExploracion(Scr_CreadorMisiones mision)
+    {
+        for (int s = 0; s < TargetExplorados.Length; s++)
+        {
+            if(TargetExplorados[s] == mision.TargetExplorado)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void GuardarMisiones()
@@ -121,6 +331,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
             PlayerPrefs.SetString("MisionActual", "");
         }
 
+        PlayerPrefs.SetString("MisionPrincipal", MisionPrincipal.name);
         PlayerPrefs.SetInt("PaginaActual", PaginaActual);
         PlayerPrefs.SetInt("MisionesExtraCantidad", MisionesExtra.Count);
 
@@ -137,9 +348,15 @@ public class Scr_ControladorMisiones : MonoBehaviour
         string nombreMision = PlayerPrefs.GetString("MisionActual", "");
         if (!string.IsNullOrEmpty(nombreMision))
         {
-            MisionActual = System.Array.Find(TodasLasMisiones, m => m.name == nombreMision);
+            MisionActual= MisionData.GetByName(nombreMision);
+            //MisionActual = System.Array.Find(TodasLasMisiones, m => m.name == nombreMision);
         }
-
+        string nombreMisionP = PlayerPrefs.GetString("MisionPrincipal", "");
+        if (!string.IsNullOrEmpty(nombreMisionP))
+        {
+            MisionPrincipal = MisionData.GetByName(nombreMisionP);
+            //MisionActual = System.Array.Find(TodasLasMisiones, m => m.name == nombreMision);
+        }
         PaginaActual = PlayerPrefs.GetInt("PaginaActual", 1);
         MisionesExtra.Clear();
 
@@ -149,7 +366,8 @@ public class Scr_ControladorMisiones : MonoBehaviour
             string nombreMisionExtra = PlayerPrefs.GetString("MisionExtra_" + i, "");
             if (!string.IsNullOrEmpty(nombreMisionExtra))
             {
-                Scr_CreadorMisiones misionExtra = System.Array.Find(TodasLasMisiones, m => m.name == nombreMisionExtra);
+                Scr_CreadorMisiones misionExtra = MisionData.GetByName(nombreMision);
+                //Scr_CreadorMisiones misionExtra = System.Array.Find(TodasLasMisiones, m => m.name == nombreMisionExtra);
                 if (misionExtra != null)
                 {
                     MisionesExtra.Add(misionExtra);

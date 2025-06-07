@@ -1,6 +1,7 @@
 using Cinemachine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -13,7 +14,10 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     [SerializeField] private GameObject camara;
     [SerializeField] private GameObject camaraGata;
     [SerializeField] private GameObject CanvasNPC;
-
+    [SerializeField] private bool Principal;
+    [SerializeField] private Scr_CreadorMisiones[] MisionesSecundarisDar;
+    public Scr_CreadorMisiones Misionesqueespera;
+    public int misionespera;
     private bool CanvasActivo = false;
     private Scr_SistemaDialogos sistemaDialogos;
     private Scr_ControladorMisiones ControladorMisiones;
@@ -100,7 +104,14 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     private IEnumerator EsperarCamara()
     {
         yield return new WaitForSeconds(TransicionDuracion);
-        CanvasNPC.SetActive(true);
+        if (!Principal)
+        {
+            CanvasNPC.SetActive(true);
+        }
+        else
+        {
+            BotonHablar();
+        }
     }
 
     public void BotonHablar()
@@ -111,6 +122,13 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         ActivarDialogo();
     }
 
+    public void BotonMisionesSecundarias()
+    {
+        CanvasActivo = false;
+        CanvasNPC.SetActive(false);
+        ComprobarMision();
+        ActivarDialogo();
+    }
     public void Salir()
     {
         CanvasActivo = false;
@@ -168,21 +186,42 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
     private void ComprobarMision()
     {
+        if (ControladorMisiones.MisionPrincipal == null) return;
         if (ControladorMisiones.MisionActual == null) return;
 
-        if (ControladorMisiones.MisionCompleta)
+        if (Principal)
         {
-            if (GetComponent<Scr_EventosGuardado>() != null)
+            if (ControladorMisiones.MisionPrincipal == Misionesqueespera && ControladorMisiones.MisionPCompleta)
             {
-                Debug.Log("Guardando progreso de diálogo");
-                GetComponent<Scr_EventosGuardado>().EventoDialogo(sistemaDialogos.DialogoActual, "Gusano");
+                if (GetComponent<Scr_EventosGuardado>() != null)
+                {
+                    Debug.Log("Guardando progreso de diálogo");
+                    GetComponent<Scr_EventosGuardado>().EventoDialogo(sistemaDialogos.DialogoActual, "Gusano");
+                }
+                ControladorMisiones.MisionPCompleta = false;
+                ControladorMisiones.MisionCompleta = false;
+                if (ControladorMisiones.MisionActual == ControladorMisiones.MisionPrincipal)
+                {
+                    ControladorMisiones.MisionActual= null;
+                }
+                ControladorMisiones.MisionPrincipal = null;
+                sistemaDialogos.LineaActual = 0;
+                sistemaDialogos.Leido = false;
+                sistemaDialogos.DialogoActual++;
+                misionespera++;
             }
-
-            ControladorMisiones.MisionActual = null;
-            sistemaDialogos.LineaActual = 0;
-            sistemaDialogos.Leido = false;
-            sistemaDialogos.DialogoActual++;
         }
+        else
+        {
+            for (int i = 0; i < ControladorMisiones.MisionesExtra.Count; i++)
+            {
+                if (ControladorMisiones.MisionesScompletas[i]== Misionesqueespera && ControladorMisiones.MisionesScompletas[i])
+                {
+
+                }
+            }
+        }
+        
     }
 
     private void OnTriggerEnter(Collider other)
