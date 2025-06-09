@@ -15,13 +15,19 @@ MonoBehaviour:
   MisionName: 
   Descripcion: 
   DescripcionFinal: 
-  prioridad: 0
-  Tipo: 0
+  prioridad: 1
+  Tipo: 2
+  Objetivocaza: 
+  cantidad_caza: 
   Teclas: 
-  EsContinua: 0
-  QuitaObjetos: 0
-  DaObjetos: 0
-  ObjetosNecesarios: []
-  ObjetosRecompensa: []
-  CantidadesQuita: 
+  EsContinua: 1
+  QuitaObjetos: 1
+  DaObjetos: 1
+  ObjetosNecesarios:
+  - {fileID: 11400000, guid: 16d59de0d61659641a6f7c640e284942, type: 2}
+  ObjetosRecompensa:
+  - {fileID: 11400000, guid: 628ebdecdc44ae84da2bdd80604007a8, type: 2}
+  - {fileID: 11400000, guid: e9bc53ed753ca3d49a96f76d01685c82, type: 2}
+  CantidadesQuita: 0a000000
   CantidadesDa: 
+  TargetExplorado: 

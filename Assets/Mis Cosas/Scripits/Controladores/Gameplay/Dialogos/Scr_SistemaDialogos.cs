@@ -8,6 +8,9 @@ public class Scr_SistemaDialogos : MonoBehaviour
 
     public TextMeshProUGUI Texto;
     public Scr_CreadorDialogos[] Dialogos;
+
+    public Scr_CreadorDialogos DialogoSecundario;
+    public Scr_CreadorDialogos DialogoArecibir;
     public float letraDelay = 0.1f;
     public float Velocidad = 1.0f;
 
@@ -53,13 +56,21 @@ public class Scr_SistemaDialogos : MonoBehaviour
         Texto.transform.parent.gameObject.SetActive(true);
         Texto.text = ""; // Limpiar el texto al iniciar un nuevo diálogo
         LineaActual = 0;
+        if (!activadorDialogos.Principal)
+        {
+            DialogoArecibir = DialogoSecundario;
+        }
+        else
+        {
+            DialogoArecibir = Dialogos[DialogoActual];
+        }
         currentCoroutine = StartCoroutine(ReadDialogue());
     }
 
     IEnumerator ReadDialogue()
     {
         Leyendo = true;
-        foreach (char letter in Dialogos[DialogoActual].Lineas[LineaActual].ToCharArray())
+        foreach (char letter in DialogoArecibir.Lineas[LineaActual].ToCharArray())
         {
             Texto.text += letter;
             yield return new WaitForSeconds(letraDelay * Velocidad);
@@ -74,7 +85,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
             StopCoroutine(currentCoroutine);
         }
 
-        if (LineaActual < Dialogos[DialogoActual].Lineas.Length - 1) // Verificar si hay más líneas disponibles
+        if (LineaActual < DialogoArecibir.Lineas.Length - 1 ) // Verificar si hay más líneas disponibles
         {
             LineaActual++; // Incrementar el índice de la línea actual
             Texto.text = ""; // Limpiar el texto antes de mostrar la siguiente línea
@@ -95,13 +106,13 @@ public class Scr_SistemaDialogos : MonoBehaviour
 
         if (DialogoActual < Dialogos.Length) // Verificar si DialogoActual está dentro de los límites del arreglo Dialogos
         {
-            if (LineaActual < Dialogos[DialogoActual].Lineas.Length) // Verificar si LineaActual está dentro de los límites del arreglo de líneas del diálogo actual
+            if (LineaActual < DialogoArecibir.Lineas.Length) // Verificar si LineaActual está dentro de los límites del arreglo de líneas del diálogo actual
             {
-                if (Texto.text == Dialogos[DialogoActual].Lineas[LineaActual])
+                if (Texto.text == DialogoArecibir.Lineas[LineaActual])
                 {
                     Texto.text = ""; // Limpiar el texto antes de mostrar la siguiente línea
                     LineaActual++; // Avanzar a la siguiente línea
-                    if (LineaActual < Dialogos[DialogoActual].Lineas.Length)
+                    if (LineaActual < DialogoArecibir.Lineas.Length)
                     {
                         currentCoroutine = StartCoroutine(ReadDialogue());
                     }
@@ -114,21 +125,27 @@ public class Scr_SistemaDialogos : MonoBehaviour
                         Leido = true;
 
                         //Asignar Mision
-                        if (Dialogos[DialogoActual].EsMision)
+                        if (DialogoArecibir.EsMision && activadorDialogos.Principal)
                         {
-                            activadorDialogos.Misionesqueespera = Dialogos[DialogoActual].Mision;
-                            ControladorMisiones.MisionActual = Dialogos[DialogoActual].Mision;
-                            ControladorMisiones.MisionPrincipal = Dialogos[DialogoActual].Mision;
+                            activadorDialogos.Misionesqueespera = DialogoArecibir.Mision;
+                            ControladorMisiones.MisionActual = DialogoArecibir.Mision;
+                            ControladorMisiones.MisionPrincipal = DialogoArecibir.Mision;
                             //Guardar Dialogo
                             if (GetComponent<Scr_EventosGuardado>() != null)
                             {
                                 Debug.Log("Activa Evento");
                                 GetComponent<Scr_EventosGuardado>().EventoDialogo(DialogoActual, "Gusano");
                             }
-                            if (Dialogos[DialogoActual].Mision.EsContinua)
+                            if (DialogoArecibir.Mision.EsContinua)
                             {
                                 DialogoActual++;
                             }
+                        }
+                        else
+                        {
+                            activadorDialogos.Misionesqueespera = DialogoArecibir.Mision;
+                            ControladorMisiones.MisionesExtra.Add(DialogoArecibir.Mision);
+                            ControladorMisiones.MisionPrincipal = DialogoArecibir.Mision;
                         }
 
                         if (DialogoActual < Dialogos.Length - 1)
@@ -154,7 +171,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
                 }
                 else
                 {
-                    Texto.text = Dialogos[DialogoActual].Lineas[LineaActual];
+                    Texto.text = DialogoArecibir.Lineas[LineaActual];
                 }
             }
         }

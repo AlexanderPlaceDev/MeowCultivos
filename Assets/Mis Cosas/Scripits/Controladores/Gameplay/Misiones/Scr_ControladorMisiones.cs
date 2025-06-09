@@ -159,7 +159,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
     {
         if (MisionPrincipal != null && MisionPCompleta)
         {
-            MisionesPcompletas.Add(MisionActual);
+            MisionesPcompletas.Add(MisionPrincipal);
             MisionPrincipal = null;
             MisionPCompleta = false;
         }
@@ -199,13 +199,51 @@ public class Scr_ControladorMisiones : MonoBehaviour
         {
             if (mision == MisionesExtra[i])
             {
+                if (mision.DaObjetos && mision.QuitaObjetos)
+                {
+                    quitarObjetos(mision);
+                    recompensa(mision);
+                }
+                else if (!mision.DaObjetos && !mision.QuitaObjetos)
+                {
+                    quitarObjetos(mision);
+                }
+                else if (mision.DaObjetos && !mision.QuitaObjetos)
+                {
+                    recompensa(mision);
+                }
                 MisionesExtra.RemoveAt(i);
                 MisionesScompletas.RemoveAt(i);
                 break;
             }
         }
     }
-
+    public void quitarObjetos(Scr_CreadorMisiones mision)
+    {
+        for (int i = 0; i < mision.ObjetosNecesarios.Length; i++)
+        {
+            for (int u = 0; u < inventario.Objetos.Length; u++)
+            {
+                if (mision.ObjetosNecesarios[i] == inventario.Objetos[u])
+                {
+                    inventario.Cantidades[u] = inventario.Cantidades[u] - mision.CantidadesQuita[i];
+                }
+            }
+        }
+    }
+    public void recompensa(Scr_CreadorMisiones mision)
+    {
+        for (int i = 0; i < mision.ObjetosRecompensa.Length; i++)
+        {
+            for (int u = 0; u < inventario.Objetos.Length; u++)
+            {
+                if (mision.ObjetosRecompensa[i] == inventario.Objetos[u])
+                {
+                    inventario.Cantidades[u] = inventario.Cantidades[u] + mision.CantidadesDa[i];
+                }
+            }
+        }
+    }
     void ComprobarProgreso(Scr_CreadorMisiones mision, ref bool completada)
     {
         /*if (mision.prioridad == prioridadM.Principal)
