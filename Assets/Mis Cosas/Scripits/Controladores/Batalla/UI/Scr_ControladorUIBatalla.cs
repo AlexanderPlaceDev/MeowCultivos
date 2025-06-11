@@ -319,7 +319,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         CanvasSeleccionDeArmas.SetActive(false);
         CanvasGameplay.SetActive(true);
         ObjetosArmas.SetActive(true);
-        GetComponent<Scr_ControladorBatalla>().CuentaAtras();
+        GetComponent<Scr_ControladorBatalla>().IniciarCuentaRegresiva();
         GetComponent<Scr_ControladorBatalla>().ArmaActual = Armas[ArmaActual];
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;

@@ -93,7 +93,6 @@ public class Scr_CambiadorBatalla : MonoBehaviour
 
         Debug.Log("📦 Asignando valores al Singleton.");
         singleton.Enemigo = PrefabEnemigo;
-        singleton.CantidadDeEnemigos = (int)Random.Range(CantidadEnemigosMinima, CantidadEnemigosMaxima);
         singleton.Mision = Mision;
         singleton.ColorMision = ColorMision;
         singleton.Complemento = Complemento;

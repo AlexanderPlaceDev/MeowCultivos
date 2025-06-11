@@ -1,8 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.AI.Navigation;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
@@ -20,68 +20,64 @@ public class Scr_ControladorBatalla : MonoBehaviour
     public string Habilidad1;
     public string Habilidad2;
     public string HabilidadEspecial;
+    public float PuntosActualesHabilidad = 0;
 
-    [SerializeField] TextMeshProUGUI NumeroCuenta;
+    [SerializeField] public TextMeshProUGUI NumeroCuenta;
     [SerializeField] GameObject Mirilla;
 
     private float Cuenta = 4;
-    [SerializeField] TextMeshProUGUI TextoMinutos;
-    [SerializeField] int Minutos = 2;
-    [SerializeField] TextMeshProUGUI TextoSegundos;
-    [SerializeField] float Segundos = 60;
     private bool ComenzarCuenta = false;
-    private bool ComenzoTiempo = false;
+    public bool ComenzoBatalla = false;
 
     [SerializeField] private GameObject PanelFinal;
     [SerializeField] Animator[] BarrasNegras;
     [SerializeField] GameObject CirculoCarga;
 
-    public List<GameObject> Enemigos = new List<GameObject>();
-    private bool DioRecompensa = false;
-
+    [Header("Vida")]
     [SerializeField] GameObject Vidas;
-    [SerializeField] GameObject BarraVida;
-    [SerializeField] GameObject BarraVida1;
-    [SerializeField] GameObject BarraVidaIzq;
-    [SerializeField] GameObject BarraVidaDer;
     [SerializeField] TextMeshProUGUI TextoVidas;
     [SerializeField] float VidaMaxima;
-
     public float VidaAnterior = 3;
     public float VidaActual = 3;
-    public float PuntosActualesHabilidad = 0;
+    [SerializeField] Slider BarraVida;
 
     [Header("Objetivo")]
     [SerializeField] TextMeshProUGUI Mision;
     [SerializeField] TextMeshProUGUI Complemento;
     [SerializeField] TextMeshProUGUI Item;
 
-    private Scr_DatosSingletonBatalla Singleton;
+    [Header("Barra Oleadas")]
+    [SerializeField] Transform BarraSlider;
+    [SerializeField] float TiempoEntreOleadas;
+    float ContTiempoEntreOleadas;
+    private bool PrimerSpawn = false;
 
+    private Scr_DatosSingletonBatalla Singleton;
+    private Scr_ControladorOleadas controladorOleadas;
+    private bool DioRecompensa = false;
     void Start()
     {
         Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
+        controladorOleadas = GetComponent<Scr_ControladorOleadas>();
+
         Mision.text = Singleton.Mision;
         Mision.color = Singleton.ColorMision;
         Complemento.text = Singleton.Complemento;
         Item.text = Singleton.Item;
         Item.color = Singleton.ColorItem;
+
         Habilidad1 = PlayerPrefs.GetString("Habilidad1", "Ojo");
         Habilidad2 = PlayerPrefs.GetString("Habilidad2", "Rugido");
-        HabilidadEspecial = PlayerPrefs.GetString("Habilidad2", "Garras");
+        HabilidadEspecial = PlayerPrefs.GetString("HabilidadEspecial", "Garras");
 
+        TextoVidas.text = VidaMaxima + "/" + VidaMaxima;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F12))
-        {
-            PlayerPrefs.DeleteAll();
-        }
+        if (Input.GetKeyDown(KeyCode.F12)) PlayerPrefs.DeleteAll();
 
         Comienzo();
-        Tiempo();
-        RemoverEnemigosMuertos();
         ActualizarVida();
         Terminar();
     }
@@ -90,108 +86,16 @@ public class Scr_ControladorBatalla : MonoBehaviour
     {
         if (VidaActual != VidaAnterior)
         {
-            // Actualizar el valor de VidaAnterior
             VidaAnterior = VidaActual;
-
-            TextoVidas.text = VidaActual.ToString() + "/" + VidaMaxima.ToString();
-
-            // Destruir los hijos actuales de "Vidas"
-            foreach (Transform hijo in Vidas.GetComponentInChildren<Transform>())
-            {
-                Destroy(hijo.gameObject);
-            }
-
-            // Crear la barra de vida correctamente
-            for (int i = 0; i < VidaActual; i++)
-            {
-                GameObject nuevaBarra;
-
-                if (VidaActual == 1) // Si solo hay 1 de vida
-                {
-                    nuevaBarra = Instantiate(BarraVida1, Vidas.transform);
-                }
-                else if (i == 0) // Primera barra
-                {
-                    nuevaBarra = Instantiate(BarraVidaIzq, Vidas.transform);
-                }
-                else if (i == VidaActual - 1) // Última barra
-                {
-                    nuevaBarra = Instantiate(BarraVidaDer, Vidas.transform);
-                }
-                else // Barras intermedias
-                {
-                    nuevaBarra = Instantiate(BarraVida, Vidas.transform);
-                }
-            }
-
+            TextoVidas.text = VidaActual + "/" + VidaMaxima;
+            BarraVida.value = VidaActual / VidaMaxima;
         }
     }
 
-    private void RemoverEnemigosMuertos()
+    public void IniciarCuentaRegresiva()
     {
-        Enemigos.RemoveAll(enemigo => enemigo == null);
-    }
-
-    public void CuentaAtras()
-    {
-        List<GameObject> Spawners = new List<GameObject>();
-        var mapa = GameObject.Find("Mapa").transform;
-
-        foreach (Transform child in mapa)
-        {
-            if (child.name == Singleton.NombreMapa)
-            {
-                child.gameObject.SetActive(true);
-                foreach (Transform objeto in child)
-                {
-                    if (objeto.name.Contains("Spawner"))
-                    {
-                        Spawners.Add(objeto.gameObject);
-                    }
-                    if(objeto.name.Contains("Posicion Inicial"))
-                    {
-                        GameObject.Find("Personaje").transform.position = objeto.transform.position;
-                        GameObject.Find("Personaje").transform.rotation = objeto.transform.rotation;
-                    }
-                }
-            }
-        }
-
-        GameObject.Find("NavMesh Surface").GetComponent<NavMeshSurface>().BuildNavMesh();
         NumeroCuenta.gameObject.SetActive(true);
         ComenzarCuenta = true;
-
-        for (int i = 0; i < Singleton.CantidadDeEnemigos; i++)
-        {
-            int pos = UnityEngine.Random.Range(0, Spawners.Count);
-
-            // Obtener posición del Spawner y añadir una variación aleatoria
-            Vector3 spawnPosition = Spawners[pos].transform.position;
-            Vector3 offset = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f));
-            spawnPosition += offset;
-
-            // Ajustar la posición al NavMesh más cercano
-            NavMeshHit navHit;
-            if (NavMesh.SamplePosition(spawnPosition, out navHit, 2f, NavMesh.AllAreas))
-            {
-                spawnPosition = navHit.position;
-            }
-
-            // Instanciar enemigo en la posición ajustada
-            GameObject enemigo = Instantiate(Singleton.Enemigo, spawnPosition, Quaternion.identity);
-            Enemigos.Add(enemigo);
-
-            // Verificar y habilitar NavMeshAgent
-            NavMeshAgent agent = enemigo.GetComponent<NavMeshAgent>();
-            if (agent != null && agent.isOnNavMesh)
-            {
-                agent.enabled = true;
-            }
-            else
-            {
-                Debug.LogWarning("El enemigo no está en el NavMesh.");
-            }
-        }
     }
 
     private void Comienzo()
@@ -200,60 +104,34 @@ public class Scr_ControladorBatalla : MonoBehaviour
         {
             if (Cuenta > 0)
             {
+                Debug.Log("Comenzo la cuenta con un numero mayor a 0");
+                if (Cuenta == 4)
+                {
+                    if (!PrimerSpawn)
+                    {
+                        PrepararBatalla();
+                        controladorOleadas.IniciarPrimeraOleada();
+                        PrimerSpawn = true;
+                    }
+                }
                 Cuenta -= Time.deltaTime;
                 NumeroCuenta.text = Cuenta < 1 ? "Pelea" : ((int)Cuenta).ToString();
             }
             else
             {
+                Debug.Log("Comenzo la cuenta con el numero en 0");
+                if (controladorOleadas.enemigosOleada.Count > 0 && ComenzarCuenta)
+                {
+                    foreach (GameObject Enemigo in controladorOleadas.enemigosOleada)
+                    {
+                        Enemigo.GetComponent<NavMeshAgent>().enabled = true;
+                    }
+                }
                 NumeroCuenta.gameObject.SetActive(false);
                 ComenzarCuenta = false;
                 Cuenta = 4;
                 ActivarControles(true);
-                ComenzoTiempo = true;
-
-                foreach (GameObject enemigo in Enemigos)
-                {
-                    enemigo.GetComponent<NavMeshAgent>().enabled = true;
-                    enemigo.GetComponent<Collider>().enabled = true;
-                }
-            }
-        }
-    }
-
-    private void Tiempo()
-    {
-        if (ComenzoTiempo)
-        {
-            Mirilla.SetActive(true);
-
-            // Verifica que el tiempo sea mayor a cero antes de restar
-            if (Minutos > 0 || Segundos > 0)
-            {
-                Segundos -= Time.deltaTime;
-
-                // Si los segundos llegan a cero, restamos un minuto y reiniciamos los segundos a 59
-                if (Segundos < 0)
-                {
-                    Segundos = 59;
-                    Minutos--;
-
-                    // Verifica si los minutos también se agotaron
-                    if (Minutos < 0)
-                    {
-                        Minutos = 0;
-                        Segundos = 0;
-                    }
-                }
-
-                // Actualiza el texto del temporizador en la interfaz
-                TextoSegundos.text = Segundos >= 10 ? ((int)Segundos).ToString() : "0" + ((int)Segundos).ToString();
-                TextoMinutos.text = Minutos.ToString();
-            }
-            else
-            {
-                // Si el tiempo ha llegado a cero, se detiene el conteo y finaliza la batalla
-                ComenzoTiempo = false;
-                FinalizarBatalla(false);
+                ComenzoBatalla = true;
             }
         }
     }
@@ -263,17 +141,18 @@ public class Scr_ControladorBatalla : MonoBehaviour
         if (VidaActual <= 0)
         {
             VidaActual = Mathf.Max(VidaActual, 0);
-            ComenzoTiempo = false;
+            ComenzoBatalla = false;
             FinalizarBatalla(false);
         }
-        else if (Enemigos.Count <= 0 && ComenzoTiempo)
+        else if (ComenzoBatalla)
         {
-            ComenzoTiempo = false;
-            FinalizarBatalla(true);
+            controladorOleadas.ComprobarOleada();
         }
+
+
     }
 
-    private void FinalizarBatalla(bool Gano)
+    public void FinalizarBatalla(bool Gano)
     {
         ActivarControles(false);
         if (Gano && !DioRecompensa)
@@ -284,7 +163,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
         if (PlayerPrefs.GetInt("XPActual", 0) >= PlayerPrefs.GetInt("XPSiguiente", 10))
         {
-            PlayerPrefs.SetInt("XPActual", PlayerPrefs.GetInt("XPActual", 0) - PlayerPrefs.GetInt("XPSiguiente", 10));
+            PlayerPrefs.SetInt("XPActual", PlayerPrefs.GetInt("XPActual") - PlayerPrefs.GetInt("XPSiguiente", 10));
             PlayerPrefs.SetInt("Nivel", PlayerPrefs.GetInt("Nivel", 0) + 1);
             PlayerPrefs.SetInt("XPSiguiente", PlayerPrefs.GetInt("XPSiguiente", 10) * 2);
             PlayerPrefs.SetInt("PuntosDeHabilidad", PlayerPrefs.GetInt("PuntosDeHabilidad", 0) + 3);
@@ -300,29 +179,20 @@ public class Scr_ControladorBatalla : MonoBehaviour
     private void DarRecompensa()
     {
         var enemigo = Singleton.Enemigo.GetComponent<Scr_Enemigo>();
-        if (enemigo.Drops.Length != enemigo.Probabilidades.Length)
-        {
-            Debug.LogError("La longitud de Drops y Probabilidades no coincide.");
-            return;
-        }
-
         var recompensasDict = new Dictionary<Scr_CreadorObjetos, int>();
-        for (int j = 0; j < Singleton.CantidadDeEnemigos; j++)
+
+        for (int j = 0; j < 2; j++)
         {
             for (int i = 0; i < enemigo.Drops.Length; i++)
             {
-                if (UnityEngine.Random.Range(0, 100) <= enemigo.Probabilidades[i])
+                if (Random.Range(0, 100) <= enemigo.Probabilidades[i])
                 {
                     if (recompensasDict.ContainsKey(enemigo.Drops[i]))
-                    {
-                        recompensasDict[enemigo.Drops[i]] += 1;
-                    }
+                        recompensasDict[enemigo.Drops[i]]++;
                     else
-                    {
-                        recompensasDict.Add(enemigo.Drops[i], 1);
-                    }
+                        recompensasDict[enemigo.Drops[i]] = 1;
                 }
-                PlayerPrefs.SetInt("XPActual", PlayerPrefs.GetInt("XPActual") + UnityEngine.Random.Range(enemigo.XPMinima, enemigo.XPMaxima));
+                PlayerPrefs.SetInt("XPActual", PlayerPrefs.GetInt("XPActual") + Random.Range(enemigo.XPMinima, enemigo.XPMaxima));
             }
         }
 
@@ -341,19 +211,13 @@ public class Scr_ControladorBatalla : MonoBehaviour
             rewardUI.gameObject.SetActive(true);
             rewardUI.GetChild(0).gameObject.SetActive(true);
             rewardUI.GetChild(0).GetComponent<TextMeshProUGUI>().text = kvp.Value.ToString();
-
             index++;
-        }
-
-        if (datos.ObjetosRecompensa.Count != datos.CantidadesRecompensa.Count)
-        {
-            Debug.LogError("La cantidad de objetos y recompensas no coincide.");
         }
     }
 
     private void ActivarControles(bool activar)
     {
-        Cursor.visible = !activar;  // Visible cuando no está en combate
+        Cursor.visible = !activar;
         Cursor.lockState = activar ? CursorLockMode.Locked : CursorLockMode.None;
 
         var camara = Camera.main;
@@ -366,9 +230,8 @@ public class Scr_ControladorBatalla : MonoBehaviour
     public void BotonAceptar()
     {
         foreach (Animator anim in BarrasNegras)
-        {
             anim.Play("Cerrar");
-        }
+
         StartCoroutine(EsperarCierre());
         PanelFinal.GetComponent<Animator>().Play("Cerrar");
     }
@@ -384,5 +247,31 @@ public class Scr_ControladorBatalla : MonoBehaviour
         CirculoCarga.SetActive(true);
         yield return new WaitForSeconds(3);
         SceneManager.LoadScene(2);
+    }
+
+    public void PrepararBatalla()
+    {
+        // Activar mapa y posicionar jugador
+        var mapa = GameObject.Find("Mapa").transform;
+
+        foreach (Transform child in mapa)
+        {
+            if (child.name == Singleton.NombreMapa)
+            {
+                child.gameObject.SetActive(true);
+                foreach (Transform objeto in child)
+                {
+
+                    if (objeto.name.Contains("Posicion Inicial") && controladorOleadas.OleadaActual == 1)
+                    {
+                        GameObject.Find("Personaje").transform.position = objeto.transform.position;
+                        GameObject.Find("Personaje").transform.rotation = objeto.transform.rotation;
+                    }
+                }
+            }
+        }
+
+        // Reconstruir NavMesh
+        GameObject.Find("NavMesh Surface").GetComponent<NavMeshSurface>().BuildNavMesh();
     }
 }

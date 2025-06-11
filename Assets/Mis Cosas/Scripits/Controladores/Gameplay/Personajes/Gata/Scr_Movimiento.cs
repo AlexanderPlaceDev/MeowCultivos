@@ -9,7 +9,9 @@ public class Scr_Movimiento : MonoBehaviour
     [Header("Movimiento")]
     public bool UsaEjeHorizontal;
     public bool PuedeRetroceder;
+    public bool CambiaVelocidadAlRetroceder;
     public float Velocidad;
+    public float VelocidadRetroceder;
     public float VelCaminar;
     public float VelCorrer;
     public float AumentoDeFov;
@@ -252,7 +254,17 @@ public class Scr_Movimiento : MonoBehaviour
                 if (InputVer < 0)
                 {
                     Estado = Estados.Retroceder;
-                    Velocidad = VelCaminar/3;
+                    if (CambiaVelocidadAlRetroceder)
+                    {
+                        Velocidad = VelocidadRetroceder;
+                    }
+                    else
+                    {
+
+                        Velocidad = VelCaminar;
+                    }
+
+
                 }
             }
         }

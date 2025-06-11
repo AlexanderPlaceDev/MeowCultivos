@@ -35,7 +35,7 @@ public class Scr_EnemigoLobo : Scr_Enemigo
         if (Objetivo != null)
         {
             float distancia = Vector3.Distance(transform.position, Objetivo.position);
-            Debug.Log("Distancia a la gata: " + distancia);
+            //Debug.Log("Distancia a la gata: " + distancia);
             // 🔹 Se reduce el temporizador de espera en todo momento
             if (esperando)
             {
@@ -134,7 +134,6 @@ public class Scr_EnemigoLobo : Scr_Enemigo
                 {
                     agente.isStopped = false;
                     agente.SetDestination(hit.position);
-                    Debug.Log("Moviéndose a nueva posición: " + hit.position);
                     return;
                 }
             }
@@ -162,6 +161,7 @@ public class Scr_EnemigoLobo : Scr_Enemigo
         }
 
         yield return new WaitForSeconds(0.875f);
+        Debug.Log("Dejo de atacar");
         Atacando = false;
     }
 }

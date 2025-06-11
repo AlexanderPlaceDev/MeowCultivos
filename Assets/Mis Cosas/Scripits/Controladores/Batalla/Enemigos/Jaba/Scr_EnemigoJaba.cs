@@ -49,11 +49,7 @@ public class Scr_EnemigoJaba : Scr_Enemigo
 
             }
         }
-
-
     }
-
-
     void Mover()
     {
         if (agente != null && agente.isActiveAndEnabled && agente.isOnNavMesh)

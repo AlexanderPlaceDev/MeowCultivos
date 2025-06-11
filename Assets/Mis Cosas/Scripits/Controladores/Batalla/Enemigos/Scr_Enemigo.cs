@@ -9,6 +9,10 @@ public class Scr_Enemigo : MonoBehaviour
     public float Velocidad;
     public float DañoMelee;
     public float DañoDistancia;
+    public float CantidadDeOleadas;
+    public int CantidadEnemigosPorOleada;
+    public float DificultadInicial;
+    public float PuntoDeHuida;
     public GameObject PrefabBala; // Prefab del proyectil para ataques a distancia
     public Transform SpawnBala; // Punto de inicio del proyectil
     public Scr_CreadorObjetos[] Drops;
@@ -104,7 +108,6 @@ public class Scr_Enemigo : MonoBehaviour
             }
             else
             {
-                Debug.Log("Avienta");
                 GetComponent<Rigidbody>().AddForce(-transform.forward.normalized,ForceMode.Impulse);
             }
 

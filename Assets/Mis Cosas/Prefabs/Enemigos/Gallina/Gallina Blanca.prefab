@@ -290,7 +290,7 @@ SphereCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
-  m_ProvidesContacts: 1
+  m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.35
@@ -383,6 +383,10 @@ MonoBehaviour:
   Velocidad: 5
   "Da\xF1oMelee": 0
   "Da\xF1oDistancia": 0
+  CantidadDeOleadas: 1
+  CantidadEnemigosPorOleada: 3
+  DificultadInicial: 1
+  PuntoDeHuida: 2
   PrefabBala: {fileID: 0}
   SpawnBala: {fileID: 0}
   Drops:

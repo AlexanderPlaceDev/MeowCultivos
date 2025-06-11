@@ -36,7 +36,6 @@ public class Scr_Habilidades : MonoBehaviour
 
     public void Habilidad(string habilidad)
     {
-        Debug.Log($"Habilidad {habilidad} activada");
 
         switch (habilidad)
         {

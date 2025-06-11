@@ -120,7 +120,6 @@ public class Scr_ControladorCinematica : MonoBehaviour
     public void AsignarSinleton()
     {
         GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().Enemigo = Enemigo;
-        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().CantidadDeEnemigos = CantidadEnemigos;
     }
 
     public void GuardarCinematica(string Cinematica)
