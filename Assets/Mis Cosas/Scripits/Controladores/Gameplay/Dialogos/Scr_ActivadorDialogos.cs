@@ -17,7 +17,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     [SerializeField] public bool Principal;
     [SerializeField] private List<Scr_CreadorDialogos> MisionesSecundarisDar;
     public MisionesSecundrias_UI misionSEc;
-    public Scr_CreadorMisiones Misionesqueespera;
+    public Scr_CreadorMisiones Misionequeespera;
+    public List<Scr_CreadorMisiones> Misionesqueespera;
     public int misionespera;
     private bool CanvasActivo = false;
     private bool vaCambio = false;

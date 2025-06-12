@@ -127,7 +127,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
                         //Asignar Mision
                         if (DialogoArecibir.EsMision && activadorDialogos.Principal)
                         {
-                            activadorDialogos.Misionesqueespera = DialogoArecibir.Mision;
+                            activadorDialogos.Misionequeespera = DialogoArecibir.Mision;
                             ControladorMisiones.MisionActual = DialogoArecibir.Mision;
                             ControladorMisiones.MisionPrincipal = DialogoArecibir.Mision;
                             //Guardar Dialogo
@@ -143,9 +143,8 @@ public class Scr_SistemaDialogos : MonoBehaviour
                         }
                         else
                         {
-                            activadorDialogos.Misionesqueespera = DialogoArecibir.Mision;
+                            activadorDialogos.Misionesqueespera.Add(DialogoArecibir.Mision);
                             ControladorMisiones.MisionesExtra.Add(DialogoArecibir.Mision);
-                            ControladorMisiones.MisionPrincipal = DialogoArecibir.Mision;
                         }
 
                         if (DialogoActual < Dialogos.Length - 1)

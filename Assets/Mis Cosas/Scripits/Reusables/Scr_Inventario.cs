@@ -8,6 +8,8 @@ public class Scr_Inventario : MonoBehaviour
     [SerializeField] public int[] Cantidades;
     [SerializeField] int Limite;
 
+    public Scr_ControladorMisiones ControladorMisiones;
+
     private void Start()
     {
         // Cargar las cantidades desde PlayerPrefs al iniciar
@@ -22,6 +24,10 @@ public class Scr_Inventario : MonoBehaviour
             {
                 PlayerPrefs.SetInt(key, Cantidades[i]); // Guardar inicial si no existe
             }
+        }
+        if (GameObject.Find("Gata"))
+        {
+            ControladorMisiones = GameObject.Find("Gata").transform.GetChild(4).GetComponent<Scr_ControladorMisiones>();
         }
     }
 
@@ -49,6 +55,10 @@ public class Scr_Inventario : MonoBehaviour
                 break;
             }
             i++;
+        }
+        if(ControladorMisiones!= null)
+        {
+            ControladorMisiones.RevisarTodasLasMisionesSecundarias();
         }
     }
 

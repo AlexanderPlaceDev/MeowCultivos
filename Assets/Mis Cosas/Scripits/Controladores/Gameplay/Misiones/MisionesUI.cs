@@ -50,6 +50,7 @@ public class MisionesUI : MonoBehaviour
     {
         MisionesenCurso.Clear();
         MisionesenCursoCompletadas.Clear();
+        ControladorMisiones.RevisarTodasLasMisionesSecundarias();
         MisionesenCurso.Add(ControladorMisiones.MisionPrincipal);
         MisionesenCursoCompletadas.Add(ControladorMisiones.MisionPCompleta);
 
