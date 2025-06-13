@@ -200,7 +200,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
         if (Principal)
         {
-            if (ControladorMisiones.MisionPrincipal == Misionesqueespera && ControladorMisiones.MisionPCompleta)
+            if (ControladorMisiones.MisionPrincipal == Misionequeespera && ControladorMisiones.MisionPCompleta)
             {
                 if (GetComponent<Scr_EventosGuardado>() != null)
                 {
@@ -231,13 +231,17 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         }
         else
         {
-            for (int i = 0; i < ControladorMisiones.MisionesExtra.Count; i++)
+            for (int t = 0; t < Misionesqueespera.Count; t++)
             {
-                if (ControladorMisiones.MisionesExtra[i]== Misionesqueespera && ControladorMisiones.MisionesScompletas[i])
+                for (int i = 0; i < ControladorMisiones.MisionesExtra.Count; i++)
                 {
-                    ControladorMisiones.TerminarMisionSexundaria(Misionesqueespera);
+                    if (ControladorMisiones.MisionesExtra[i] == Misionesqueespera[t] && ControladorMisiones.MisionesScompletas[i])
+                    {
+                        ControladorMisiones.TerminarMisionSexundaria(Misionesqueespera[t]);
+                    }
                 }
             }
+            
         }
         
     }

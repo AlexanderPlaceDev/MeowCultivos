@@ -372,10 +372,12 @@ public class Scr_ControladorMisiones : MonoBehaviour
         PlayerPrefs.SetString("MisionPrincipal", MisionPrincipal.name);
         PlayerPrefs.SetInt("PaginaActual", PaginaActual);
         PlayerPrefs.SetInt("MisionesExtraCantidad", MisionesExtra.Count);
-
-        for (int i = 0; i < MisionesExtra.Count; i++)
+        if (MisionesExtra != null)
         {
-            PlayerPrefs.SetString("MisionExtra_" + i, MisionesExtra[i].name);
+            for (int i = 0; i < MisionesExtra.Count; i++)
+            {
+                PlayerPrefs.SetString("MisionExtra_" + i, MisionesExtra[i].name);
+            }
         }
 
         PlayerPrefs.Save();

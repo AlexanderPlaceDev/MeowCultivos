@@ -17,6 +17,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
     public bool EnPausa = true;
     public bool Leyendo = false;
     public int DialogoActual = 0;
+    public int DialogoSecundariActual = 0;
     public bool Leido = false;
     public bool EsCinematica = false;
     public int LineaActual = 0;
@@ -56,7 +57,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
         Texto.transform.parent.gameObject.SetActive(true);
         Texto.text = ""; // Limpiar el texto al iniciar un nuevo diálogo
         LineaActual = 0;
-        if (!activadorDialogos.Principal)
+        if (activadorDialogos!=null && !activadorDialogos.Principal)
         {
             DialogoArecibir = DialogoSecundario;
         }
@@ -103,8 +104,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
         {
             StopCoroutine(currentCoroutine);
         }
-
-        if (DialogoActual < Dialogos.Length) // Verificar si DialogoActual está dentro de los límites del arreglo Dialogos
+        if (DialogoActual < Dialogos.Length ) // Verificar si DialogoActual está dentro de los límites del arreglo Dialogos
         {
             if (LineaActual < DialogoArecibir.Lineas.Length) // Verificar si LineaActual está dentro de los límites del arreglo de líneas del diálogo actual
             {
@@ -141,7 +141,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
                                 DialogoActual++;
                             }
                         }
-                        else
+                        else if(!activadorDialogos.Principal)
                         {
                             activadorDialogos.Misionesqueespera.Add(DialogoArecibir.Mision);
                             ControladorMisiones.MisionesExtra.Add(DialogoArecibir.Mision);
@@ -168,6 +168,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
                         Texto.transform.parent.gameObject.SetActive(false);
                     }
                 }
+                
                 else
                 {
                     Texto.text = DialogoArecibir.Lineas[LineaActual];
