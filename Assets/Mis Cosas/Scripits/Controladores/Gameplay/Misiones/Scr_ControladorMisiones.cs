@@ -36,6 +36,8 @@ public class Scr_ControladorMisiones : MonoBehaviour
     public int[] cazados;
 
 
+    public List<bool> valido;
+
     public string[] TargetExplorados;
     void Start()
     {
@@ -174,21 +176,27 @@ public class Scr_ControladorMisiones : MonoBehaviour
             ComprobarProgreso(MisionPrincipal, ref MisionPCompleta);
 
         }*/
-
-        // Misiones Secundarias
-        for (int i = 0; i < MisionesExtra.Count; i++)
+        if (MisionesExtra != null)
         {
-            if (!MisionesScompletas[i])
+            // Misiones Secundarias
+            for (int i = 0; i < MisionesExtra.Count; i++)
             {
-                bool completada = false;
-                ComprobarProgreso(MisionesExtra[i], ref completada);
-                if (completada)
+                if (!MisionesScompletas[i])
                 {
-                    MisionesScompletas[i] = true;
-                    
+                    bool completada = false;
+                    ComprobarProgreso(MisionesExtra[i], ref completada);
+                    if (completada)
+                    {
+                        MisionesScompletas[i] = true;
+                        if (MisionesScompletas[i] == MisionActual)
+                        {
+                            MisionCompleta=true;
+                        }
+                    }
                 }
             }
         }
+        
 
         ActualizarInfo(); // Refresca el panel de UI si es necesario
     }
@@ -203,11 +211,11 @@ public class Scr_ControladorMisiones : MonoBehaviour
                 {
                     quitarObjetos(mision);
                     recompensa(mision);
-                }
+                }/*
                 else if (!mision.DaObjetos && !mision.QuitaObjetos)
                 {
                     quitarObjetos(mision);
-                }
+                }*/
                 else if (mision.DaObjetos && !mision.QuitaObjetos)
                 {
                     recompensa(mision);
@@ -231,6 +239,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
             }
         }
     }
+    
     public void recompensa(Scr_CreadorMisiones mision)
     {
         for (int i = 0; i < mision.ObjetosRecompensa.Length; i++)
@@ -239,6 +248,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
             {
                 if (mision.ObjetosRecompensa[i] == inventario.Objetos[u])
                 {
+                    UnityEngine.Debug.LogWarning("Recompesa "+ mision.ObjetosRecompensa[i] );
                     inventario.Cantidades[u] = inventario.Cantidades[u] + mision.CantidadesDa[i];
                 }
             }
@@ -268,8 +278,6 @@ public class Scr_ControladorMisiones : MonoBehaviour
                 break;
         }
     }
-
-    private List<bool> valido;
     public bool VerificarCaza(Scr_CreadorMisiones mision)
     {
         valido.Clear();
@@ -368,8 +376,11 @@ public class Scr_ControladorMisiones : MonoBehaviour
         {
             PlayerPrefs.SetString("MisionActual", "");
         }
-
-        PlayerPrefs.SetString("MisionPrincipal", MisionPrincipal.name);
+        if (MisionPrincipal != null)
+        {
+            PlayerPrefs.SetString("MisionPrincipal", MisionPrincipal.name);
+        }
+        
         PlayerPrefs.SetInt("PaginaActual", PaginaActual);
         PlayerPrefs.SetInt("MisionesExtraCantidad", MisionesExtra.Count);
         if (MisionesExtra != null)

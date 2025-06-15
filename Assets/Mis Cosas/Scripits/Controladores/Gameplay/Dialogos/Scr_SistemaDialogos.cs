@@ -10,10 +10,12 @@ public class Scr_SistemaDialogos : MonoBehaviour
     public Scr_CreadorDialogos[] Dialogos;
 
     public Scr_CreadorDialogos DialogoSecundario;
+    public Scr_CreadorDialogos DialogoDeRecompensaSecundario;
     public Scr_CreadorDialogos DialogoArecibir;
     public float letraDelay = 0.1f;
     public float Velocidad = 1.0f;
 
+    public bool recompensarSecundarias=false;
     public bool EnPausa = true;
     public bool Leyendo = false;
     public int DialogoActual = 0;
@@ -57,7 +59,11 @@ public class Scr_SistemaDialogos : MonoBehaviour
         Texto.transform.parent.gameObject.SetActive(true);
         Texto.text = ""; // Limpiar el texto al iniciar un nuevo diálogo
         LineaActual = 0;
-        if (activadorDialogos!=null && !activadorDialogos.Principal)
+        if (recompensarSecundarias)
+        {
+            DialogoArecibir = DialogoDeRecompensaSecundario;
+        }
+        else if (activadorDialogos!=null && !activadorDialogos.Principal && !recompensarSecundarias)
         {
             DialogoArecibir = DialogoSecundario;
         }
@@ -129,6 +135,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
                         {
                             activadorDialogos.Misionequeespera = DialogoArecibir.Mision;
                             ControladorMisiones.MisionActual = DialogoArecibir.Mision;
+                            activadorDialogos.vaCambio = DialogoArecibir.cambia;
                             ControladorMisiones.MisionPrincipal = DialogoArecibir.Mision;
                             //Guardar Dialogo
                             if (GetComponent<Scr_EventosGuardado>() != null)
@@ -141,10 +148,18 @@ public class Scr_SistemaDialogos : MonoBehaviour
                                 DialogoActual++;
                             }
                         }
-                        else if(!activadorDialogos.Principal)
+                        else if(DialogoArecibir.EsMision && !activadorDialogos.Principal)
                         {
                             activadorDialogos.Misionesqueespera.Add(DialogoArecibir.Mision);
                             ControladorMisiones.MisionesExtra.Add(DialogoArecibir.Mision);
+                            activadorDialogos.quitarMisionSecundaria(DialogoArecibir);
+                            ControladorMisiones.MisionesScompletas.Add(false);
+                            activadorDialogos.vaCambio = DialogoArecibir.cambia;
+                            if (ControladorMisiones.MisionActual == null)
+                            {
+                                ControladorMisiones.MisionActual = DialogoArecibir.Mision;
+                                ControladorMisiones.MisionCompleta = false;
+                            }
                         }
 
                         if (DialogoActual < Dialogos.Length - 1)

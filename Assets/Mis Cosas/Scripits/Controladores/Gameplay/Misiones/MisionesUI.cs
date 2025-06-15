@@ -42,6 +42,7 @@ public class MisionesUI : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
+            checarMisionesCurso();
             MostrarMisiones();
         }
     }
@@ -51,14 +52,18 @@ public class MisionesUI : MonoBehaviour
         MisionesenCurso.Clear();
         MisionesenCursoCompletadas.Clear();
         ControladorMisiones.RevisarTodasLasMisionesSecundarias();
-        MisionesenCurso.Add(ControladorMisiones.MisionPrincipal);
-        MisionesenCursoCompletadas.Add(ControladorMisiones.MisionPCompleta);
+        if (ControladorMisiones.MisionPrincipal != null)
+        {
+            MisionesenCurso.Add(ControladorMisiones.MisionPrincipal);
+            MisionesenCursoCompletadas.Add(ControladorMisiones.MisionPCompleta);
+        }
 
         for (int i = 0; i < ControladorMisiones.MisionesExtra.Count; i++)
         {
             MisionesenCurso.Add(ControladorMisiones.MisionesExtra[i]);
             MisionesenCursoCompletadas.Add(ControladorMisiones.MisionesScompletas[i]);
         }
+        Debug.Log("Revisado");
     }
     public void checarMisionActual()
     {

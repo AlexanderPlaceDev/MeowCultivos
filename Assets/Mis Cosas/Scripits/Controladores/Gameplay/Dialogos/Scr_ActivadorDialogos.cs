@@ -21,13 +21,14 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     public List<Scr_CreadorMisiones> Misionesqueespera;
     public int misionespera;
     private bool CanvasActivo = false;
-    private bool vaCambio = false;
+    public bool vaCambio = false;
     private Scr_SistemaDialogos sistemaDialogos;
     private Scr_ControladorMisiones ControladorMisiones;
     private Transform Gata;
 
     private CinemachineBrain brain;
     private float TransicionDuracion = 1f;
+    public bool completoSecundaria=false;
     private void Start()
     {
         Gata = GameObject.Find("Gata").transform;
@@ -129,14 +130,44 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         CanvasNPC.SetActive(false);
         ComprobarMision();
         ActivarDialogo();
+        
     }
 
     public void BotonMisionesSecundarias()
     {
         CanvasNPC.SetActive(false);
-        MisionesSecundariasUI.SetActive(true);
-        misionSEc.conseguirNPC(gameObject);
-        misionSEc.coseguir_misiones(MisionesSecundarisDar);
+        if (Misionesqueespera != null)
+        {
+            Debug.Log("ae");
+            for (int t = 0; t < Misionesqueespera.Count; t++)
+            {
+                for (int i = 0; i < ControladorMisiones.MisionesExtra.Count; i++)
+                {
+                    if (ControladorMisiones.MisionesExtra[i] == Misionesqueespera[t] && ControladorMisiones.MisionesScompletas[i])
+                    {
+                        ControladorMisiones.TerminarMisionSexundaria(Misionesqueespera[t]);
+                        completoSecundaria = true;
+                        Debug.Log("aeeee" + completoSecundaria);
+                    }
+                }
+            }
+
+        }
+
+        sistemaDialogos.recompensarSecundarias = completoSecundaria;
+        if (completoSecundaria)
+        {
+            sistemaDialogos.IniciarDialogo();
+            opcionesUI();
+            completoSecundaria = false;
+        }
+        else
+        {
+            MisionesSecundariasUI.SetActive(true);
+            misionSEc.conseguirNPC(gameObject);
+            misionSEc.coseguir_misiones(MisionesSecundarisDar);
+        }
+
     }
     public void Salir()
     {
@@ -145,7 +176,18 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         camara.SetActive(true);
         camaraGata.SetActive(true);
     }
-
+    public void quitarMisionSecundaria(Scr_CreadorDialogos mision)
+    {
+        for (int i = 0; i < MisionesSecundarisDar.Count; i++) 
+        {
+            Debug.LogError(MisionesSecundarisDar[i] == mision);
+            if (MisionesSecundarisDar[i]== mision)
+            {
+                MisionesSecundarisDar.RemoveAt(i);
+                Debug.Log("quito Mision");
+            }
+        }
+    }
     private void ActivarDialogo()
     {
         Debug.Log("Activando dialogo y desactivando camaraGata");
@@ -174,6 +216,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
                 else
                 {
                     sistemaDialogos.IniciarDialogo();
+
                 }
             }
         }
@@ -229,20 +272,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
                 misionespera++;
             }
         }
-        else
-        {
-            for (int t = 0; t < Misionesqueespera.Count; t++)
-            {
-                for (int i = 0; i < ControladorMisiones.MisionesExtra.Count; i++)
-                {
-                    if (ControladorMisiones.MisionesExtra[i] == Misionesqueespera[t] && ControladorMisiones.MisionesScompletas[i])
-                    {
-                        ControladorMisiones.TerminarMisionSexundaria(Misionesqueespera[t]);
-                    }
-                }
-            }
-            
-        }
+        
         
     }
 

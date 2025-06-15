@@ -27,7 +27,8 @@ public class Scr_CreadorMisiones : ScriptableObject
     public enum cazarenemigo
     {
         jaba,
-        gallina
+        gallina,
+        lobo
     }
     public cazarenemigo[] Objetivocaza;
     public int[] cantidad_caza;
@@ -43,6 +44,7 @@ public class Scr_CreadorMisiones : ScriptableObject
     public int[] CantidadesDa;
 
 
+    public bool CambiaPrincipal;
     public string TargetExplorado;
 }
 
