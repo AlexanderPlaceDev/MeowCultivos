@@ -49,6 +49,7 @@ public class MisionesUI : MonoBehaviour
 
     public void checarMisionesCurso()
     {
+        //actualiza las misiones que tiene el jugador en su controlador inventario
         MisionesenCurso.Clear();
         MisionesenCursoCompletadas.Clear();
         ControladorMisiones.RevisarTodasLasMisionesSecundarias();
@@ -67,6 +68,7 @@ public class MisionesUI : MonoBehaviour
     }
     public void checarMisionActual()
     {
+        //cambia la mision principal la cual se acualiza en el controlador
         TextMeshProUGUI texto1;
         TextMeshProUGUI texto2;
         TextMeshProUGUI[] textos = mis.GetComponentsInChildren<TextMeshProUGUI>();
@@ -82,7 +84,7 @@ public class MisionesUI : MonoBehaviour
             texto2 = null;
         }
 
-
+        //marca si es principal o secundaria
         Image img = mis.GetComponent<Image>();
         if (ControladorMisiones.MisionActual !=null && ControladorMisiones.MisionActual.prioridad == Scr_CreadorMisiones.prioridadM.Principal)
         {
@@ -96,7 +98,8 @@ public class MisionesUI : MonoBehaviour
         {
             img.color = Vacio;
         }
-        if(ControladorMisiones.MisionActual!= null)
+        //comprueba si ya esta completa o no para poder elejir la descripcion
+        if (ControladorMisiones.MisionActual!= null)
         {
             if (!ControladorMisiones.MisionCompleta)
             {
@@ -116,6 +119,7 @@ public class MisionesUI : MonoBehaviour
         
         
     }
+    //muestra las misiones con su respectivo boton para marcarla como la actual
     void MostrarMisiones()
     {
         foreach (Transform child in contentPanel)
@@ -143,7 +147,7 @@ public class MisionesUI : MonoBehaviour
                 texto1 = null;
                 texto2 = null;
             }
-
+            //marca si es principal o secundaria
             Image img = obj.GetComponent<Image>();
             
             if (instance.prioridad == Scr_CreadorMisiones.prioridadM.Principal)
@@ -157,7 +161,7 @@ public class MisionesUI : MonoBehaviour
             Button[] botons = obj.GetComponentsInChildren<Button>();
             Button boton = botons[0];
 
-
+            //comprueba si ya esta completa o no para poder elejir la descripcion
             texto1.text = $"{instance.name}";
             if (!MisionesenCursoCompletadas[i])
             {

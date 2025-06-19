@@ -10,12 +10,14 @@ public class Scr_SistemaDialogos : MonoBehaviour
     public Scr_CreadorDialogos[] Dialogos;
 
     public Scr_CreadorDialogos DialogoSecundario;
+    public Scr_CreadorDialogos DialogoExtra;
     public Scr_CreadorDialogos DialogoDeRecompensaSecundario;
     public Scr_CreadorDialogos DialogoArecibir;
     public float letraDelay = 0.1f;
     public float Velocidad = 1.0f;
 
     public bool recompensarSecundarias=false;
+    public bool DiaExtra=false;
     public bool EnPausa = true;
     public bool Leyendo = false;
     public int DialogoActual = 0;
@@ -63,6 +65,10 @@ public class Scr_SistemaDialogos : MonoBehaviour
         {
             DialogoArecibir = DialogoDeRecompensaSecundario;
         }
+        else if (DiaExtra)
+        {
+            DialogoArecibir = DialogoExtra;
+        }
         else if (activadorDialogos!=null && !activadorDialogos.Principal && !recompensarSecundarias)
         {
             DialogoArecibir = DialogoSecundario;
@@ -76,6 +82,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
 
     IEnumerator ReadDialogue()
     {
+        Debug.Log("aes");
         Leyendo = true;
         foreach (char letter in DialogoArecibir.Lineas[LineaActual].ToCharArray())
         {
@@ -112,82 +119,86 @@ public class Scr_SistemaDialogos : MonoBehaviour
         }
         if (DialogoActual < Dialogos.Length ) // Verificar si DialogoActual está dentro de los límites del arreglo Dialogos
         {
-            if (LineaActual < DialogoArecibir.Lineas.Length) // Verificar si LineaActual está dentro de los límites del arreglo de líneas del diálogo actual
+            
+        }
+        if (LineaActual < DialogoArecibir.Lineas.Length) // Verificar si LineaActual está dentro de los límites del arreglo de líneas del diálogo actual
+        {
+            if (Texto.text == DialogoArecibir.Lineas[LineaActual])
             {
-                if (Texto.text == DialogoArecibir.Lineas[LineaActual])
+                Texto.text = ""; // Limpiar el texto antes de mostrar la siguiente línea
+                LineaActual++; // Avanzar a la siguiente línea
+                if (LineaActual < DialogoArecibir.Lineas.Length)
                 {
-                    Texto.text = ""; // Limpiar el texto antes de mostrar la siguiente línea
-                    LineaActual++; // Avanzar a la siguiente línea
-                    if (LineaActual < DialogoArecibir.Lineas.Length)
-                    {
-                        currentCoroutine = StartCoroutine(ReadDialogue());
-                    }
-                    else
-                    {
-                        // Aquí termina el diálogo
-                        LineaActual = 0;
-                        EnPausa = true;
-                        Leyendo = false;
-                        Leido = true;
-
-                        //Asignar Mision
-                        if (DialogoArecibir.EsMision && activadorDialogos.Principal)
-                        {
-                            activadorDialogos.Misionequeespera = DialogoArecibir.Mision;
-                            ControladorMisiones.MisionActual = DialogoArecibir.Mision;
-                            activadorDialogos.vaCambio = DialogoArecibir.cambia;
-                            ControladorMisiones.MisionPrincipal = DialogoArecibir.Mision;
-                            //Guardar Dialogo
-                            if (GetComponent<Scr_EventosGuardado>() != null)
-                            {
-                                Debug.Log("Activa Evento");
-                                GetComponent<Scr_EventosGuardado>().EventoDialogo(DialogoActual, "Gusano");
-                            }
-                            if (DialogoArecibir.Mision.EsContinua)
-                            {
-                                DialogoActual++;
-                            }
-                        }
-                        else if(DialogoArecibir.EsMision && !activadorDialogos.Principal)
-                        {
-                            activadorDialogos.Misionesqueespera.Add(DialogoArecibir.Mision);
-                            ControladorMisiones.MisionesExtra.Add(DialogoArecibir.Mision);
-                            activadorDialogos.quitarMisionSecundaria(DialogoArecibir);
-                            ControladorMisiones.MisionesScompletas.Add(false);
-                            activadorDialogos.vaCambio = DialogoArecibir.cambia;
-                            if (ControladorMisiones.MisionActual == null)
-                            {
-                                ControladorMisiones.MisionActual = DialogoArecibir.Mision;
-                                ControladorMisiones.MisionCompleta = false;
-                            }
-                        }
-
-                        if (DialogoActual < Dialogos.Length - 1)
-                        {
-                            //En caso de no tener mision
-                            if (ControladorMisiones != null)
-                            {
-                                if (ControladorMisiones.MisionActual == null)
-                                {
-                                    DialogoActual++; // Avanzar al siguiente diálogo
-                                    if (GetComponent<Scr_EventosGuardado>() != null)
-                                    {
-                                        GetComponent<Scr_EventosGuardado>().EventoDialogo(DialogoActual, "Gusano");
-                                    }
-
-                                }
-                            }
-
-
-                        }
-                        Texto.transform.parent.gameObject.SetActive(false);
-                    }
+                    currentCoroutine = StartCoroutine(ReadDialogue());
                 }
-                
                 else
                 {
-                    Texto.text = DialogoArecibir.Lineas[LineaActual];
+                    // Aquí termina el diálogo
+                    LineaActual = 0;
+                    EnPausa = true;
+                    Leyendo = false;
+                    Leido = true;
+
+                    //Asignar Mision
+                    if (DialogoArecibir.EsMision && activadorDialogos.Principal)
+                    {
+                        activadorDialogos.Misionequeespera = DialogoArecibir.Mision;
+                        ControladorMisiones.MisionActual = DialogoArecibir.Mision;
+                        activadorDialogos.vaCambio = DialogoArecibir.cambia;
+                        ControladorMisiones.MisionPrincipal = DialogoArecibir.Mision;
+                        //Guardar Dialogo
+                        if (GetComponent<Scr_EventosGuardado>() != null)
+                        {
+                            Debug.Log("Activa Evento");
+                            GetComponent<Scr_EventosGuardado>().EventoDialogo(DialogoActual, "Gusano");
+                        }
+                        if (DialogoArecibir.Mision.EsContinua)
+                        {
+                            DialogoActual++;
+                        }
+                    }
+                    else if (DialogoArecibir.EsMision && !activadorDialogos.Principal)
+                    {
+                        activadorDialogos.Misionesqueespera.Add(DialogoArecibir.Mision);
+                        ControladorMisiones.MisionesExtra.Add(DialogoArecibir.Mision);
+                        activadorDialogos.quitarMisionSecundaria(DialogoArecibir);
+                        ControladorMisiones.MisionesScompletas.Add(false);
+                        activadorDialogos.vaCambio = DialogoArecibir.cambia;
+                        if (ControladorMisiones.MisionActual == null)
+                        {
+                            ControladorMisiones.MisionActual = DialogoArecibir.Mision;
+                            ControladorMisiones.MisionCompleta = false;
+                        }
+                    }
+
+                    if (DialogoActual < Dialogos.Length - 1)
+                    {
+                        //En caso de no tener mision
+                        if (ControladorMisiones != null)
+                        {
+                            if (ControladorMisiones.MisionActual == null)
+                            {
+                                DialogoActual++; // Avanzar al siguiente diálogo
+                                if (GetComponent<Scr_EventosGuardado>() != null)
+                                {
+                                    GetComponent<Scr_EventosGuardado>().EventoDialogo(DialogoActual, "Gusano");
+                                }
+
+                            }
+                        }
+
+
+                    }
+                    Texto.transform.parent.gameObject.SetActive(false);
                 }
+            }
+
+            else
+            {
+                Debug.Log("ad");
+                Texto.text = DialogoArecibir.Lineas[LineaActual];
+                recompensarSecundarias = false;
+                DiaExtra = false;
             }
         }
     }

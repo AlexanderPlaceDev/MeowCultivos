@@ -43,7 +43,13 @@ public class MisionesSecundrias_UI : MonoBehaviour
         dialogoNPC=Npc.GetComponent<Scr_ActivadorDialogos>();
         activardialogoNPC = Npc.GetComponent<Scr_SistemaDialogos>();
     }
-
+    public void cerrar()
+    {
+        if (dialogoNPC != null)
+        {
+            dialogoNPC.cerrarMisionesSecundaris();
+        }
+    }
     public void coseguir_misiones(List<Scr_CreadorDialogos> mis)
     {
         Misiones.Clear();

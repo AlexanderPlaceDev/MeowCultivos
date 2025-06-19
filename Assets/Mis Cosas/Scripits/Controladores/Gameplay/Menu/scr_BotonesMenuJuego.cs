@@ -19,9 +19,9 @@ public class scr_BotonesMenuJuego : MonoBehaviour
     {
         if (BotonActual < 0)
         {
-            BotonActual = 5;
+            BotonActual = 6;
         }
-        else if (BotonActual > 5)
+        else if (BotonActual > 6)
         {
             BotonActual = 0;
         }
@@ -31,6 +31,8 @@ public class scr_BotonesMenuJuego : MonoBehaviour
 
     public void PrenderBoton(string BotonySi)
     {
+        //Primer 1 es igual a entra al boton
+        
         if (BotonySi[0] == '1')
         {
             if (BotonySi[1] == '0')
@@ -67,10 +69,11 @@ public class scr_BotonesMenuJuego : MonoBehaviour
                 }
             }
         }
+        //Si es diferente sale del boton
         else
         {
-            Botones[4].GetComponent<Image>().color = Colores[1];
             Botones[5].GetComponent<Image>().color = Colores[1];
+            Botones[6].GetComponent<Image>().color = Colores[1];
             Botones[0].transform.GetChild(0).GetComponent<Image>().color = Colores[1];
             Botones[0].transform.GetChild(1).GetComponent<Image>().color = Colores[1];
             Botones[1].transform.GetChild(0).GetComponent<Image>().color = Colores[1];
@@ -79,6 +82,8 @@ public class scr_BotonesMenuJuego : MonoBehaviour
             Botones[2].transform.GetChild(1).GetComponent<Image>().color = Colores[1];
             Botones[3].transform.GetChild(0).GetComponent<Image>().color = Colores[1];
             Botones[3].transform.GetChild(1).GetComponent<Image>().color = Colores[1];
+            Botones[4].transform.GetChild(0).GetComponent<Image>().color = Colores[1];
+            Botones[4].transform.GetChild(1).GetComponent<Image>().color = Colores[1];
         }
     }
 

@@ -9,6 +9,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 {
     private bool estaAdentro = false;
     [SerializeField] private GameObject MisionesSecundariasUI;
+    [SerializeField] private GameObject MisionesExtrUI;
     [SerializeField] private GameObject panelDialogo;
     [SerializeField] private GameObject[] iconos;
     [SerializeField] private GameObject camara;
@@ -16,7 +17,9 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     [SerializeField] private GameObject CanvasNPC;
     [SerializeField] public bool Principal;
     [SerializeField] private List<Scr_CreadorDialogos> MisionesSecundarisDar;
+    [SerializeField] private List<Scr_CreadorDialogos> Misiones_deDialogoExtra;
     public MisionesSecundrias_UI misionSEc;
+    public Misiones_Extra misionExtr;
     public Scr_CreadorMisiones Misionequeespera;
     public List<Scr_CreadorMisiones> Misionesqueespera;
     public int misionespera;
@@ -33,6 +36,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     {
         Gata = GameObject.Find("Gata").transform;
         misionSEc= MisionesSecundariasUI.GetComponent<MisionesSecundrias_UI>();
+
+        misionExtr = MisionesExtrUI.GetComponent<Misiones_Extra>();
         camaraGata = GameObject.Find("Camara 360")?.gameObject; // Asegurar que sea un GameObject válido
         brain = Camera.main.GetComponent<CinemachineBrain>();
         if (brain != null)
@@ -118,10 +123,39 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             BotonHablar();
         }
     }
+    public void Boton_hablarUI()
+    {
+        Debug.Log("que");
+        CanvasActivo = false;
+        CanvasNPC.SetActive(false);
+        MisionesExtrUI.SetActive(true);
+        misionExtr.conseguirNPC(gameObject);
+        misionExtr.coseguir_misiones(Misiones_deDialogoExtra);
+    }
     public void opcionesUI()
     {
         CanvasActivo = false;
         CanvasNPC.SetActive(false);
+        MisionesSecundariasUI.SetActive(false);
+    }
+
+    
+    public void opcionesUI2()
+    {
+        CanvasActivo = false;
+        CanvasNPC.SetActive(false);
+        MisionesExtrUI.SetActive(false);
+    }
+    public void cerrarHablar_extra()
+    {
+        CanvasNPC.SetActive(true);
+        CanvasActivo = true;
+        MisionesExtrUI.SetActive(false);
+    }
+    public void cerrarMisionesSecundaris()
+    {
+        CanvasNPC.SetActive(true);
+        CanvasActivo = true;
         MisionesSecundariasUI.SetActive(false);
     }
     public void BotonHablar()
@@ -138,7 +172,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         CanvasNPC.SetActive(false);
         if (Misionesqueespera != null)
         {
-            Debug.Log("ae");
+            //Debug.Log("ae");
             for (int t = 0; t < Misionesqueespera.Count; t++)
             {
                 for (int i = 0; i < ControladorMisiones.MisionesExtra.Count; i++)
