@@ -52,6 +52,7 @@ public class MisionesUI : MonoBehaviour
         //actualiza las misiones que tiene el jugador en su controlador inventario
         MisionesenCurso.Clear();
         MisionesenCursoCompletadas.Clear();
+        ControladorMisiones.revisarMisionPrincipal();
         ControladorMisiones.RevisarTodasLasMisionesSecundarias();
         if (ControladorMisiones.MisionPrincipal != null)
         {
@@ -162,7 +163,7 @@ public class MisionesUI : MonoBehaviour
             Button boton = botons[0];
 
             //comprueba si ya esta completa o no para poder elejir la descripcion
-            texto1.text = $"{instance.name}";
+            texto1.text = $"{instance.MisionName}";
             if (!MisionesenCursoCompletadas[i])
             {
 

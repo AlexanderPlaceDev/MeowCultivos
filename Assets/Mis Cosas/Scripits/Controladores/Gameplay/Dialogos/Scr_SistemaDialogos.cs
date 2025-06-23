@@ -45,10 +45,12 @@ public class Scr_SistemaDialogos : MonoBehaviour
             {
                 if (Leyendo)
                 {
+                    Debug.Log("salta dialogo");
                     SaltarDialogo();
                 }
                 else
                 {
+                    Debug.Log("Siguiente linea");
                     SiguienteLinea();
                 }
             }
@@ -57,10 +59,12 @@ public class Scr_SistemaDialogos : MonoBehaviour
     }
     public void IniciarDialogo()
     {
+        Debug.Log("hola");
         EnPausa = false;
         Texto.transform.parent.gameObject.SetActive(true);
         Texto.text = ""; // Limpiar el texto al iniciar un nuevo diálogo
         LineaActual = 0;
+        
         if (recompensarSecundarias)
         {
             DialogoArecibir = DialogoDeRecompensaSecundario;
@@ -73,7 +77,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
         {
             DialogoArecibir = DialogoSecundario;
         }
-        else
+        else 
         {
             DialogoArecibir = Dialogos[DialogoActual];
         }
@@ -82,7 +86,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
 
     IEnumerator ReadDialogue()
     {
-        Debug.Log("aes");
+        Debug.Log("aes"+LineaActual);
         Leyendo = true;
         foreach (char letter in DialogoArecibir.Lineas[LineaActual].ToCharArray())
         {
@@ -99,7 +103,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
             StopCoroutine(currentCoroutine);
         }
 
-        if (LineaActual < DialogoArecibir.Lineas.Length - 1 ) // Verificar si hay más líneas disponibles
+        if (LineaActual < DialogoArecibir.Lineas.Length -1 ) // Verificar si hay más líneas disponibles
         {
             LineaActual++; // Incrementar el índice de la línea actual
             Texto.text = ""; // Limpiar el texto antes de mostrar la siguiente línea
@@ -119,8 +123,11 @@ public class Scr_SistemaDialogos : MonoBehaviour
         }
         if (DialogoActual < Dialogos.Length ) // Verificar si DialogoActual está dentro de los límites del arreglo Dialogos
         {
+            Debug.Log("adsr");
             
         }
+
+        Debug.Log(LineaActual < DialogoArecibir.Lineas.Length);
         if (LineaActual < DialogoArecibir.Lineas.Length) // Verificar si LineaActual está dentro de los límites del arreglo de líneas del diálogo actual
         {
             if (Texto.text == DialogoArecibir.Lineas[LineaActual])
@@ -169,6 +176,18 @@ public class Scr_SistemaDialogos : MonoBehaviour
                             ControladorMisiones.MisionActual = DialogoArecibir.Mision;
                             ControladorMisiones.MisionCompleta = false;
                         }
+                    }
+                    if (activadorDialogos!=null && activadorDialogos.vaCambio)
+                    {
+                        if (activadorDialogos.Principal)
+                        {
+                            activadorDialogos.Principal=false;
+                        }
+                        else
+                        {
+                            activadorDialogos.Principal = true;
+                        }
+
                     }
 
                     if (DialogoActual < Dialogos.Length - 1)

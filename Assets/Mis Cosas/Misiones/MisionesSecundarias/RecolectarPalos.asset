@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea24d2bc748133d448a419af8bc82e61, type: 3}
   m_Name: RecolectarPalos
   m_EditorClassIdentifier: 
-  MisionName: 
+  MisionName: 10 palos
   Descripcion: Recolecta 10 Palos
   DescripcionFinal: Regresa con Bony
   prioridad: 1
@@ -30,4 +30,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e9bc53ed753ca3d49a96f76d01685c82, type: 2}
   CantidadesQuita: 0a000000
   CantidadesDa: 0100000001000000
+  CambiaPrincipal: 0
   TargetExplorado: 

@@ -38,13 +38,18 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
     public List<bool> valido;
 
-    public string[] TargetExplorados;
+    public List<string> TargetExplorados;
+
+
+    public GameObject[] todos;
     void Start()
     {
 
         Gata = GameObject.Find("Gata").transform;
         inventario = Gata.GetChild(7).GetComponent<Scr_Inventario>();
         //CargarMisiones();
+        todos= Buscartag.BuscarObjetosConTagInclusoInactivos("Construcciones");
+
         ActualizarInfo();
     }
 
@@ -91,6 +96,29 @@ public class Scr_ControladorMisiones : MonoBehaviour
         }
     }
 
+    public void actualizarTargetsExploratod(string target)
+    {
+        if (!existirTarget(target))
+        {
+            TargetExplorados.Add(target);
+            UnityEngine.Debug.Log("Se agrego" + target);
+        }
+
+        UnityEngine.Debug.Log("Revisando");
+        revisarMisionPrincipal();
+        RevisarTodasLasMisionesSecundarias();
+    }
+    public bool existirTarget(string target)
+    {
+        for (int i = 0; i < TargetExplorados.Count; i++)
+        {
+            if (target == TargetExplorados[i])
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     void ComprobarMision()
     {
         if (MisionActual == null)
@@ -146,15 +174,20 @@ public class Scr_ControladorMisiones : MonoBehaviour
         MisionCompleta = complete;
     }
 
-    public bool revisarMisionPrincipal()
+    public void revisarMisionPrincipal()
     {
-        if (MisionPrincipal == null)
+        if (MisionPrincipal != null)
         {
-            return true;
-        }
-        else
-        {
-            return false;
+            bool completada = false;
+            ComprobarProgreso(MisionPrincipal, ref completada);
+            if (completada)
+            {
+                MisionPCompleta = true;
+                if (MisionPrincipal == MisionActual)
+                {
+                    MisionCompleta = true;
+                }
+            }
         }
     }
     public void Terminar_MisionPrincipal()
@@ -276,6 +309,9 @@ public class Scr_ControladorMisiones : MonoBehaviour
             case Tipos.Exploracion:
                 completada = VerificarExploracion(mision);
                 break;
+            case Tipos.Construccion:
+                completada = VerificarConstruccion(mision);
+                break;
         }
     }
     public bool VerificarCaza(Scr_CreadorMisiones mision)
@@ -356,14 +392,51 @@ public class Scr_ControladorMisiones : MonoBehaviour
     }
     public bool VerificarExploracion(Scr_CreadorMisiones mision)
     {
-        for (int s = 0; s < TargetExplorados.Length; s++)
+        for (int s = 0; s < TargetExplorados.Count; s++)
         {
-            if(TargetExplorados[s] == mision.TargetExplorado)
+            UnityEngine.Debug.LogWarning((TargetExplorados[s] == mision.TargetExplorado)+"ade");
+            if (TargetExplorados[s] == mision.TargetExplorado)
             {
                 return true;
             }
         }
         return false;
+    }
+
+    public bool VerificarConstruccion(Scr_CreadorMisiones mision)
+    {
+        valido.Clear();
+        for (int s = 0; s < todos.Length; s++)
+        {
+            for (int i = 0; i < mision.objetoaCostruir.Length; i++)
+            {
+                if (todos[s].name == mision.objetoaCostruir[i].name && todos[s].activeSelf)
+                {
+                    valido.Add(true);
+                }
+                else
+                {
+                    
+                    valido.Add(false);
+                }
+            }
+        }
+        int e = 0;
+        for (int s = 0; s < valido.Count; s++)
+        {
+            if (valido[s] == true)
+            {
+                e++;
+            }
+        }
+        if (e == valido.Count)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void GuardarMisiones()

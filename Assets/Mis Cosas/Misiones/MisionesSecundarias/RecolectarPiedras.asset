@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea24d2bc748133d448a419af8bc82e61, type: 3}
   m_Name: RecolectarPiedras
   m_EditorClassIdentifier: 
-  MisionName: 
+  MisionName: 10 Piedras
   Descripcion: Recolecta 10 Piedras
   DescripcionFinal: Regresa con Bony
   prioridad: 1
@@ -29,4 +29,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f2dd07ffe30451b4d9ced2110326053a, type: 2}
   CantidadesQuita: 0a000000
   CantidadesDa: 0100000001000000
+  objetoaCostruir: {fileID: 0}
+  CambiaPrincipal: 0
   TargetExplorado: 

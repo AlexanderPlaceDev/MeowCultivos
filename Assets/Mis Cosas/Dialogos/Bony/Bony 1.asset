@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfd7b7348ecdf544ab73fad30de2eac3, type: 3}
   m_Name: Bony 1
   m_EditorClassIdentifier: 
+  NombreDialogo: 
   NumeroDialogo: 0
   EsUnico: 1
-  EsMision: 0
-  cambia: 1
+  EsMision: 1
+  cambia: 0
   Mision: {fileID: 11400000, guid: 26cf91a577a461e4a8375203ef1dbc92, type: 2}
   Lineas:
   - Gracias por salvarme

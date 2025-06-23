@@ -71,6 +71,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             if (panelDialogo.activeSelf)
             {
                 ComprobarMision();
+                Debug.Log("a");
                 ActivarDialogo();
             }
             else
@@ -123,10 +124,9 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             BotonHablar();
         }
     }
-    public void Boton_hablarUI()
+    public void Boton_hablarExtra()
     {
         Debug.Log("que");
-        CanvasActivo = false;
         CanvasNPC.SetActive(false);
         MisionesExtrUI.SetActive(true);
         misionExtr.conseguirNPC(gameObject);
@@ -243,7 +243,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             else
             {
                 string textoActual = panelDialogo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text;
-                if (sistemaDialogos.Dialogos[sistemaDialogos.DialogoActual].Lineas[sistemaDialogos.LineaActual] == textoActual)
+                
+                if (sistemaDialogos.DialogoArecibir!=null && sistemaDialogos.DialogoArecibir.Lineas[sistemaDialogos.LineaActual] == textoActual)
                 {
                     sistemaDialogos.SiguienteLinea();
                 }
@@ -290,14 +291,16 @@ public class Scr_ActivadorDialogos : MonoBehaviour
                 {
                     ControladorMisiones.MisionActual= null;
                 }
+                /*
                 if (vaCambio && Principal)
                 {
                     Principal = false;
                 }
+                
                 else if(vaCambio && !Principal)
                 {
                     Principal = true;
-                }
+                }*/
 
                 ControladorMisiones.MisionPrincipal = null;
                 sistemaDialogos.LineaActual = 0;
