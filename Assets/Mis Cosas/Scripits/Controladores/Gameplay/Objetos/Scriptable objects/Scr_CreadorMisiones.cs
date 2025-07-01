@@ -38,6 +38,7 @@ public class Scr_CreadorMisiones : ScriptableObject
     public bool DaObjetos;
     public Scr_CreadorObjetos[] ObjetosNecesarios;
     public Scr_CreadorObjetos[] ObjetosRecompensa;
+    public int xpTotal;
     //public string[] ObjetosQueQuita;
     //public string[] ObjetosQueDa;
     public int[] CantidadesQuita;

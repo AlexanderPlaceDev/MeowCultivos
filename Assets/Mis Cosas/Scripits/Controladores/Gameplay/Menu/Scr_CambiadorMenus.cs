@@ -15,12 +15,14 @@ public class Scr_CambiadorMenus : MonoBehaviour
     [SerializeField] GameObject BotonesMenu;
     private float tiempoPasado = 0.0f;
     bool CambiarInventario = false;
+    bool CambiarMisiones = false;
     bool CambiarArmas = false;
     bool CambiarOpciones = false;
     bool CambiarGuia = false;
     bool CambiarHabilidades = false;
     bool RegresarInventario = false;
     bool RegresarOpciones = false;
+    bool RegresarMisiones = false;
     bool RegresarGuia = false;
     bool RegresarHabilidades = false;
     public string MenuActual = "Inventario";
@@ -123,7 +125,28 @@ public class Scr_CambiadorMenus : MonoBehaviour
             }
         }
 
+        if (CambiarMisiones)
+        {
+            // Calcula la interpolación lineal entre los colores inicial y final
 
+            if (tiempoPasado >= 1)
+            {
+                float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
+                Fondo.color = Color.Lerp(TemaActual.ColoresMenu[2], TemaActual.ColoresGuia[2], t);
+
+                BarraIzquierda.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[0], TemaActual.ColoresMisiones[0], t);
+                BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[1], TemaActual.ColoresMisiones[1], t);
+
+                BarraDerecha.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[0], TemaActual.ColoresMisiones[0], t);
+                BarraDerecha.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[1], TemaActual.ColoresMisiones[1], t);
+            }
+
+            // Si el tiempo ha superado la duración, desactiva la actualización
+            if (tiempoPasado >= DuracionTransicion + 1)
+            {
+                CambiarMisiones = false;
+            }
+        }
         if (RegresarHabilidades)
         {
             // Calcula la interpolación lineal entre los colores inicial y final
@@ -218,6 +241,28 @@ public class Scr_CambiadorMenus : MonoBehaviour
                 RegresarGuia = false;
             }
         }
+        if (RegresarMisiones)
+        {
+            // Calcula la interpolación lineal entre los colores inicial y final
+
+            if (tiempoPasado >= 1)
+            {
+                float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
+                Fondo.color = Color.Lerp(TemaActual.ColoresMenu[2], TemaActual.ColoresGuia[2], t);
+
+                BarraIzquierda.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMisiones[0], TemaActual.ColoresMenu[0], t);
+                BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMisiones[1], TemaActual.ColoresMenu[1], t);
+
+                BarraDerecha.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMisiones[0], TemaActual.ColoresMenu[0], t);
+                BarraDerecha.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMisiones[1], TemaActual.ColoresMenu[1], t);
+            }
+
+            // Si el tiempo ha superado la duración, desactiva la actualización
+            if (tiempoPasado >= DuracionTransicion + 1)
+            {
+                RegresarMisiones = false;
+            }
+        }
 
     }
 
@@ -236,6 +281,15 @@ public class Scr_CambiadorMenus : MonoBehaviour
                         break;
                     }
 
+                case "Misiones":
+                    {
+                        CambiarMisiones = true;
+                        MenuActual = "Misiones";
+                        Menu.GetComponent<Animator>().Play("Cerrar 5");
+
+                        Debug.Log("Activando transición a Misiones");
+                        break;
+                    }
                 case "Armas":
                     {
                         CambiarArmas = true;
@@ -257,6 +311,8 @@ public class Scr_CambiadorMenus : MonoBehaviour
                         CambiarHabilidades = true;
                         MenuActual = "Habilidades";
                         Menu.GetComponent<Animator>().Play("Cerrar 4");
+
+                        Debug.Log("Activando transición a Habilidades");
                         break;
                     }
 
@@ -294,12 +350,19 @@ public class Scr_CambiadorMenus : MonoBehaviour
             {
                 case "Inventario":
                     {
-                        CambiarHabilidades = true;
-                        MenuActual = "Habilidades";
+                        CambiarMisiones = true;
+                        MenuActual = "Misiones";
                         Menu.GetComponent<Animator>().Play("Cerrar 4");
                         break;
                     }
 
+                case "Misiones":
+                    {
+                        CambiarHabilidades = true;
+                        MenuActual = "Habilidades";
+                        Menu.GetComponent<Animator>().Play("Cerrar 5");
+                        break;
+                    }
                 case "Armas":
                     {
                         CambiarGuia = true;
@@ -329,7 +392,6 @@ public class Scr_CambiadorMenus : MonoBehaviour
                         Menu.GetComponent<Animator>().Play("Cerrar 1");
                         break;
                     }
-
                 case "Salir":
                     {
                         CambiarOpciones = true;
@@ -356,7 +418,13 @@ public class Scr_CambiadorMenus : MonoBehaviour
                         Menu.GetComponent<Animator>().Play("Cerrar 3");
                         break;
                     }
-
+                case "Misiones":
+                    {
+                        CambiarInventario = true;
+                        MenuActual = "Inventario";
+                        Menu.GetComponent<Animator>().Play("Cerrar 0");
+                        break;
+                    }
                 case "Armas":
                     {
                         CambiarOpciones = true;
@@ -376,8 +444,8 @@ public class Scr_CambiadorMenus : MonoBehaviour
 
                 case "Habilidades":
                     {
-                        CambiarInventario = true;
-                        MenuActual = "Inventario";
+                        CambiarMisiones = true;
+                        MenuActual = "Misiones";
                         Menu.GetComponent<Animator>().Play("Cerrar 0");
                         break;
                     }
@@ -432,6 +500,12 @@ public class Scr_CambiadorMenus : MonoBehaviour
                 {
                     Menu.GetComponent<Animator>().Play("Cerrar Opciones");
                     RegresarOpciones = true;
+                    break;
+                }
+            case "Misiones":
+                {
+                    Menu.GetComponent<Animator>().Play("Cerrar Misiones");
+                    RegresarMisiones = true;
                     break;
                 }
         }

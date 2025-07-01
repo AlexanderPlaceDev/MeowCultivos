@@ -300,8 +300,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
                 else if(vaCambio && !Principal)
                 {
                     Principal = true;
-                }*/
-
+                }
+                */
                 ControladorMisiones.MisionPrincipal = null;
                 sistemaDialogos.LineaActual = 0;
                 sistemaDialogos.Leido = false;

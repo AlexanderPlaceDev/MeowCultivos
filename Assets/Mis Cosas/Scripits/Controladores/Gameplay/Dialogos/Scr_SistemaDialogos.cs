@@ -59,7 +59,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
     }
     public void IniciarDialogo()
     {
-        Debug.Log("hola");
+        Debug.Log("hola" + DialogoActual);
         EnPausa = false;
         Texto.transform.parent.gameObject.SetActive(true);
         Texto.text = ""; // Limpiar el texto al iniciar un nuevo diálogo
@@ -81,6 +81,8 @@ public class Scr_SistemaDialogos : MonoBehaviour
         {
             DialogoArecibir = Dialogos[DialogoActual];
         }
+
+        activadorDialogos.vaCambio = DialogoArecibir.cambia;
         currentCoroutine = StartCoroutine(ReadDialogue());
     }
 
@@ -146,6 +148,20 @@ public class Scr_SistemaDialogos : MonoBehaviour
                     Leyendo = false;
                     Leido = true;
 
+                    if (activadorDialogos != null && activadorDialogos.vaCambio)
+                    {
+                        Debug.LogWarning("qeu");
+                        if (activadorDialogos.Principal)
+                        {
+                            activadorDialogos.Principal = false;
+                        }
+                        else
+                        {
+                            activadorDialogos.Principal = true;
+                        }
+
+                    }
+
                     //Asignar Mision
                     if (DialogoArecibir.EsMision && activadorDialogos.Principal)
                     {
@@ -163,6 +179,8 @@ public class Scr_SistemaDialogos : MonoBehaviour
                         {
                             DialogoActual++;
                         }
+
+                        //ControladorMisiones.revisar_objetivos();
                     }
                     else if (DialogoArecibir.EsMision && !activadorDialogos.Principal)
                     {
@@ -170,25 +188,15 @@ public class Scr_SistemaDialogos : MonoBehaviour
                         ControladorMisiones.MisionesExtra.Add(DialogoArecibir.Mision);
                         activadorDialogos.quitarMisionSecundaria(DialogoArecibir);
                         ControladorMisiones.MisionesScompletas.Add(false);
-                        activadorDialogos.vaCambio = DialogoArecibir.cambia;
                         if (ControladorMisiones.MisionActual == null)
                         {
                             ControladorMisiones.MisionActual = DialogoArecibir.Mision;
                             ControladorMisiones.MisionCompleta = false;
                         }
-                    }
-                    if (activadorDialogos!=null && activadorDialogos.vaCambio)
-                    {
-                        if (activadorDialogos.Principal)
-                        {
-                            activadorDialogos.Principal=false;
-                        }
-                        else
-                        {
-                            activadorDialogos.Principal = true;
-                        }
 
+                        //ControladorMisiones.revisar_objetivos();
                     }
+                    
 
                     if (DialogoActual < Dialogos.Length - 1)
                     {

@@ -19,7 +19,6 @@ public class Carpas : MonoBehaviour
     void Start()
     {
         cam= carpaUI.GetComponent<CambioTiempo>();
-        cam.carpa = this;
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
     }
 
@@ -28,7 +27,9 @@ public class Carpas : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E) && !openUI && EstaEnRango)
         {
+            Debug.Log("carpita");
             carpaUI.SetActive(true);
+            cam.carpa = this;
             openUI = true;
         }
     }

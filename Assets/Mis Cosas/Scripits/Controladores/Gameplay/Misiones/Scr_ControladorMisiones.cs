@@ -32,8 +32,9 @@ public class Scr_ControladorMisiones : MonoBehaviour
     private float[] TiempoTeclas;
     private bool Oculto = true;
 
-    public string[] NameEnemiCazado;
-    public int[] cazados;
+    public List<Scr_CreadorMisiones.cazarenemigo> NameEnemiCazado;
+    //public string[] NameEnemiCazado;
+    public List<int> cazados;
 
 
     public List<bool> valido;
@@ -174,6 +175,33 @@ public class Scr_ControladorMisiones : MonoBehaviour
         MisionCompleta = complete;
     }
 
+    public void revisar_objetivos()
+    {
+        if(MisionPrincipal != null)
+        {
+            if(MisionPrincipal.Objetivocaza.Length > 0)
+            {
+                for (int i = 0; i < MisionPrincipal.Objetivocaza.Length; i++) 
+                {
+                    checkazados(MisionPrincipal.Objetivocaza[i], MisionPrincipal.cantidad_caza[i]);
+                }
+            }
+        }
+        if (MisionesExtra.Count > 0)
+        { 
+
+            for (int u = 0; u < MisionPrincipal.Objetivocaza.Length; u++)
+            {
+                if (MisionesExtra[u].Objetivocaza.Length > 0)
+                {
+                    for (int i = 0; i < MisionesExtra[u].Objetivocaza.Length; i++)
+                    {
+                        checkazados(MisionesExtra[u].Objetivocaza[i], MisionesExtra[u].cantidad_caza[i]);
+                    }
+                }
+            }
+        }
+    }
     public void revisarMisionPrincipal()
     {
         if (MisionPrincipal != null)
@@ -275,17 +303,39 @@ public class Scr_ControladorMisiones : MonoBehaviour
     
     public void recompensa(Scr_CreadorMisiones mision)
     {
-        for (int i = 0; i < mision.ObjetosRecompensa.Length; i++)
+        if (mision.ObjetosRecompensa.Length > 0)
         {
-            for (int u = 0; u < inventario.Objetos.Length; u++)
+            for (int i = 0; i < mision.ObjetosRecompensa.Length; i++)
             {
-                if (mision.ObjetosRecompensa[i] == inventario.Objetos[u])
+                for (int u = 0; u < inventario.Objetos.Length; u++)
                 {
-                    UnityEngine.Debug.LogWarning("Recompesa "+ mision.ObjetosRecompensa[i] );
-                    inventario.Cantidades[u] = inventario.Cantidades[u] + mision.CantidadesDa[i];
+                    if (mision.ObjetosRecompensa[i] == inventario.Objetos[u])
+                    {
+                        UnityEngine.Debug.LogWarning("Recompesa " + mision.ObjetosRecompensa[i]);
+                        inventario.Cantidades[u] = inventario.Cantidades[u] + mision.CantidadesDa[i];
+                    }
                 }
             }
         }
+
+        if (mision.xpTotal > 0)
+        {
+            PlayerPrefs.SetInt("XPActual", PlayerPrefs.GetInt("XPActual") + mision.xpTotal);
+            if (PlayerPrefs.GetInt("XPActual", 0) >= PlayerPrefs.GetInt("XPSiguiente", 10))
+            {
+                PlayerPrefs.SetInt("XPActual", PlayerPrefs.GetInt("XPActual", 0) - PlayerPrefs.GetInt("XPSiguiente", 10));
+                PlayerPrefs.SetInt("Nivel", PlayerPrefs.GetInt("Nivel", 0) + 1);
+                PlayerPrefs.SetInt("XPSiguiente", PlayerPrefs.GetInt("XPSiguiente", 10) * 2);
+                PlayerPrefs.SetInt("PuntosDeHabilidad", PlayerPrefs.GetInt("PuntosDeHabilidad", 0) + 3);
+                GameObject.Find("Canvas XP").transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "LV.+1";
+            }
+            else
+            {
+                GameObject.Find("Canvas XP").transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "XP + " + mision.xpTotal;
+            }
+        }
+        
+
     }
     void ComprobarProgreso(Scr_CreadorMisiones mision, ref bool completada)
     {
@@ -314,14 +364,32 @@ public class Scr_ControladorMisiones : MonoBehaviour
                 break;
         }
     }
+    public void checkazados(Scr_CreadorMisiones.cazarenemigo caza, int cantidad)
+    {
+        bool have=false;
+        for (int i = 0; i < 10; i++) 
+        {
+            if(NameEnemiCazado[i].ToString() == caza.ToString())
+            {
+                cazados[i]=cazados[i]+cantidad;
+                have = true; 
+                break;
+            }
+        }
+        if (!have)
+        {
+            NameEnemiCazado.Add(caza);
+            cazados.Add(cantidad);
+        }
+    }
     public bool VerificarCaza(Scr_CreadorMisiones mision)
     {
         valido.Clear();
         for (int i = 0; i < mision.Objetivocaza.Length; i++)
         {
-            for (int u = 0; u < NameEnemiCazado.Length; u++)
+            for (int u = 0; u < NameEnemiCazado.Count; u++)
             {
-                if (mision.Objetivocaza[i].ToString() == NameEnemiCazado[u])
+                if (mision.Objetivocaza[i].ToString() == NameEnemiCazado[u].ToString())
                 {
                     if (cazados[u] >= mision.cantidad_caza[i])
                     {
