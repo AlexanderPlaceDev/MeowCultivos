@@ -15,9 +15,13 @@ public class Scr_EnemigoLobo : Scr_Enemigo
     private float temporizadorEspera;
     private bool esperando = false;
     private bool Atacando = false;
+    private float ContAtaque = 0;
+    private bool YaAtaco = false;
 
-    void Start()
+    protected override void Start()
     {
+     
+        base.Start();
         Gata = GameObject.Find("Personaje");
         agente = GetComponent<NavMeshAgent>();
         agente.speed = Velocidad;
@@ -28,10 +32,30 @@ public class Scr_EnemigoLobo : Scr_Enemigo
             Objetivo = Gata.transform;
             agente.SetDestination(Objetivo.position);
         }
+
+        // Reproducir animación de aparición y esperar a que termine
+        Anim.Play(NombreAnimacionAparecer);
+        float duracion = Anim.GetCurrentAnimatorStateInfo(0).length;
+        StartCoroutine(EsperarAparicion(duracion));
+    }
+
+    IEnumerator EsperarAparicion(float duracion)
+    {
+        yield return new WaitForSeconds(duracion);
+        Aparecio = true;
+        if (agente.isOnNavMesh)
+        {
+            agente.isStopped = false;
+        }
     }
 
     void Update()
     {
+
+        if (!Aparecio) return;
+        if (EstaMuerto) return;
+
+
         if (Objetivo != null)
         {
             float distancia = Vector3.Distance(transform.position, Objetivo.position);
@@ -51,11 +75,13 @@ public class Scr_EnemigoLobo : Scr_Enemigo
             {
                 if (!esperando)
                 {
+
+
                     if (!Atacando)
                     {
                         agente.isStopped = true;
                         esperando = true;
-                        StartCoroutine(Atacar());
+                        Atacar();
                         temporizadorEspera = Random.Range(TiempoDeEsperaMin, TiempoDeEsperaMax);
                     }
                 }
@@ -83,6 +109,19 @@ public class Scr_EnemigoLobo : Scr_Enemigo
                 {
                     Mover();
                 }
+            }
+
+
+            //CicloDeAtaque
+            if (Atacando && ContAtaque < DuracionDeAtaque)
+            {
+                ContAtaque += Time.deltaTime;
+            }
+            else
+            {
+                ContAtaque = 0;
+                Atacando = false;
+                YaAtaco = false;
             }
         }
         else
@@ -142,13 +181,13 @@ public class Scr_EnemigoLobo : Scr_Enemigo
         Debug.LogWarning("No se encontró un punto válido en el NavMesh después de varios intentos.");
     }
 
-    IEnumerator Atacar()
+    void Atacar()
     {
+        Debug.Log("Comenzo Atacar");
         Atacando = true;
         agente.isStopped = true; // 🔹 Evita que se mueva mientras ataca
         Anim.Play("Mordida");
         Tween.ShakeCamera(Camera.main, 3);
-
         Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
 
         if (batalla.VidaActual >= DañoMelee)
@@ -159,9 +198,5 @@ public class Scr_EnemigoLobo : Scr_Enemigo
         {
             batalla.VidaActual = 0; // 🔹 Evita valores negativos
         }
-
-        yield return new WaitForSeconds(0.875f);
-        Debug.Log("Dejo de atacar");
-        Atacando = false;
     }
 }

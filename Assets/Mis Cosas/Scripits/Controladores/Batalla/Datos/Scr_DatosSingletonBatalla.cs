@@ -14,6 +14,10 @@ public class Scr_DatosSingletonBatalla : MonoBehaviour
     public string Habilidad1;
     public string Habilidad2;
     public string HabilidadEspecial;
+    public Color Luz;
+    public int HoraActual;
+    public Material SkyBoxDia;
+    public Material SkyBoxNoche;
 
     [Header("Recompensa")]
     public List<Scr_CreadorObjetos> ObjetosRecompensa = new List<Scr_CreadorObjetos>();

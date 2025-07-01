@@ -52,6 +52,9 @@ public class Scr_ControladorBatalla : MonoBehaviour
     float ContTiempoEntreOleadas;
     private bool PrimerSpawn = false;
 
+
+    [Header("Otros")]
+    [SerializeField] Light OrigenLuz;
     private Scr_DatosSingletonBatalla Singleton;
     private Scr_ControladorOleadas controladorOleadas;
     private bool DioRecompensa = false;
@@ -71,6 +74,14 @@ public class Scr_ControladorBatalla : MonoBehaviour
         HabilidadEspecial = PlayerPrefs.GetString("HabilidadEspecial", "Garras");
 
         TextoVidas.text = VidaMaxima + "/" + VidaMaxima;
+        if (Singleton.HoraActual > 7 && Singleton.HoraActual < 19)
+        {
+            RenderSettings.skybox = Singleton.SkyBoxDia;
+        }
+        else
+        {
+            RenderSettings.skybox = Singleton.SkyBoxNoche;
+        }
     }
 
     void Update()
@@ -109,6 +120,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 {
                     if (!PrimerSpawn)
                     {
+                        OrigenLuz.color = Singleton.Luz;
                         PrepararBatalla();
                         controladorOleadas.IniciarPrimeraOleada();
                         PrimerSpawn = true;
@@ -181,21 +193,27 @@ public class Scr_ControladorBatalla : MonoBehaviour
         var enemigo = Singleton.Enemigo.GetComponent<Scr_Enemigo>();
         var recompensasDict = new Dictionary<Scr_CreadorObjetos, int>();
 
-        for (int j = 0; j < 2; j++)
+        int totalEnemigos = enemigo.CantidadEnemigosPorOleada * controladorOleadas.OleadaActual;
+
+        for (int k = 0; k < totalEnemigos; k++)
         {
+            // Tiradas por enemigo individual
             for (int i = 0; i < enemigo.Drops.Length; i++)
             {
                 if (Random.Range(0, 100) <= enemigo.Probabilidades[i])
                 {
                     if (recompensasDict.ContainsKey(enemigo.Drops[i]))
-                        recompensasDict[enemigo.Drops[i]]++;
+                        recompensasDict[enemigo.Drops[i]] += 1;
                     else
                         recompensasDict[enemigo.Drops[i]] = 1;
                 }
-                PlayerPrefs.SetInt("XPActual", PlayerPrefs.GetInt("XPActual") + Random.Range(enemigo.XPMinima, enemigo.XPMaxima));
             }
+
+            // XP individual por enemigo
+            PlayerPrefs.SetInt("XPActual", PlayerPrefs.GetInt("XPActual") + Random.Range(enemigo.XPMinima, enemigo.XPMaxima));
         }
 
+        // Mostrar recompensas
         var datos = Singleton;
         datos.ObjetosRecompensa.Clear();
         datos.CantidadesRecompensa.Clear();
@@ -214,6 +232,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
             index++;
         }
     }
+
 
     private void ActivarControles(bool activar)
     {

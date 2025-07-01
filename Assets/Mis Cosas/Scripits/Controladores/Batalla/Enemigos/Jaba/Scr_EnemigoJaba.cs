@@ -5,87 +5,152 @@ using UnityEngine.AI;
 
 public class Scr_EnemigoJaba : Scr_Enemigo
 {
-
-    GameObject Gata;
-    [SerializeField] float TiempoDeEsperaEntreAtaque;
     [SerializeField] Animator Anim;
 
+    private GameObject Gata;
     private NavMeshAgent agente;
-    private bool Atacando = false; // Indica si el enemigo está Atacando
+    private float temporizadorEspera;
+    private bool esperando = false;
+    private bool Atacando = false;
+    private float ContAtaque = 0;
 
-    void Start()
+    protected override void Start()
     {
-        agente = GetComponent<NavMeshAgent>();
-        // Verifica si el agente está sobre el NavMesh antes de asignarle un destino
+        base.Start();
+
         Gata = GameObject.Find("Personaje");
+        agente = GetComponent<NavMeshAgent>();
+        agente.speed = Velocidad;
+
+        if (agente.isOnNavMesh)
+        {
+            agente.isStopped = true; // 🔹 Detener movimiento inicial
+        }
+
+        // Reproducir animación de aparición y esperar a que termine
+        Anim.Play(NombreAnimacionAparecer);
+        float duracion = Anim.GetCurrentAnimatorStateInfo(0).length;
+        StartCoroutine(EsperarAparicion(duracion));
+    }
+
+    IEnumerator EsperarAparicion(float duracion)
+    {
+        yield return new WaitForSeconds(duracion);
+        Aparecio = true;
+        if (agente.isOnNavMesh)
+        {
+            agente.isStopped = false;
+        }
     }
 
     void Update()
     {
 
-        Objetivo = Gata.transform;
-        Debug.Log("Gata detectada, asignando objetivo: " + Objetivo.name);
-
-        float distancia = Vector3.Distance(transform.position, Objetivo.position);
-        Debug.Log("Distancia a la gata: " + distancia);
-
-        if (distancia <= agente.stoppingDistance + 1f)
+        if (!Aparecio) return;
+        if (EstaMuerto) return;
         {
-            Debug.Log("Listo para atacar");
-            agente.isStopped = true;
 
-            if (!Atacando)
+        }
+
+        if (Objetivo != null)
+        {
+            float distancia = Vector3.Distance(transform.position, Objetivo.position);
+            //Debug.Log("Distancia a la gata: " + distancia);
+            // 🔹 Se reduce el temporizador de espera en todo momento
+            if (esperando)
             {
-                StartCoroutine(Atacar());
+                temporizadorEspera -= Time.deltaTime;
+            }
+            // 🔹 Si el temporizador ha terminado, persigue a la gata
+            if (temporizadorEspera <= 0)
+            {
+                esperando = false;
+            }
+            // 🔹 Lógica de ataque
+            if (distancia <= agente.stoppingDistance + 1f)
+            {
+                if (!esperando)
+                {
+                    if (!Atacando)
+                    {
+                        agente.isStopped = true;
+                        esperando = true;
+                        Atacar();
+                    }
+                }
+            }
+            else
+            {
+                if (!esperando)
+                {
+                    Mover();
+
+                }
+            }
+
+
+            //CicloDeAtaque
+            if (Atacando && ContAtaque < DuracionDeAtaque)
+            {
+                ContAtaque += Time.deltaTime;
+            }
+            else
+            {
+                ContAtaque = 0;
+                Atacando = false;
             }
         }
         else
         {
-            Debug.Log("Entra en persecución");
             if (agente.isOnNavMesh)
             {
-                agente.isStopped = false;
-                Mover();
-
+                Objetivo = Gata.transform;
+                agente.SetDestination(Objetivo.position);
             }
         }
+
+
     }
+
     void Mover()
     {
         if (agente != null && agente.isActiveAndEnabled && agente.isOnNavMesh)
         {
-            if (Objetivo != null)
+            if (!Anim.GetCurrentAnimatorStateInfo(0).IsName("Mover"))
             {
-                if (!Anim.GetCurrentAnimatorStateInfo(0).IsName("Mover"))
-                {
-                    Anim.Play("Mover");
-                }
-                agente.isStopped = false;
-                agente.destination = Objetivo.position;
+                Anim.Play("Mover");
             }
-            else
-            {
-                agente.isStopped = true;
-            }
+            agente.isStopped = false;
+            Objetivo = Gata.transform;
+            agente.destination = Objetivo.position;
         }
     }
 
-
-
-    IEnumerator Atacar()
+    void Atacar()
     {
-        Tween.ShakeCamera(Camera.main, 3);
+        Debug.Log("Comenzo Atacar");
         Atacando = true;
-        Anim.Play("Ataque1");
-        if (Controlador.GetComponent<Scr_ControladorBatalla>().VidaActual >= DañoMelee)
+        agente.isStopped = true; // 🔹 Evita que se mueva mientras ataca
+        if (Random.Range(0, 2) == 1)
         {
-            Controlador.GetComponent<Scr_ControladorBatalla>().VidaActual -= DañoMelee;
+            Anim.Play("Ataque1");
+            DuracionDeAtaque = 2.917f;
         }
         else
         {
-            Controlador.GetComponent<Scr_ControladorBatalla>().VidaActual -= Controlador.GetComponent<Scr_ControladorBatalla>().VidaActual;
+            Anim.Play("Ataque2");
+            DuracionDeAtaque = 1.042f;
         }
-        yield return new WaitForSeconds(TiempoDeEsperaEntreAtaque);
-        Atacando = false;
+        Tween.ShakeCamera(Camera.main, 3);
+        Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
+
+        if (batalla.VidaActual >= DañoMelee)
+        {
+            batalla.VidaActual -= DañoMelee;
+        }
+        else
+        {
+            batalla.VidaActual = 0; // 🔹 Evita valores negativos
+        }
     }
 }

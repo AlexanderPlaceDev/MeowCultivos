@@ -13,6 +13,12 @@ public class Scr_ControladorOleadas : MonoBehaviour
     [SerializeField] GameObject[] Iconos;
     [SerializeField] Transform BarraSlider;
     [SerializeField] float TiempoEntreOleadas;
+    [SerializeField] GameObject BotonOleada;
+    [SerializeField] TextMeshProUGUI TextoCantidadEnemigos;
+    private int CantEnemigosPorOleada;
+    private float tiempoPresionE = 0f;
+    private float duracionNecesaria = 1.5f;
+    private bool estaPresionandoE = false;
     float ContTiempoEntreOleadas;
     List<GameObject> spawners = new List<GameObject>();
 
@@ -28,7 +34,7 @@ public class Scr_ControladorOleadas : MonoBehaviour
         ControladorBatalla = GetComponent<Scr_ControladorBatalla>();
         singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
         prefabEnemigo = singleton.Enemigo;
-
+        CantEnemigosPorOleada = prefabEnemigo.GetComponent<Scr_Enemigo>().CantidadEnemigosPorOleada;
         // Inicializar barra de oleadas
         var enemigo = singleton.Enemigo.GetComponent<Scr_Enemigo>();
         float dificultad = enemigo.DificultadInicial;
@@ -55,64 +61,92 @@ public class Scr_ControladorOleadas : MonoBehaviour
             {
                 if (child.name == singleton.NombreMapa)
                 {
-                    foreach (Transform objeto in child)
+                    foreach (Transform objeto in child.GetChild(2))
                     {
-                        if (objeto.name.Contains("Spawner"))
+                        if (objeto.name.Contains("Spawner Dentro") && enemigo.SpawnDentro)
                         {
                             spawners.Add(objeto.gameObject);
                         }
+
+                        if (objeto.name.Contains("Spawner Medio") && enemigo.SpawnMedio)
+                        {
+                            spawners.Add(objeto.gameObject);
+                        }
+
+                        if (objeto.name.Contains("Spawner Lejos") && enemigo.SpawnLejos)
+                        {
+                            spawners.Add(objeto.gameObject);
+                        }
+
+                        if (objeto.name.Contains("Spawner Distancia") && enemigo.SpawnDistancia)
+                        {
+                            spawners.Add(objeto.gameObject);
+                        }
+
                     }
                 }
             }
         }
     }
 
-    public void ComenzarOleada()
+    private void Update()
     {
-        enemigosOleada.Clear();
-
-        List<GameObject> spawners = new List<GameObject>();
-        var mapa = GameObject.Find("Mapa").transform;
-
-        foreach (Transform child in mapa)
+        if (ControladorBatalla.ComenzoBatalla)
         {
-            if (child.name == singleton.NombreMapa)
+            if (enemigosOleada.Count > 0)
             {
-                child.gameObject.SetActive(true);
-
-                foreach (Transform obj in child)
+                TextoCantidadEnemigos.text = (CantEnemigosPorOleada * OleadaActual) - enemigosOleada.Count + "/" + CantEnemigosPorOleada * OleadaActual;
+                BotonOleada.SetActive(false);
+            }
+            else
+            {
+                TextoCantidadEnemigos.text = "•/•";
+                var enemigo = prefabEnemigo.GetComponent<Scr_Enemigo>();
+                int oleadaActual = OleadaActual;
+                bool siguienteEsBandera = (oleadaActual + 1 == enemigo.PuntoDeHuida);
+                if (siguienteEsBandera)
                 {
-                    if (obj.name.Contains("Spawner"))
-                        spawners.Add(obj.gameObject);
+                    BotonOleada.SetActive(true);
 
-                    if (obj.name.Contains("Posicion Inicial"))
+                    if (Input.GetKey(KeyCode.E))
                     {
-                        var personaje = GameObject.Find("Personaje");
-                        personaje.transform.position = obj.position;
-                        personaje.transform.rotation = obj.rotation;
+                        estaPresionandoE = true;
+                        tiempoPresionE += Time.deltaTime;
+                        float progreso = Mathf.Clamp01(tiempoPresionE / duracionNecesaria);
+                        BotonOleada.transform.GetChild(1).GetComponent<Image>().fillAmount = progreso;
+
+                        if (tiempoPresionE >= duracionNecesaria)
+                        {
+                            BotonOleada.SetActive(false);
+                            ControladorBatalla.NumeroCuenta.text = "";
+
+                            // Reset
+                            tiempoPresionE = 0f;
+                            estaPresionandoE = false;
+                            BarraSlider.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = "";
+                            ControladorBatalla.ComenzoBatalla = false;
+                            ControladorBatalla.FinalizarBatalla(true);
+                        }
+
+                    }
+                    else
+                    {
+                        // Si se soltó la tecla antes de completar el tiempo
+                        if (estaPresionandoE)
+                        {
+                            tiempoPresionE = 0f;
+                            estaPresionandoE = false;
+                            BotonOleada.transform.GetChild(1).GetComponent<Image>().fillAmount = 0f;
+                        }
                     }
                 }
+
             }
         }
-
-        GameObject.Find("NavMesh Surface").GetComponent<NavMeshSurface>().BuildNavMesh();
-
-        for (int i = 0; i < 2; i++)
+        else
         {
-            int pos = Random.Range(0, spawners.Count);
-            Vector3 spawnPos = spawners[pos].transform.position + new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
-
-            if (NavMesh.SamplePosition(spawnPos, out NavMeshHit navHit, 2f, NavMesh.AllAreas))
-                spawnPos = navHit.position;
-
-            GameObject enemigo = Instantiate(singleton.Enemigo, spawnPos, Quaternion.identity);
-            enemigosOleada.Add(enemigo);
-
-            var agent = enemigo.GetComponent<NavMeshAgent>();
-            if (agent != null && agent.isOnNavMesh)
-                agent.enabled = true;
-            else
-                Debug.LogWarning("El enemigo no está en el NavMesh.");
+            TextoCantidadEnemigos.text = "•/•";
+            BotonOleada.SetActive(false);
         }
     }
 
@@ -120,7 +154,7 @@ public class Scr_ControladorOleadas : MonoBehaviour
     {
         enemigosOleada.Clear();
 
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < CantEnemigosPorOleada * OleadaActual; i++)
         {
             Debug.Log(spawners.Count);
             int pos = Random.Range(0, spawners.Count);
@@ -161,12 +195,10 @@ public class Scr_ControladorOleadas : MonoBehaviour
 
     public void IniciarPrimeraOleada()
     {
-        Debug.Log("Entra");
         enemigosOleada.Clear();
 
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < CantEnemigosPorOleada; i++)
         {
-            Debug.Log(spawners.Count);
             int pos = Random.Range(0, spawners.Count);
 
             // Posición con leve variación
@@ -228,7 +260,7 @@ public class Scr_ControladorOleadas : MonoBehaviour
             float tiempoRestante = tiempoActualEntreOleadas - ContTiempoEntreOleadas;
 
             // Obtener texto del temporizador
-            TextMeshProUGUI textoTiempo = BarraSlider.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(2).GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI textoTiempo = BarraSlider.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>();
 
             if (tiempoRestante >= 4f)
             {
@@ -259,33 +291,48 @@ public class Scr_ControladorOleadas : MonoBehaviour
             }
             else
             {
-
-                // Tiempo cumplido: iniciar siguiente oleada
                 ControladorBatalla.NumeroCuenta.gameObject.SetActive(false);
                 textoTiempo.gameObject.SetActive(false);
                 ContTiempoEntreOleadas = 0;
+
                 OleadaActual += siguienteEsBandera ? 2 : 1;
 
-                if (oleadaActual < enemigo.CantidadDeOleadas)
+                if (OleadaActual <= enemigo.CantidadDeOleadas + 1)
                 {
-                    // Obtener spawners para nueva oleada
                     List<GameObject> spawners = new List<GameObject>();
                     var mapa = GameObject.Find("Mapa").transform;
                     foreach (Transform child in mapa)
                     {
                         if (child.name == singleton.NombreMapa)
                         {
-                            foreach (Transform objeto in child)
+                            foreach (Transform objeto in child.GetChild(2))
                             {
-                                if (objeto.name.Contains("Spawner"))
+                                if (objeto.name.Contains("Spawner Dentro") && enemigo.SpawnDentro)
+                                {
                                     spawners.Add(objeto.gameObject);
+                                }
+
+                                if (objeto.name.Contains("Spawner Medio") && enemigo.SpawnMedio)
+                                {
+                                    spawners.Add(objeto.gameObject);
+                                }
+
+                                if (objeto.name.Contains("Spawner Lejos") && enemigo.SpawnLejos)
+                                {
+                                    spawners.Add(objeto.gameObject);
+                                }
+
+                                if (objeto.name.Contains("Spawner Distancia") && enemigo.SpawnDistancia)
+                                {
+                                    spawners.Add(objeto.gameObject);
+                                }
+
                             }
                         }
                     }
 
                     SpawnNuevaOleada(spawners);
 
-                    // Activar NavMeshAgent de enemigos inmediatamente
                     foreach (GameObject enemigoGO in enemigosOleada)
                     {
                         if (enemigoGO != null)
@@ -296,9 +343,15 @@ public class Scr_ControladorOleadas : MonoBehaviour
                         }
                     }
                 }
-
-
+                else
+                {
+                    ControladorBatalla.ComenzoBatalla = false;
+                    ControladorBatalla.FinalizarBatalla(true);
+                    Debug.Log("Terminar");
+                }
             }
+
+
         }
     }
 }

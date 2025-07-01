@@ -98,6 +98,8 @@ public class Scr_CambiadorBatalla : MonoBehaviour
         singleton.Complemento = Complemento;
         singleton.Item = Item;
         singleton.ColorItem = ColorItem;
+        singleton.Luz = GameObject.Find("Sol").GetComponent<Light>().color;
+        singleton.HoraActual = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().HoraActual;
 
         if (Carga != null)
         {

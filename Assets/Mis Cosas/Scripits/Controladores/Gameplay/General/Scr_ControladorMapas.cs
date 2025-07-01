@@ -9,7 +9,8 @@ public class Scr_ControladorMapas : MonoBehaviour
     [SerializeField] GameObject[] MapasQueActiva;
     [SerializeField] GameObject[] MapasQueDesactiva;
     [SerializeField] string NombreMapaBatalla;
-
+    [SerializeField] Material SkyBoxDia;
+    [SerializeField] Material SkyBoxNoche;
 
     public void Start()
     {
@@ -63,7 +64,10 @@ public class Scr_ControladorMapas : MonoBehaviour
     {
         if (other.name == "Gata")
         {
-            GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().NombreMapa = NombreMapaBatalla;
+            Scr_DatosSingletonBatalla Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
+            Singleton.NombreMapa = NombreMapaBatalla;
+            Singleton.SkyBoxDia = SkyBoxDia;
+            Singleton.SkyBoxNoche = SkyBoxNoche;
             PlayerPrefs.SetString("Mapa Actual", NombreMapaBatalla);
             foreach (GameObject Mapa in MapasQueActiva)
             {
@@ -73,7 +77,7 @@ public class Scr_ControladorMapas : MonoBehaviour
             {
                 Mapa.SetActive(false);
             }
-
+            
         }
     }
 

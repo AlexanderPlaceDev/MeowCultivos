@@ -9,10 +9,23 @@ public class Scr_Enemigo : MonoBehaviour
     public float Velocidad;
     public float DañoMelee;
     public float DañoDistancia;
+    public float DistanciaDeAtaque;
+    public float DuracionDeAtaque = 1;
+    public bool SaleDelArea = true;
+    public string NombreAnimacionAparecer;
+    public bool Aparecio;
+    public bool SpawnDentro;
+    public bool SpawnMedio;
+    public bool SpawnLejos;
+    public bool SpawnDistancia;
     public float CantidadDeOleadas;
     public int CantidadEnemigosPorOleada;
     public float DificultadInicial;
     public float PuntoDeHuida;
+    public bool EstaMuerto = false;
+    public bool UsaParticulasAlMorir;
+    public ParticleSystem ParticulasMuerte;
+    public GameObject MeshMuerte;
     public GameObject PrefabBala; // Prefab del proyectil para ataques a distancia
     public Transform SpawnBala; // Punto de inicio del proyectil
     public Scr_CreadorObjetos[] Drops;
@@ -36,7 +49,7 @@ public class Scr_Enemigo : MonoBehaviour
     [SerializeField] GameObject CanvasDaño;
     [SerializeField] private Transform PosInicialDaño; // Posición inicial del CanvasDaño
     [SerializeField] private Transform PosFinalDaño;  // Posición final del CanvasDaño
-    private void Start()
+    protected virtual void Start()
     {
         // Asumiendo que el material está en el segundo hijo
         Renderer renderer = transform.GetChild(1).GetComponent<Renderer>();
@@ -44,6 +57,8 @@ public class Scr_Enemigo : MonoBehaviour
         {
             materialesOriginales = renderer.materials;
         }
+
+
     }
 
     private void OnEnable()
@@ -71,6 +86,32 @@ public class Scr_Enemigo : MonoBehaviour
     }
     public virtual void Morir()
     {
+        if (UsaParticulasAlMorir)
+        {
+            EstaMuerto = true; // <- Añadido
+            DañoDistancia = 0;
+            DañoMelee = 0;
+            Velocidad = 0;
+
+            if (GetComponent<NavMeshAgent>() != null)
+            {
+                GetComponent<NavMeshAgent>().enabled = false; // <- MUY IMPORTANTE
+            }
+
+            MeshMuerte.SetActive(false);
+            ParticulasMuerte.Play();
+            StartCoroutine(EsperarMuerte());
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+
+    IEnumerator EsperarMuerte()
+    {
+        yield return new WaitForSeconds(ParticulasMuerte.main.duration);
         Destroy(gameObject);
     }
     public void EstablecerComportamiento(TipoComportamiento NuevoComportamiento)
@@ -108,7 +149,7 @@ public class Scr_Enemigo : MonoBehaviour
             }
             else
             {
-                GetComponent<Rigidbody>().AddForce(-transform.forward.normalized,ForceMode.Impulse);
+                GetComponent<Rigidbody>().AddForce(-transform.forward.normalized, ForceMode.Impulse);
             }
 
 

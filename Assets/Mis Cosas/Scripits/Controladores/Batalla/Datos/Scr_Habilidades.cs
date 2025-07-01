@@ -15,6 +15,7 @@ public class Scr_Habilidades : MonoBehaviour
     private ColorAdjustments _ColorAdjustments;   // Referencia a Color Adjustments
 
     private float velocidadInicial;           // Velocidad inicial de los enemigos
+    private float DuracionAtaqueInicial;           // Velocidad inicial de los enemigos
     private float lensDistortionInicial;      // Valor inicial del Lens Distortion
     private float ColorAdjustmentsInicial;      // Valor inicial del Lens Distortion
 
@@ -71,6 +72,8 @@ public class Scr_Habilidades : MonoBehaviour
                 foreach (GameObject enemigo in GameObject.FindGameObjectsWithTag("Enemigo"))
                 {
                     velocidadInicial = enemigo.GetComponent<Scr_Enemigo>().Velocidad;
+                    DuracionAtaqueInicial = enemigo.GetComponent<Scr_Enemigo>().DuracionDeAtaque;
+                    enemigo.GetComponent<Scr_Enemigo>().DuracionDeAtaque = DuracionAtaqueInicial * 3f;
                     enemigo.GetComponent<Scr_Enemigo>().Velocidad = velocidadInicial / 3f;
                     enemigo.GetComponent<Animator>().speed = 1 / 3f;
                     enemigo.GetComponent<NavMeshAgent>().speed = velocidadInicial / 3f;
@@ -218,6 +221,8 @@ public class Scr_Habilidades : MonoBehaviour
 
         if (enemigo != null)
         {
+
+            enemigo.GetComponent<Scr_Enemigo>().DuracionDeAtaque = DuracionAtaqueInicial;
             enemigo.GetComponent<Scr_Enemigo>().Velocidad = velocidadInicial;
             enemigo.GetComponent<Animator>().speed = 1f;
             enemigo.GetComponent<NavMeshAgent>().speed = velocidadInicial;

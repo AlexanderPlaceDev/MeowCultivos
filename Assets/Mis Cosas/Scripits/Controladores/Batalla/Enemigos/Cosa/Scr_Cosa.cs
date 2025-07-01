@@ -17,8 +17,9 @@ public class Scr_Cosa : Scr_Enemigo
     bool Esperando = false;
     float Contador = 0;
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         Anim = GetComponent<Animator>();
         Gata = GameObject.Find("Personaje");
         Agente = GetComponent<NavMeshAgent>();
@@ -34,6 +35,9 @@ public class Scr_Cosa : Scr_Enemigo
 
     void Update()
     {
+        if (EstaMuerto) return;
+
+
         if (Agente.isActiveAndEnabled)
         {
             if (!Disparando)

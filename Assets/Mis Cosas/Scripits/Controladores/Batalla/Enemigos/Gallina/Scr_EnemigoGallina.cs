@@ -1,20 +1,26 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public class Scr_EnemigoGallina : Scr_Enemigo
 {
-
     [SerializeField] float RadioDeambulacion;
-
-    [Header("Configuración de Raycast")]
+    [SerializeField] LayerMask capasPermitidas; // <<< NUEVO
 
     private NavMeshAgent agente;
-    private float temporizadorEspera;
 
-    void Start()
+    protected override void Start()
     {
+        Animator Anim = GetComponent<Animator>();
+
+        base.Start(); // en caso de que Scr_Enemigo tenga lógica en Start
         agente = GetComponent<NavMeshAgent>();
-        GetComponent<Animator>().SetBool("Caminando", true);
+        if (!Aparecio)
+        {
+            float duracion = Anim.GetCurrentAnimatorStateInfo(0).length;
+            StartCoroutine(EsperarAparicion(duracion));
+        }
 
         if (agente.isOnNavMesh)
         {
@@ -22,17 +28,27 @@ public class Scr_EnemigoGallina : Scr_Enemigo
         }
     }
 
+    IEnumerator EsperarAparicion(float duracion)
+    {
+        yield return new WaitForSeconds(duracion);
+        Aparecio = true;
+        GetComponent<Animator>().SetBool("Caminando", true);
+        if (agente.isOnNavMesh)
+        {
+            agente.isStopped = false;
+        }
+    }
+
     void Update()
     {
-        if (Objetivo == null)
+        if (Objetivo == null && Aparecio && !EstaMuerto)
         {
-            Deambular(); // Solo cambiar de posición cuando sea necesario
+            Deambular();
         }
     }
 
     void Deambular()
     {
-        // Verifica que el agente esté en el NavMesh y que haya llegado a su destino antes de moverse
         if (agente.isOnNavMesh && !agente.pathPending && agente.remainingDistance <= agente.stoppingDistance)
         {
             MoverANuevaPosicion();
@@ -44,26 +60,32 @@ public class Scr_EnemigoGallina : Scr_Enemigo
         int intentos = 0;
         while (intentos < 10)
         {
-            Vector3 randomDirection = Random.onUnitSphere * RadioDeambulacion;
-            randomDirection.y = 0; // Mantener el movimiento en el plano horizontal
+            Vector3 randomDirection = Random.insideUnitSphere * RadioDeambulacion;
+            randomDirection.y = 0; // Movimiento horizontal
             randomDirection += transform.position;
-            NavMeshHit hit;
 
+            NavMeshHit hit;
             if (NavMesh.SamplePosition(randomDirection, out hit, RadioDeambulacion, NavMesh.AllAreas))
             {
-                if (agente.isOnNavMesh && Vector3.Distance(transform.position, hit.position) > agente.stoppingDistance * 2)
+                Vector3 puntoDestino = hit.position;
+
+                // Validar que el punto esté sobre un layer permitido
+                Ray ray = new Ray(puntoDestino + Vector3.up * 2f, Vector3.down);
+                RaycastHit rayHit;
+                if (Physics.Raycast(ray, out rayHit, 5f, capasPermitidas)) // <<< NUEVA VERIFICACIÓN
                 {
-                    agente.isStopped = false;
-                    agente.SetDestination(hit.position);
-                    Debug.Log("Moviéndose a nueva posición: " + hit.position);
-                    return;
+                    if (agente.isOnNavMesh && Vector3.Distance(transform.position, puntoDestino) > agente.stoppingDistance * 2)
+                    {
+                        agente.isStopped = false;
+                        agente.SetDestination(puntoDestino);
+                        Debug.Log("Moviéndose a nueva posición: " + puntoDestino);
+                        return;
+                    }
                 }
             }
             intentos++;
         }
-        Debug.LogWarning("No se encontró un punto válido en el NavMesh después de varios intentos.");
+
+        Debug.LogWarning("No se encontró un punto válido en capas permitidas después de varios intentos.");
     }
-
-
-
 }

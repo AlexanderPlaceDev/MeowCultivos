@@ -19501,6 +19501,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 0971a354750a6d04488c5cc5f8226ffc,
         type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0971a354750a6d04488c5cc5f8226ffc,
+        type: 3}
       propertyPath: m_TagString
       value: Enemigo
       objectReference: {fileID: 0}
@@ -19595,6 +19600,19 @@ MonoBehaviour:
   Velocidad: 0
   "Da\xF1oMelee": 0
   "Da\xF1oDistancia": 1
+  DistanciaDeAtaque: 0
+  DuracionDeAtaque: 1
+  SaleDelArea: 0
+  NombreAnimacionAparecer: 
+  Aparecio: 0
+  SpawnDentro: 1
+  SpawnMedio: 0
+  SpawnLejos: 0
+  SpawnDistancia: 0
+  CantidadDeOleadas: 2
+  CantidadEnemigosPorOleada: 16
+  DificultadInicial: 1
+  PuntoDeHuida: 2
   PrefabBala: {fileID: 6804410154801436116, guid: 4415bca45249af54c98c8ba1e5a4c870,
     type: 3}
   SpawnBala: {fileID: 5847364740057914039}
@@ -19626,7 +19644,7 @@ NavMeshAgent:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7649158396241794918}
   m_Enabled: 0
-  m_AgentTypeID: 0
+  m_AgentTypeID: -1923039037
   m_Radius: 1.85
   m_Speed: 3.5
   m_Acceleration: 8
@@ -19657,7 +19675,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Radius: 3.04
   m_Center: {x: 0, y: 1.74, z: 0}
