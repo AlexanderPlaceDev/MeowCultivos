@@ -17,4 +17,7 @@ public class Scr_CreadorTemas : ScriptableObject
     public Color[] ColoresArmas;
     [Space]
     public Color[] ColoresOpciones;
+
+    [Space]
+    public Color[] ColoresMisiones;
 }

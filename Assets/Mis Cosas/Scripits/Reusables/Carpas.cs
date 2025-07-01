@@ -14,12 +14,11 @@ public class Carpas : MonoBehaviour
     public CambioTiempo cam;
     Transform Gata;
     public bool openUI=false;
-    bool EstaEnRango;
+    bool EstaEnRango = false;
     // Start is called before the first frame update
     void Start()
     {
         cam= carpaUI.GetComponent<CambioTiempo>();
-        cam.carpa = this;
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
     }
 
@@ -28,7 +27,9 @@ public class Carpas : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E) && !openUI && EstaEnRango)
         {
+            Debug.Log("carpita");
             carpaUI.SetActive(true);
+            cam.carpa = this;
             openUI = true;
         }
     }

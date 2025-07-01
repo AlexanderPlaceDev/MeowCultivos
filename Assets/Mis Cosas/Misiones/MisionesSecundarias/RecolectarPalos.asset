@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea24d2bc748133d448a419af8bc82e61, type: 3}
+  m_Name: RecolectarPalos
+  m_EditorClassIdentifier: 
+  MisionName: 10 palos
+  Descripcion: Recolecta 10 Palos
+  DescripcionFinal: Regresa con Bony
+  prioridad: 1
+  Tipo: 2
+  Objetivocaza: 
+  cantidad_caza: 
+  Teclas: 
+  EsContinua: 1
+  QuitaObjetos: 1
+  DaObjetos: 1
+  ObjetosNecesarios:
+  - {fileID: 11400000, guid: 16d59de0d61659641a6f7c640e284942, type: 2}
+  ObjetosRecompensa:
+  - {fileID: 11400000, guid: 628ebdecdc44ae84da2bdd80604007a8, type: 2}
+  - {fileID: 11400000, guid: e9bc53ed753ca3d49a96f76d01685c82, type: 2}
+  xpTotal: 5
+  CantidadesQuita: 0a000000
+  CantidadesDa: 0100000001000000
+  objetoaCostruir: []
+  CambiaPrincipal: 0
+  TargetExplorado: 

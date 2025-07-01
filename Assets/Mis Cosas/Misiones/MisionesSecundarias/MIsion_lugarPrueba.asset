@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea24d2bc748133d448a419af8bc82e61, type: 3}
+  m_Name: MIsion_lugarPrueba
+  m_EditorClassIdentifier: 
+  MisionName: Prueba xd
+  Descripcion: es una prueba de exploracion
+  DescripcionFinal: si
+  prioridad: 1
+  Tipo: 0
+  Objetivocaza: 
+  cantidad_caza: 
+  Teclas: 
+  EsContinua: 0
+  QuitaObjetos: 0
+  DaObjetos: 0
+  ObjetosNecesarios: []
+  ObjetosRecompensa: []
+  CantidadesQuita: 
+  CantidadesDa: 
+  objetoaCostruir:
+  - {fileID: 0}
+  LugardeConstruccion: []
+  CambiaPrincipal: 0
+  TargetExplorado: Prueba XD

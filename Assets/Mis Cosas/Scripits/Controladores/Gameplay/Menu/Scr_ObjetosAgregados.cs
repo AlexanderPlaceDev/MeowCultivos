@@ -21,6 +21,7 @@ public class Scr_ObjetosAgregados : MonoBehaviour
 
     void Update()
     {
+        //Debug.LogWarning("aparezo" + gameObject.name);
         AgregarObjetosBatalla();
 
         if (Lista.Count > 0)
@@ -50,6 +51,7 @@ public class Scr_ObjetosAgregados : MonoBehaviour
 
             if (Iconos[0].GetComponent<Image>().sprite != null && GameObject.Find("Canvas XP").transform.GetChild(0).GetComponent<TextMeshProUGUI>().color.a == 0)
             {
+                //Debug.LogWarning("doy xp");
                 if (PlayerPrefs.GetString("Habilidad:" + HabilidadXP, "No") == "Si")
                 {
                     xptotal = xptotal * 2;

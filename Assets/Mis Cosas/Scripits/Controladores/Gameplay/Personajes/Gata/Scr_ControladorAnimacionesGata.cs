@@ -23,6 +23,7 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
     public bool Recolectando;
     public bool Regando;
 
+
     void Start()
     {
         Anim = transform.GetComponent<Animator>();

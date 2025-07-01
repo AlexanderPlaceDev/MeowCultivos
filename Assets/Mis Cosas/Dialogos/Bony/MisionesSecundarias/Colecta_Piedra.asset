@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfd7b7348ecdf544ab73fad30de2eac3, type: 3}
+  m_Name: Colecta_Piedra
+  m_EditorClassIdentifier: 
+  NumeroDialogo: 0
+  EsUnico: 1
+  EsMision: 1
+  cambia: 0
+  Mision: {fileID: 11400000, guid: bef89f09640c68e48b48ab12d23974cb, type: 2}
+  Lineas:
+  - Necesito que me consigas 10 piedras y te dare tu primer abono
+  - Los ecuentras por los Piedras Grandes
+  LineasSecundarias: []

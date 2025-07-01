@@ -18,6 +18,8 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
     [SerializeField] GameObject BotonCerrar;
     [SerializeField] Color[] ColorBotones;
     [SerializeField] GameObject CanvasMenu;
+
+    private Scr_ControladorMisiones ControladorMisiones;
     Transform Gata;
     float Tiempo = 0;
     public bool EstaDentro = false;
@@ -29,6 +31,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
         Camara360 = GameObject.Find("Camara 360");
         Canvas = GameObject.Find("Canvas");
+        ControladorMisiones = GameObject.Find("Gata").transform.GetChild(4).GetComponent<Scr_ControladorMisiones>();
     }
 
     void Update()
@@ -122,6 +125,8 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
 
     public void CerrarTablero()
     {
+        ControladorMisiones.revisarMisionPrincipal();
+        ControladorMisiones.RevisarTodasLasMisionesSecundarias();
         Tiempo += 1;
         EstaDentro = false;
         Camara360.SetActive(true);
