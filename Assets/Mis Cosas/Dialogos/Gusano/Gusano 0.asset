@@ -12,15 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfd7b7348ecdf544ab73fad30de2eac3, type: 3}
   m_Name: Gusano 0
   m_EditorClassIdentifier: 
+  NombreDialogo: 
   NumeroDialogo: 0
   EsUnico: 0
   EsMision: 1
-  EsCinematica: 0
+  cambia: 0
   Mision: {fileID: 11400000, guid: 3f2444c712822e54487e036164c36315, type: 2}
   Lineas:
   - 'Por fin hemos llegado
 
     me empezaba a doler el trasero'
   - "No creo que el autobus llegue mas lejos asi que \ndeberiamos estirar las piernas"
-  - "Intenta moverte con W-A-D, \nsi quieres ir mas rapido presiona shift izq"
-  LineasRadio: []
+  - "Intenta moverte con W-A-S-D, \nsi quieres ir mas rapido presiona shift izq"
+  LineasSecundarias: []
