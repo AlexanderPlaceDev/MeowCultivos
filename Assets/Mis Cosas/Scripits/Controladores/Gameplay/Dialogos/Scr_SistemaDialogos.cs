@@ -81,8 +81,10 @@ public class Scr_SistemaDialogos : MonoBehaviour
         {
             DialogoArecibir = Dialogos[DialogoActual];
         }
-
-        activadorDialogos.vaCambio = DialogoArecibir.cambia;
+        if (activadorDialogos != null)
+        {
+            activadorDialogos.vaCambio = DialogoArecibir.cambia;
+        }
         currentCoroutine = StartCoroutine(ReadDialogue());
     }
 

@@ -35,21 +35,24 @@ public class CambioTiempo : MonoBehaviour
         {
             
         }*/
-        if (can_C)
-        {
-            camb.SetActive(true);
-        }
-        else 
-        {
-            camb.SetActive(false);
-        }
+        cabTiempo();
     }
 
     public void cambioTiempo()
     {
 
     }
-
+    public void cabTiempo()
+    {
+        if (can_C)
+        {
+            camb.SetActive(true);
+        }
+        else
+        {
+            camb.SetActive(false);
+        }
+    }
 
     public void aumentH()
     {
@@ -84,11 +87,18 @@ public class CambioTiempo : MonoBehaviour
         if (hM == maxValueM)
         {
             hM = minValueM;
+            aumentH();
         }
         else
         {
             hM = Mathf.Clamp(hM + 1, minValueM, maxValueM);
         }
+        /*
+        int ha = ObtenerHoraActual();
+        if (ha==24)
+        {
+            aumentH();
+        }*/
         Minuto.text = hM.ToString();
     }
     public void disminuirM()
@@ -97,11 +107,18 @@ public class CambioTiempo : MonoBehaviour
         if (hM == minValueM)
         {
             hM = maxValueM;
+            disminuirH();
         }
         else
         {
             hM = Mathf.Clamp(hM - 1, minValueM, maxValueM);
         }
+        /*
+        int ha = ObtenerHoraActual();
+        if (ha == 0)
+        {
+            disminuirH();
+        }*/
         Minuto.text = hM.ToString();
     }
     private int ObtenerHoraActual()

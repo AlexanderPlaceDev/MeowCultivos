@@ -1,6 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class Scr_MenuTablero : MonoBehaviour
@@ -12,6 +14,9 @@ public class Scr_MenuTablero : MonoBehaviour
     private List<Scr_CreadorEstructuras> estructurasFiltradas = new List<Scr_CreadorEstructuras>();
     private List<GameObject> objEstructurasFiltradas = new List<GameObject>();
 
+    private float TransicionDuracion = 1f;
+    [SerializeField] private GameObject camara_tablero;
+    [SerializeField] private GameObject camaraGata;
     [Header("Menú")]
     [SerializeField] private TextMeshProUGUI Nombre;
     [SerializeField] private TextMeshProUGUI Descripcion;
@@ -69,7 +74,21 @@ public class Scr_MenuTablero : MonoBehaviour
         for (int i = 0; i < ObjEstructuras.Length; i++)
         {
             ObjEstructuras[i].SetActive(PlayerPrefs.GetInt("Estructura" + i, 0) == 1);
+            //StartCoroutine(EsperarCamara());
+            Debug.Log("aa");
         }
+    }
+
+    private void CambiarACamaraDialogo()
+    {
+        Debug.Log("Cambiando a camara de dialogo");
+        //camara.SetActive(true);
+        camara_tablero.SetActive(false);
+    }
+    private IEnumerator EsperarCamara()
+    {
+        yield return new WaitForSeconds(TransicionDuracion);
+        camara_tablero.SetActive(true);
     }
 
     private void ActualizarEstructura()
