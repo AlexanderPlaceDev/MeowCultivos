@@ -14,7 +14,7 @@ public class Scr_MenuTablero : MonoBehaviour
     private List<Scr_CreadorEstructuras> estructurasFiltradas = new List<Scr_CreadorEstructuras>();
     private List<GameObject> objEstructurasFiltradas = new List<GameObject>();
 
-    private float TransicionDuracion = 1f;
+    private float TransicionDuracion = 3f;
     [SerializeField] private GameObject camara_tablero;
     [SerializeField] private GameObject camaraGata;
     [Header("Menú")]
@@ -61,11 +61,12 @@ public class Scr_MenuTablero : MonoBehaviour
 
         for (int i = 0; i < Estructuras.Length; i++)
         {
-            if (VerificarEstructura(Estructuras[i].HabilidadRequerida))
+            estructurasFiltradas.Add(Estructuras[i]);
+            objEstructurasFiltradas.Add(ObjEstructuras[i]);
+            /*if (VerificarEstructura(Estructuras[i].HabilidadRequerida))
             {
-                estructurasFiltradas.Add(Estructuras[i]);
-                objEstructurasFiltradas.Add(ObjEstructuras[i]);
-            }
+               
+            }*/
         }
     }
 
@@ -88,6 +89,7 @@ public class Scr_MenuTablero : MonoBehaviour
     private IEnumerator EsperarCamara()
     {
         yield return new WaitForSeconds(TransicionDuracion);
+        ObjEstructuras[EstructuraActual].transform.GetChild(0).gameObject.SetActive(false);
         camara_tablero.SetActive(true);
     }
 
@@ -211,6 +213,9 @@ public class Scr_MenuTablero : MonoBehaviour
         {
             PlayerPrefs.SetInt("Estructura" + EstructuraActual, 1);
             QuitarObjetos(estructurasFiltradas[EstructuraActual].Materiales, estructurasFiltradas[EstructuraActual].Cantidades);
+            camara_tablero.SetActive(false);
+            ObjEstructuras[EstructuraActual].transform.GetChild(0).gameObject.SetActive(true);
+            StartCoroutine(EsperarCamara());
             ActualizarEstructura();
             ActivarEstructuras();
         }
