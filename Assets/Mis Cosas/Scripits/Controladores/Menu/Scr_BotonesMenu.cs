@@ -19,7 +19,7 @@ public class Scr_BotonesMenu : MonoBehaviour
 
     private void Update()
     {
-        if (Controlador.ActivarCreditos && gameObject.name == "Creditos")
+        if (Controlador.CreditosActivados && gameObject.name == "Creditos")
         {
             GetComponent<TextMeshProUGUI>().color = Colores[2];
         }
@@ -61,10 +61,9 @@ public class Scr_BotonesMenu : MonoBehaviour
 
     public void Creditos()
     {
-        if (!Controlador.ActivarCreditos)
+        if (!Controlador.CreditosActivados)
         {
-
-            Controlador.ActivarCreditos = true;
+            StartCoroutine(Controlador.Creditos());
         }
     }
 
@@ -77,7 +76,6 @@ public class Scr_BotonesMenu : MonoBehaviour
     {
         if (!Controlador.EstaEnOpciones)
         {
-            GameObject.Find("Autobus").GetComponent<Animator>().Play("Avanzar");
             Tween.Color(GameObject.Find("Pantalla").GetComponent<SpriteRenderer>(), Color.black, 4, Ease.Default, cycles: 1);
             StartCoroutine(CambiarEscena());
         }
@@ -89,51 +87,8 @@ public class Scr_BotonesMenu : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
-    public void Opciones()
-    {
-        if (!Controlador.EstaEnOpciones)
-        {
-            GameObject.Find("Autobus").GetComponent<Animator>().Play("Retroceder");
-            Controlador.EstaEnOpciones = true;
 
-        }
-    }
 
-    public void EntrarGuardarOpciones()
-    {
-        GetComponent<Image>().color = Color.white;
-    }
 
-    public void SalirGuardarOpciones()
-    {
-        GetComponent<Image>().color = new Color32(209, 209, 209, 180);
-    }
-
-    public void CerrarOpciones()
-    {
-        if (Controlador.EstaEnOpciones && Camera.main.transform.GetChild(1).GetChild(1).GetComponent<Image>().color.a>=0.62)
-        {
-            Camera.main.transform.GetChild(1).GetComponent<Animator>().Play("Desaparecer");
-            StartCoroutine(RegresarOpciones());
-        }
-    }
-
-    IEnumerator RegresarOpciones()
-    {
-        yield return new WaitForSeconds(0.5f);
-        foreach (GameObject Suelo in GameObject.FindGameObjectsWithTag("SueloMenu"))
-        {
-            Debug.Log("Entra");
-            Suelo.GetComponent<Rigidbody>().velocity = new Vector3(Controlador.Velocidad, 0, 0);
-        }
-        GameObject.Find("Autobus").transform.GetChild(0).GetComponent<Scr_GirarObjeto>().VelocidadGeneral = -1;
-        GameObject.Find("Autobus").transform.GetChild(1).GetComponent<Scr_GirarObjeto>().VelocidadGeneral = -1;
-        GameObject.Find("Autobus").transform.GetChild(2).GetComponent<Scr_GirarObjeto>().VelocidadGeneral = -1;
-        GameObject.Find("Autobus").transform.GetChild(3).GetComponent<Scr_GirarObjeto>().VelocidadGeneral = -1;
-        GameObject.Find("Autobus").GetComponent<Animator>().Play("Regresar");
-        yield return new WaitForSeconds(2);
-        Camera.main.transform.GetChild(1).GetComponent<Animator>().Play("New State");
-        Controlador.EstaEnOpciones = false;
-    }
 }
 
