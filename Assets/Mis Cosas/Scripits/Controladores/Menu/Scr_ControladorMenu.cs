@@ -6,19 +6,13 @@ using PrimeTween;
 
 public class Scr_ControladorMenu : MonoBehaviour
 {
-    [SerializeField] bool EsSpawner;
-
-    [Header("Suelos")]
-    [SerializeField] GameObject[] Suelos;
-    [SerializeField] Vector3 PosicionOrigen;
-    [SerializeField] public float Velocidad;
-    [SerializeField] bool CambiarMesh;
-    GameObject SueloSpawneado;
+    [Header("Nubes")]
+    [SerializeField] GameObject[] Nubes;
+    float Tiempo = 0;
 
     [Header("Creditos")]
-    [SerializeField] GameObject Letrero;
-    [HideInInspector] public bool ActivarCreditos = false;
-    int CreditoActual = 0;
+    [SerializeField] GameObject ObjCreditos;
+    public bool CreditosActivados=false;
 
     [Header("Titulo")]
     [SerializeField] GameObject Titulo;
@@ -44,33 +38,21 @@ public class Scr_ControladorMenu : MonoBehaviour
 
     void Start()
     {
-        if (!EsSpawner)
-        {
-            if (CambiarMesh)
-            {
-                int r = Random.Range(0, Suelos.Length);
-                GetComponent<MeshFilter>().mesh = Suelos[r].GetComponent<MeshFilter>().sharedMesh;
-            }
 
-            gameObject.GetComponent<Rigidbody>().velocity = new Vector3(Velocidad, 0, 0);
-
-        }
-        else
+        if (!UsaFormaEspecifica)
         {
-            if (!UsaFormaEspecifica)
-            {
-                RandomEase();
-            }
-            r = Random.Range(2, 10);
-            rotacionActual = RenderSettings.skybox.GetFloat("_Rotation");
-            Version.text = "Ver " + Application.version;
-            SueloSpawneado = Instantiate(Suelos[0], PosicionOrigen, Quaternion.Euler(-90, 180, 0), null);
-            SueloSpawneado.GetComponent<Rigidbody>().velocity = new Vector3(Velocidad, 0, 0);
+            RandomEase();
         }
+        r = Random.Range(2, 10);
+        rotacionActual = RenderSettings.skybox.GetFloat("_Rotation");
+        Version.text = "Ver " + Application.version;
     }
 
     void Update()
     {
+
+        SpawnNubes();
+
         if (!tween.IsAlive && Titulo != null && !EstaEnOpciones)
         {
             if (UsaFormaEspecifica)
@@ -83,116 +65,56 @@ public class Scr_ControladorMenu : MonoBehaviour
             }
         }
 
-        if (EsSpawner)
+        if (!EstaEnOpciones)
         {
+            //Skybox
+            rotacionActual += velocidadRotacion * Time.deltaTime;
+            RenderSettings.skybox.SetFloat("_Rotation", rotacionActual);
 
-            //Suelos
-            if (SueloSpawneado == null)
+            //Shake
+            if (TiempoShake < r)
             {
-                SueloSpawneado = Instantiate(Suelos[Random.Range(0, Suelos.Length)], PosicionOrigen, Quaternion.Euler(-90, 180, 0), null);
-                SueloSpawneado.GetComponent<Rigidbody>().velocity = new Vector3(Velocidad, 0, 0);
-
-                //Creditos
-                if (ActivarCreditos && !EstaEnOpciones)
-                {
-                    if (SueloSpawneado.name != "Suelo3(Clone)")
-                    {
-                        GameObject LetreroSpawneado = Instantiate(Letrero, new Vector3(200, -40, 75), Quaternion.Euler(-90, 0, 0), SueloSpawneado.transform);
-                        LetreroSpawneado.transform.localScale = new Vector3(0.5f, 0.5f, 15);
-                        switch (CreditoActual)
-                        {
-                            case 0:
-                                {
-                                    LetreroSpawneado.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = "Director\nCarlos Alfredo\nLopez Flores";
-                                    CreditoActual++;
-                                    break;
-                                }
-                            case 1:
-                                {
-                                    LetreroSpawneado.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = "Jugabilidad\nXavier Emilio\n";
-                                    CreditoActual++;
-                                    break;
-                                }
-                            case 2:
-                                {
-                                    LetreroSpawneado.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = "Tester\nErick\nPulido Santoyo";
-                                    ActivarCreditos = false;
-                                    CreditoActual = 0;
-                                    break;
-                                }
-                        }
-                    }
-                }
-
+                TiempoShake += Time.deltaTime;
             }
             else
             {
-                if (SueloSpawneado.transform.position.x <= PosicionOrigen.x - 80)
-                {
-                    SueloSpawneado = null;
-                }
+                Tween.ShakeCamera(Camera.main, strengthFactor: FuerzaShake);
+                TiempoShake = 0;
+                r = Random.Range(2, 10);
             }
 
 
+        }
+    }
 
+    public IEnumerator Creditos()
+    {
 
-            if (!EstaEnOpciones)
-            {
-                //Skybox
-                rotacionActual += velocidadRotacion * Time.deltaTime;
-                RenderSettings.skybox.SetFloat("_Rotation", rotacionActual);
+        CreditosActivados = true;
+        ObjCreditos.GetComponent<Animator>().enabled = true;
+        yield return new WaitForSeconds(20);
+        CreditosActivados = false;
+        ObjCreditos.GetComponent<Animator>().enabled = false;
+    }
 
-                //Shake
-                if (TiempoShake < r)
-                {
-                    TiempoShake += Time.deltaTime;
-                }
-                else
-                {
-                    Tween.ShakeCamera(Camera.main, strengthFactor: FuerzaShake);
-                    TiempoShake = 0;
-                    r = Random.Range(2, 10);
-                }
-
-
-            }
-            else
-            {
-                if (GameObject.Find("Autobus").transform.position.x == -93)
-                {
-                    rotacionActual += (velocidadRotacion / 2) * Time.deltaTime;
-                    RenderSettings.skybox.SetFloat("_Rotation", rotacionActual);
-
-                    if (Camera.main.transform.GetChild(1).GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("New State") || Camera.main.transform.GetChild(1).GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Aparecer"))
-                    {
-                        foreach (GameObject Suelo in GameObject.FindGameObjectsWithTag("SueloMenu"))
-                        {
-                            Debug.Log("Entra2");
-                            Suelo.GetComponent<Rigidbody>().velocity = new Vector3(Velocidad / 2, 0, 0);
-                        }
-                    }
-
-                    GameObject.Find("Autobus").transform.GetChild(0).GetComponent<Scr_GirarObjeto>().VelocidadGeneral = -0.5f;
-                    GameObject.Find("Autobus").transform.GetChild(1).GetComponent<Scr_GirarObjeto>().VelocidadGeneral = -0.5f;
-                    GameObject.Find("Autobus").transform.GetChild(2).GetComponent<Scr_GirarObjeto>().VelocidadGeneral = -0.5f;
-                    GameObject.Find("Autobus").transform.GetChild(3).GetComponent<Scr_GirarObjeto>().VelocidadGeneral = -0.5f;
-                    if (EstaEnOpciones && GameObject.Find("Canvas2").GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("New State"))
-                    {
-                        Camera.main.transform.GetChild(1).GetComponent<Animator>().Play("Aparecer");
-                    }
-                }
-            }
-
+    private void SpawnNubes()
+    {
+        if (Tiempo <= 0)
+        {
+            Tiempo = Random.Range(2, 15);
+            GameObject Nube = Instantiate(Nubes[Random.Range(0, 4)], new Vector3(40, Random.Range(-10, 10), 0), Quaternion.identity, null);
+            float Escala = Random.Range(0.5f, 1.5f);
+            Nube.GetComponent<SpriteRenderer>().sortingOrder = Random.Range(-2, -1);
+            Nube.transform.localScale = new Vector3(Escala, Escala, 1);
+            Nube.GetComponent<Rigidbody>().velocity = new Vector3(Random.Range(-3, -7), 0, 0);
         }
         else
         {
-            if (transform.position.x < -250)
-            {
-                Destroy(gameObject);
-            }
+            Tiempo -= Time.deltaTime;
         }
-
     }
+
+
 
     void RandomEase()
     {
@@ -367,5 +289,7 @@ public class Scr_ControladorMenu : MonoBehaviour
                 }
         }
     }
+
+
 
 }

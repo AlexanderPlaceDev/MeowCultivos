@@ -133,6 +133,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     {
         float animSpeed = 1f; // Valor por defecto
 
+        gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
         // Verificar si la habilidad está activa o no
         if (PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si" && !string.IsNullOrEmpty(Habilidad))
         {
@@ -141,6 +142,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
         gata.GetComponent<Animator>().speed = animSpeed;
 
         yield return new WaitForSeconds(5.22f / animSpeed);
+        gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
         gata.GetComponent<Animator>().speed = 1;
 
         recolectando = false;
