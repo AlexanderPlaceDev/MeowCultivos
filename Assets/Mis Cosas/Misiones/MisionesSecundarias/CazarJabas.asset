@@ -12,21 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea24d2bc748133d448a419af8bc82e61, type: 3}
   m_Name: CazarJabas
   m_EditorClassIdentifier: 
-  MisionName: CazaJabas
-  Descripcion: Caza Jabas
-  DescripcionFinal: Jaba
+  MisionName: CazarJabas
+  Descripcion: Caza 10 Jabas
+  DescripcionFinal: Regresa con Rex
   prioridad: 1
   Tipo: 4
-  Objetivocaza: 
-  cantidad_caza: 
+  Objetivocaza:
+  - Jaba
+  cantidad_caza: 0a000000
   Teclas: 
   EsContinua: 0
   QuitaObjetos: 0
-  DaObjetos: 0
+  DaObjetos: 1
   ObjetosNecesarios: []
-  ObjetosRecompensa: []
+  ObjetosRecompensa:
+  - {fileID: 11400000, guid: 6285dd7ac81f2b54ab9b413bc37fa082, type: 2}
+  xpTotal: 10
   CantidadesQuita: 
-  CantidadesDa: 
+  CantidadesDa: 01000000
   objetoaCostruir: []
   CambiaPrincipal: 0
   TargetExplorado: 

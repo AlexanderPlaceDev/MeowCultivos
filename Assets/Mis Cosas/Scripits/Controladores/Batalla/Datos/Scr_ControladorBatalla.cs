@@ -192,9 +192,9 @@ public class Scr_ControladorBatalla : MonoBehaviour
     {
         var enemigo = Singleton.Enemigo.GetComponent<Scr_Enemigo>();
         var recompensasDict = new Dictionary<Scr_CreadorObjetos, int>();
-
+        
         int totalEnemigos = enemigo.CantidadEnemigosPorOleada * controladorOleadas.OleadaActual;
-
+        Debug.Log(totalEnemigos + "**********");
         for (int k = 0; k < totalEnemigos; k++)
         {
             // Tiradas por enemigo individual
@@ -212,12 +212,47 @@ public class Scr_ControladorBatalla : MonoBehaviour
             // XP individual por enemigo
             PlayerPrefs.SetInt("XPActual", PlayerPrefs.GetInt("XPActual") + Random.Range(enemigo.XPMinima, enemigo.XPMaxima));
         }
+        
+        int cazado = PlayerPrefs.GetInt("Cazado_Cantidad", 0);
+        bool havecaza = false;
+        if (cazado > 0)
+        {
+            for (int i = 0; i < cazado; i++)
+            {
+                string nombrecazado = PlayerPrefs.GetString("Cazado_" + i, "");
+                int cantCazados = PlayerPrefs.GetInt("cazado_cant" + i, 0);
+                if (!string.IsNullOrEmpty(nombrecazado) && cantCazados > 0)
+                {
+                    if (nombrecazado == enemigo.name)
+                    {
+                        Debug.Log("ya exite");
+                        PlayerPrefs.SetString("Cazado_" + i, nombrecazado);
+                        PlayerPrefs.SetInt("cazado_cant" + i, cantCazados + totalEnemigos);
+                        havecaza = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        if (!havecaza)
+        {
+
+            Debug.Log("NO exite" + cazado);
+            //Debug.Log("se caso" + enemigo.name + " num" + cazado);
+            PlayerPrefs.SetString("Cazado_" + cazado, enemigo.name);
+            PlayerPrefs.SetInt("cazado_cant" + cazado, totalEnemigos);
+            PlayerPrefs.SetInt("Cazado_Cantidad", cazado+1);
+        }
+        PlayerPrefs.Save();
 
         // Mostrar recompensas
         var datos = Singleton;
         datos.ObjetosRecompensa.Clear();
         datos.CantidadesRecompensa.Clear();
-
+        //datos.enemicaza = enemigo.name;
+        //datos.cantcaza = totalEnemigos;
         int index = 0;
         foreach (var kvp in recompensasDict)
         {

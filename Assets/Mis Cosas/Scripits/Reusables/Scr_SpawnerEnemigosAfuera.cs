@@ -8,10 +8,13 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
     [SerializeField] private GameObject Enemigo;
     [SerializeField] private int CantidadDeEnemigos;
     [SerializeField] private float TiempoSpawn;
-
+    
     private List<GameObject> Enemigos = new List<GameObject>();
     private float TiempoRestanteSpawn;
 
+    public int haveAcivate;
+
+    public float a;
     void Start()
     {
         // Recuperar el tiempo de respawn guardado
@@ -32,82 +35,95 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
     {
         while (true)
         {
-            if (Enemigos.Count < CantidadDeEnemigos) // Si faltan enemigos
+            if (haveAcivate == 1)
             {
-                yield return new WaitForSeconds(TiempoRestanteSpawn);
-
-                // Spawnear un enemigo
-                GameObject nuevoEnemigo = Instantiate(Enemigo, transform.position, Quaternion.identity, transform.parent.parent);
-                Enemigos.Add(nuevoEnemigo);
-
-                // Reiniciar el tiempo de espera solo si sigue habiendo espacio
-                if (Enemigos.Count < CantidadDeEnemigos)
+                if (Enemigos.Count < CantidadDeEnemigos) // Si faltan enemigos
                 {
-                    TiempoRestanteSpawn = TiempoSpawn;
-                    PlayerPrefs.SetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoRestanteSpawn);
+                    yield return new WaitForSeconds(TiempoRestanteSpawn);
+
+                    // Spawnear un enemigo
+                    GameObject nuevoEnemigo = Instantiate(Enemigo, transform.position, Quaternion.identity, transform.parent.parent);
+                    Enemigos.Add(nuevoEnemigo);
+
+                    // Reiniciar el tiempo de espera solo si sigue habiendo espacio
+                    if (Enemigos.Count < CantidadDeEnemigos)
+                    {
+                        TiempoRestanteSpawn = TiempoSpawn;
+                        PlayerPrefs.SetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoRestanteSpawn);
+                    }
                 }
             }
             yield return null;
         }
     }
 
-    void GuardarEstado()
+    public void GuardarEstado()
     {
-        int i = 0;
-        foreach (var enem in Enemigos)
+        if(haveAcivate ==1)
         {
-            Vector3 pos = Enemigos[i].transform.position;
-            if (enem.GetComponent<Scr_CambiadorBatalla>().Cambiando)
-            {
-                Debug.Log("Remueve");
-                Enemigos.RemoveAt(i);
-                PlayerPrefs.DeleteKey($"{IDSpawner}_EnemigoX_{i}");
-                PlayerPrefs.DeleteKey($"{IDSpawner}_EnemigoY_{i}");
-                PlayerPrefs.DeleteKey($"{IDSpawner}_EnemigoZ_{i}");
-                break;
-            }
-            i++;
-        }
-        // Guardar la cantidad de enemigos vivos
-        PlayerPrefs.SetInt($"{IDSpawner}_CantidadEnemigosVivos", Enemigos.Count);
-
-        // Guardar posiciones de enemigos vivos
-        for (i = 0; i < Enemigos.Count; i++)
-        {
-            if (Enemigos[i] != null)
+            int i = 0;
+            foreach (var enem in Enemigos)
             {
                 Vector3 pos = Enemigos[i].transform.position;
-                PlayerPrefs.SetFloat($"{IDSpawner}_EnemigoX_{i}", pos.x);
-                PlayerPrefs.SetFloat($"{IDSpawner}_EnemigoY_{i}", pos.y);
-                PlayerPrefs.SetFloat($"{IDSpawner}_EnemigoZ_{i}", pos.z);
+                if (enem.GetComponent<Scr_CambiadorBatalla>().Cambiando)
+                {
+                    Debug.Log("Remueve");
+                    Enemigos.RemoveAt(i);
+                    PlayerPrefs.DeleteKey($"{IDSpawner}_EnemigoX_{i}");
+                    PlayerPrefs.DeleteKey($"{IDSpawner}_EnemigoY_{i}");
+                    PlayerPrefs.DeleteKey($"{IDSpawner}_EnemigoZ_{i}");
+                    break;
+                }
+                i++;
             }
-        }
+            // Guardar la cantidad de enemigos vivos
+            PlayerPrefs.SetInt($"{IDSpawner}_CantidadEnemigosVivos", Enemigos.Count);
 
+            // Guardar posiciones de enemigos vivos
+            for (i = 0; i < Enemigos.Count; i++)
+            {
+                if (Enemigos[i] != null)
+                {
+                    Vector3 pos = Enemigos[i].transform.position;
+                    PlayerPrefs.SetFloat($"{IDSpawner}_EnemigoX_{i}", pos.x);
+                    PlayerPrefs.SetFloat($"{IDSpawner}_EnemigoY_{i}", pos.y);
+                    PlayerPrefs.SetFloat($"{IDSpawner}_EnemigoZ_{i}", pos.z);
+                }
+            }
+
+            //PlayerPrefs.Save();
+        }
+        Debug.Log(haveAcivate);
+        PlayerPrefs.SetInt($"{IDSpawner}_Active", haveAcivate);
         PlayerPrefs.Save();
     }
 
     void RestaurarEnemigos()
     {
-        int enemigosVivos = PlayerPrefs.GetInt($"{IDSpawner}_CantidadEnemigosVivos", CantidadDeEnemigos);
-
-        for (int i = 0; i < enemigosVivos; i++)
+        haveAcivate = PlayerPrefs.GetInt($"{IDSpawner}_Active");
+        if (haveAcivate == 1)
         {
-            string keyX = $"{IDSpawner}_EnemigoX_{i}";
-            string keyY = $"{IDSpawner}_EnemigoY_{i}";
-            string keyZ = $"{IDSpawner}_EnemigoZ_{i}";
+            int enemigosVivos = PlayerPrefs.GetInt($"{IDSpawner}_CantidadEnemigosVivos", CantidadDeEnemigos);
 
-            Vector3 pos = transform.position;
-            if (PlayerPrefs.HasKey(keyX) && PlayerPrefs.HasKey(keyY) && PlayerPrefs.HasKey(keyZ))
+            for (int i = 0; i < enemigosVivos; i++)
             {
-                pos = new Vector3(
-                    PlayerPrefs.GetFloat(keyX),
-                    PlayerPrefs.GetFloat(keyY),
-                    PlayerPrefs.GetFloat(keyZ)
-                );
-            }
+                string keyX = $"{IDSpawner}_EnemigoX_{i}";
+                string keyY = $"{IDSpawner}_EnemigoY_{i}";
+                string keyZ = $"{IDSpawner}_EnemigoZ_{i}";
 
-            GameObject enemigoRestaurado = Instantiate(Enemigo, pos, Quaternion.identity, transform.parent.parent);
-            Enemigos.Add(enemigoRestaurado);
+                Vector3 pos = transform.position;
+                if (PlayerPrefs.HasKey(keyX) && PlayerPrefs.HasKey(keyY) && PlayerPrefs.HasKey(keyZ))
+                {
+                    pos = new Vector3(
+                        PlayerPrefs.GetFloat(keyX),
+                        PlayerPrefs.GetFloat(keyY),
+                        PlayerPrefs.GetFloat(keyZ)
+                    );
+                }
+
+                GameObject enemigoRestaurado = Instantiate(Enemigo, pos, Quaternion.identity, transform.parent.parent);
+                Enemigos.Add(enemigoRestaurado);
+            }
         }
     }
 }
