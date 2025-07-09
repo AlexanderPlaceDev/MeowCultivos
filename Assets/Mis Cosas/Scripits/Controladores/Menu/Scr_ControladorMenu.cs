@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using PrimeTween;
+using UnityEngine.UI;
 
 public class Scr_ControladorMenu : MonoBehaviour
 {
@@ -12,7 +13,15 @@ public class Scr_ControladorMenu : MonoBehaviour
 
     [Header("Creditos")]
     [SerializeField] GameObject ObjCreditos;
-    public bool CreditosActivados=false;
+    public bool CreditosActivados = false;
+
+    [Header("Opciones")]
+    [SerializeField]
+    public GameObject Panel;
+    [SerializeField] TextMeshProUGUI TextoVolumen;
+    [SerializeField] Slider SliderVolumen;
+    [SerializeField] TextMeshProUGUI TextoBrillo;
+    [SerializeField] Slider SliderBrillo;
 
     [Header("Titulo")]
     [SerializeField] GameObject Titulo;
@@ -46,11 +55,22 @@ public class Scr_ControladorMenu : MonoBehaviour
         r = Random.Range(2, 10);
         rotacionActual = RenderSettings.skybox.GetFloat("_Rotation");
         Version.text = "Ver " + Application.version;
+
+
+        //InicializarOpciones
+        if (PlayerPrefs.HasKey("Volumen"))
+        {
+            SliderVolumen.value = PlayerPrefs.GetInt("Volumen", 50);
+        }
+        if (PlayerPrefs.HasKey("Brillo"))
+        {
+            SliderBrillo.value = PlayerPrefs.GetInt("Brillo", 50);
+        }
     }
 
     void Update()
     {
-
+        ActualizarOpciones();
         SpawnNubes();
 
         if (!tween.IsAlive && Titulo != null && !EstaEnOpciones)
@@ -97,6 +117,26 @@ public class Scr_ControladorMenu : MonoBehaviour
         ObjCreditos.GetComponent<Animator>().enabled = false;
     }
 
+    void ActualizarOpciones()
+    {
+        if (Panel.activeSelf)
+        {
+            TextoVolumen.text = (int)SliderVolumen.value + "%";
+            TextoBrillo.text = (int)SliderBrillo.value + "%";
+        }
+    }
+
+    public void GuardarOpciones()
+    {
+        PlayerPrefs.SetInt("Volumen", (int)SliderVolumen.value);
+        PlayerPrefs.SetInt("Brillo", (int)SliderBrillo.value);
+        Panel.SetActive(false);
+    }
+    public void ReiniciarOpciones()
+    {
+        SliderVolumen.value = 50;
+        SliderBrillo.value = 50;
+    }
     private void SpawnNubes()
     {
         if (Tiempo <= 0)

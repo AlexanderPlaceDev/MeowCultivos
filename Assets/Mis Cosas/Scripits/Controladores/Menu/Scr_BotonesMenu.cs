@@ -67,6 +67,11 @@ public class Scr_BotonesMenu : MonoBehaviour
         }
     }
 
+    public void Opciones()
+    {
+        Controlador.Panel.SetActive(true);
+    }
+
     public void CerrarJuego()
     {
         Application.Quit();

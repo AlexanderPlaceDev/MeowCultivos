@@ -1,13 +1,20 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using PrimeTween;
 
 public class Scr_ControladorMenuHabilidades : MonoBehaviour
 {
     [SerializeField] GameObject Arbol;
+    [SerializeField] GameObject[] Ramas;
+    [SerializeField] string RamaActual;
+    [SerializeField] GameObject[] Barras;
+    [SerializeField] float DuracionTransicion;
+    [SerializeField] Ease TipoTransicionPaneles;
+    [SerializeField] Ease TipoTransicionBotonesIn;
+    [SerializeField] Ease TipoTransicionBotonesOut;
     [SerializeField] float moveSpeed;
-    [SerializeField] float scaleFactor;
-    [SerializeField] GameObject[] Botones;
     [SerializeField] GameObject ObjetoHabilidadSeleccionada;
     public GameObject BotonActual;
     public string HabilidadActual;
@@ -16,7 +23,6 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
     [SerializeField] TextMeshProUGUI Puntos;
     [SerializeField] GameObject BotonAceptar;
 
-    string HabilidadSeleccionada;
     bool YaSelecciono = false;
 
     private RectTransform arbolRectTransform;
@@ -26,21 +32,18 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
         moveSpeed = moveSpeed * 1000;
         arbolRectTransform = Arbol.GetComponent<RectTransform>();
 
-        foreach (GameObject Boton in Botones)
+        foreach (GameObject Barra in Barras)
         {
-            if (PlayerPrefs.GetString("Habilidad:" + Boton.name, "No") == "Si")
-            {
-                Boton.GetComponent<Image>().color = Color.white;
-                Boton.transform.GetChild(0).GetComponent<Image>().color = Color.white;
-            }
-        }
+            int CantBotones = int.Parse(Barra.name[Barra.name.Length - 1].ToString());
+            Debug.Log("Cantidad de botones:" + CantBotones);
 
-        foreach (Scr_CreadorHabilidades Habilidad in Habilidades)
-        {
-            if (PlayerPrefs.GetString("Habilidad:" + Habilidad.NombreBoton, "No") == "Si")
+            for (int i = 0; i < CantBotones * PlayerPrefs.GetInt("Rango " + Barra.name, 0); i++)
             {
-                ActivarBarra(Habilidad.NombresBarrasCarga);
+                Barra.transform.GetChild(0).GetChild(i).GetComponent<Image>().color = Color.white;
+
             }
+
+
         }
     }
 
@@ -54,24 +57,174 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
         Puntos.text = PlayerPrefs.GetInt("PuntosDeHabilidad", 0).ToString();
         SeleccionarHabilidad();
 
-        MoverYEscalarArbol();
-        if (HabilidadActual != null || HabilidadActual != "")
+        //Prueba de rango
+        if (Input.GetKeyDown(KeyCode.KeypadMultiply))
         {
-            ActualizarHabilidad();
+            Debug.Log("Borra");
+            PlayerPrefs.DeleteKey("Rango Barra Planos4");
+            PlayerPrefs.DeleteKey("Rango Barra Naturaleza3");
+        }
+        if (Input.GetKeyDown(KeyCode.KeypadPlus))
+        {
+            PlayerPrefs.SetInt("Rango Barra Planos4", PlayerPrefs.GetInt("Rango Barra Planos4", 0) + 1);
+            PlayerPrefs.SetInt("Rango Barra Naturaleza3", PlayerPrefs.GetInt("Rango Barra Naturaleza3", 0) + 1);
+            Debug.Log("Aumenta Rango, Rango actual:" + PlayerPrefs.GetInt("Rango Barra Naturaleza3", 0));
+        }
+        if (Input.GetKeyDown(KeyCode.KeypadMinus))
+        {
+            PlayerPrefs.SetInt("Rango Barra Planos4", PlayerPrefs.GetInt("Rango Barra Planos4", 0) - 1);
+            PlayerPrefs.SetInt("Rango Barra Naturaleza3", PlayerPrefs.GetInt("Rango Barra Naturaleza3", 0) - 1);
+            Debug.Log("Resta Rango, Rango actual:" + PlayerPrefs.GetInt("Rango Barra Naturaleza3", 0));
+        }
+    }
+    public void SeleccionarRama(string NombreRama)
+    {
+        RamaActual = NombreRama;
+
+        switch (RamaActual)
+        {
+            case "Naturaleza":
+                {
+                    Debug.Log("Selecciona Rama");
+                    //Escala Fondo
+                    Tween.LocalScaleY(Barras[0].transform.GetChild(0), 1, DuracionTransicion, TipoTransicionPaneles, default);
+                    //Escala X
+                    Tween.LocalScale(Ramas[0].transform.GetChild(2), 1, DuracionTransicion, TipoTransicionPaneles, default);
+                    //Escala Textos Rango
+                    Tween.LocalScale(Ramas[0].transform.GetChild(3), 1, DuracionTransicion, TipoTransicionPaneles, default);
+                    //Posicion TextosRango
+                    Tween.LocalPositionY(Ramas[0].transform.GetChild(3), -75, DuracionTransicion, TipoTransicionPaneles, default);
+                    //Escala Fondo Planos
+                    Tween.LocalScale(Ramas[0].transform.GetChild(0), new Vector3(4, 4, 1), DuracionTransicion, TipoTransicionPaneles, default);
+                    //Posicion Y Escala Arbol
+                    Tween.LocalScale(Arbol.transform, new Vector3(1.5f, 1.5f, 1.5f), DuracionTransicion, TipoTransicionPaneles, default);
+                    Tween.LocalPosition(Arbol.transform, new Vector3(-1105, -110, 0), DuracionTransicion, TipoTransicionPaneles, default);
+                    break;
+                }
+            case "Industrial":
+                {
+                    Debug.Log("Selecciona Rama");
+                    //Escala Fondo
+                    Tween.LocalScaleY(Barras[2].transform.GetChild(0), 1, DuracionTransicion, TipoTransicionPaneles, default);
+                    //Escala X
+                    Tween.LocalScale(Ramas[2].transform.GetChild(1), 1, DuracionTransicion, TipoTransicionPaneles, default);
+                    //Escala Textos Rango
+                    Tween.LocalScale(Ramas[2].transform.GetChild(2), 1, DuracionTransicion, TipoTransicionPaneles, default);
+                    //Posicion TextosRango
+                    Tween.LocalPositionY(Ramas[2].transform.GetChild(2), -75, DuracionTransicion, TipoTransicionPaneles, default);
+                    //Posicion Y Escala Arbol
+                    Tween.LocalScale(Arbol.transform, new Vector3(1.5f, 1.5f, 1.5f), DuracionTransicion, TipoTransicionPaneles, default);
+                    Tween.LocalPosition(Arbol.transform, new Vector3(1105, -110, 0), DuracionTransicion, TipoTransicionPaneles, default);
+                    break;
+                }
+            case "Tecnica":
+                {
+                    Debug.Log("Selecciona Rama");
+                    //Escala Fondo
+                    Tween.LocalScaleY(Barras[1].transform.GetChild(0), 1, DuracionTransicion, TipoTransicionPaneles, default);
+                    //Escala X
+                    Tween.LocalScale(Ramas[1].transform.GetChild(1), 1, DuracionTransicion, TipoTransicionPaneles, default);
+                    //Escala Textos Rango
+                    Tween.LocalScale(Ramas[1].transform.GetChild(2), 1, DuracionTransicion, TipoTransicionPaneles, default);
+                    //Posicion TextosRango
+                    Tween.LocalPositionY(Ramas[1].transform.GetChild(2), -440, DuracionTransicion, TipoTransicionPaneles, default);
+                    //Posicion Y Escala Arbol
+                    Tween.LocalScale(Arbol.transform, new Vector3(1.5f, 1.5f, 1.5f), DuracionTransicion, TipoTransicionPaneles, default);
+                    Tween.LocalPosition(Arbol.transform, new Vector3(-850, 890, 0), DuracionTransicion, TipoTransicionPaneles, default);
+                    break;
+                }
+            case "Arsenal":
+                {
+                    Debug.Log("Selecciona Rama");
+                    //Escala Fondo
+                    Tween.LocalScaleY(Barras[3].transform.GetChild(0), 1, DuracionTransicion, TipoTransicionPaneles, default);
+                    //Escala X
+                    Tween.LocalScale(Ramas[3].transform.GetChild(1), 1, DuracionTransicion, TipoTransicionPaneles, default);
+                    //Posicion Y Escala Arbol
+                    Tween.LocalScale(Arbol.transform, new Vector3(1.5f, 1.5f, 1.5f), DuracionTransicion, TipoTransicionPaneles, default);
+                    Tween.LocalPosition(Arbol.transform, new Vector3(850, 780, 0), DuracionTransicion, TipoTransicionPaneles, default);
+                    break;
+                }
         }
 
-
-
     }
+    public void CerrarRama(string NombreRama)
+    {
+        switch (RamaActual)
+        {
+            case "Naturaleza":
+                {
+                    Debug.Log("Selecciona Rama");
+                    //Escala Fondo
+                    Tween.LocalScaleY(Barras[0].transform.GetChild(0), 0, DuracionTransicion, TipoTransicionBotonesIn, default);
+                    //Escala X
+                    Tween.LocalScale(Ramas[0].transform.GetChild(2), 0, DuracionTransicion, TipoTransicionBotonesOut, default);
+                    //Escala Textos Rango
+                    Tween.LocalScale(Ramas[0].transform.GetChild(3), 0, DuracionTransicion, TipoTransicionBotonesOut, default);
+                    //Posicion TextosRango
+                    Tween.LocalPositionY(Ramas[0].transform.GetChild(3), 180, DuracionTransicion, TipoTransicionBotonesOut, default);
+                    //Escala Fondo Planos
+                    Tween.LocalScale(Ramas[0].transform.GetChild(0), new Vector3(0, 0, 1), DuracionTransicion, TipoTransicionBotonesIn, default);
+                    //Posicion Y Escala Arbol
+                    Tween.LocalScale(Arbol.transform, new Vector3(1f, 1f, 1f), DuracionTransicion, TipoTransicionPaneles, default);
+                    Tween.LocalPosition(Arbol.transform, Vector3.zero, DuracionTransicion, TipoTransicionPaneles, default);
+                    break;
+                }
+            case "Industrial":
+                {
 
+                    Debug.Log("Selecciona Rama");
+                    //Escala Fondo
+                    Tween.LocalScaleY(Barras[2].transform.GetChild(0), 0, DuracionTransicion, TipoTransicionBotonesIn, default);
+                    //Escala X
+                    Tween.LocalScale(Ramas[2].transform.GetChild(1), 0, DuracionTransicion, TipoTransicionBotonesOut, default);
+                    //Escala Textos Rango
+                    Tween.LocalScale(Ramas[2].transform.GetChild(2), 0, DuracionTransicion, TipoTransicionBotonesOut, default);
+                    //Posicion TextosRango
+                    Tween.LocalPositionY(Ramas[2].transform.GetChild(2), 180, DuracionTransicion, TipoTransicionBotonesOut, default);
+                    //Posicion Y Escala Arbol
+                    Tween.LocalScale(Arbol.transform, new Vector3(1f, 1f, 1f), DuracionTransicion, TipoTransicionPaneles, default);
+                    Tween.LocalPosition(Arbol.transform, Vector3.zero, DuracionTransicion, TipoTransicionPaneles, default);
+                    break;
+                }
+            case "Tecnica":
+                {
+                    Debug.Log("Selecciona Rama");
+                    //Escala Fondo
+                    Tween.LocalScaleY(Barras[1].transform.GetChild(0), 0, DuracionTransicion, TipoTransicionBotonesIn, default);
+                    //Escala X
+                    Tween.LocalScale(Ramas[1].transform.GetChild(1), 0, DuracionTransicion, TipoTransicionBotonesOut, default);
+                    //Escala Textos Rango
+                    Tween.LocalScale(Ramas[1].transform.GetChild(2), 0, DuracionTransicion, TipoTransicionBotonesOut, default);
+                    //Posicion TextosRango
+                    Tween.LocalPositionY(Ramas[1].transform.GetChild(2), -180, DuracionTransicion, TipoTransicionBotonesOut, default);
+                    //Posicion Y Escala Arbol
+                    Tween.LocalScale(Arbol.transform, new Vector3(1f, 1f, 1f), DuracionTransicion, TipoTransicionPaneles, default);
+                    Tween.LocalPosition(Arbol.transform, Vector3.zero, DuracionTransicion, TipoTransicionPaneles, default);
+                    break;
+                }
+            case "Arsenal":
+                {
+                    Debug.Log("Selecciona Rama");
+                    //Escala Fondo
+                    Tween.LocalScaleY(Barras[3].transform.GetChild(0), 0, DuracionTransicion, TipoTransicionBotonesIn, default);
+                    //Escala X
+                    Tween.LocalScale(Ramas[3].transform.GetChild(1), 0, DuracionTransicion, TipoTransicionBotonesOut, default);
+                    //Posicion Y Escala Arbol
+                    Tween.LocalScale(Arbol.transform, new Vector3(1f, 1f, 1f), DuracionTransicion, TipoTransicionPaneles, default);
+                    Tween.LocalPosition(Arbol.transform, Vector3.zero, DuracionTransicion, TipoTransicionPaneles, default);
+                    break;
+                }
+        }
+        RamaActual = "";
+    }
     private void SeleccionarHabilidad()
     {
         // Añade una verificación para asegurarte de que no se vuelva a seleccionar de inmediato
-        if (HabilidadSeleccionada == null && HabilidadActual != "" && Input.GetKeyDown(KeyCode.Mouse0) && !YaSelecciono && ComprobarHabilidadAnterior())
+        if (HabilidadActual != "" && Input.GetKeyDown(KeyCode.Mouse0) && !YaSelecciono)
         {
             YaSelecciono = true;
             BotonSeleccionado = BotonActual;
-            HabilidadSeleccionada = HabilidadActual;
             Debug.Log("Habilidad Seleccionada");
 
             foreach (Scr_CreadorHabilidades Habilidad in Habilidades)
@@ -102,8 +255,6 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
         // Asegúrate de que la UI relacionada con la selección de habilidad se oculte
         ObjetoHabilidadSeleccionada.SetActive(false);
 
-        // Asegúrate de que la habilidad seleccionada se deseleccione
-        HabilidadSeleccionada = null;
     }
     private void ActualizarHabilidad()
     {
@@ -123,50 +274,9 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
             }
         }
     }
-
-    private void MoverYEscalarArbol()
-    {
-        // Cambiar tamaño del árbol con la rueda del mouse
-        float scrollInput = Input.GetAxis("Mouse ScrollWheel");
-        if (scrollInput != 0f)
-        {
-            if (arbolRectTransform.localScale.x > 0f || scrollInput > 0)
-            {
-                arbolRectTransform.localScale += Vector3.one * scrollInput * scaleFactor;
-            }
-
-        }
-
-        // Mover el árbol cuando se presiona la rueda del mouse
-        if (Input.GetMouseButton(2))
-        {
-            float moveX = Input.GetAxis("Mouse X") * moveSpeed * Time.deltaTime;
-            float moveY = Input.GetAxis("Mouse Y") * moveSpeed * Time.deltaTime;
-            arbolRectTransform.anchoredPosition += new Vector2(moveX, moveY);
-        }
-    }
-
     public void EntraHabilidad(string Habilidad)
     {
-        HabilidadActual = Habilidad;
-
-        foreach (GameObject Boton in Botones)
-        {
-            if (Boton.gameObject.name == HabilidadActual)
-            {
-                BotonActual = Boton;
-                if (ComprobarHabilidadAnterior())
-                {
-                    Boton.GetComponent<Image>().color = Color.white;
-                    Boton.transform.GetChild(0).GetComponent<Image>().color = Color.white;
-                    Boton.transform.GetChild(1).gameObject.SetActive(true);
-                }
-
-                break;
-            }
-        }
     }
-
     public void SaleHabilidad()
     {
         HabilidadActual = "";
@@ -185,113 +295,4 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
 
     }
 
-    public void ComprarHabilidad()
-    {
-
-        if (HabilidadSeleccionada != null)
-        {
-            foreach (Scr_CreadorHabilidades Habilidad in Habilidades)
-            {
-                Debug.Log(Habilidad.NombreBoton + HabilidadSeleccionada);
-                if (Habilidad.NombreBoton == HabilidadSeleccionada)
-                {
-                    int puntosActuales = PlayerPrefs.GetInt("PuntosDeHabilidad", 0);
-                    int puntosRestantes = puntosActuales - Habilidad.Costo;
-
-                    // Asegúrate de que los puntos no sean negativos
-                    if (puntosRestantes >= 0)
-                    {
-                        ActivarBarra(Habilidad.NombresBarrasCarga);
-                        PlayerPrefs.SetInt("PuntosDeHabilidad", puntosRestantes);
-                    }
-                    else
-                    {
-                        Debug.LogWarning("No tienes suficientes puntos para comprar esta habilidad.");
-                        return;
-                    }
-                }
-            }
-
-            if (PlayerPrefs.GetString("Habilidad:" + HabilidadSeleccionada, "No") == "No")
-            {
-
-
-                PlayerPrefs.SetString("Habilidad:" + HabilidadSeleccionada, "Si");
-                BotonSeleccionado.GetComponent<Image>().color = Color.white;
-                BotonSeleccionado.transform.GetChild(0).GetComponent<Image>().color = Color.white;
-
-                // Desactiva la selección de habilidad y resetea la variable de control
-                YaSelecciono = false;
-
-                // Asegúrate de que la UI relacionada con la selección de habilidad se oculte
-                ObjetoHabilidadSeleccionada.SetActive(false);
-
-                // Asegúrate de que la habilidad seleccionada se deseleccione
-                HabilidadSeleccionada = null;
-            }
-        }
-    }
-
-    bool ComprobarHabilidadAnterior()
-    {
-        foreach (Scr_CreadorHabilidades Habilidad in Habilidades)
-        {
-
-            if (Habilidad.NombreBoton == BotonActual.name)
-            {
-
-                // Si la habilidad anterior es una cadena vacía, se permite seleccionar la habilidad actual
-                if (Habilidad.HabilidadesAnteriores.Length == 0)
-                {
-                    Debug.Log("1");
-                    return true;
-                }
-
-                foreach (string HabilidadAnterior in Habilidad.HabilidadesAnteriores)
-                {
-                    // Comprobar si la habilidad anterior ha sido comprada
-                    if (PlayerPrefs.GetString("Habilidad:" + HabilidadAnterior, "No") == "Si")
-                    {
-                        Debug.Log("2");
-                        return true;
-                    }
-                    else
-                    {
-                        Debug.Log("3");
-                        return false;
-                    }
-                }
-            }
-        }
-
-        // Si no se encuentra la habilidad actual en la lista de habilidades, se retorna false
-        Debug.Log("No se encontró una habilidad coincidente para el botón actual");
-        return false;
-    }
-
-    void ActivarBarra(string[] NombresBarra)
-    {
-        // Obtén todos los transform de los hijos (incluyendo descendientes)
-        Transform[] todasLasBarras = Arbol.GetComponentsInChildren<Transform>();
-
-        foreach (string NombreBarra in NombresBarra)
-        {
-            foreach (Transform Barra in todasLasBarras)
-            {
-                if (Barra.gameObject.name == NombreBarra)
-                {
-                    // Asegúrate de que estás accediendo al hijo correcto y llenando la barra
-                    Image imagenBarra = Barra.GetChild(0).GetComponent<Image>();
-                    if (imagenBarra != null)
-                    {
-                        imagenBarra.fillAmount = 1;
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"No se encontró un componente Image en {Barra.gameObject.name}");
-                    }
-                }
-            }
-        }
-    }
 }

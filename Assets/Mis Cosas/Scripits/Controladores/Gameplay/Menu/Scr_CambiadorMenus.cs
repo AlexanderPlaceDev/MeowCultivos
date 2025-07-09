@@ -29,442 +29,81 @@ public class Scr_CambiadorMenus : MonoBehaviour
 
     private void Update()
     {
-        // Incrementa el tiempo transcurrido
         tiempoPasado += Time.deltaTime;
 
-        if (CambiarHabilidades)
+        // ---- CAMBIAR ----
+        if (CambiarHabilidades) LerpColores(TemaActual.ColoresMenu, TemaActual.ColoresHabilidades, () => CambiarHabilidades = false);
+        if (CambiarInventario) LerpColores(TemaActual.ColoresMenu, TemaActual.ColoresInventario, () => CambiarInventario = false);
+        if (CambiarOpciones) LerpColores(TemaActual.ColoresMenu, TemaActual.ColoresOpciones, () => CambiarOpciones = false);
+        if (CambiarGuia) LerpColores(TemaActual.ColoresMenu, TemaActual.ColoresGuia, () => CambiarGuia = false);
+        if (CambiarMisiones) LerpColores(TemaActual.ColoresMenu, TemaActual.ColoresMisiones, () => CambiarMisiones = false);
+
+        // ---- REGRESAR ----
+        if (RegresarHabilidades) LerpColores(TemaActual.ColoresHabilidades, TemaActual.ColoresMenu, () => RegresarHabilidades = false);
+        if (RegresarInventario) LerpColores(TemaActual.ColoresInventario, TemaActual.ColoresMenu, () => RegresarInventario = false);
+        if (RegresarOpciones) LerpColores(TemaActual.ColoresOpciones, TemaActual.ColoresMenu, () => RegresarOpciones = false);
+        if (RegresarGuia) LerpColores(TemaActual.ColoresGuia, TemaActual.ColoresMenu, () => RegresarGuia = false);
+        if (RegresarMisiones) LerpColores(TemaActual.ColoresMisiones, TemaActual.ColoresMenu, () => RegresarMisiones = false);
+    }
+
+    private void LerpColores(Color[] desde, Color[] hasta, System.Action onFinish)
+    {
+        if (tiempoPasado >= 0f)
         {
-            // Calcula la interpolación lineal entre los colores inicial y final
-
-            if (tiempoPasado >= 1)
-            {
-                float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
-                Fondo.color = Color.Lerp(TemaActual.ColoresMenu[2], TemaActual.ColoresHabilidades[2], t);
-
-                BarraIzquierda.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[0], TemaActual.ColoresHabilidades[0], t);
-                BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[1], TemaActual.ColoresHabilidades[1], t);
-
-                BarraDerecha.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[0], TemaActual.ColoresHabilidades[0], t);
-                BarraDerecha.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[1], TemaActual.ColoresHabilidades[1], t);
-            }
-
-            // Si el tiempo ha superado la duración, desactiva la actualización
-            if (tiempoPasado >= DuracionTransicion + 1)
-            {
-                CambiarHabilidades = false;
-                GetComponent<Scr_ControladorMenuHabilidades>().enabled = true;
-            }
+            float t = Mathf.Clamp01((tiempoPasado - 1f) / DuracionTransicion);
+            Fondo.color = Color.Lerp(desde[2], hasta[2], t);
+            BarraIzquierda.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(desde[0], hasta[0], t);
+            BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(desde[1], hasta[1], t);
+            BarraDerecha.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(desde[0], hasta[0], t);
+            BarraDerecha.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(desde[1], hasta[1], t);
         }
 
-        if (CambiarInventario)
+        if (tiempoPasado >= DuracionTransicion + 1f)
         {
-            // Calcula la interpolación lineal entre los colores inicial y final
-
-            if (tiempoPasado >= 1)
-            {
-                float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
-                Fondo.color = Color.Lerp(TemaActual.ColoresMenu[2], TemaActual.ColoresInventario[2], t);
-
-                BarraIzquierda.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[0], TemaActual.ColoresInventario[0], t);
-                BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[1], TemaActual.ColoresInventario[1], t);
-
-                BarraDerecha.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[0], TemaActual.ColoresInventario[0], t);
-                BarraDerecha.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[1], TemaActual.ColoresInventario[1], t);
-            }
-
-            // Si el tiempo ha superado la duración, desactiva la actualización
-            if (tiempoPasado >= DuracionTransicion + 1)
-            {
-                CambiarInventario = false;
-            }
+            onFinish?.Invoke();
         }
-
-        if (CambiarOpciones)
-        {
-            // Calcula la interpolación lineal entre los colores inicial y final
-
-            if (tiempoPasado >= 1)
-            {
-                float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
-                Fondo.color = Color.Lerp(TemaActual.ColoresMenu[2], TemaActual.ColoresOpciones[2], t);
-
-                BarraIzquierda.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[0], TemaActual.ColoresOpciones[0], t);
-                BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[1], TemaActual.ColoresOpciones[1], t);
-
-                BarraDerecha.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[0], TemaActual.ColoresOpciones[0], t);
-                BarraDerecha.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[1], TemaActual.ColoresOpciones[1], t);
-            }
-
-            // Si el tiempo ha superado la duración, desactiva la actualización
-            if (tiempoPasado >= DuracionTransicion + 1)
-            {
-                CambiarOpciones = false;
-            }
-        }
-
-        if (CambiarGuia)
-        {
-            // Calcula la interpolación lineal entre los colores inicial y final
-
-            if (tiempoPasado >= 1)
-            {
-                float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
-                Fondo.color = Color.Lerp(TemaActual.ColoresMenu[2], TemaActual.ColoresGuia[2], t);
-
-                BarraIzquierda.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[0], TemaActual.ColoresGuia[0], t);
-                BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[1], TemaActual.ColoresGuia[1], t);
-
-                BarraDerecha.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[0], TemaActual.ColoresGuia[0], t);
-                BarraDerecha.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[1], TemaActual.ColoresGuia[1], t);
-            }
-
-            // Si el tiempo ha superado la duración, desactiva la actualización
-            if (tiempoPasado >= DuracionTransicion + 1)
-            {
-                CambiarGuia = false;
-            }
-        }
-
-        if (CambiarMisiones)
-        {
-            // Calcula la interpolación lineal entre los colores inicial y final
-
-            if (tiempoPasado >= 1)
-            {
-                float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
-                Fondo.color = Color.Lerp(TemaActual.ColoresMenu[2], TemaActual.ColoresGuia[2], t);
-
-                BarraIzquierda.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[0], TemaActual.ColoresMisiones[0], t);
-                BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[1], TemaActual.ColoresMisiones[1], t);
-
-                BarraDerecha.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[0], TemaActual.ColoresMisiones[0], t);
-                BarraDerecha.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMenu[1], TemaActual.ColoresMisiones[1], t);
-            }
-
-            // Si el tiempo ha superado la duración, desactiva la actualización
-            if (tiempoPasado >= DuracionTransicion + 1)
-            {
-                CambiarMisiones = false;
-            }
-        }
-        if (RegresarHabilidades)
-        {
-            // Calcula la interpolación lineal entre los colores inicial y final
-
-            if (tiempoPasado >= 1)
-            {
-                float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
-                Fondo.color = Color.Lerp(TemaActual.ColoresHabilidades[2], TemaActual.ColoresMenu[2], t);
-
-                BarraIzquierda.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresHabilidades[0], TemaActual.ColoresMenu[0], t);
-                BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresHabilidades[1], TemaActual.ColoresMenu[1], t);
-
-                BarraDerecha.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresHabilidades[0], TemaActual.ColoresMenu[0], t);
-                BarraDerecha.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresHabilidades[1], TemaActual.ColoresMenu[1], t);
-            }
-
-            // Si el tiempo ha superado la duración, desactiva la actualización
-            if (tiempoPasado >= DuracionTransicion + 1)
-            {
-                RegresarHabilidades = false;
-                GetComponent<Scr_ControladorMenuHabilidades>().enabled = false;
-                GetComponent<Scr_ControladorMenuHabilidades>().HabilidadActual = "";
-                GetComponent<Scr_ControladorMenuHabilidades>().BotonActual = null;
-            }
-        }
-
-        if (RegresarInventario)
-        {
-            // Calcula la interpolación lineal entre los colores inicial y final
-
-            if (tiempoPasado >= 1)
-            {
-                float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
-                Fondo.color = Color.Lerp(TemaActual.ColoresInventario[2], TemaActual.ColoresMenu[2], t);
-
-                BarraIzquierda.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresInventario[0], TemaActual.ColoresMenu[0], t);
-                BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresInventario[1], TemaActual.ColoresMenu[1], t);
-
-                BarraDerecha.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresInventario[0], TemaActual.ColoresMenu[0], t);
-                BarraDerecha.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresInventario[1], TemaActual.ColoresMenu[1], t);
-            }
-
-            // Si el tiempo ha superado la duración, desactiva la actualización
-            if (tiempoPasado >= DuracionTransicion + 1)
-            {
-                RegresarInventario = false;
-            }
-        }
-
-        if (RegresarOpciones)
-        {
-            // Calcula la interpolación lineal entre los colores inicial y final
-
-            if (tiempoPasado >= 1)
-            {
-                float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
-                Fondo.color = Color.Lerp(TemaActual.ColoresOpciones[2], TemaActual.ColoresMenu[2], t);
-
-                BarraIzquierda.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresOpciones[0], TemaActual.ColoresMenu[0], t);
-                BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresOpciones[1], TemaActual.ColoresMenu[1], t);
-
-                BarraDerecha.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresOpciones[0], TemaActual.ColoresMenu[0], t);
-                BarraDerecha.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresOpciones[1], TemaActual.ColoresMenu[1], t);
-            }
-
-            // Si el tiempo ha superado la duración, desactiva la actualización
-            if (tiempoPasado >= DuracionTransicion + 1)
-            {
-                RegresarOpciones = false;
-            }
-        }
-
-        if (RegresarGuia)
-        {
-            // Calcula la interpolación lineal entre los colores inicial y final
-
-            if (tiempoPasado >= 1)
-            {
-                float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
-                Fondo.color = Color.Lerp(TemaActual.ColoresGuia[2], TemaActual.ColoresMenu[2], t);
-
-                BarraIzquierda.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresGuia[0], TemaActual.ColoresMenu[0], t);
-                BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresGuia[1], TemaActual.ColoresMenu[1], t);
-
-                BarraDerecha.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresGuia[0], TemaActual.ColoresMenu[0], t);
-                BarraDerecha.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresGuia[1], TemaActual.ColoresMenu[1], t);
-            }
-
-            // Si el tiempo ha superado la duración, desactiva la actualización
-            if (tiempoPasado >= DuracionTransicion + 1)
-            {
-                RegresarGuia = false;
-            }
-        }
-        if (RegresarMisiones)
-        {
-            // Calcula la interpolación lineal entre los colores inicial y final
-
-            if (tiempoPasado >= 1)
-            {
-                float t = Mathf.Clamp01(tiempoPasado - 1 / DuracionTransicion);
-                Fondo.color = Color.Lerp(TemaActual.ColoresMenu[2], TemaActual.ColoresGuia[2], t);
-
-                BarraIzquierda.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMisiones[0], TemaActual.ColoresMenu[0], t);
-                BarraIzquierda.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMisiones[1], TemaActual.ColoresMenu[1], t);
-
-                BarraDerecha.transform.GetChild(1).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMisiones[0], TemaActual.ColoresMenu[0], t);
-                BarraDerecha.transform.GetChild(2).GetComponent<Image>().color = Color.Lerp(TemaActual.ColoresMisiones[1], TemaActual.ColoresMenu[1], t);
-            }
-
-            // Si el tiempo ha superado la duración, desactiva la actualización
-            if (tiempoPasado >= DuracionTransicion + 1)
-            {
-                RegresarMisiones = false;
-            }
-        }
-
     }
 
     public void Cambiar()
     {
         if (!GetComponent<Scr_ControladorMenuGameplay>().EstaReproduciendoAnimacion())
         {
-            tiempoPasado = 0;
+            tiempoPasado = 0f;
             switch (MenuActual)
             {
                 case "Inventario":
-                    {
-                        CambiarInventario = true;
-                        MenuActual = "Inventario";
-                        Menu.GetComponent<Animator>().Play("Cerrar 0");
-                        break;
-                    }
-
+                    CambiarInventario = true;
+                    MenuActual = "Inventario";
+                    Menu.GetComponent<Animator>().Play("Cerrar 0");
+                    break;
                 case "Misiones":
-                    {
-                        CambiarMisiones = true;
-                        MenuActual = "Misiones";
-                        Menu.GetComponent<Animator>().Play("Cerrar 5");
-
-                        Debug.Log("Activando transición a Misiones");
-                        break;
-                    }
+                    CambiarMisiones = true;
+                    MenuActual = "Misiones";
+                    Menu.GetComponent<Animator>().Play("Cerrar 5");
+                    break;
                 case "Armas":
-                    {
-                        CambiarArmas = true;
-                        MenuActual = "Armas";
-                        Menu.GetComponent<Animator>().Play("Cerrar 1");
-                        break;
-                    }
-
+                    CambiarArmas = true;
+                    MenuActual = "Armas";
+                    Menu.GetComponent<Animator>().Play("Cerrar 1");
+                    break;
                 case "Guia":
-                    {
-                        CambiarGuia = true;
-                        MenuActual = "Guia";
-                        Menu.GetComponent<Animator>().Play("Cerrar 3");
-                        break;
-                    }
-
+                    CambiarGuia = true;
+                    MenuActual = "Guia";
+                    Menu.GetComponent<Animator>().Play("Cerrar 3");
+                    break;
                 case "Habilidades":
-                    {
-                        CambiarHabilidades = true;
-                        MenuActual = "Habilidades";
-                        Menu.GetComponent<Animator>().Play("Cerrar 4");
-
-                        Debug.Log("Activando transición a Habilidades");
-                        break;
-                    }
-
+                    CambiarHabilidades = true;
+                    MenuActual = "Habilidades";
+                    Menu.GetComponent<Animator>().Play("Cerrar 4");
+                    break;
                 case "Opciones":
-                    {
-                        CambiarOpciones = true;
-                        MenuActual = "Opciones";
-                        Menu.GetComponent<Animator>().Play("Cerrar 2");
-                        break;
-                    }
-
+                    CambiarOpciones = true;
+                    MenuActual = "Opciones";
+                    Menu.GetComponent<Animator>().Play("Cerrar 2");
+                    break;
                 case "Salir":
-                    {
-                        SceneManager.LoadScene(0);
-                        break;
-                    }
-
-                default:
-                    {
-                        Debug.Log("No encontre el menu");
-                        break;
-                    }
-            }
-        }
-
-    }
-
-    public void CambiarArriba()
-    {
-        if (!GetComponent<Scr_ControladorMenuGameplay>().EstaReproduciendoAnimacion())
-        {
-            BotonesMenu.GetComponent<scr_BotonesMenuJuego>().ClicFlecha(true);
-            tiempoPasado = 0;
-            switch (MenuActual)
-            {
-                case "Inventario":
-                    {
-                        CambiarMisiones = true;
-                        MenuActual = "Misiones";
-                        Menu.GetComponent<Animator>().Play("Cerrar 4");
-                        break;
-                    }
-
-                case "Misiones":
-                    {
-                        CambiarHabilidades = true;
-                        MenuActual = "Habilidades";
-                        Menu.GetComponent<Animator>().Play("Cerrar 5");
-                        break;
-                    }
-                case "Armas":
-                    {
-                        CambiarGuia = true;
-                        MenuActual = "Guia";
-                        Menu.GetComponent<Animator>().Play("Cerrar 3");
-                        break;
-                    }
-
-                case "Guia":
-                    {
-                        CambiarInventario = true;
-                        MenuActual = "Inventario";
-                        Menu.GetComponent<Animator>().Play("Cerrar 0");
-                        break;
-                    }
-
-                case "Habilidades":
-                    {
-                        SceneManager.LoadScene(0);
-                        break;
-                    }
-
-                case "Opciones":
-                    {
-                        CambiarArmas = true;
-                        MenuActual = "Armas";
-                        Menu.GetComponent<Animator>().Play("Cerrar 1");
-                        break;
-                    }
-                case "Salir":
-                    {
-                        CambiarOpciones = true;
-                        MenuActual = "Opciones";
-                        Menu.GetComponent<Animator>().Play("Cerrar 2");
-                        break;
-                    }
-            }
-        }
-    }
-    public void CambiarAbajo()
-    {
-        if (!GetComponent<Scr_ControladorMenuGameplay>().EstaReproduciendoAnimacion())
-        {
-            BotonesMenu.GetComponent<scr_BotonesMenuJuego>().ClicFlecha(false);
-            tiempoPasado = 0;
-            switch (MenuActual)
-            {
-                case "Inventario":
-                    {
-
-                        CambiarGuia = true;
-                        MenuActual = "Guia";
-                        Menu.GetComponent<Animator>().Play("Cerrar 3");
-                        break;
-                    }
-                case "Misiones":
-                    {
-                        CambiarInventario = true;
-                        MenuActual = "Inventario";
-                        Menu.GetComponent<Animator>().Play("Cerrar 0");
-                        break;
-                    }
-                case "Armas":
-                    {
-                        CambiarOpciones = true;
-                        MenuActual = "Opciones";
-                        Menu.GetComponent<Animator>().Play("Cerrar 2");
-
-                        break;
-                    }
-
-                case "Guia":
-                    {
-                        CambiarArmas = true;
-                        MenuActual = "Armas";
-                        Menu.GetComponent<Animator>().Play("Cerrar 1");
-                        break;
-                    }
-
-                case "Habilidades":
-                    {
-                        CambiarMisiones = true;
-                        MenuActual = "Misiones";
-                        Menu.GetComponent<Animator>().Play("Cerrar 0");
-                        break;
-                    }
-
-                case "Opciones":
-                    {
-                        SceneManager.LoadScene(0);
-
-                        break;
-                    }
-
-                case "Salir":
-                    {
-                        CambiarHabilidades = true;
-                        MenuActual = "Habilidades";
-                        Menu.GetComponent<Animator>().Play("Cerrar 4");
-
-                        break;
-                    }
+                    SceneManager.LoadScene(0);
+                    break;
             }
         }
     }
@@ -476,38 +115,25 @@ public class Scr_CambiadorMenus : MonoBehaviour
         switch (MenuActual)
         {
             case "Habilidades":
-                {
-                    Menu.GetComponent<Animator>().Play("Cerrar Habilidades");
-                    RegresarHabilidades = true;
-                    break;
-                }
-
+                Menu.GetComponent<Animator>().Play("Cerrar Habilidades");
+                RegresarHabilidades = true;
+                break;
             case "Inventario":
-                {
-                    Menu.GetComponent<Animator>().Play("Cerrar 1");
-                    RegresarInventario = true;
-                    break;
-                }
-
+                Menu.GetComponent<Animator>().Play("Cerrar Inventario");
+                RegresarInventario = true;
+                break;
             case "Guia":
-                {
-                    Menu.GetComponent<Animator>().Play("Cerrar Guia");
-                    RegresarGuia = true;
-                    break;
-                }
-
+                Menu.GetComponent<Animator>().Play("Cerrar Guia");
+                RegresarGuia = true;
+                break;
             case "Opciones":
-                {
-                    Menu.GetComponent<Animator>().Play("Cerrar Opciones");
-                    RegresarOpciones = true;
-                    break;
-                }
+                Menu.GetComponent<Animator>().Play("Cerrar Opciones");
+                RegresarOpciones = true;
+                break;
             case "Misiones":
-                {
-                    Menu.GetComponent<Animator>().Play("Cerrar Misiones");
-                    RegresarMisiones = true;
-                    break;
-                }
+                Menu.GetComponent<Animator>().Play("Cerrar Misiones");
+                RegresarMisiones = true;
+                break;
         }
     }
 }
