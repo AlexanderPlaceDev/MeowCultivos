@@ -55,7 +55,57 @@ public class Scr_CambiadorBatalla : MonoBehaviour
             Debug.LogWarning("⚠️ La escena ya está cambiando. Cancelando nueva carga.");
             yield break;
         }
+        
+        var mis=Gata.GetComponentInChildren<Scr_ControladorMisiones>();
+        int cazado = PlayerPrefs.GetInt("Cazado_Cantidad", 0);
+        bool havecaza = false;
+        if (cazado > 0)
+        {
+            for (int i = 0; i < cazado; i++)
+            {
+                string nombrecazado = PlayerPrefs.GetString("Cazado_" + i, "");
+                int cantCazados = PlayerPrefs.GetInt("cazado_cant" + i, 0);
+                if (!string.IsNullOrEmpty(nombrecazado) && cantCazados > 0)
+                {
+                    if (nombrecazado == PrefabEnemigo.name)
+                    {
+                        Debug.Log("ya exite");
+                        PlayerPrefs.SetString("Cazado_" + i, nombrecazado);
+                        PlayerPrefs.SetInt("cazado_cant" + i, cantCazados);
+                        havecaza = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (!havecaza)
+        {
 
+            Debug.Log("NO exite");
+            //Debug.Log("se caso" + PrefabEnemigo.name + " num" + cazado);
+            PlayerPrefs.SetString("Cazado_" + cazado, PrefabEnemigo.name);
+            PlayerPrefs.SetInt("cazado_cant" + cazado, 0);
+            PlayerPrefs.SetInt("Cazado_Cantidad",cazado++);
+            havecaza=false;
+        }
+        PlayerPrefs.Save();
+        for (int i = 0; i < mis.NameEnemiCazado.Count; i++)
+        {
+            string nombrecazado = mis.NameEnemiCazado[i];
+            int cantCazados = mis.cazados[i];
+            if (nombrecazado == PrefabEnemigo.name)
+            {
+                Debug.Log("ya exite");
+                havecaza = true;
+                break;
+            }
+        }
+        if (!havecaza)
+        {
+            mis.NameEnemiCazado.Add(PrefabEnemigo.name);
+            mis.cazados.Add(0);
+            havecaza = false;
+        }
         Cambiando = true;
         escenaCargada = true;
 

@@ -32,7 +32,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
     private float[] TiempoTeclas;
     private bool Oculto = true;
 
-    public List<Scr_CreadorMisiones.cazarenemigo> NameEnemiCazado;
+    public List<string> NameEnemiCazado;
     //public string[] NameEnemiCazado;
     public List<int> cazados;
 
@@ -45,10 +45,10 @@ public class Scr_ControladorMisiones : MonoBehaviour
     public GameObject[] todos;
     void Start()
     {
-
+        UnityEngine.Debug.Log("APARECE GATA");
         Gata = GameObject.Find("Gata").transform;
         inventario = Gata.GetChild(7).GetComponent<Scr_Inventario>();
-        //CargarMisiones();
+        CargarMisiones();
         todos= Buscartag.BuscarObjetosConTagInclusoInactivos("Construcciones");
 
         ActualizarInfo();
@@ -87,7 +87,6 @@ public class Scr_ControladorMisiones : MonoBehaviour
             TextoDescripcion.text = MisionCompleta ? MisionActual.DescripcionFinal : MisionActual.Descripcion;
             TextoPagina.text = PaginaActual.ToString() + "/" + (MisionesExtra.Count > 0 ? MisionesExtra.Count.ToString() : "1");
             Objetos.SetActive(MisionActual.Tipo == Scr_CreadorMisiones.Tipos.Caza || MisionActual.Tipo == Scr_CreadorMisiones.Tipos.Recoleccion);
-            GuardarMisiones();
         }
         else
         {
@@ -95,6 +94,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
             TextoPagina.text = "...";
             Objetos.SetActive(false);
         }
+        GuardarMisiones();
     }
 
     public void actualizarTargetsExploratod(string target)
@@ -237,7 +237,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
             ComprobarProgreso(MisionPrincipal, ref MisionPCompleta);
 
         }*/
-        if (MisionesExtra != null)
+        if (MisionesExtra != null && MisionesExtra.Count >0)
         {
             // Misiones Secundarias
             for (int i = 0; i < MisionesExtra.Count; i++)
@@ -364,7 +364,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
                 break;
         }
     }
-    public void checkazados(Scr_CreadorMisiones.cazarenemigo caza, int cantidad)
+    public void checkazados(string caza, int cantidad)
     {
         bool have=false;
         for (int i = 0; i < 10; i++) 
@@ -523,15 +523,49 @@ public class Scr_ControladorMisiones : MonoBehaviour
         }
         
         PlayerPrefs.SetInt("PaginaActual", PaginaActual);
-        PlayerPrefs.SetInt("MisionesExtraCantidad", MisionesExtra.Count);
-        if (MisionesExtra != null)
+        
+        if (MisionesExtra.Count>0)
         {
+            PlayerPrefs.SetInt("MisionesExtraCantidad", MisionesExtra.Count); 
+            UnityEngine.Debug.Log("33333333333");
             for (int i = 0; i < MisionesExtra.Count; i++)
             {
                 PlayerPrefs.SetString("MisionExtra_" + i, MisionesExtra[i].name);
             }
         }
+        else
+        {
+            int misionesExtraCantidad = PlayerPrefs.GetInt("MisionesExtraCantidad", 0);
+            UnityEngine.Debug.Log("se borran" + MisionesExtra.Count);
+            for (int i = 0; i < misionesExtraCantidad; i++)
+            {
+                PlayerPrefs.DeleteKey("MisionExtra_" + i);
+            }
+            PlayerPrefs.SetInt("MisionesExtraCantidad", 0);
+        }
 
+        PlayerPrefs.SetInt("Target_Cantidad", TargetExplorados.Count);
+
+        PlayerPrefs.SetInt("Cazado_Cantidad", NameEnemiCazado.Count);
+        if (TargetExplorados.Count > 0)
+        {
+            for (int i = 0; i < TargetExplorados.Count; i++)
+            {
+                PlayerPrefs.SetString("Target_" + i, TargetExplorados[i]);
+            }
+        }
+        if(NameEnemiCazado.Count > 0)
+        {
+            for (int i = 0; i < NameEnemiCazado.Count; i++)
+            {
+                PlayerPrefs.SetString("Cazado_" + i, NameEnemiCazado[i]);
+                PlayerPrefs.SetInt("cazado_cant" + i, cazados[i]);
+            }
+        }
+
+        
+        
+        UnityEngine.Debug.Log("se gaurd" + MisionesExtra.Count);
         PlayerPrefs.Save();
     }
 
@@ -552,10 +586,12 @@ public class Scr_ControladorMisiones : MonoBehaviour
         PaginaActual = PlayerPrefs.GetInt("PaginaActual", 1);
         MisionesExtra.Clear();
 
-        int misionesExtraCantidad = PlayerPrefs.GetInt("MisionesExtraCantidad", 0);
+        int misionesExtraCantidad = PlayerPrefs.GetInt("MisionesExtraCantidad",0);
+        UnityEngine.Debug.Log("checa------"+misionesExtraCantidad);
         for (int i = 0; i < misionesExtraCantidad; i++)
         {
             string nombreMisionExtra = PlayerPrefs.GetString("MisionExtra_" + i, "");
+            UnityEngine.Debug.Log(nombreMisionExtra);
             if (!string.IsNullOrEmpty(nombreMisionExtra))
             {
                 Scr_CreadorMisiones misionExtra = MisionData.GetByName(nombreMision);
@@ -564,6 +600,35 @@ public class Scr_ControladorMisiones : MonoBehaviour
                 {
                     MisionesExtra.Add(misionExtra);
                 }
+            }
+        }
+        TargetExplorados.Clear();
+        int targets = PlayerPrefs.GetInt("Target_Cantidad", 0);
+        UnityEngine.Debug.Log(targets);
+        for (int i = 0; i < targets; i++)
+        {
+            string nombretarget = PlayerPrefs.GetString("Target_" + i, "");
+            if (!string.IsNullOrEmpty(nombretarget))
+            {
+                //Scr_CreadorMisiones misionExtra = MisionData.GetByName(nombreMision);
+                //Scr_CreadorMisiones misionExtra = System.Array.Find(TodasLasMisiones, m => m.name == nombreMisionExtra);
+                TargetExplorados.Add(nombretarget);
+            }
+        }
+        NameEnemiCazado.Clear();
+        cazados.Clear();
+        int cazado = PlayerPrefs.GetInt("Cazado_Cantidad", 0);
+        UnityEngine.Debug.Log("ae"+cazado);
+        for (int i = 0; i < cazado; i++)
+        {
+            string nombrecazado = PlayerPrefs.GetString("Cazado_" + i, "");
+            int cantCazados = PlayerPrefs.GetInt("cazado_cant" + i, 0);
+            if (!string.IsNullOrEmpty(nombrecazado) && cantCazados>0)
+            {
+                //Scr_CreadorMisiones misionExtra = MisionData.GetByName(nombreMision);
+                //Scr_CreadorMisiones misionExtra = System.Array.Find(TodasLasMisiones, m => m.name == nombreMisionExtra);
+                NameEnemiCazado.Add(nombrecazado);
+                cazados.Add(cantCazados);
             }
         }
     }

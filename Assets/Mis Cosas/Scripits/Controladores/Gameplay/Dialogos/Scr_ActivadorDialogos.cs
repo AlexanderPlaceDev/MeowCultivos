@@ -55,17 +55,19 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
     private void Update()
     {
-        if (!estaAdentro)
+        
+        if (sistemaDialogos != null && !estaAdentro)
         {
             sistemaDialogos.EnPausa = true;
             return;
         }
 
-        if (panelDialogo.activeSelf)
+        //Debug.Log(panelDialogo.activeSelf);
+        if (panelDialogo!=null && panelDialogo.activeSelf)
         {
             ControlarGata();
         }
-        else if (sistemaDialogos.Leido)
+        else if (sistemaDialogos != null && sistemaDialogos.Leido)
         {
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
         }
@@ -84,9 +86,10 @@ public class Scr_ActivadorDialogos : MonoBehaviour
                 StartCoroutine(EsperarCamara());
                 CambiarACamaraDialogo();
             }
+            ControlarGata();
         }
 
-        if (sistemaDialogos.Leido && !sistemaDialogos.Leyendo && !panelDialogo.activeSelf && !CanvasActivo)
+        if (sistemaDialogos != null && sistemaDialogos.Leido && !sistemaDialogos.Leyendo && !panelDialogo.activeSelf && !CanvasActivo)
         {
             CanvasActivo = false;
             DesactivarDialogo();
@@ -218,7 +221,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     {
         for (int i = 0; i < MisionesSecundarisDar.Count; i++) 
         {
-            Debug.LogError(MisionesSecundarisDar[i] == mision);
+            //Debug.LogError(MisionesSecundarisDar[i] == mision);
             if (MisionesSecundarisDar[i]== mision)
             {
                 MisionesSecundarisDar.RemoveAt(i);

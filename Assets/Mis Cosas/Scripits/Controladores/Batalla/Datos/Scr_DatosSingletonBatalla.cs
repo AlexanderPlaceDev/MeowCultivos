@@ -22,4 +22,6 @@ public class Scr_DatosSingletonBatalla : MonoBehaviour
     [Header("Recompensa")]
     public List<Scr_CreadorObjetos> ObjetosRecompensa = new List<Scr_CreadorObjetos>();
     public List<int> CantidadesRecompensa= new List<int>();
+    //public string enemicaza;
+    //public int cantcaza;
 }

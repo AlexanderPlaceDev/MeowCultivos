@@ -30,7 +30,7 @@ public class Scr_CreadorMisiones : ScriptableObject
         gallina,
         lobo
     }
-    public cazarenemigo[] Objetivocaza;
+    public string[] Objetivocaza;
     public int[] cantidad_caza;
     public KeyCode[] Teclas;
     public bool EsContinua;

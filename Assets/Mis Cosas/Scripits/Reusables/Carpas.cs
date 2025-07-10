@@ -30,6 +30,7 @@ public class Carpas : MonoBehaviour
             Debug.Log("carpita");
             carpaUI.SetActive(true);
             cam.carpa = this;
+            cam.cabTiempo();
             openUI = true;
         }
     }
