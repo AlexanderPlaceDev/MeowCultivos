@@ -9,9 +9,6 @@ using UnityEngine.UI;
 public class Scr_ActivadorDialogos : MonoBehaviour
 {
     private bool estaAdentro = false;
-    [SerializeField] Color ColorPersonaje;
-    [SerializeField] Color ContrastePersonaje;
-    [SerializeField] string NombrePersonaje;
     [SerializeField] private GameObject MisionesSecundariasUI;
     [SerializeField] private GameObject MisionesExtrUI;
     [SerializeField] private GameObject panelDialogo;
@@ -238,9 +235,6 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         if (!panelDialogo.activeSelf)
         {
             panelDialogo.SetActive(true);
-            panelDialogo.transform.GetChild(2).GetComponent<Image>().color = ColorPersonaje;
-            panelDialogo.transform.GetChild(2).GetChild(0).GetComponent<Image>().color = ContrastePersonaje;
-            panelDialogo.transform.GetChild(2).GetChild(1).GetComponent<TextMeshProUGUI>().text = NombrePersonaje;
             sistemaDialogos.EnPausa = false;
         }
 

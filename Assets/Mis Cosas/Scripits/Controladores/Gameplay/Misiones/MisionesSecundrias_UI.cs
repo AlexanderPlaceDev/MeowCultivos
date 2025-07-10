@@ -11,7 +11,6 @@ public class MisionesSecundrias_UI : MonoBehaviour
     public Transform contentPanel;
 
     public Color32 PrincipalC;
-
     public Color32 SecundarioC;
 
 

@@ -1,10 +1,15 @@
 using System.Collections;
 using TMPro;
+using UnityEditor.UI;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class Scr_SistemaDialogos : MonoBehaviour
 {
+
+    [SerializeField] string NombreNPC;
+    [SerializeField] Color ColorNPC;
+    [SerializeField] Color ContrasteNPC;
 
     public TextMeshProUGUI Texto;
     public Scr_CreadorDialogos[] Dialogos;
@@ -64,6 +69,9 @@ public class Scr_SistemaDialogos : MonoBehaviour
         Texto.transform.parent.gameObject.SetActive(true);
         Texto.text = ""; // Limpiar el texto al iniciar un nuevo diálogo
         LineaActual = 0;
+        GameObject.Find("Canvas").transform.GetChild(0).GetChild(0).GetChild(2).GetChild(1).GetComponent<TextMeshProUGUI>().text = NombreNPC;
+        GameObject.Find("Canvas").transform.GetChild(0).GetChild(0).GetChild(2).GetComponent<Image>().color = ColorNPC;
+        GameObject.Find("Canvas").transform.GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetComponent<Image>().color = ContrasteNPC;
         
         if (recompensarSecundarias)
         {
