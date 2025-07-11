@@ -25,7 +25,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     public List<Scr_CreadorMisiones> Misionesqueespera;
     public int misionespera;
     private bool CanvasActivo = false;
-    public bool vaCambio = false;
+    public bool CambiaEstadoPrincipal = false;
     private Scr_SistemaDialogos sistemaDialogos;
     private Scr_ControladorMisiones ControladorMisiones;
     private Transform Gata;

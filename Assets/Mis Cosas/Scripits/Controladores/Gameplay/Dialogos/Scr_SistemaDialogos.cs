@@ -91,7 +91,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
         }
         if (activadorDialogos != null)
         {
-            activadorDialogos.vaCambio = DialogoArecibir.cambia;
+            activadorDialogos.CambiaEstadoPrincipal = DialogoArecibir.cambia;
         }
         currentCoroutine = StartCoroutine(ReadDialogue());
     }
@@ -158,7 +158,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
                     Leyendo = false;
                     Leido = true;
 
-                    if (activadorDialogos != null && activadorDialogos.vaCambio)
+                    if (activadorDialogos != null && activadorDialogos.CambiaEstadoPrincipal)
                     {
                         Debug.LogWarning("qeu");
                         if (activadorDialogos.Principal)
@@ -177,7 +177,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
                     {
                         activadorDialogos.Misionequeespera = DialogoArecibir.Mision;
                         ControladorMisiones.MisionActual = DialogoArecibir.Mision;
-                        activadorDialogos.vaCambio = DialogoArecibir.cambia;
+                        activadorDialogos.CambiaEstadoPrincipal = DialogoArecibir.cambia;
                         ControladorMisiones.MisionPrincipal = DialogoArecibir.Mision;
                         //Guardar Dialogo
                         if (GetComponent<Scr_EventosGuardado>() != null)
@@ -253,5 +253,10 @@ public class Scr_SistemaDialogos : MonoBehaviour
     public void AumentarDialogo()
     {
         DialogoActual++;
+    }
+
+    public void GuardarNPC()
+    {
+
     }
 }
