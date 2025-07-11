@@ -295,7 +295,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         if (ControladorMisiones.MisionPrincipal == null) return;
         if (ControladorMisiones.MisionActual == null) return;
 
-        if (Estado_npc==1)
+        if (Estado_npc==0)
         {
             if (ControladorMisiones.MisionPrincipal == Misionequeespera && ControladorMisiones.MisionPCompleta)
             {
@@ -336,6 +336,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     public void GuardarNPC()
     {
         Debug.Log("Aqui se guarda datos de NPc_"+sistemaDialogos.NombreNPC);
+        //sistemaDialogos.EsCinematica;
     }
     public void cargarNPC()
     {

@@ -46,7 +46,12 @@ public class MisionesUI : MonoBehaviour
             MostrarMisiones();
         }
     }
-
+    void OnEnable()
+    {
+        Debug.Log("El GameObject se ha activado");
+        // Aquí puedes llamar a tu función personalizada
+        checarMisionesCurso();
+    }
     public void checarMisionesCurso()
     {
         //actualiza las misiones que tiene el jugador en su controlador inventario

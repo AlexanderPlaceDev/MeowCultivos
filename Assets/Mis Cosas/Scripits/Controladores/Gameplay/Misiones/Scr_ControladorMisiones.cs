@@ -237,7 +237,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
             ComprobarProgreso(MisionPrincipal, ref MisionPCompleta);
 
         }*/
-        if (MisionesExtra != null && MisionesExtra.Count >0)
+        if (MisionesExtra != null && MisionesExtra.Count >0 && MisionesScompletas!=null && MisionesScompletas.Count>0)
         {
             // Misiones Secundarias
             for (int i = 0; i < MisionesExtra.Count; i++)
@@ -280,6 +280,12 @@ public class Scr_ControladorMisiones : MonoBehaviour
                 else if (mision.DaObjetos && !mision.QuitaObjetos)
                 {
                     recompensa(mision);
+                }
+
+                if(MisionActual== MisionesExtra[i])
+                {
+                    MisionActual = null;
+                    MisionCompleta = false;
                 }
                 MisionesExtra.RemoveAt(i);
                 MisionesScompletas.RemoveAt(i);
@@ -527,10 +533,11 @@ public class Scr_ControladorMisiones : MonoBehaviour
         if (MisionesExtra.Count>0)
         {
             PlayerPrefs.SetInt("MisionesExtraCantidad", MisionesExtra.Count); 
-            //UnityEngine.Debug.Log("33333333333");
+            UnityEngine.Debug.Log("33333333333");
             for (int i = 0; i < MisionesExtra.Count; i++)
             {
                 PlayerPrefs.SetString("MisionExtra_" + i, MisionesExtra[i].name);
+                UnityEngine.Debug.Log("00000000000000");
             }
         }
         else
@@ -599,6 +606,10 @@ public class Scr_ControladorMisiones : MonoBehaviour
                 if (misionExtra != null)
                 {
                     MisionesExtra.Add(misionExtra);
+                }
+                else
+                {
+                    UnityEngine.Debug.Log("no exisre misione");
                 }
             }
         }
