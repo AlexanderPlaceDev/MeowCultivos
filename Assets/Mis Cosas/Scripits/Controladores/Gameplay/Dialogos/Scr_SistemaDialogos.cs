@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Scr_SistemaDialogos : MonoBehaviour
 {
 
-    [SerializeField] string NombreNPC;
+    [SerializeField] public string NombreNPC;
     [SerializeField] Color ColorNPC;
     [SerializeField] Color ContrasteNPC;
 
@@ -81,7 +81,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
         {
             DialogoArecibir = DialogoExtra;
         }
-        else if (activadorDialogos!=null && !activadorDialogos.Principal && !recompensarSecundarias)
+        else if (activadorDialogos!=null && activadorDialogos.Estado_npc==1 && !recompensarSecundarias)
         {
             DialogoArecibir = DialogoSecundario;
         }
@@ -161,19 +161,19 @@ public class Scr_SistemaDialogos : MonoBehaviour
                     if (activadorDialogos != null && activadorDialogos.CambiaEstadoPrincipal)
                     {
                         Debug.LogWarning("qeu");
-                        if (activadorDialogos.Principal)
+                        if (activadorDialogos.Estado_npc == 1)
                         {
-                            activadorDialogos.Principal = false;
+                            activadorDialogos.Estado_npc = 0;
                         }
                         else
                         {
-                            activadorDialogos.Principal = true;
+                            activadorDialogos.Estado_npc = 1;
                         }
 
                     }
 
                     //Asignar Mision
-                    if (DialogoArecibir.EsMision && activadorDialogos.Principal)
+                    if (DialogoArecibir.EsMision && activadorDialogos.Estado_npc == 0)
                     {
                         activadorDialogos.Misionequeespera = DialogoArecibir.Mision;
                         ControladorMisiones.MisionActual = DialogoArecibir.Mision;
@@ -192,7 +192,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
 
                         //ControladorMisiones.revisar_objetivos();
                     }
-                    else if (DialogoArecibir.EsMision && !activadorDialogos.Principal)
+                    else if (DialogoArecibir.EsMision && activadorDialogos.Estado_npc == 1)
                     {
                         activadorDialogos.Misionesqueespera.Add(DialogoArecibir.Mision);
                         ControladorMisiones.MisionesExtra.Add(DialogoArecibir.Mision);

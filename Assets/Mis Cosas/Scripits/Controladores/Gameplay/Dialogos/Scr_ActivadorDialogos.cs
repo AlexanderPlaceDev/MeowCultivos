@@ -16,7 +16,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     [SerializeField] private GameObject camara;
     [SerializeField] private GameObject camaraGata;
     [SerializeField] private GameObject CanvasNPC;
-    [SerializeField] public bool Principal;
+    //[SerializeField] private GameObject CanvasReloj;
+    [SerializeField] public int Estado_npc;
     [SerializeField] private List<Scr_CreadorDialogos> MisionesSecundarisDar;
     [SerializeField] private List<Scr_CreadorDialogos> Misiones_deDialogoExtra;
     public MisionesSecundrias_UI misionSEc;
@@ -36,8 +37,16 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     private void Start()
     {
         Gata = GameObject.Find("Gata").transform;
-        misionSEc= MisionesSecundariasUI.GetComponent<MisionesSecundrias_UI>();
+        /*if (misionExtr != null)
+        {
 
+            misionExtr = MisionesExtrUI.GetComponent<Misiones_Extra>();
+        }
+        if(MisionesSecundariasUI != null)
+        {
+            
+        }*/
+        misionSEc = MisionesSecundariasUI.GetComponent<MisionesSecundrias_UI>();
         misionExtr = MisionesExtrUI.GetComponent<Misiones_Extra>();
         camaraGata = GameObject.Find("Camara 360")?.gameObject; // Asegurar que sea un GameObject válido
         brain = Camera.main.GetComponent<CinemachineBrain>();
@@ -83,7 +92,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
                 StartCoroutine(EsperarCamara());
                 CambiarACamaraDialogo();
             }
-            ControlarGata();
+            //ControlarGata();
         }
 
         if (sistemaDialogos != null && sistemaDialogos.Leido && !sistemaDialogos.Leyendo && !panelDialogo.activeSelf && !CanvasActivo)
@@ -109,6 +118,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
     private void CambiarACamaraDialogo()
     {
+        //CanvasReloj.SetActive(false);
         Debug.Log("Cambiando a camara de dialogo");
         camara.SetActive(true);
         camaraGata.SetActive(false);
@@ -119,7 +129,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     private IEnumerator EsperarCamara()
     {
         yield return new WaitForSeconds(TransicionDuracion);
-        if (!Principal)
+        if (Estado_npc==1)
         {
             CanvasNPC.SetActive(true);
         }
@@ -152,12 +162,14 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     }
     public void cerrarHablar_extra()
     {
+        GuardarNPC();
         CanvasNPC.SetActive(true);
         CanvasActivo = true;
         MisionesExtrUI.SetActive(false);
     }
     public void cerrarMisionesSecundaris()
     {
+        GuardarNPC();
         CanvasNPC.SetActive(true);
         CanvasActivo = true;
         MisionesSecundariasUI.SetActive(false);
@@ -209,6 +221,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     }
     public void Salir()
     {
+        GuardarNPC();
         CanvasActivo = false;
         CanvasNPC.SetActive(false);
         camara.SetActive(true);
@@ -225,6 +238,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
                 Debug.Log("quito Mision");
             }
         }
+        GuardarNPC();
     }
     private void ActivarDialogo()
     {
@@ -263,6 +277,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
     private void DesactivarDialogo()
     {
+        GuardarNPC();
         camara.SetActive(false);
         camaraGata.SetActive(true);
         iconos[0].SetActive(true);
@@ -280,10 +295,11 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         if (ControladorMisiones.MisionPrincipal == null) return;
         if (ControladorMisiones.MisionActual == null) return;
 
-        if (Principal)
+        if (Estado_npc==0)
         {
             if (ControladorMisiones.MisionPrincipal == Misionequeespera && ControladorMisiones.MisionPCompleta)
             {
+                GuardarNPC();
                 if (GetComponent<Scr_EventosGuardado>() != null)
                 {
                     Debug.Log("Guardando progreso de diálogo");
@@ -315,6 +331,16 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         }
         
         
+    }
+
+    public void GuardarNPC()
+    {
+        Debug.Log("Aqui se guarda datos de NPc_"+sistemaDialogos.NombreNPC);
+        //sistemaDialogos.EsCinematica;
+    }
+    public void cargarNPC()
+    {
+        Debug.Log("Aqui se carga datos de NPc_" + sistemaDialogos.NombreNPC);
     }
 
     private void OnTriggerEnter(Collider other)
