@@ -527,7 +527,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
         if (MisionesExtra.Count>0)
         {
             PlayerPrefs.SetInt("MisionesExtraCantidad", MisionesExtra.Count); 
-            UnityEngine.Debug.Log("33333333333");
+            //UnityEngine.Debug.Log("33333333333");
             for (int i = 0; i < MisionesExtra.Count; i++)
             {
                 PlayerPrefs.SetString("MisionExtra_" + i, MisionesExtra[i].name);
@@ -536,7 +536,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
         else
         {
             int misionesExtraCantidad = PlayerPrefs.GetInt("MisionesExtraCantidad", 0);
-            UnityEngine.Debug.Log("se borran" + MisionesExtra.Count);
+            //UnityEngine.Debug.Log("se borran" + MisionesExtra.Count);
             for (int i = 0; i < misionesExtraCantidad; i++)
             {
                 PlayerPrefs.DeleteKey("MisionExtra_" + i);
@@ -565,7 +565,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
         
         
-        UnityEngine.Debug.Log("se gaurd" + MisionesExtra.Count);
+        //UnityEngine.Debug.Log("se gaurd" + MisionesExtra.Count);
         PlayerPrefs.Save();
     }
 
@@ -587,11 +587,11 @@ public class Scr_ControladorMisiones : MonoBehaviour
         MisionesExtra.Clear();
 
         int misionesExtraCantidad = PlayerPrefs.GetInt("MisionesExtraCantidad",0);
-        UnityEngine.Debug.Log("checa------"+misionesExtraCantidad);
+        //UnityEngine.Debug.Log("checa------"+misionesExtraCantidad);
         for (int i = 0; i < misionesExtraCantidad; i++)
         {
             string nombreMisionExtra = PlayerPrefs.GetString("MisionExtra_" + i, "");
-            UnityEngine.Debug.Log(nombreMisionExtra);
+            //UnityEngine.Debug.Log(nombreMisionExtra);
             if (!string.IsNullOrEmpty(nombreMisionExtra))
             {
                 Scr_CreadorMisiones misionExtra = MisionData.GetByName(nombreMision);
@@ -604,7 +604,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
         }
         TargetExplorados.Clear();
         int targets = PlayerPrefs.GetInt("Target_Cantidad", 0);
-        UnityEngine.Debug.Log(targets);
+        //UnityEngine.Debug.Log(targets);
         for (int i = 0; i < targets; i++)
         {
             string nombretarget = PlayerPrefs.GetString("Target_" + i, "");
@@ -618,7 +618,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
         NameEnemiCazado.Clear();
         cazados.Clear();
         int cazado = PlayerPrefs.GetInt("Cazado_Cantidad", 0);
-        UnityEngine.Debug.Log("ae"+cazado);
+        //UnityEngine.Debug.Log("ae"+cazado);
         for (int i = 0; i < cazado; i++)
         {
             string nombrecazado = PlayerPrefs.GetString("Cazado_" + i, "");
