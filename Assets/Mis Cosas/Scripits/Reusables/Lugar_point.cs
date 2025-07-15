@@ -52,7 +52,7 @@ public class Lugar_point : MonoBehaviour
         if (isshow) return;
         Scr_ControladorMisiones ControladorMisiones= other.gameObject.GetComponentInChildren<Scr_ControladorMisiones>();
         Debug.Log("Se detecto ");
-        ControladorMisiones.actualizarTargetsExploratod(NombreLugar);
+        //ControladorMisiones.actualizarTargetsExploratod(NombreLugar);
         StartCoroutine(Showtext());
     }
 

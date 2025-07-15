@@ -26,7 +26,7 @@ public class AlphaChanger : MonoBehaviour
     {
         if (Dialogo != null)
         {
-            if (Dialogo.DialogoActual > NumDialogo)
+            if (Dialogo.DialogoActual >= NumDialogo)
             {
                 gameObject.SetActive(false);
             }

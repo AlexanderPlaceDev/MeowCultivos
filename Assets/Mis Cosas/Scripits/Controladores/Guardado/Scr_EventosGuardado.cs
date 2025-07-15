@@ -29,7 +29,7 @@ public class Scr_EventosGuardado : MonoBehaviour
     {
         switch (Personaje)
         {
-            case "Gusano":
+            case "Miguel":
                 {
                     Debug.Log("Evento:" + Personaje + " " + UltimoDialogo + " guardado");
                     if (UltimoDialogo == 0)
@@ -45,7 +45,7 @@ public class Scr_EventosGuardado : MonoBehaviour
                         PlayerPrefs.SetString("Reloj", "Si");
                         Gata.transform.GetChild(6).GetComponent<Scr_ControladorMenuGameplay>().enabled = true;
                     }
-                    PlayerPrefs.SetInt("DialogoGusano", UltimoDialogo);
+                    PlayerPrefs.SetInt("DialogoMiguel", UltimoDialogo);
                     break;
                 }
         }

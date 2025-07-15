@@ -57,17 +57,17 @@ public class MisionesUI : MonoBehaviour
         //actualiza las misiones que tiene el jugador en su controlador inventario
         MisionesenCurso.Clear();
         MisionesenCursoCompletadas.Clear();
-        ControladorMisiones.revisarMisionPrincipal();
-        ControladorMisiones.RevisarTodasLasMisionesSecundarias();
+        //ControladorMisiones.revisarMisionPrincipal();
+        //ControladorMisiones.RevisarTodasLasMisionesSecundarias();
         if (ControladorMisiones.MisionPrincipal != null)
         {
             MisionesenCurso.Add(ControladorMisiones.MisionPrincipal);
             MisionesenCursoCompletadas.Add(ControladorMisiones.MisionPCompleta);
         }
 
-        for (int i = 0; i < ControladorMisiones.MisionesExtra.Count; i++)
+        for (int i = 0; i < ControladorMisiones.MisionesSecundarias.Count; i++)
         {
-            MisionesenCurso.Add(ControladorMisiones.MisionesExtra[i]);
+            MisionesenCurso.Add(ControladorMisiones.MisionesSecundarias[i]);
             MisionesenCursoCompletadas.Add(ControladorMisiones.MisionesScompletas[i]);
         }
         Debug.Log("Revisado");
@@ -183,7 +183,7 @@ public class MisionesUI : MonoBehaviour
             boton.onClick.RemoveAllListeners();
             boton.onClick.AddListener(() =>
             {
-                ControladorMisiones.SeleccionMisionActual(instance, MisionesenCursoCompletadas[i-1]);
+                //ControladorMisiones.SeleccionMisionActual(instance, MisionesenCursoCompletadas[i-1]);
                 checarMisionActual();
             });
         }

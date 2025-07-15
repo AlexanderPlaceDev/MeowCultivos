@@ -32,8 +32,8 @@ public class Scr_ObjetosAgregados : MonoBehaviour
                 GameObject.Find("Canvas XP").GetComponent<Animator>().Play("Desaparecer");
             }
             Scr_ControladorMisiones mis = GameObject.Find("ControladorMisiones").GetComponent<Scr_ControladorMisiones>();
-            mis.revisarMisionPrincipal();
-            mis.RevisarTodasLasMisionesSecundarias();
+            //mis.revisarMisionPrincipal();
+            //mis.RevisarTodasLasMisionesSecundarias();
 
             int ObjetoActual = 0;
             xptotal = 0;

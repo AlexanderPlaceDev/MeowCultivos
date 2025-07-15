@@ -89,7 +89,7 @@ public class Scr_CambiadorBatalla : MonoBehaviour
             havecaza=false;
         }
         PlayerPrefs.Save();
-        for (int i = 0; i < mis.NameEnemiCazado.Count; i++)
+        /*for (int i = 0; i < mis.NameEnemiCazado.Count; i++)
         {
             string nombrecazado = mis.NameEnemiCazado[i];
             int cantCazados = mis.cazados[i];
@@ -105,7 +105,7 @@ public class Scr_CambiadorBatalla : MonoBehaviour
             mis.NameEnemiCazado.Add(PrefabEnemigo.name);
             mis.cazados.Add(0);
             havecaza = false;
-        }
+        }*/
         Cambiando = true;
         escenaCargada = true;
 

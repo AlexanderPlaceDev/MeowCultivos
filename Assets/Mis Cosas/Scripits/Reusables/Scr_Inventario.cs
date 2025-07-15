@@ -58,7 +58,7 @@ public class Scr_Inventario : MonoBehaviour
         }
         if(ControladorMisiones!= null)
         {
-            ControladorMisiones.RevisarTodasLasMisionesSecundarias();
+            //ControladorMisiones.RevisarTodasLasMisionesSecundarias();
         }
     }
 
