@@ -11,7 +11,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     private bool estaAdentro = false;
     [SerializeField] private GameObject MisionesSecundariasUI;
     [SerializeField] private GameObject MisionesExtrUI;
-    [SerializeField] private GameObject panelDialogo;
+    [SerializeField] public GameObject panelDialogo;
     [SerializeField] private GameObject[] iconos;
     [SerializeField] private GameObject camara;
     [SerializeField] private GameObject camaraGata;

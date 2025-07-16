@@ -11,37 +11,50 @@ public class NPC_movimiento : MonoBehaviour
 
     public GameObject CTiempo;
     public Scr_ControladorTiempo ContolT;
+    public Scr_ActivadorDialogos Dialogo;
 
     private NavMeshAgent agente;
     private Vector3 Destino;
     private bool Esperando = false;
     private string diaAnterior;
 
+    private Transform Gata;
+
     void Start()
     {
+
+        Gata = GameObject.Find("Gata").transform;
         ContolT = CTiempo.GetComponent<Scr_ControladorTiempo>();
         agente = GetComponent<NavMeshAgent>();
         diaAnterior = ContolT.DiaActual;
+        Dialogo=GetComponent<Scr_ActivadorDialogos>();
     }
 
     void Update()
     {
-        if (ContolT.DiaActual != diaAnterior)
+        if (ContolT.DiaActual != diaAnterior && !Dialogo.panelDialogo.activeSelf)
         {
+            Esperando = false;
             ReiniciarComportamientos();
             diaAnterior = ContolT.DiaActual;
 
             MoverAlEventoMasCercano();
         }
-
-        checarcambio();
+        else if (Dialogo.panelDialogo.activeSelf)
+        {
+            DetenerYMirarJugador();
+        }
+        else
+        {
+            checarcambio();
+        }
     }
 
     void checarcambio()
     {
         if (!Esperando)
         {
-            //Debug.Log("AAA deja ver");
+            Debug.Log("AAA deja ver");
             foreach (var c in comportamientos)
             {
                 if (c.DiaActual == ContolT.DiaActual && !c.Ejecutado)
@@ -111,6 +124,23 @@ public class NPC_movimiento : MonoBehaviour
             Debug.Log("NPC: Moviendo al evento más cercano del día al cambiar de día");
             MoverANuevaPosicion(eventoMasCercano.pos);
             eventoMasCercano.Ejecutado = true; // Marcar como hecho para evitar repetirlo
+        }
+    }
+
+    void DetenerYMirarJugador()
+    {
+        if (agente.isOnNavMesh)
+        {
+            agente.isStopped = true; // Detiene el movimiento
+        }
+
+        Vector3 direccion = Gata.position - transform.position;
+        direccion.y = 0; // Evita rotación vertical
+
+        if (direccion != Vector3.zero)
+        {
+            Quaternion rotacionDeseada = Quaternion.LookRotation(direccion);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotacionDeseada, Time.deltaTime * 5f);
         }
     }
 }
