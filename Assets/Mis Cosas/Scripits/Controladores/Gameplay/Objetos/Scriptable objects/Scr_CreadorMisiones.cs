@@ -43,7 +43,7 @@ public class Scr_CreadorMisiones : ScriptableObject
     //public string[] ObjetosQueDa;
     public int[] CantidadesQuita;
     public int[] CantidadesDa;
-    public GameObject[] objetoaCostruir;
+    public GameObject[] objetosCostruir;
 
     public bool CambiaPrincipal;
     public string TargetExplorado;

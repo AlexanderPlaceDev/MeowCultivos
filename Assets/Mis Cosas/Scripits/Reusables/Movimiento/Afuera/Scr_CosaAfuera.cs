@@ -93,6 +93,7 @@ public class Scr_CosaAfuera : Scr_EnemigoFuera
 
     public void SpawnearBala()
     {
+        Debug.Log("Disparando");
         // Instancia la bala con la misma rotación que el enemigo
         GameObject Bala = Instantiate(PrefabBala, PosicionBala.position, transform.rotation);
 

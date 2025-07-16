@@ -35,7 +35,6 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
         foreach (GameObject Barra in Barras)
         {
             int CantBotones = int.Parse(Barra.name[Barra.name.Length - 1].ToString());
-            Debug.Log("Cantidad de botones:" + CantBotones);
 
             for (int i = 0; i < CantBotones * PlayerPrefs.GetInt("Rango " + Barra.name, 0); i++)
             {

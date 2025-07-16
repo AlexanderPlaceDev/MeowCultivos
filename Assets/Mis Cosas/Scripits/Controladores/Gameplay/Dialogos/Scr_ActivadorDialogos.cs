@@ -1,5 +1,4 @@
-using Cinemachine;
-using System;
+ï»¿using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -10,354 +9,252 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 {
     private bool estaAdentro = false;
     [SerializeField] private GameObject MisionesSecundariasUI;
-    [SerializeField] private GameObject MisionesExtrUI;
-    [SerializeField] public GameObject panelDialogo;
+    [SerializeField] private GameObject panelDialogo;
     [SerializeField] private GameObject[] iconos;
-    [SerializeField] private GameObject camara;
+    [SerializeField] private GameObject camaraDialogo;
     [SerializeField] private GameObject camaraGata;
-    [SerializeField] private GameObject CanvasNPC;
-    //[SerializeField] private GameObject CanvasReloj;
-    [SerializeField] public int Estado_npc;
-    [SerializeField] private List<Scr_CreadorDialogos> MisionesSecundarisDar;
-    [SerializeField] private List<Scr_CreadorDialogos> Misiones_deDialogoExtra;
-    public MisionesSecundrias_UI misionSEc;
-    public Misiones_Extra misionExtr;
-    public Scr_CreadorMisiones Misionequeespera;
-    public List<Scr_CreadorMisiones> Misionesqueespera;
-    public int misionespera;
-    private bool CanvasActivo = false;
-    public bool vaCambio = false;
+
+    [SerializeField] private List<Scr_CreadorDialogos> MisionesSecundariasDar;
+    public MisionesSecundrias_UI ControladorMisionesSecundariasUI;
+    public List<Scr_CreadorMisiones> MisionesSecundarias;
+
+    private bool canvasActivo = false;
+    private bool completoSecundaria = false;
+
     private Scr_SistemaDialogos sistemaDialogos;
-    private Scr_ControladorMisiones ControladorMisiones;
+    private Scr_ControladorMisiones controladorMisiones;
     private Transform Gata;
 
     private CinemachineBrain brain;
-    private float TransicionDuracion = 1f;
-    public bool completoSecundaria=false;
+    private float transicionDuracion = 1f;
+
+    bool Hablando = false;
+    bool ViendoMisiones = false;
+
+    [SerializeField] private bool autoIniciarDialogo = false;
+
     private void Start()
     {
         Gata = GameObject.Find("Gata").transform;
-        /*if (misionExtr != null)
-        {
-
-            misionExtr = MisionesExtrUI.GetComponent<Misiones_Extra>();
-        }
-        if(MisionesSecundariasUI != null)
-        {
-            
-        }*/
-        misionSEc = MisionesSecundariasUI.GetComponent<MisionesSecundrias_UI>();
-        misionExtr = MisionesExtrUI.GetComponent<Misiones_Extra>();
-        camaraGata = GameObject.Find("Camara 360")?.gameObject; // Asegurar que sea un GameObject válido
+        ControladorMisionesSecundariasUI = MisionesSecundariasUI.GetComponent<MisionesSecundrias_UI>();
         brain = Camera.main.GetComponent<CinemachineBrain>();
+
         if (brain != null)
         {
-            // Cambiar duración del blend por defecto
-            brain.m_DefaultBlend.m_Time = TransicionDuracion;
+            brain.m_DefaultBlend.m_Time = transicionDuracion;
         }
+
         sistemaDialogos = GetComponent<Scr_SistemaDialogos>();
-        ControladorMisiones = Gata.GetChild(4).GetComponent<Scr_ControladorMisiones>();
+        controladorMisiones = Gata.GetChild(4).GetComponent<Scr_ControladorMisiones>();
     }
 
     private void Update()
     {
-        
-        if (sistemaDialogos != null && !estaAdentro)
+        if (!estaAdentro) return; // Salir si no estÃ¡ dentro del trigger
+
+        if (sistemaDialogos != null && panelDialogo.activeSelf == false)
         {
             sistemaDialogos.EnPausa = true;
-            return;
         }
 
-        //Debug.Log(panelDialogo.activeSelf);
-        if (panelDialogo!=null && panelDialogo.activeSelf)
+        if (!autoIniciarDialogo) // Solo escuchar input si no es autoIniciar
         {
-            ControlarGata();
-        }
-        else if (sistemaDialogos != null && sistemaDialogos.Leido)
-        {
-            Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (panelDialogo.activeSelf)
+            if (Input.GetKeyDown(KeyCode.E) && !ViendoMisiones)
             {
-                ComprobarMision();
-                Debug.Log("a");
-                ActivarDialogo();
+                Hablando = true;
+                ManejarDialogoPrincipal();
             }
-            else
+
+            if (Input.GetKeyDown(KeyCode.F) && !Hablando)
             {
-                CanvasActivo = true;
-                StartCoroutine(EsperarCamara());
-                CambiarACamaraDialogo();
+                ViendoMisiones = true;
+                ManejarMisionesSecundarias();
             }
-            //ControlarGata();
         }
 
-        if (sistemaDialogos != null && sistemaDialogos.Leido && !sistemaDialogos.Leyendo && !panelDialogo.activeSelf && !CanvasActivo)
+        //Asegurarse de desactivar los dialogos
+        if (sistemaDialogos != null && sistemaDialogos.Leido && !panelDialogo.activeSelf && !canvasActivo)
         {
-            CanvasActivo = false;
             DesactivarDialogo();
         }
     }
 
-    private void ControlarGata()
+    private void ManejarDialogoPrincipal()
     {
-        Girar();
-        var movimiento = Gata.GetComponent<Scr_Movimiento>();
-        movimiento.Estado = Scr_Movimiento.Estados.Quieto;
-        movimiento.InputVer = 0;
-        movimiento.InputHor = 0;
-
-        var animaciones = Gata.GetComponent<Scr_ControladorAnimacionesGata>();
-        animaciones.PuedeCaminar = false;
-
-        Gata.GetComponent<Rigidbody>().velocity = Vector3.zero;
-    }
-
-    private void CambiarACamaraDialogo()
-    {
-        //CanvasReloj.SetActive(false);
-        Debug.Log("Cambiando a camara de dialogo");
-        camara.SetActive(true);
-        camaraGata.SetActive(false);
-        iconos[0].SetActive(false);
-        iconos[1].SetActive(false);
-    }
-
-    private IEnumerator EsperarCamara()
-    {
-        yield return new WaitForSeconds(TransicionDuracion);
-        if (Estado_npc==1)
+        if (panelDialogo.activeSelf)
         {
-            CanvasNPC.SetActive(true);
+            VerificarMisionPrincipal();
+            ActivarDialogo();
         }
         else
         {
-            BotonHablar();
+            canvasActivo = true;
+            StartCoroutine(EsperarYCambiarCamara());
         }
     }
-    public void Boton_hablarExtra()
+private void ManejarMisionesSecundarias()
     {
-        Debug.Log("que");
-        CanvasNPC.SetActive(false);
-        MisionesExtrUI.SetActive(true);
-        misionExtr.conseguirNPC(gameObject);
-        misionExtr.coseguir_misiones(Misiones_deDialogoExtra);
-    }
-    public void opcionesUI()
-    {
-        CanvasActivo = false;
-        CanvasNPC.SetActive(false);
-        MisionesSecundariasUI.SetActive(false);
-    }
+        completoSecundaria = false;
 
-    
-    public void opcionesUI2()
-    {
-        CanvasActivo = false;
-        CanvasNPC.SetActive(false);
-        MisionesExtrUI.SetActive(false);
-    }
-    public void cerrarHablar_extra()
-    {
-        GuardarNPC();
-        CanvasNPC.SetActive(true);
-        CanvasActivo = true;
-        MisionesExtrUI.SetActive(false);
-    }
-    public void cerrarMisionesSecundaris()
-    {
-        GuardarNPC();
-        CanvasNPC.SetActive(true);
-        CanvasActivo = true;
-        MisionesSecundariasUI.SetActive(false);
-    }
-    public void BotonHablar()
-    {
-        CanvasActivo = false;
-        CanvasNPC.SetActive(false);
-        ComprobarMision();
-        ActivarDialogo();
-        
-    }
-
-    public void BotonMisionesSecundarias()
-    {
-        CanvasNPC.SetActive(false);
-        if (Misionesqueespera != null)
+        foreach (var mision in MisionesSecundarias)
         {
-            //Debug.Log("ae");
-            for (int t = 0; t < Misionesqueespera.Count; t++)
+            int index = controladorMisiones.MisionesSecundarias.IndexOf(mision);
+            if (index >= 0 && controladorMisiones.MisionesScompletas[index])
             {
-                for (int i = 0; i < ControladorMisiones.MisionesExtra.Count; i++)
-                {
-                    if (ControladorMisiones.MisionesExtra[i] == Misionesqueespera[t] && ControladorMisiones.MisionesScompletas[i])
-                    {
-                        ControladorMisiones.TerminarMisionSexundaria(Misionesqueespera[t]);
-                        completoSecundaria = true;
-                        Debug.Log("aeeee" + completoSecundaria);
-                    }
-                }
+                completoSecundaria = true;
+                break;
             }
-
         }
 
         sistemaDialogos.recompensarSecundarias = completoSecundaria;
+
         if (completoSecundaria)
         {
             sistemaDialogos.IniciarDialogo();
-            opcionesUI();
             completoSecundaria = false;
         }
         else
         {
             MisionesSecundariasUI.SetActive(true);
-            misionSEc.conseguirNPC(gameObject);
-            misionSEc.coseguir_misiones(MisionesSecundarisDar);
+            ControladorMisionesSecundariasUI.conseguirNPC(gameObject);
+            ControladorMisionesSecundariasUI.coseguir_misiones(MisionesSecundariasDar);
         }
+    }
+    private IEnumerator EsperarYCambiarCamara()
+    {
+        CambiarACamaraDialogo();
+        yield return new WaitForSeconds(transicionDuracion);
+        VerificarMisionPrincipal();
+        ActivarDialogo();
+    }
 
-    }
-    public void Salir()
+    private void VerificarMisionPrincipal()
     {
-        GuardarNPC();
-        CanvasActivo = false;
-        CanvasNPC.SetActive(false);
-        camara.SetActive(true);
-        camaraGata.SetActive(true);
-    }
-    public void quitarMisionSecundaria(Scr_CreadorDialogos mision)
-    {
-        for (int i = 0; i < MisionesSecundarisDar.Count; i++) 
+        Debug.Log("Verifica la mision");
+        if (controladorMisiones.MisionPrincipal == null) return;
+        controladorMisiones.RevisarMisionPrincipal();
+        if (controladorMisiones.MisionPCompleta)
         {
-            //Debug.LogError(MisionesSecundarisDar[i] == mision);
-            if (MisionesSecundarisDar[i]== mision)
-            {
-                MisionesSecundarisDar.RemoveAt(i);
-                Debug.Log("quito Mision");
-            }
+            controladorMisiones.MisionPCompleta = false;
+            controladorMisiones.MisionPrincipal = null;
+
+
+
+            //Agregar logica para quitar/dar items/Rango/XP/Dinero
+
+
+
+
+            sistemaDialogos.LineaActual = 0;
+            sistemaDialogos.Leido = false;
+            sistemaDialogos.DialogoActual++;
         }
-        GuardarNPC();
     }
+
+    
+
     private void ActivarDialogo()
     {
-        Debug.Log("Activando dialogo y desactivando camaraGata");
-        camaraGata.SetActive(false); // Asegurar que se apaga al iniciar diálogo
-        camara.SetActive(true);
+        if (camaraDialogo != null) camaraDialogo.SetActive(true);
+        if (camaraGata != null) camaraGata.SetActive(false);
+
+        OcultarIconos(); // Siempre ocultar iconos al iniciar diÃ¡logo
+        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
 
         if (!panelDialogo.activeSelf)
         {
             panelDialogo.SetActive(true);
             sistemaDialogos.EnPausa = false;
-        }
-
-        if (!sistemaDialogos.EnPausa)
-        {
+            
             if (sistemaDialogos.Leyendo)
             {
                 sistemaDialogos.SaltarDialogo();
             }
             else
             {
-                string textoActual = panelDialogo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text;
-                
-                if (sistemaDialogos.DialogoArecibir!=null && sistemaDialogos.DialogoArecibir.Lineas[sistemaDialogos.LineaActual] == textoActual)
-                {
-                    sistemaDialogos.SiguienteLinea();
-                }
-                else
-                {
-                    sistemaDialogos.IniciarDialogo();
-
-                }
+                sistemaDialogos.IniciarDialogo();
             }
         }
+
+        
+            
+        
     }
 
-    private void DesactivarDialogo()
+    public void DesactivarDialogo()
     {
         GuardarNPC();
-        camara.SetActive(false);
-        camaraGata.SetActive(true);
-        iconos[0].SetActive(true);
-        iconos[1].SetActive(true);
+        Hablando = false;
+
+        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
+
+        if (camaraDialogo != null) camaraDialogo.SetActive(false);
+        if (camaraGata != null) camaraGata.SetActive(true);
+
+        if (!autoIniciarDialogo) // Solo mostrar iconos si no es autoIniciar
+            MostrarIconos();
     }
 
-    private void Girar()
+    private void CambiarACamaraDialogo()
     {
-        Quaternion objetivo = Quaternion.LookRotation(new Vector3(transform.position.x, Gata.position.y, transform.position.z) - Gata.position);
-        Gata.rotation = Quaternion.RotateTowards(Gata.rotation, objetivo, 200 * Time.deltaTime);
+        if (camaraDialogo != null) camaraDialogo.SetActive(true);
+        if (camaraGata != null) camaraGata.SetActive(false);
+        OcultarIconos();
     }
 
-    private void ComprobarMision()
+    private void OcultarIconos()
     {
-        if (ControladorMisiones.MisionPrincipal == null) return;
-        if (ControladorMisiones.MisionActual == null) return;
-
-        if (Estado_npc==0)
+        foreach (var icono in iconos)
         {
-            if (ControladorMisiones.MisionPrincipal == Misionequeespera && ControladorMisiones.MisionPCompleta)
-            {
-                GuardarNPC();
-                if (GetComponent<Scr_EventosGuardado>() != null)
-                {
-                    Debug.Log("Guardando progreso de diálogo");
-                    GetComponent<Scr_EventosGuardado>().EventoDialogo(sistemaDialogos.DialogoActual, "Gusano");
-                }
-                ControladorMisiones.MisionPCompleta = false;
-                ControladorMisiones.MisionCompleta = false;
-                if (ControladorMisiones.MisionActual == ControladorMisiones.MisionPrincipal)
-                {
-                    ControladorMisiones.MisionActual= null;
-                }
-                /*
-                if (vaCambio && Principal)
-                {
-                    Principal = false;
-                }
-                
-                else if(vaCambio && !Principal)
-                {
-                    Principal = true;
-                }
-                */
-                ControladorMisiones.MisionPrincipal = null;
-                sistemaDialogos.LineaActual = 0;
-                sistemaDialogos.Leido = false;
-                sistemaDialogos.DialogoActual++;
-                misionespera++;
-            }
+            if (icono != null) icono.SetActive(false);
         }
-        
-        
+    }
+
+    private void MostrarIconos()
+    {
+        foreach (var icono in iconos)
+        {
+            if (icono != null) icono.SetActive(true);
+        }
     }
 
     public void GuardarNPC()
     {
-        Debug.Log("Aqui se guarda datos de NPc_"+sistemaDialogos.NombreNPC);
-        //sistemaDialogos.EsCinematica;
+        var eventosGuardado = GetComponent<Scr_EventosGuardado>();
+        if (eventosGuardado != null)
+        {
+            eventosGuardado.EventoDialogo(sistemaDialogos.DialogoActual, sistemaDialogos.NombreNPC);
+        }
     }
-    public void cargarNPC()
+
+    public void cerrarMisionesSecundarias()
     {
-        Debug.Log("Aqui se carga datos de NPc_" + sistemaDialogos.NombreNPC);
+        GuardarNPC();
+        ViendoMisiones = false;
+        MisionesSecundariasUI.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Gata")) return;
 
-        iconos[0].SetActive(true);
-        iconos[1].SetActive(true);
         estaAdentro = true;
+
+        if (!autoIniciarDialogo)
+            MostrarIconos();
+
+        if (autoIniciarDialogo && !Hablando)
+        {
+            Hablando = true;
+            ManejarDialogoPrincipal();
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (!other.CompareTag("Gata")) return;
 
-        iconos[0].SetActive(false);
-        iconos[1].SetActive(false);
         estaAdentro = false;
+        OcultarIconos();
     }
 }

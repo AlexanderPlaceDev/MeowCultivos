@@ -1,4 +1,4 @@
-using PrimeTween;
+ï»¿using PrimeTween;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,96 +12,82 @@ public class Scr_ControladorMapas : MonoBehaviour
     [SerializeField] Material SkyBoxDia;
     [SerializeField] Material SkyBoxNoche;
 
-    public void Start()
+    private void Start()
     {
         if (EsMapa)
         {
-            // Obtenemos la cantidad de hijos directos del objeto
-            int childCount = transform.childCount;
-
-            // Recorremos cada hijo directo
-            for (int i = 0; i < childCount; i++)
-            {
-                // Obtenemos el hijo en la posición i
-                Transform child = transform.GetChild(i);
-                if (PlayerPrefs.GetString("MapaActivo:" + child.name, "No") == "Si")
-                {
-                    child.gameObject.SetActive(true);
-                }
-                else
-                {
-                    child.gameObject.SetActive(false);
-                }
-            }
+            // ðŸ”¥ Sincroniza los mapas con PlayerPrefs al inicio
+            CargarEstadoMapas();
         }
     }
 
-    private void Update()
-    {
-        if (EsMapa)
-        {
-            // Obtenemos la cantidad de hijos directos del objeto
-            int childCount = transform.childCount;
-
-            // Recorremos cada hijo directo
-            for (int i = 0; i < childCount; i++)
-            {
-                // Obtenemos el hijo en la posición i
-                Transform child = transform.GetChild(i);
-
-                if (child.gameObject.activeSelf)
-                {
-                    PlayerPrefs.SetString("MapaActivo:" + child.name, "Si");
-                }
-                else
-                {
-                    PlayerPrefs.SetString("MapaActivo:" + child.name, "No");
-                }
-            }
-        }
-    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.name == "Gata")
         {
-            Scr_DatosSingletonBatalla Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
-            Singleton.NombreMapa = NombreMapaBatalla;
-            Singleton.SkyBoxDia = SkyBoxDia;
-            Singleton.SkyBoxNoche = SkyBoxNoche;
+            // Configura datos del singleton
+            var singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
+            singleton.NombreMapa = NombreMapaBatalla;
+            singleton.SkyBoxDia = SkyBoxDia;
+            singleton.SkyBoxNoche = SkyBoxNoche;
+
             PlayerPrefs.SetString("Mapa Actual", NombreMapaBatalla);
-            foreach (GameObject Mapa in MapasQueActiva)
+
+            // Activa los mapas necesarios
+            foreach (GameObject mapa in MapasQueActiva)
             {
-                Mapa.SetActive(true);
+                if (!mapa.activeSelf)
+                    mapa.SetActive(true);
             }
-            foreach (GameObject Mapa in MapasQueDesactiva)
+
+            // Desactiva los mapas que ya no se necesitan
+            foreach (GameObject mapa in MapasQueDesactiva)
             {
-                Mapa.SetActive(false);
+                if (mapa.activeSelf)
+                    mapa.SetActive(false);
             }
-            
+
+            // ðŸ”¥ Guarda el nuevo estado
+            GuardarEstadoMapas();
         }
     }
 
-    public void ActualizarMapas()
+    public void CargarEstadoMapas()
     {
-        if (EsMapa)
-        {
-            // Obtenemos la cantidad de hijos directos del objeto
-            int childCount = transform.childCount;
+        if (!EsMapa) return;
 
-            // Recorremos cada hijo directo
-            for (int i = 0; i < childCount; i++)
-            {
-                // Obtenemos el hijo en la posición i
-                Transform child = transform.GetChild(i);
-                if (PlayerPrefs.GetString("MapaActivo:" + child.name, "No") == "Si")
-                {
-                    child.gameObject.SetActive(true);
-                }
-                else
-                {
-                    child.gameObject.SetActive(false);
-                }
-            }
+        int childCount = transform.childCount;
+
+        for (int i = 0; i < childCount; i++)
+        {
+            Transform child = transform.GetChild(i);
+            string key = "MapaActivo:" + child.name;
+            string estado = PlayerPrefs.GetString(key, "No");
+
+            bool activo = (estado == "Si");
+            child.gameObject.SetActive(activo);
+
+            Debug.Log($"[CargarEstadoMapas] {child.name}: {estado}");
         }
+    }
+
+    public void GuardarEstadoMapas()
+    {
+        if (!EsMapa) return;
+
+        int childCount = transform.childCount;
+
+        for (int i = 0; i < childCount; i++)
+        {
+            Transform child = transform.GetChild(i);
+            string key = "MapaActivo:" + child.name;
+            string valor = child.gameObject.activeSelf ? "Si" : "No";
+
+            PlayerPrefs.SetString(key, valor);
+            Debug.Log($"[GuardarEstadoMapas] {child.name}: {valor}");
+        }
+
+        PlayerPrefs.Save(); // ðŸ”¥ Guarda en disco
+        Debug.Log("[GuardarEstadoMapas] PlayerPrefs guardados.");
     }
 }

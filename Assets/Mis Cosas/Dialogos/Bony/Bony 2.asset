@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: Bony 2
   m_EditorClassIdentifier: 
   NombreDialogo: 
-  NumeroDialogo: 0
-  EsUnico: 1
-  EsMision: 0
-  cambia: 1
-  Mision: {fileID: 0}
+  NumeroDialogo: 2
+  EsUnico: 0
+  EsMisionPrincipal: 1
+  EsMisionSecundaria: 0
+  Mision: {fileID: 11400000, guid: 26cf91a577a461e4a8375203ef1dbc92, type: 2}
   Lineas:
-  - Wow gracias por la hoguera
-  - Me podrias ayudar con mas cosas?
+  - 'Que tal si me ayudas construyendo algunas cosas '
+  - En el tablero azul que esta a la ezquierda puedes ver los proyectos que me encargo
+    mi padre
   LineasSecundarias: []

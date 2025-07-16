@@ -151,16 +151,16 @@ public class Scr_BarrilSembradio : MonoBehaviour
     void ActivarUI()
     {
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = true;
-        gata.GetChild(2).gameObject.SetActive(true);
-        gata.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
-        gata.GetChild(2).GetChild(0).GetComponent<Image>().sprite = teclaIcono;
-        gata.GetChild(2).GetChild(1).GetComponent<Image>().sprite = icono;
+        gata.GetChild(3).gameObject.SetActive(true);
+        gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
+        gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = teclaIcono;
+        gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = icono;
     }
 
     void DesactivarUI()
     {
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = false;
-        gata.GetChild(2).gameObject.SetActive(false);
+        gata.GetChild(3).gameObject.SetActive(false);
     }
 
     public void ColocarIconoPanel(bool EnAlerta)

@@ -126,8 +126,8 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
 
     public void CerrarTablero()
     {
-        ControladorMisiones.revisarMisionPrincipal();
-        ControladorMisiones.RevisarTodasLasMisionesSecundarias();
+        //ControladorMisiones.revisarMisionPrincipal();
+        //ControladorMisiones.RevisarTodasLasMisionesSecundarias();
         Tiempo += 1;
         EstaDentro = false;
         Camara360.SetActive(true);

@@ -93,7 +93,6 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 
             //PlayerPrefs.Save();
         }
-        Debug.Log(haveAcivate);
         PlayerPrefs.SetInt($"{IDSpawner}_Active", haveAcivate);
         PlayerPrefs.Save();
     }

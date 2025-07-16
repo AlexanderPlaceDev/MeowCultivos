@@ -1,12 +1,7 @@
 using Cinemachine;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.Playables;
-using UnityEngine.UI;
-using UnityEngine.UIElements.Experimental;
 
 public class Scr_CargadorGuardado : MonoBehaviour
 {
@@ -40,7 +35,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
             }
         }
         //Posicion y Rotacion
-        if (PlayerPrefs.GetInt("DialogoGusano", 0) > 0)
+        if (PlayerPrefs.GetInt("DialogoMiguel", 0) > 0)
         {
             Gata.transform.position = new Vector3(PlayerPrefs.GetFloat("GataPosX", 62), PlayerPrefs.GetFloat("GataPosY", 7), PlayerPrefs.GetFloat("GataPosZ", 103.5f));
             Gata.transform.rotation = Quaternion.Euler(PlayerPrefs.GetFloat("GataRotX", 0), PlayerPrefs.GetFloat("GataRotY", -67), PlayerPrefs.GetFloat("GataRotZ", 0));
@@ -50,6 +45,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
         if (PlayerPrefs.GetString("Movimiento", "No") == "Si")
         {
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
+            Gata.GetComponent<Scr_Movimiento>().enabled=true;
         }
         //Mapa Batalla
         GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().NombreMapa = PlayerPrefs.GetString("Mapa Actual", "Mapa Estacion Batalla");
@@ -67,9 +63,9 @@ public class Scr_CargadorGuardado : MonoBehaviour
 
         //Dialogos
 
-        Personajes[0].GetComponent<Scr_SistemaDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoGusano", 0);
+        Personajes[0].GetComponent<Scr_SistemaDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoMiguel", 0);
         Personajes[1].GetComponent<Scr_SistemaDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoBony", 0);
-        if (PlayerPrefs.GetInt("DialogoGusano", 0) > 0)
+        if (PlayerPrefs.GetInt("DialogoMiguel", 0) > 0)
         {
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
             MuroTutorial.SetActive(false);

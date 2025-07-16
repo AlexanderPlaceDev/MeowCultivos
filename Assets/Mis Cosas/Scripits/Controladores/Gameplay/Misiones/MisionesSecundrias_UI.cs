@@ -44,10 +44,6 @@ public class MisionesSecundrias_UI : MonoBehaviour
     }
     public void cerrar()
     {
-        if (dialogoNPC != null)
-        {
-            dialogoNPC.cerrarMisionesSecundaris();
-        }
     }
     public void coseguir_misiones(List<Scr_CreadorDialogos> mis)
     {
@@ -110,7 +106,6 @@ public class MisionesSecundrias_UI : MonoBehaviour
             {
                 activardialogoNPC.DialogoSecundario = instance;
                 activardialogoNPC.IniciarDialogo();
-                dialogoNPC.opcionesUI();
             });
         }
     }
