@@ -30,18 +30,21 @@ public class MisionesSecundrias_UI : MonoBehaviour
 
     public void cerrar()
     {
-        // 🔥 Quitar selección activa del EventSystem
-        EventSystem.current.SetSelectedGameObject(null);
-        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
-        activadorActual.ViendoMisiones = false;
+        if (!gameObject.activeSelf) return; // 🔥 Evita doble cierre
+
         if (activadorActual != null)
         {
-            activadorActual.MostrarIconos(); // Opcional: reactivar iconos del NPC
-            activadorActual = null; // Limpiar referencia
+            activadorActual.ViendoMisiones = false;
+            activadorActual.MostrarIconos();
+            activadorActual.DesactivarDialogo();
+            activadorActual = null;
         }
 
+        EventSystem.current.SetSelectedGameObject(null);
+        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
         gameObject.SetActive(false);
     }
+
 
     public void SeleccionarMision(Scr_CreadorMisiones Mision)
     {

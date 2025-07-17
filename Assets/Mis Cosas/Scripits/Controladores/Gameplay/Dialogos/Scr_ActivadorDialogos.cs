@@ -91,6 +91,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.F) && !Hablando)
             {
                 Debug.Log("Presiona F");
+                ControladorMisionesSecundariasUI.activadorActual = this;
                 ViendoMisiones = true;
                 Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
                 ManejarMisionesSecundarias();
@@ -233,7 +234,6 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         }
         else
         {
-            ControladorMisionesSecundariasUI.activadorActual = this;
             MisionesSecundariasUI.SetActive(true);
         }
     }

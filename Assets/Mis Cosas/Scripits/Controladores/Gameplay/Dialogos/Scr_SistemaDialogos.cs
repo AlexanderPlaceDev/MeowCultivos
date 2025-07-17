@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using TMPro;
-using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -98,6 +97,10 @@ public class Scr_SistemaDialogos : MonoBehaviour
         // Elegir qué diálogo cargar
         if (Principal)
         {
+            if (DialogoActual >= Dialogos.Length)
+            {
+                DialogoActual = Dialogos.Length-1;
+            }
             DialogoArecibir = Dialogos[DialogoActual]; // Diálogo principal actual
         }
         else
@@ -185,7 +188,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
                     EnPausa = true;
                     Leyendo = false;
                     Leido = true;
-                    Input.ResetInputAxes(); // Evitar inputs pendientes
+                    Input.ResetInputAxes();
 
                     if (activadorDialogos != null)
                         activadorDialogos.DesactivarDialogo(); // Notificar al activador
