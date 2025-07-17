@@ -6,17 +6,18 @@ using UnityEngine.UIElements;
 
 public class NPC_movimiento : MonoBehaviour
 {
-    public List<comportamiento> comportamientos = new List<comportamiento>();
-    public List<Transform> pos;
+    //Hablando y ViendoMisiones para comprobar que estan en dialogo el npc 
+    public List<comportamiento> Posiciones = new List<comportamiento>(); //lista de lugares a donde ir que puede moverse el npc
+    public List<Transform> pos; // posiciones que se tienen que poner aparte en el mapa para que puedan ser utilizados
 
-    public GameObject CTiempo;
-    public Scr_ControladorTiempo ContolT;
-    public Scr_ActivadorDialogos Dialogo;
+    public GameObject CTiempo; //checa donde esta el controlador del tiempo
+    public Scr_ControladorTiempo ContolT; //checa el tiempo y el dia
+    public Scr_ActivadorDialogos Dialogo; //el activdor de dialogos
 
-    private NavMeshAgent agente;
-    private Vector3 Destino;
-    private bool Esperando = false;
-    private string diaAnterior;
+    private NavMeshAgent agente; //para el navmesh
+    private Vector3 Destino; //destino
+    private bool Esperando = false; //se utiliza para pausar el movimento en caso de necesitaro
+    private string diaAnterior; //checa un dia para poder moverse a la ultima posicion que deberia estar
 
     private Transform Gata;
 
@@ -35,16 +36,16 @@ public class NPC_movimiento : MonoBehaviour
         if (ContolT.DiaActual != diaAnterior)
         {
             Esperando = false;
-            ReiniciarComportamientos();
+            ReiniciarPosiciones();
             diaAnterior = ContolT.DiaActual;
 
-            MoverAlEventoMasCercano();
+            MoverAlLugarMasCercano();
         }
-        /*
-        else if (Dialogo.panelDialogo.activeSelf)
+        if(Dialogo.Hablando || Dialogo.ViendoMisiones)
         {
-            DetenerYMirarJugador();
-        }*/
+            Debug.Log("Estoy hablando");
+            Esperando =true;
+        }
         else
         {
 
@@ -72,7 +73,7 @@ public class NPC_movimiento : MonoBehaviour
             if (!Esperando)
             {
                 Debug.Log("AAA deja ver");
-                foreach (var c in comportamientos)
+                foreach (var c in Posiciones)
                 {
                     if (c.DiaActual == ContolT.DiaActual && !c.Ejecutado)
                     {
@@ -107,23 +108,24 @@ public class NPC_movimiento : MonoBehaviour
             //Debug.Log("AAA ya me muevo");
         }
 
-        void ReiniciarComportamientos()
+        //Reinicialas posiciones para que encuentre la mas cercana
+        void ReiniciarPosiciones()
         {
-            foreach (var c in comportamientos)
+            foreach (var c in Posiciones)
             {
                 c.Ejecutado = false;
             }
         }
 
-        //Mueve al evento mas cercano dependiendo del dia Lunes
-        void MoverAlEventoMasCercano()
+        //Mueve a la poscicion mas cercano dependiendo del dia Lunes
+        void MoverAlLugarMasCercano()
         {
             float menorDiferencia = float.MaxValue;
             comportamiento eventoMasCercano = null;
 
             float tiempoActual = ContolT.HoraActual * 60f + ContolT.MinutoActual;
 
-            foreach (var c in comportamientos)
+            foreach (var c in Posiciones)
             {
                 if (c.DiaActual != ContolT.DiaActual) continue;
 

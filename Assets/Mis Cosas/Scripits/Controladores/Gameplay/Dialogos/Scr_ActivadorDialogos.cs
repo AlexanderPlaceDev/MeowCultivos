@@ -10,10 +10,10 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     //===========================
     //=== Variables de Estado ===
     //===========================
-    private bool estaAdentro = false; // ¿Está la gata dentro del área de activación?
+    public bool estaAdentro = false; // ¿Está la gata dentro del área de activación?
     private bool canvasActivo = false; // ¿Está el canvas de diálogo activo?
     private bool completoSecundaria = false; // ¿Alguna misión secundaria está completa?
-    private bool Hablando = false; // ¿Está hablando actualmente?
+    public bool Hablando = false; // ¿Está hablando actualmente?
     public bool ViendoMisiones = false; // ¿Está viendo la UI de misiones?
 
     //========================================
@@ -65,6 +65,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     //========================================================================
     private void Update()
     {
+        //Debug.Log(estaAdentro);
         if (!estaAdentro) return; // Salir si la gata no está dentro
 
         if (sistemaDialogos != null && !panelDialogo.activeSelf)
@@ -228,6 +229,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             if (!autoIniciarDialogo)
                 MostrarIconos();
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
+            //estaAdentro = false;
         }
         else
         {
@@ -279,7 +281,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Gata")) return;
-
+        Debug.Log("combe"+ estaAdentro);
         estaAdentro = true;
 
         if (!autoIniciarDialogo)
@@ -294,8 +296,9 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+       // Debug.Log("aa");
         if (!other.CompareTag("Gata")) return;
-
+        Debug.Log("aa");
         estaAdentro = false;
         OcultarIconos();
     }
