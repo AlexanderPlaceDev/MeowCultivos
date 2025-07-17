@@ -27,12 +27,12 @@ public class NPC_movimiento : MonoBehaviour
         ContolT = CTiempo.GetComponent<Scr_ControladorTiempo>();
         agente = GetComponent<NavMeshAgent>();
         diaAnterior = ContolT.DiaActual;
-        Dialogo=GetComponent<Scr_ActivadorDialogos>();
+        Dialogo = GetComponent<Scr_ActivadorDialogos>();
     }
 
     void Update()
     {
-        if (ContolT.DiaActual != diaAnterior && !Dialogo.panelDialogo.activeSelf)
+        if (ContolT.DiaActual != diaAnterior)
         {
             Esperando = false;
             ReiniciarComportamientos();
@@ -40,107 +40,147 @@ public class NPC_movimiento : MonoBehaviour
 
             MoverAlEventoMasCercano();
         }
+        /*
         else if (Dialogo.panelDialogo.activeSelf)
         {
             DetenerYMirarJugador();
-        }
+        }*/
         else
         {
-            checarcambio();
-        }
-    }
 
-    void checarcambio()
-    {
-        if (!Esperando)
-        {
-            Debug.Log("AAA deja ver");
-            foreach (var c in comportamientos)
+            if (YaLlegoAlDestino() && !Esperando)
             {
-                if (c.DiaActual == ContolT.DiaActual && !c.Ejecutado)
+                // Aquí podrías hacer alguna acción al llegar, como empezar una animación
+                BoxCollider[] colliders = GetComponents<BoxCollider>();
+                colliders[1].enabled = true; // Desactiva el segundo BoxCollider
+                DetenerYMirarJugador();
+
+                Debug.Log("NPC: Ya llegué al destino");
+            }
+            else
+            {
+                BoxCollider[] colliders = GetComponents<BoxCollider>();
+                colliders[1].enabled = false; // Desactiva el segundo BoxCollider
+            }
+            checarcambio();
+
+
+        }
+
+        void checarcambio()
+        {
+            if (!Esperando)
+            {
+                Debug.Log("AAA deja ver");
+                foreach (var c in comportamientos)
                 {
-                    if (ContolT.HoraActual > c.HoraActual ||
-                       (ContolT.HoraActual == c.HoraActual && ContolT.MinutoActual >= c.MinutoActual))
+                    if (c.DiaActual == ContolT.DiaActual && !c.Ejecutado)
                     {
-                        c.Ejecutado = true;
-                        StartCoroutine(MoverYEspesar(c.pos, 2f));
-                        break;
+                        if (ContolT.HoraActual > c.HoraActual ||
+                           (ContolT.HoraActual == c.HoraActual && ContolT.MinutoActual >= c.MinutoActual))
+                        {
+                            c.Ejecutado = true;
+                            StartCoroutine(MoverYEspesar(c.pos, 2f));
+                            break;
+                        }
                     }
                 }
             }
         }
-    }
 
-    IEnumerator MoverYEspesar(int posIndex, float tiempo)
-    {
-        Esperando = true;
-        MoverANuevaPosicion(posIndex);
-        yield return new WaitForSeconds(tiempo);
-        Esperando = false;
-    }
-
-    void MoverANuevaPosicion(int posIndex)
-    {
-        if (!agente.isOnNavMesh) return;
-
-        Destino = pos[posIndex].position;
-        agente.isStopped = false;
-        agente.SetDestination(Destino);
-
-        //Debug.Log("AAA ya me muevo");
-    }
-
-    void ReiniciarComportamientos()
-    {
-        foreach (var c in comportamientos)
+        IEnumerator MoverYEspesar(int posIndex, float tiempo)
         {
-            c.Ejecutado = false;
+            Esperando = true;
+            MoverANuevaPosicion(posIndex);
+            yield return new WaitForSeconds(tiempo);
+            Esperando = false;
         }
-    }
 
-    void MoverAlEventoMasCercano()
-    {
-        float menorDiferencia = float.MaxValue;
-        comportamiento eventoMasCercano = null;
-
-        float tiempoActual = ContolT.HoraActual * 60f + ContolT.MinutoActual;
-
-        foreach (var c in comportamientos)
+        void MoverANuevaPosicion(int posIndex)
         {
-            if (c.DiaActual != ContolT.DiaActual) continue;
+            if (!agente.isOnNavMesh) return;
 
-            float tiempoEvento = c.HoraActual * 60f + c.MinutoActual;
-            float diferencia = Mathf.Abs(tiempoEvento - tiempoActual);
+            Destino = pos[posIndex].position;
+            agente.isStopped = false;
+            agente.SetDestination(Destino);
 
-            if (diferencia < menorDiferencia)
+            //Debug.Log("AAA ya me muevo");
+        }
+
+        void ReiniciarComportamientos()
+        {
+            foreach (var c in comportamientos)
             {
-                menorDiferencia = diferencia;
-                eventoMasCercano = c;
+                c.Ejecutado = false;
             }
         }
 
-        if (eventoMasCercano != null)
+        //Mueve al evento mas cercano dependiendo del dia Lunes
+        void MoverAlEventoMasCercano()
         {
-            Debug.Log("NPC: Moviendo al evento más cercano del día al cambiar de día");
-            MoverANuevaPosicion(eventoMasCercano.pos);
-            eventoMasCercano.Ejecutado = true; // Marcar como hecho para evitar repetirlo
+            float menorDiferencia = float.MaxValue;
+            comportamiento eventoMasCercano = null;
+
+            float tiempoActual = ContolT.HoraActual * 60f + ContolT.MinutoActual;
+
+            foreach (var c in comportamientos)
+            {
+                if (c.DiaActual != ContolT.DiaActual) continue;
+
+                float tiempoEvento = c.HoraActual * 60f + c.MinutoActual;
+                float diferencia = Mathf.Abs(tiempoEvento - tiempoActual);
+
+                if (diferencia < menorDiferencia)
+                {
+                    menorDiferencia = diferencia;
+                    eventoMasCercano = c;
+                }
+            }
+
+            if (eventoMasCercano != null)
+            {
+                Debug.Log("NPC: Moviendo al evento más cercano del día al cambiar de día");
+                MoverANuevaPosicion(eventoMasCercano.pos);
+                eventoMasCercano.Ejecutado = true; // Marcar como hecho para evitar repetirlo
+            }
         }
-    }
 
-    void DetenerYMirarJugador()
-    {
-        if (agente.isOnNavMesh)
+        //detiene el movimiento y gira a mirar al npc
+        void DetenerYMirarJugador()
         {
-            agente.isStopped = true; // Detiene el movimiento
+            if (agente.isOnNavMesh)
+            {
+                agente.isStopped = true; // Detener el movimiento
+            }
+            //Solo se voltea solo si esta a una distancia
+            float distancia = Vector3.Distance(transform.position, Gata.position);
+            //Debug.Log(distancia);
+            if (distancia <= 12.5f) // Cambia '2f' al rango deseado
+            {
+                Vector3 direccion = Gata.position - transform.position;
+                direccion.y = 0; // Mantener solo la rotación horizontal
+
+                if (direccion != Vector3.zero)
+                {
+                    Quaternion rotacionDeseada = Quaternion.LookRotation(direccion);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, rotacionDeseada, Time.deltaTime * 5f);
+                }
+            }
         }
-
-        Vector3 direccion = Gata.position - transform.position;
-        direccion.y = 0; // Evita rotación vertical
-
-        if (direccion != Vector3.zero)
+        //Detecta que si llego a su destino
+        bool YaLlegoAlDestino()
         {
-            Quaternion rotacionDeseada = Quaternion.LookRotation(direccion);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotacionDeseada, Time.deltaTime * 5f);
+            if (!agente.pathPending)
+            {
+                if (agente.remainingDistance <= agente.stoppingDistance)
+                {
+                    if (!agente.hasPath || agente.velocity.sqrMagnitude == 0f)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }
