@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "CrearObjeto", menuName = "Crear Objeto/Mision", order = 0)]
@@ -8,6 +9,8 @@ public class Scr_CreadorMisiones : ScriptableObject
     public string MisionName;
     public string Descripcion;
     public string DescripcionFinal;
+    public string DialogoEnMision;
+    public string DialogoMisionCompleta;
     public enum prioridadM
     {
         Principal,
@@ -30,22 +33,21 @@ public class Scr_CreadorMisiones : ScriptableObject
         gallina,
         lobo
     }
-    public string[] Objetivocaza;
-    public int[] cantidad_caza;
+    public Scr_CreadorObjetos[] ObjetosNecesarios;
+    public string[] ObjetivosACazar;
+    public int[] CantidadACazar;
+    public Sprite[] IconosACazar;
     public KeyCode[] Teclas;
     public bool EsContinua;
     public bool QuitaObjetos;
     public bool DaObjetos;
-    public Scr_CreadorObjetos[] ObjetosNecesarios;
-    public Scr_CreadorObjetos[] ObjetosRecompensa;
-    public int xpTotal;
+    public int RecompensaDinero;
+    public int RecompensaXP;
     //public string[] ObjetosQueQuita;
     //public string[] ObjetosQueDa;
     public int[] CantidadesQuita;
     public int[] CantidadesDa;
     public GameObject[] objetosCostruir;
-
-    public bool CambiaPrincipal;
     public string TargetExplorado;
 }
 

@@ -1,112 +1,90 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Security.Principal;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class MisionesSecundrias_UI : MonoBehaviour
 {
-    public GameObject MisionUIprefab;
-    public Transform contentPanel;
-
-    public Color32 PrincipalC;
-    public Color32 SecundarioC;
-
-
-    public Color32 Vacio;
-
     public List<Scr_CreadorDialogos> Misiones;
+    GameObject Gata;
+    [HideInInspector]
+    public Scr_ActivadorDialogos activadorActual;
 
-    public GameObject Npc;
+    [Header("Variables de la UI")]
+    [SerializeField] TextMeshProUGUI TituloMision;
+    [SerializeField] TextMeshProUGUI DescripcionMision;
+    [SerializeField] GameObject[] ItemsNecesarios;
+    [SerializeField] TextMeshProUGUI TextoRecompensa;
 
-    public Scr_ActivadorDialogos dialogoNPC;
-    public Scr_SistemaDialogos activardialogoNPC;
-
-    // Start is called before the first frame update
+    private Scr_ControladorMisiones ControladorMisiones;
+    private Scr_CreadorMisiones MisionActual;
     void Start()
     {
-        
+        Gata = GameObject.Find("Gata").gameObject;
+        ControladorMisiones = Gata.transform.GetChild(4).GetComponent<Scr_ControladorMisiones>();
     }
 
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void conseguirNPC(GameObject np)
-    {
-        Npc=np;
-        dialogoNPC=Npc.GetComponent<Scr_ActivadorDialogos>();
-        activardialogoNPC = Npc.GetComponent<Scr_SistemaDialogos>();
-    }
     public void cerrar()
     {
-    }
-    public void coseguir_misiones(List<Scr_CreadorDialogos> mis)
-    {
-        Misiones.Clear();
-        for (int i = 0; i < mis.Count; i++)
+        // 🔥 Quitar selección activa del EventSystem
+        EventSystem.current.SetSelectedGameObject(null);
+        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
+        activadorActual.ViendoMisiones = false;
+        if (activadorActual != null)
         {
-            Misiones.Add(mis[i]);
+            activadorActual.MostrarIconos(); // Opcional: reactivar iconos del NPC
+            activadorActual = null; // Limpiar referencia
         }
-        MostrarMisiones();
+
+        gameObject.SetActive(false);
     }
-    public void MostrarMisiones()
+
+    public void SeleccionarMision(Scr_CreadorMisiones Mision)
     {
-        foreach (Transform child in contentPanel)
-            Destroy(child.gameObject);
-
-        for (int i = 0; i < Misiones.Count; i++)
+        MisionActual = Mision;
+        EventSystem.current.SetSelectedGameObject(null);
+        TituloMision.text = Mision.MisionName;
+        DescripcionMision.text = Mision.Descripcion;
+        int c = 0;
+        foreach (Scr_CreadorObjetos Objeto in Mision.ObjetosNecesarios)
         {
-            Scr_CreadorDialogos instance = Misiones[i];
-            //string misionname= instance.name;
-            //MisionesData baseData = MisionesData.GetByName(misionname);
-            if (instance == null) continue;
-
-            GameObject obj = Instantiate(MisionUIprefab, contentPanel);
-            TextMeshProUGUI texto1;
-            TextMeshProUGUI texto2;
-            TextMeshProUGUI[] textos = obj.GetComponentsInChildren<TextMeshProUGUI>();
-
-            if (textos.Length >= 2)
-            {
-                texto1 = textos[0];
-                texto2 = textos[1];
-            }
-            else
-            {
-                texto1 = null;
-                texto2 = null;
-            }
-
-            Image img = obj.GetComponent<Image>();
-
-            if (instance.Mision.prioridad == Scr_CreadorMisiones.prioridadM.Principal)
-            {
-                img.color = PrincipalC;
-            }
-            else
-            {
-                img.color = SecundarioC;
-            }
-            Button[] botons = obj.GetComponentsInChildren<Button>();
-            Button boton = botons[0];
-
-
-            texto1.text = $"{instance.name}";
-            
-            texto2.text = $"{instance.Mision.DescripcionFinal}";
-            TextMeshProUGUI Textbut = boton.GetComponentInChildren<TextMeshProUGUI>();
-            Textbut.text = "Activar";
-            boton.onClick.RemoveAllListeners();
-            boton.onClick.AddListener(() =>
-            {
-                activardialogoNPC.DialogoSecundario = instance;
-                activardialogoNPC.IniciarDialogo();
-            });
+            ItemsNecesarios[c].SetActive(true);
+            ItemsNecesarios[c].transform.GetChild(0).GetComponent<Image>().sprite = Objeto.Icono;
+            ItemsNecesarios[c].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = Objeto.Nombre;
+            ItemsNecesarios[c].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = Mision.CantidadesQuita[c].ToString();
+            c++;
         }
+        if (Mision.RecompensaDinero > 0)
+        {
+            TextoRecompensa.text = "$" + Mision.RecompensaDinero;
+
+        }
+        else
+        {
+            TextoRecompensa.text = Mision.RecompensaXP + " XP";
+        }
+    }
+
+    public void AceptarMision()
+    {
+        bool Encontro = false;
+        foreach (Scr_CreadorMisiones MisionSecundaria in ControladorMisiones.MisionesSecundarias)
+        {
+            if (MisionActual != null && MisionActual.MisionName == MisionSecundaria.MisionName)
+            {
+                Encontro = true;
+                break;
+            }
+        }
+        if(!Encontro)
+        {
+            ControladorMisiones.MisionesSecundarias.Add(MisionActual);
+            ControladorMisiones.MisionActual = MisionActual;
+        }
+
     }
 }

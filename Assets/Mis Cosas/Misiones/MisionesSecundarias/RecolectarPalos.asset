@@ -17,7 +17,7 @@ MonoBehaviour:
   DescripcionFinal: Regresa con Bony
   prioridad: 1
   Tipo: 2
-  Objetivocaza: 
+  Objetivocaza: []
   cantidad_caza: 
   Teclas: 
   EsContinua: 1
@@ -25,12 +25,9 @@ MonoBehaviour:
   DaObjetos: 1
   ObjetosNecesarios:
   - {fileID: 11400000, guid: 16d59de0d61659641a6f7c640e284942, type: 2}
-  ObjetosRecompensa:
-  - {fileID: 11400000, guid: 628ebdecdc44ae84da2bdd80604007a8, type: 2}
-  - {fileID: 11400000, guid: e9bc53ed753ca3d49a96f76d01685c82, type: 2}
-  xpTotal: 5
+  RecompensaDinero: 50
+  RecompensaXP: 0
   CantidadesQuita: 0a000000
   CantidadesDa: 0100000001000000
-  objetoaCostruir: []
-  CambiaPrincipal: 0
+  objetosCostruir: []
   TargetExplorado: 

@@ -7,92 +7,125 @@ using UnityEngine.UI;
 
 public class Scr_ActivadorDialogos : MonoBehaviour
 {
-    private bool estaAdentro = false;
+    //===========================
+    //=== Variables de Estado ===
+    //===========================
+    private bool estaAdentro = false; // ¿Está la gata dentro del área de activación?
+    private bool canvasActivo = false; // ¿Está el canvas de diálogo activo?
+    private bool completoSecundaria = false; // ¿Alguna misión secundaria está completa?
+    private bool Hablando = false; // ¿Está hablando actualmente?
+    public bool ViendoMisiones = false; // ¿Está viendo la UI de misiones?
+
+    //========================================
+    //=== Configuración del Comportamiento ===
+    //========================================
+    [SerializeField] private bool autoIniciarDialogo = false; // ¿El diálogo se inicia automáticamente?
+    [SerializeField] private bool MuestraMisiones; // ¿Mostrar misiones secundarias?
+
+    //==========================================
+    //=== Referencias a Objetos de la Escena ===
+    //==========================================
     [SerializeField] private GameObject MisionesSecundariasUI;
     [SerializeField] private GameObject panelDialogo;
     [SerializeField] private GameObject[] iconos;
     [SerializeField] private GameObject camaraDialogo;
     [SerializeField] private GameObject camaraGata;
 
-    [SerializeField] private List<Scr_CreadorDialogos> MisionesSecundariasDar;
+    //===================================
+    //=== Referencias a Otros Scripts ===
+    //===================================
     public MisionesSecundrias_UI ControladorMisionesSecundariasUI;
     public List<Scr_CreadorMisiones> MisionesSecundarias;
-
-    private bool canvasActivo = false;
-    private bool completoSecundaria = false;
-
     private Scr_SistemaDialogos sistemaDialogos;
     private Scr_ControladorMisiones controladorMisiones;
     private Transform Gata;
 
+    //===================
+    //=== Cinemachine ===
+    //===================
     private CinemachineBrain brain;
     private float transicionDuracion = 1f;
-
-    bool Hablando = false;
-    bool ViendoMisiones = false;
-
-    [SerializeField] private bool autoIniciarDialogo = false;
 
     private void Start()
     {
         Gata = GameObject.Find("Gata").transform;
-        ControladorMisionesSecundariasUI = MisionesSecundariasUI.GetComponent<MisionesSecundrias_UI>();
         brain = Camera.main.GetComponent<CinemachineBrain>();
 
         if (brain != null)
         {
-            brain.m_DefaultBlend.m_Time = transicionDuracion;
+            brain.m_DefaultBlend.m_Time = transicionDuracion; // Ajusta duración de transición de cámara
         }
 
         sistemaDialogos = GetComponent<Scr_SistemaDialogos>();
         controladorMisiones = Gata.GetChild(4).GetComponent<Scr_ControladorMisiones>();
     }
 
+    //========================================================================
+    //=== MÉTODO Update: Controla la entrada de teclas y lógica de diálogo ===
+    //========================================================================
     private void Update()
     {
-        if (!estaAdentro) return; // Salir si no está dentro del trigger
+        if (!estaAdentro) return; // Salir si la gata no está dentro
 
-        if (sistemaDialogos != null && panelDialogo.activeSelf == false)
+        if (sistemaDialogos != null && !panelDialogo.activeSelf)
         {
-            sistemaDialogos.EnPausa = true;
+            sistemaDialogos.EnPausa = true; // Pausa sistema de diálogos si el panel está inactivo
         }
 
-        if (!autoIniciarDialogo) // Solo escuchar input si no es autoIniciar
+        if (!autoIniciarDialogo)
         {
+            //==========================================
+            //=== Tecla E: Iniciar diálogo principal ===
+            //==========================================
             if (Input.GetKeyDown(KeyCode.E) && !ViendoMisiones)
             {
                 Hablando = true;
+                Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
                 ManejarDialogoPrincipal();
             }
 
+            //=========================================
+            //=== Tecla F: Ver misiones secundarias ===
+            //=========================================
             if (Input.GetKeyDown(KeyCode.F) && !Hablando)
             {
+                Debug.Log("Presiona F");
                 ViendoMisiones = true;
+                Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
                 ManejarMisionesSecundarias();
             }
         }
 
-        //Asegurarse de desactivar los dialogos
-        if (sistemaDialogos != null && sistemaDialogos.Leido && !panelDialogo.activeSelf && !canvasActivo)
+        //==================================================
+        //=== Si ya se leyó el diálogo, desactivar panel ===
+        //==================================================
+        if (sistemaDialogos != null && sistemaDialogos.Leido && !panelDialogo.activeSelf && !canvasActivo && !ViendoMisiones)
         {
             DesactivarDialogo();
         }
     }
 
+    //=================================
+    //=== Manejar diálogo principal ===
+    //=================================
     private void ManejarDialogoPrincipal()
     {
         if (panelDialogo.activeSelf)
         {
             VerificarMisionPrincipal();
-            ActivarDialogo();
+            ActivarDialogo(true);
         }
         else
         {
             canvasActivo = true;
-            StartCoroutine(EsperarYCambiarCamara());
+            StartCoroutine(EsperarYCambiarCamaraPrincipal());
         }
     }
-private void ManejarMisionesSecundarias()
+
+    //====================================
+    //=== Manejar misiones secundarias ===
+    //====================================
+    private void ManejarMisionesSecundarias()
     {
         completoSecundaria = false;
 
@@ -106,79 +139,81 @@ private void ManejarMisionesSecundarias()
             }
         }
 
-        sistemaDialogos.recompensarSecundarias = completoSecundaria;
-
         if (completoSecundaria)
         {
-            sistemaDialogos.IniciarDialogo();
+            sistemaDialogos.IniciarDialogo(false); // Inicia diálogo de recompensa secundaria
             completoSecundaria = false;
         }
         else
         {
-            MisionesSecundariasUI.SetActive(true);
-            ControladorMisionesSecundariasUI.conseguirNPC(gameObject);
-            ControladorMisionesSecundariasUI.coseguir_misiones(MisionesSecundariasDar);
+            Debug.Log("Cambiando Camara Secundaria");
+            StartCoroutine(EsperarYCambiarCamaraSecundaria());
+            Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
         }
     }
-    private IEnumerator EsperarYCambiarCamara()
+
+    //=================================================================
+    //=== Corutina: Cambiar cámara y esperar para diálogo principal ===
+    //=================================================================
+    private IEnumerator EsperarYCambiarCamaraPrincipal()
     {
         CambiarACamaraDialogo();
         yield return new WaitForSeconds(transicionDuracion);
         VerificarMisionPrincipal();
-        ActivarDialogo();
+        ActivarDialogo(true);
     }
 
+    //==================================================================
+    //=== Corutina: Cambiar cámara y esperar para diálogo secundario ===
+    //==================================================================
+    private IEnumerator EsperarYCambiarCamaraSecundaria()
+    {
+        CambiarACamaraDialogo();
+        yield return new WaitForSeconds(transicionDuracion);
+        ActivarDialogo(false);
+    }
+
+    //===========
+    //=== Verificar estado de la misión principal ===
+    //===========
     private void VerificarMisionPrincipal()
     {
         Debug.Log("Verifica la mision");
         if (controladorMisiones.MisionPrincipal == null) return;
         controladorMisiones.RevisarMisionPrincipal();
+
         if (controladorMisiones.MisionPCompleta)
         {
             controladorMisiones.MisionPCompleta = false;
             controladorMisiones.MisionPrincipal = null;
-
-
-
-            //Agregar logica para quitar/dar items/Rango/XP/Dinero
-
-
-
-
             sistemaDialogos.LineaActual = 0;
             sistemaDialogos.Leido = false;
             sistemaDialogos.DialogoActual++;
         }
     }
 
-    
-
-    private void ActivarDialogo()
+    private void ActivarDialogo(bool Principal)
     {
         if (camaraDialogo != null) camaraDialogo.SetActive(true);
         if (camaraGata != null) camaraGata.SetActive(false);
-
-        OcultarIconos(); // Siempre ocultar iconos al iniciar diálogo
+        OcultarIconos();
         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
 
         if (!panelDialogo.activeSelf)
         {
             panelDialogo.SetActive(true);
             sistemaDialogos.EnPausa = false;
-            
+
             if (sistemaDialogos.Leyendo)
             {
                 sistemaDialogos.SaltarDialogo();
             }
             else
             {
-                sistemaDialogos.IniciarDialogo();
+                Debug.Log("Inicia Dialogo + Es principal:" + Principal);
+                sistemaDialogos.IniciarDialogo(Principal);
             }
         }
-
-        
-            
-        
     }
 
     public void DesactivarDialogo()
@@ -186,13 +221,19 @@ private void ManejarMisionesSecundarias()
         GuardarNPC();
         Hablando = false;
 
-        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
-
-        if (camaraDialogo != null) camaraDialogo.SetActive(false);
-        if (camaraGata != null) camaraGata.SetActive(true);
-
-        if (!autoIniciarDialogo) // Solo mostrar iconos si no es autoIniciar
-            MostrarIconos();
+        if (!ViendoMisiones)
+        {
+            if (camaraDialogo != null) camaraDialogo.SetActive(false);
+            if (camaraGata != null) camaraGata.SetActive(true);
+            if (!autoIniciarDialogo)
+                MostrarIconos();
+            Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
+        }
+        else
+        {
+            ControladorMisionesSecundariasUI.activadorActual = this;
+            MisionesSecundariasUI.SetActive(true);
+        }
     }
 
     private void CambiarACamaraDialogo()
@@ -210,14 +251,23 @@ private void ManejarMisionesSecundarias()
         }
     }
 
-    private void MostrarIconos()
+    public void MostrarIconos()
     {
-        foreach (var icono in iconos)
+        if (MisionesSecundarias.Count > 0 && MuestraMisiones)
         {
-            if (icono != null) icono.SetActive(true);
+            iconos[0].SetActive(true);
+            iconos[1].SetActive(true);
+            iconos[2].SetActive(true);
+            iconos[3].SetActive(true);
+        }
+        else
+        {
+            iconos[0].SetActive(true);
+            iconos[1].SetActive(true);
         }
     }
 
+    
     public void GuardarNPC()
     {
         var eventosGuardado = GetComponent<Scr_EventosGuardado>();
@@ -226,14 +276,6 @@ private void ManejarMisionesSecundarias()
             eventosGuardado.EventoDialogo(sistemaDialogos.DialogoActual, sistemaDialogos.NombreNPC);
         }
     }
-
-    public void cerrarMisionesSecundarias()
-    {
-        GuardarNPC();
-        ViendoMisiones = false;
-        MisionesSecundariasUI.SetActive(false);
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Gata")) return;
