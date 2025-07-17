@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -33,10 +32,10 @@ public class Lugar_point : MonoBehaviour
         foreach (GameObject go in todos)
         {
             // Asegurarse de que no sea parte del editor (como prefabs)
-            if (go.CompareTag(tag) && !EditorUtility.IsPersistent(go))
+            /*if (go.CompareTag(tag) && !EditorUtility.IsPersistent(go))
             {
                 return go;
-            }
+            }*/
         }
 
         return null;
