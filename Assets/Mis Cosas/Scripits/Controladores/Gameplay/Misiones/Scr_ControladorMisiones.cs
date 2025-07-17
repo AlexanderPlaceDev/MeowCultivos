@@ -26,7 +26,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
     // ================================
     // === CONTROL DE OBJETOS ===
     // ================================
-    private Scr_Inventario inventario;
+    private Scr_Inventario Inventario;
     private Transform Gata;
     [SerializeField] private GameObject BotonesUI;
     [SerializeField] private GameObject PanelMisiones;
@@ -62,7 +62,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
     {
         // Buscar referencias importantes
         Gata = GameObject.Find("Gata").transform;
-        inventario = Gata.GetChild(7).GetComponent<Scr_Inventario>();
+        Inventario = Gata.GetChild(7).GetComponent<Scr_Inventario>();
         TodasLasConstrucciones = Buscartag.BuscarObjetosConTagInclusoInactivos("Construcciones");
 
         // Cargar datos guardados y actualizar información de la UI
@@ -106,12 +106,64 @@ public class Scr_ControladorMisiones : MonoBehaviour
     {
         if (MisionActual != null)
         {
+            //Actualiza en caso de tener mision
             TextoDescripcion.text = MisionCompleta ? MisionActual.DescripcionFinal : MisionActual.Descripcion;
             TextoPagina.text = $"{PaginaActual}/{(MisionesSecundarias.Count > 0 ? MisionesSecundarias.Count : 1)}";
-            ObjetosRecoleccion.SetActive(MisionActual.Tipo == Tipos.Caza || MisionActual.Tipo == Tipos.Recoleccion);
+            if (MisionActual.Tipo == Tipos.Caza || MisionActual.Tipo == Tipos.Recoleccion)
+            {
+
+                //Nos Aseguramos de desactivar los objetos que no se vayan a usar
+                ObjetosRecoleccion.transform.GetChild(0).gameObject.SetActive(false);
+                ObjetosRecoleccion.transform.GetChild(1).gameObject.SetActive(false);
+                ObjetosRecoleccion.transform.GetChild(2).gameObject.SetActive(false);
+                ObjetosRecoleccion.transform.GetChild(3).gameObject.SetActive(false);
+                ObjetosRecoleccion.SetActive(true);
+
+                int N = 0;
+                if (MisionActual.ObjetosNecesarios != null)
+                {
+                    foreach (Scr_CreadorObjetos Item in MisionActual.ObjetosNecesarios)
+                    {
+                        ObjetosRecoleccion.transform.GetChild(N).gameObject.SetActive(true);
+                        ObjetosRecoleccion.transform.GetChild(N).GetComponent<Image>().sprite = MisionActual.ObjetosNecesarios[N].Icono;
+                        ObjetosRecoleccion.transform.GetChild(N).GetChild(0).GetComponent<TextMeshProUGUI>().text = MisionActual.ObjetosNecesarios[N].Nombre;
+                        //Buscar objetos en el inventario
+                        int I = 0;
+                        foreach (Scr_CreadorObjetos Objeto in Inventario.Objetos)
+                        {
+                            if (Objeto == MisionActual.ObjetosNecesarios[N])
+                            {
+                                ObjetosRecoleccion.transform.GetChild(N).GetChild(1).GetComponent<TextMeshProUGUI>().text = Inventario.Cantidades[I].ToString();
+
+                            }
+                            I++;
+                        }
+                        ObjetosRecoleccion.transform.GetChild(N).GetChild(3).GetComponent<TextMeshProUGUI>().text = MisionActual.CantidadesQuita[N].ToString();
+                        N++;
+                    }
+                }
+                if (MisionActual.ObjetivosACazar.Length > 0)
+                {
+                    N = 0;
+                    foreach (string Enemigo in MisionActual.ObjetivosACazar)
+                    {
+                        ObjetosRecoleccion.transform.GetChild(N).gameObject.SetActive(true);
+                        ObjetosRecoleccion.transform.GetChild(N).GetComponent<Image>().sprite = MisionActual.IconosACazar[N];
+                        ObjetosRecoleccion.transform.GetChild(N).GetChild(0).GetComponent<TextMeshProUGUI>().text = MisionActual.ObjetivosACazar[N];
+                        ObjetosRecoleccion.transform.GetChild(N).GetChild(1).GetComponent<TextMeshProUGUI>().text = CantidadCazados.ToArray()[N].ToString();
+                        ObjetosRecoleccion.transform.GetChild(N).GetChild(3).GetComponent<TextMeshProUGUI>().text = MisionActual.CantidadACazar[N].ToString();
+                        N++;
+                    }
+                }
+
+
+
+            }
+
         }
         else
         {
+            //Muestra por defecto
             TextoDescripcion.text = "Sin objetivo...";
             TextoPagina.text = "...";
             if (ObjetosRecoleccion != null)
@@ -226,8 +278,6 @@ public class Scr_ControladorMisiones : MonoBehaviour
             }
         }
     }
-
-
     private void RevisarMisionesSecundarias()
     {
         for (int i = 0; i < MisionesSecundarias.Count; i++)
@@ -273,6 +323,12 @@ public class Scr_ControladorMisiones : MonoBehaviour
         {
             string nombreMisionExtra = MisionesSecundarias[i].name;
             PlayerPrefs.SetString("MisionExtra_" + i, nombreMisionExtra);
+        }
+
+        if (MisionActual != null)
+        {
+            PlayerPrefs.SetString("MisionActual", MisionActual.MisionName);
+
         }
     }
 
