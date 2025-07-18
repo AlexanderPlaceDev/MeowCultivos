@@ -7,10 +7,12 @@ public class Balas : MonoBehaviour
     public float daño = 0;
     private float delete = 2f;
     private float contar=0;
+    public int penetracion=0;
+    public GameObject Controlador;
     // Start is called before the first frame update
     void Start()
     {
-        
+        Controlador = GameObject.Find("Controlador");
     }
 
     // Update is called once per frame
@@ -33,6 +35,17 @@ public class Balas : MonoBehaviour
             Debug.Log("Daño");
             var ene = other.GetComponent<Scr_Enemigo>();
             ene.RecibirDaño(daño);
+            penetracion_menos();
+            // Lógica de daño
+            Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
+                GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].PuntosXGolpe;
+        }
+    }
+    void penetracion_menos()
+    {
+        penetracion--;
+        if (penetracion < 0)
+        {
             Destroy(gameObject);
         }
     }

@@ -160,6 +160,7 @@ public class Scr_Enemigo : MonoBehaviour
 
             RecibirDaño(Daño);
         }
+
     }
     private IEnumerator MoverCanvas(GameObject canvas, Vector3 inicio, Vector3 fin, float duracion)
     {

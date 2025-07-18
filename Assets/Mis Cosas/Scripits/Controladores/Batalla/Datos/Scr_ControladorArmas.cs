@@ -6,7 +6,7 @@ public class Scr_ControladorArmas : MonoBehaviour
 {
     [SerializeField] Scr_CreadorArmas[] TodasLasArmas;
     [SerializeField] GameObject ObjetoArmas;
-    [SerializeField] Image Mira;
+    [SerializeField] GameObject Mira;
     [SerializeField] Sprite[] Mirillas;
     [SerializeField] Color[] ColoresMirillas;
     [SerializeField] float LongitudRaycast;
@@ -17,13 +17,13 @@ public class Scr_ControladorArmas : MonoBehaviour
     [SerializeField] GameObject[] balaPrefab; //bala que dispara
     public Transform puntoDisparo; //lugar donde sale la bala
     public Camera camera;
-    public float fuerzaDisparo = 30f;
+    public float fuerzaDisparo = 70f;
     public int ArmaActual = 0;
     bool Atacando = false;  // Evita que se interrumpa la animación actual
     public int CantBalasActual = 0;
     public int balascargador = 0;
     public int cantidadPerdigones = 8;//si es ecopeta
-    public float dispersion = 15f; // en grados de dispersion
+    public float dispersion = 25f; // en grados de dispersion
     public float cadencia = 0;
     public float temporizadorDisparo = 0f;
 
@@ -51,6 +51,11 @@ public class Scr_ControladorArmas : MonoBehaviour
         temporizadorDisparo = cadencia;
         ObjetoArmas_reales[ArmaActual-1].SetActive(true);
         puntoDisparo = ObjetoArmas_reales[ArmaActual - 1].GetComponentInChildren<Transform>();
+        if (TodasLasArmas[ArmaActual].Tipo != "Cuerpo a Cuerpo")
+        {
+            Debug.Log("aaa");
+            Mira.SetActive(true);
+        }
     }
 
 
@@ -169,6 +174,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         {
             GameObject bala = Instantiate(balaPrefab[ArmaActual - 1], puntoDisparo.position, puntoDisparo.rotation);
             bala.GetComponent<Balas>().daño = TodasLasArmas[ArmaActual].Daño;
+            bala.GetComponent<Balas>().penetracion=2;
             // Direccion base
             Vector3 direccionBase = camera.transform.forward;
 

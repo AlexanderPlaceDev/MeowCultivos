@@ -28,7 +28,7 @@ public class NPC_movimiento : MonoBehaviour
         ContolT = CTiempo.GetComponent<Scr_ControladorTiempo>();
         agente = GetComponent<NavMeshAgent>();
         diaAnterior = ContolT.DiaActual;
-        Dialogo = GetComponent<Scr_ActivadorDialogos>();
+        //Dialogo = GetComponent<Scr_ActivadorDialogos>();
     }
 
     void Update()
@@ -41,11 +41,12 @@ public class NPC_movimiento : MonoBehaviour
 
             MoverAlLugarMasCercano();
         }
+        /*
         if(Dialogo.Hablando || Dialogo.ViendoMisiones)
         {
             Debug.Log("Estoy hablando");
             Esperando =true;
-        }
+        }*/
         else
         {
 
@@ -56,7 +57,7 @@ public class NPC_movimiento : MonoBehaviour
                 colliders[1].enabled = true; // Desactiva el segundo BoxCollider
                 DetenerYMirarJugador();
 
-                Debug.Log("NPC: Ya llegué al destino");
+                //Debug.Log("NPC: Ya llegué al destino");
             }
             else
             {
@@ -72,7 +73,7 @@ public class NPC_movimiento : MonoBehaviour
         {
             if (!Esperando)
             {
-                Debug.Log("AAA deja ver");
+                //Debug.Log("AAA deja ver");
                 foreach (var c in Posiciones)
                 {
                     if (c.DiaActual == ContolT.DiaActual && !c.Ejecutado)
