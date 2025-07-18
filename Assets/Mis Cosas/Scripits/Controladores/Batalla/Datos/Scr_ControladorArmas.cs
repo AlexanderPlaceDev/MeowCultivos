@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +20,9 @@ public class Scr_ControladorArmas : MonoBehaviour
     public Camera camera;
     public float fuerzaDisparo = 70f;
     public int ArmaActual = 0;
+    public GameObject[] contador;//es para mostar las balas o si es infinito
+    private TextMeshProUGUI contadorbalas;
+
     bool Atacando = false;  // Evita que se interrumpa la animación actual
     public int CantBalasActual = 0;
     public int balascargador = 0;
@@ -55,12 +59,26 @@ public class Scr_ControladorArmas : MonoBehaviour
         {
             Debug.Log("aaa");
             Mira.SetActive(true);
+            contador[0].SetActive(false);
+            contador[1].SetActive(true);
+            contadorbalas = contador[1].GetComponent<TextMeshProUGUI>();
+            contadorbalas.text = CantBalasActual + "/" + balascargador;
         }
+        else
+        {
+            contador[0].SetActive(true);
+            contador[1].SetActive(false);
+        }
+
     }
 
 
     void Update()
     {
+        if (TodasLasArmas[ArmaActual].Tipo != "Cuerpo a Cuerpo")
+        {
+            contadorbalas.text = CantBalasActual + "/" + balascargador;
+        }
         //Debug.Log(temporizadorDisparo+ "?"+cadencia+ " +++++++++++++++" + (temporizadorDisparo >= cadencia));
         if (cadencia > 0) 
         {
