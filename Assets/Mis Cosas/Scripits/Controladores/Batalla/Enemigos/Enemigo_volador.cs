@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemigo_volador : MonoBehaviour
 {
-    public Transform player;
+    //public Transform player;
     public GameObject gata;
     public float speed = 10f;
     public float rotationSpeed = 5f;
@@ -21,7 +21,7 @@ public class Enemigo_volador : MonoBehaviour
     void Start()
     {
 
-        gata = GameObject.Find("Personaje");
+        gata = GameObject.Find("Gata");
         SetNewPatrolPoint();
     }
 
