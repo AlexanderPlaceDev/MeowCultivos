@@ -107,13 +107,13 @@ public class MisionesUI : MonoBehaviour
         //comprueba si ya esta completa o no para poder elejir la descripcion
         if (ControladorMisiones.MisionActual!= null)
         {
-            if (!ControladorMisiones.MisionCompleta)
+            if (!ControladorMisiones.MisionActualCompleta)
             {
                 texto2.text = $"{ControladorMisiones.MisionActual.Descripcion}";
             }
             else
             {
-                texto2.text = $"{ControladorMisiones.MisionActual.DescripcionFinal}";
+                texto2.text = $"{ControladorMisiones.MisionActual.DescripcionCompleta}";
             }
             texto1.text = $"{ControladorMisiones.MisionActual.name}";
         }
@@ -176,7 +176,7 @@ public class MisionesUI : MonoBehaviour
             }
             else
             {
-                texto2.text = $"{instance.DescripcionFinal}";
+                texto2.text = $"{instance.DescripcionCompleta}";
             }
             TextMeshProUGUI Textbut= boton.GetComponentInChildren<TextMeshProUGUI>();
             Textbut.text = "Seguir";

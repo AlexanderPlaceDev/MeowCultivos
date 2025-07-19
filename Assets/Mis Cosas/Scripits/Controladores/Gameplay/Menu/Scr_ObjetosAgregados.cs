@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,123 +9,108 @@ public class Scr_ObjetosAgregados : MonoBehaviour
     public List<int> Cantidades = new List<int>();
     [SerializeField] GameObject[] Iconos;
     public float[] Tiempo = { 2, 2, 2, 2 };
-    int xptotal = 0;
-    [SerializeField] string HabilidadXP;
 
-    // Bandera para evitar agregar objetos repetidamente
-    private bool objetosAgregados = false;
+    // ðŸ†• Referencias para Canvas Dinero
+    [SerializeField] private GameObject canvasXP;
+    [SerializeField] private GameObject canvasDinero;
+    private TextMeshProUGUI XPText;
+    private TextMeshProUGUI DineroText;
+    private Animator XPAnimator;
+    private Animator DineroAnimator;
 
     void Start()
     {
+        // ðŸ†• Cachear referencias al Canvas Dinero
+        if (canvasDinero != null)
+        {
+            DineroText = canvasDinero.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            DineroAnimator = canvasDinero.GetComponent<Animator>();
+        }
+        if (canvasXP != null)
+        {
+            XPText = canvasXP.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            XPAnimator = canvasXP.GetComponent<Animator>();
+        }
     }
 
     void Update()
     {
-        //Debug.LogWarning("aparezo" + gameObject.name);
-        AgregarObjetosBatalla();
+        MostrarObjetosEnCanvas();
 
-        if (Lista.Count > 0)
-        {
-            Debug.Log("Entra2");
-            if (!GameObject.Find("Canvas XP").GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Desaparecer"))
-            {
-                GameObject.Find("Canvas XP").GetComponent<Animator>().Play("Desaparecer");
-            }
-            Scr_ControladorMisiones mis = GameObject.Find("ControladorMisiones").GetComponent<Scr_ControladorMisiones>();
-            //mis.revisarMisionPrincipal();
-            //mis.RevisarTodasLasMisionesSecundarias();
-
-            int ObjetoActual = 0;
-            xptotal = 0;
-            foreach (Scr_CreadorObjetos Objeto in Lista)
-            {
-                if (ObjetoActual == 4 || Lista[ObjetoActual] == null)
-                {
-                    Debug.Log("Objeto numero 4 rompe ciclo");
-                    break;
-                }
-                else
-                {
-                    xptotal += Objeto.XPRecolecta;
-                    Iconos[ObjetoActual].GetComponent<Image>().sprite = Lista[ObjetoActual].Icono;
-                    Iconos[ObjetoActual].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "+" + Cantidades[ObjetoActual].ToString();
-                }
-                ObjetoActual++;
-            }
-
-            if (Iconos[0].GetComponent<Image>().sprite != null && GameObject.Find("Canvas XP").transform.GetChild(0).GetComponent<TextMeshProUGUI>().color.a == 0)
-            {
-                //Debug.LogWarning("doy xp");
-                if (PlayerPrefs.GetString("Habilidad:" + HabilidadXP, "No") == "Si")
-                {
-                    xptotal = xptotal * 2;
-                }
-                PlayerPrefs.SetInt("XPActual", PlayerPrefs.GetInt("XPActual") + xptotal);
-                if (PlayerPrefs.GetInt("XPActual", 0) >= PlayerPrefs.GetInt("XPSiguiente", 10))
-                {
-                    PlayerPrefs.SetInt("XPActual", PlayerPrefs.GetInt("XPActual", 0) - PlayerPrefs.GetInt("XPSiguiente", 10));
-                    PlayerPrefs.SetInt("Nivel", PlayerPrefs.GetInt("Nivel", 0) + 1);
-                    PlayerPrefs.SetInt("XPSiguiente", PlayerPrefs.GetInt("XPSiguiente", 10) * 2);
-                    PlayerPrefs.SetInt("PuntosDeHabilidad", PlayerPrefs.GetInt("PuntosDeHabilidad", 0) + 3);
-                    GameObject.Find("Canvas XP").transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "LV.+1";
-                }
-                else
-                {
-                    GameObject.Find("Canvas XP").transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "XP + " + xptotal;
-                }
-
-            }
-        }
-
+        // Gestiona el desvanecimiento de iconos
         int i = 0;
-        foreach (GameObject Icono in Iconos)
+        foreach (GameObject icono in Iconos)
         {
-            if (Icono.GetComponent<Image>().sprite == null) { break; }
+            if (icono.GetComponent<Image>().sprite == null) break;
 
             Tiempo[i] -= Time.deltaTime;
-            Icono.GetComponent<Image>().color = new Color(1, 1, 1, Tiempo[i]);
-            Icono.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, Tiempo[i]);
+            icono.GetComponent<Image>().color = new Color(1, 1, 1, Tiempo[i]);
+            icono.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, Tiempo[i]);
+
             if (Tiempo[i] <= 0 && Lista.Count > 0)
             {
-                Icono.GetComponent<Image>().sprite = null;
+                icono.GetComponent<Image>().sprite = null;
                 Lista.RemoveAt(0);
                 Cantidades.RemoveAt(0);
                 Tiempo[i] = 2;
-
-
-
-
             }
             i++;
         }
     }
 
-    void AgregarObjetosBatalla()
+    public void AgregarExperiencia(int cantidadXP)
     {
-        Scr_DatosSingletonBatalla Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
+        int xpActual = PlayerPrefs.GetInt("XPActual", 0) + cantidadXP;
+        int xpSiguiente = PlayerPrefs.GetInt("XPSiguiente", 10);
+        PlayerPrefs.SetInt("XPActual", xpActual);
 
-        if (!objetosAgregados && Singleton.CantidadesRecompensa.Count > 0 && Singleton.CantidadesRecompensa[0] != 0)
+        if (xpActual >= xpSiguiente)
         {
-            for (int i = 0; i < Mathf.Min(Singleton.ObjetosRecompensa.Count, Singleton.CantidadesRecompensa.Count); i++)
-            {
-                Scr_CreadorObjetos Objeto = Singleton.ObjetosRecompensa[i];
-                Lista.Add(Objeto);
-                Cantidades.Add(Singleton.CantidadesRecompensa[i]);
-            }
-            objetosAgregados = true;
+            PlayerPrefs.SetInt("XPActual", 0);
+            PlayerPrefs.SetInt("Nivel", PlayerPrefs.GetInt("Nivel", 0) + 1);
+            PlayerPrefs.SetInt("XPSiguiente", xpSiguiente * 2);
+            PlayerPrefs.SetInt("PuntosDeHabilidad", PlayerPrefs.GetInt("PuntosDeHabilidad", 0) + 3);
+
+            XPText.text = "LV.+1";
         }
         else
         {
-            // Verifica si la lista no está vacía antes de acceder al primer índice
-            if (Singleton.CantidadesRecompensa.Count > 0 && Singleton.CantidadesRecompensa[0] > 0)
-            {
-                Singleton.CantidadesRecompensa.Clear();
-                Singleton.ObjetosRecompensa.Clear();
-            }
+            XPText.text = "XP + " + cantidadXP;
         }
 
-        
+        if (!XPAnimator.GetCurrentAnimatorStateInfo(0).IsName("Desaparecer"))
+        {
+            XPAnimator.Play("Desaparecer");
+        }
+    }
+    public void AgregarDinero(int cantidad)
+    {
+        if (canvasDinero == null) return;
+
+        // Suma el dinero al total
+        int dineroActual = PlayerPrefs.GetInt("Dinero", 0) + cantidad;
+        PlayerPrefs.SetInt("Dinero", dineroActual);
+
+        // Muestra el dinero ganado en el Canvas Dinero
+        DineroText.text = "ðŸ’° + " + cantidad; // Puedes cambiar el emoji por "$", "â‚¡", etc.
+
+        if (!DineroAnimator.GetCurrentAnimatorStateInfo(0).IsName("Desaparecer"))
+        {
+            DineroAnimator.Play("Desaparecer");
+        }
     }
 
+    private void MostrarObjetosEnCanvas()
+    {
+        if (Lista.Count <= 0) return;
+        int objetoActual = 0;
+        foreach (Scr_CreadorObjetos objeto in Lista)
+        {
+            if (objetoActual >= Iconos.Length || objeto == null) break;
 
+            Iconos[objetoActual].GetComponent<Image>().sprite = objeto.Icono;
+            Iconos[objetoActual].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "+" + Cantidades[objetoActual];
+            objetoActual++;
+        }
+    }
 }

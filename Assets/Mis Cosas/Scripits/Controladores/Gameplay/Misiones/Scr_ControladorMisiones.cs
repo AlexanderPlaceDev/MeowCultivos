@@ -1,4 +1,5 @@
 ﻿using PrimeTween;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -18,7 +19,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
     // ================================
     // === ESTADO DE LAS MISIONES ===
     // ================================
-    public bool MisionCompleta;           // ¿La misión actual está completa?
+    public bool MisionActualCompleta;           // ¿La misión actual está completa?
     public bool MisionPCompleta;          // ¿La misión principal está completa?
     public List<bool> MisionesScompletas; // Estado de todas las misiones secundarias
     public MisionesData MisionData;       // Datos serializados para guardar/cargar progreso
@@ -32,7 +33,6 @@ public class Scr_ControladorMisiones : MonoBehaviour
     [SerializeField] private GameObject PanelMisiones;
     [SerializeField] private TextMeshProUGUI TextoDescripcion;
     [SerializeField] private TextMeshProUGUI TextoPagina;
-    [SerializeField] private KeyCode TeclaAbrirPanel = KeyCode.M;
     [SerializeField] private GameObject ObjetosRecoleccion;
 
     // ================================
@@ -41,7 +41,6 @@ public class Scr_ControladorMisiones : MonoBehaviour
     private int PaginaActual = 1;
     private bool[] TeclasPresionadas;
     private float[] TiempoTeclas;
-    private bool PanelOculto = true;
 
     // ================================
     // === TRACKING DE PROGRESO ===
@@ -78,13 +77,13 @@ public class Scr_ControladorMisiones : MonoBehaviour
         if (MisionActual != null && MisionActual.Tipo == Tipos.Teclas)
         {
             ProcesarMisionTeclas();
-            BotonesUI.SetActive(!MisionCompleta);
+            BotonesUI.SetActive(!MisionActualCompleta);
         }
 
         // Solo refrescar UI si la descripción cambió
         if (MisionActual != null)
         {
-            string nuevaDescripcion = MisionCompleta ? MisionActual.DescripcionFinal : MisionActual.Descripcion;
+            string nuevaDescripcion = MisionActualCompleta ? MisionActual.DescripcionCompleta : MisionActual.Descripcion;
             if (nuevaDescripcion != ultimaDescripcion)
             {
                 ActualizarUI();
@@ -92,22 +91,19 @@ public class Scr_ControladorMisiones : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(TeclaAbrirPanel))
-        {
-            AlternarPanelMisiones();
-        }
+        RevisarMisionesSecundarias();
     }
 
 
     // ================================
     // === MÉTODOS DE LA UI ===
     // ================================
-    private void ActualizarUI()
+    public void ActualizarUI()
     {
         if (MisionActual != null)
         {
             //Actualiza en caso de tener mision
-            TextoDescripcion.text = MisionCompleta ? MisionActual.DescripcionFinal : MisionActual.Descripcion;
+            TextoDescripcion.text = MisionActualCompleta ? MisionActual.DescripcionCompleta : MisionActual.Descripcion;
             TextoPagina.text = $"{PaginaActual}/{(MisionesSecundarias.Count > 0 ? MisionesSecundarias.Count : 1)}";
             if (MisionActual.Tipo == Tipos.Caza || MisionActual.Tipo == Tipos.Recoleccion)
             {
@@ -155,9 +151,6 @@ public class Scr_ControladorMisiones : MonoBehaviour
                         N++;
                     }
                 }
-
-
-
             }
 
         }
@@ -173,20 +166,6 @@ public class Scr_ControladorMisiones : MonoBehaviour
         }
 
         GuardarMisiones();
-    }
-
-    private void AlternarPanelMisiones()
-    {
-        if (PanelOculto)
-        {
-            PanelOculto = false;
-            Tween.PositionX(PanelMisiones.transform, 0, 1);
-        }
-        else
-        {
-            PanelOculto = true;
-            Tween.PositionX(PanelMisiones.transform, -610, 1);
-        }
     }
 
     // ================================
@@ -221,7 +200,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
         MisionPCompleta = System.Array.TrueForAll(TeclasPresionadas, t => t);
         if (MisionPrincipal == MisionActual)
         {
-            MisionCompleta = MisionPCompleta;
+            MisionActualCompleta = MisionPCompleta;
         }
     }
 
@@ -271,7 +250,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
                 MisionPCompleta = true;
 
                 if (MisionPrincipal == MisionActual)
-                    MisionCompleta = true;
+                    MisionActualCompleta = true;
 
                 // Guarda el progreso
                 GuardarMisiones();
@@ -297,7 +276,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
                 }
                 else if (mision.Tipo == Tipos.Recoleccion)
                 {
-                    //completada = RevisarMisionRecoleccion(mision);
+                    completada = RevisarMisionRecoleccion(mision);
                 }
 
                 if (completada)
@@ -307,6 +286,28 @@ public class Scr_ControladorMisiones : MonoBehaviour
                 }
             }
         }
+    }
+
+    private bool RevisarMisionRecoleccion(Scr_CreadorMisiones mision)
+    {
+        int j = 0;
+        foreach (Scr_CreadorObjetos Objeto in mision.ObjetosNecesarios)
+        {
+            int i = 0;
+            foreach (Scr_CreadorObjetos Item in Inventario.Objetos)
+            {
+                if (Item == Objeto)
+                {
+                    if (Inventario.Cantidades[i] <mision.CantidadesQuita[j])
+                    {
+                        return false;
+                    }
+                }
+                i++;
+            }
+            j++;
+        }
+        return true;
     }
 
     // ================================
@@ -319,7 +320,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
             PlayerPrefs.SetString("MisionPrincipal", MisionPrincipal.name);
         }
 
-        for (int i = 0; i < MisionesSecundarias.Count; i++)
+        for (int i = 0; i < MisionesSecundarias.Count - 1; i++)
         {
             string nombreMisionExtra = MisionesSecundarias[i].name;
             PlayerPrefs.SetString("MisionExtra_" + i, nombreMisionExtra);
@@ -349,6 +350,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
                 if (misionExtra != null && !MisionesSecundarias.Contains(misionExtra))
                 {
                     MisionesSecundarias.Add(misionExtra);
+                    MisionesScompletas.Add(false);
                 }
             }
         }

@@ -17,7 +17,6 @@ public class Scr_SistemaDialogos : MonoBehaviour
     public Scr_CreadorDialogos[] Dialogos; // Lista de diálogos principales
 
     public Scr_CreadorDialogos DialogoSecundario; // Diálogo alternativo (misiones secundarias)
-    public Scr_CreadorDialogos DialogoDeRecompensaSecundario; // Diálogo de recompensa para misiones secundarias
     public Scr_CreadorDialogos DialogoArecibir; // Diálogo actual que se está mostrando
 
     public float letraDelay = 0.1f; // Tiempo entre letras al escribir
@@ -99,20 +98,27 @@ public class Scr_SistemaDialogos : MonoBehaviour
         {
             if (DialogoActual >= Dialogos.Length)
             {
-                DialogoActual = Dialogos.Length-1;
+                DialogoActual = Dialogos.Length - 1;
             }
             DialogoArecibir = Dialogos[DialogoActual]; // Diálogo principal actual
         }
         else
         {
-            if (DialogoDeRecompensaSecundario != null)
+
+            DialogoArecibir = DialogoSecundario; //Primero asigna el dialogo secundario
+            //Despues busca si tiene misiones activas
+            for (int i = 0; i < ControladorMisiones.MisionesSecundarias.ToArray().Length; i++)
             {
-                DialogoArecibir = DialogoDeRecompensaSecundario; // Si hay recompensa secundaria
+                //En caso de tener una mision secundaria usa el dialogo de esa mision
+                DialogoArecibir = ControladorMisiones.MisionesSecundarias[i].DialogoEnMision;
+                if (ControladorMisiones.MisionesScompletas[i])
+                {
+                    //en caso de estar completa usa el dialogo de mision completa
+                    DialogoArecibir = ControladorMisiones.MisionesSecundarias[i].DialogoMisionCompleta;
+                    break;
+                }
             }
-            else if (DialogoSecundario != null)
-            {
-                DialogoArecibir = DialogoSecundario; // Si no, usa el diálogo secundario
-            }
+
         }
 
         // Iniciar escritura de la primera línea

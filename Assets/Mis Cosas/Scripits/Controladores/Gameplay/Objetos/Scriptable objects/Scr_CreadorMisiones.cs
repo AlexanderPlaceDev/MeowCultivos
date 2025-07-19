@@ -8,9 +8,9 @@ public class Scr_CreadorMisiones : ScriptableObject
 {
     public string MisionName;
     public string Descripcion;
-    public string DescripcionFinal;
-    public string DialogoEnMision;
-    public string DialogoMisionCompleta;
+    public string DescripcionCompleta;
+    public Scr_CreadorDialogos DialogoEnMision;
+    public Scr_CreadorDialogos DialogoMisionCompleta;
     public enum prioridadM
     {
         Principal,
@@ -34,6 +34,7 @@ public class Scr_CreadorMisiones : ScriptableObject
         lobo
     }
     public Scr_CreadorObjetos[] ObjetosNecesarios;
+    public int[] CantidadesQuita;
     public string[] ObjetivosACazar;
     public int[] CantidadACazar;
     public Sprite[] IconosACazar;
@@ -43,9 +44,7 @@ public class Scr_CreadorMisiones : ScriptableObject
     public bool DaObjetos;
     public int RecompensaDinero;
     public int RecompensaXP;
-    //public string[] ObjetosQueQuita;
-    //public string[] ObjetosQueDa;
-    public int[] CantidadesQuita;
+    public Scr_CreadorObjetos[] ObjetosQueDa;
     public int[] CantidadesDa;
     public GameObject[] objetosCostruir;
     public string TargetExplorado;

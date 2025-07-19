@@ -10,11 +10,12 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     //===========================
     //=== Variables de Estado ===
     //===========================
-    public bool estaAdentro = false; // ¿Está la gata dentro del área de activación?
+    private bool estaAdentro = false; // ¿Está la gata dentro del área de activación?
     private bool canvasActivo = false; // ¿Está el canvas de diálogo activo?
-    private bool completoSecundaria = false; // ¿Alguna misión secundaria está completa?
-    public bool Hablando = false; // ¿Está hablando actualmente?
+    private bool Hablando = false; // ¿Está hablando actualmente?
+    private bool Comprando = false; // ¿Está hablando actualmente?
     public bool ViendoMisiones = false; // ¿Está viendo la UI de misiones?
+    private bool ViendoTienda = false;
 
     //========================================
     //=== Configuración del Comportamiento ===
@@ -26,8 +27,10 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     //=== Referencias a Objetos de la Escena ===
     //==========================================
     [SerializeField] private GameObject MisionesSecundariasUI;
+    [SerializeField] private GameObject TiendaUI;
     [SerializeField] private GameObject panelDialogo;
     [SerializeField] private GameObject[] iconos;
+    [SerializeField] private GameObject camaraTienda;
     [SerializeField] private GameObject camaraDialogo;
     [SerializeField] private GameObject camaraGata;
 
@@ -65,7 +68,6 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     //========================================================================
     private void Update()
     {
-        //Debug.Log(estaAdentro);
         if (!estaAdentro) return; // Salir si la gata no está dentro
 
         if (sistemaDialogos != null && !panelDialogo.activeSelf)
@@ -78,7 +80,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             //==========================================
             //=== Tecla E: Iniciar diálogo principal ===
             //==========================================
-            if (Input.GetKeyDown(KeyCode.E) && !ViendoMisiones)
+            if (Input.GetKeyDown(KeyCode.E) && !ViendoMisiones & !Comprando)
             {
                 Hablando = true;
                 Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
@@ -88,14 +90,23 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             //=========================================
             //=== Tecla F: Ver misiones secundarias ===
             //=========================================
-            if (Input.GetKeyDown(KeyCode.F) && !Hablando)
+            if (Input.GetKeyDown(KeyCode.F) && !Hablando && !Comprando)
             {
-                Debug.Log("Presiona F");
-                ControladorMisionesSecundariasUI.activadorActual = this;
-                ViendoMisiones = true;
                 Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
-                ManejarMisionesSecundarias();
+
+                if (MuestraMisiones)
+                {
+                    ControladorMisionesSecundariasUI.activadorActual = this;
+                    ViendoMisiones = true;
+                    ManejarMisionesSecundarias();
+                }
+                else
+                {
+                    Comprando = true;
+                    ManejarUIVenta();
+                }
             }
+
         }
 
         //==================================================
@@ -129,30 +140,74 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     //====================================
     private void ManejarMisionesSecundarias()
     {
-        completoSecundaria = false;
 
-        foreach (var mision in MisionesSecundarias)
+        //Primero Verifica si completo alguna mision
+        List<int> MisionesAEliminar = new List<int>();
+        int index = 0;
+
+        foreach (var mision in controladorMisiones.MisionesSecundarias)
         {
-            int index = controladorMisiones.MisionesSecundarias.IndexOf(mision);
-            if (index >= 0 && controladorMisiones.MisionesScompletas[index])
+            Debug.Log("Accede a " + index);
+
+            //Aqui comprueba
+            if (controladorMisiones.MisionesScompletas[index])
             {
-                completoSecundaria = true;
-                break;
+                MisionesAEliminar.Add(index); // 📌 Marcar para eliminar después
+
+                //🎁 Recompensas
+                if (mision.RecompensaDinero > 0)
+                    GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>().AgregarDinero(mision.RecompensaDinero);
+
+                if (mision.RecompensaXP > 0)
+                    GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>().AgregarExperiencia(mision.RecompensaXP);
+
+                if (mision.ObjetosQueDa.Length > 0)
+                {
+                    Scr_Inventario inventario = GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>();
+                    foreach (Scr_CreadorObjetos item in mision.ObjetosQueDa)
+                    {
+                        int i = 0;
+                        foreach (Scr_CreadorObjetos obj in inventario.Objetos)
+                        {
+                            if (obj == item)
+                            {
+                                inventario.Cantidades[i] += mision.CantidadesDa[index];
+                                GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>().Lista.Add(item);
+                                GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>().Cantidades.Add(mision.CantidadesDa[index]);
+                            }
+                            i++;
+                        }
+                    }
+                }
+
+                //📦 Quitar objetos necesarios
+                if (mision.ObjetosNecesarios.Length > 0)
+                {
+                    Scr_Inventario inventario = Gata.transform.GetChild(7).GetComponent<Scr_Inventario>();
+                    int i = 0;
+                    foreach (Scr_CreadorObjetos item in mision.ObjetosNecesarios)
+                    {
+                        inventario.QuitarObjeto(mision.CantidadesQuita[i], item.Nombre);
+                        i++;
+                    }
+                }
             }
+            index++;
         }
 
-        if (completoSecundaria)
-        {
-            sistemaDialogos.IniciarDialogo(false); // Inicia diálogo de recompensa secundaria
-            completoSecundaria = false;
-        }
-        else
-        {
-            Debug.Log("Cambiando Camara Secundaria");
-            StartCoroutine(EsperarYCambiarCamaraSecundaria());
-            Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
-        }
+        Debug.Log("Cambiando Camara Secundaria");
+        StartCoroutine(EsperarYCambiarCamaraSecundaria(MisionesAEliminar));
+        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
     }
+
+    private void ManejarUIVenta()
+    {
+        ViendoTienda = true; // 📌 Activar bandera
+        Debug.Log("Cambiando a cámara de tienda");
+        StartCoroutine(EsperarYCambiarCamaraTienda());
+    }
+
+
 
     //=================================================================
     //=== Corutina: Cambiar cámara y esperar para diálogo principal ===
@@ -168,12 +223,57 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     //==================================================================
     //=== Corutina: Cambiar cámara y esperar para diálogo secundario ===
     //==================================================================
-    private IEnumerator EsperarYCambiarCamaraSecundaria()
+    private IEnumerator EsperarYCambiarCamaraSecundaria(List<int> misionesAEliminar)
     {
         CambiarACamaraDialogo();
         yield return new WaitForSeconds(transicionDuracion);
-        ActivarDialogo(false);
+
+        ActivarDialogo(false); // 🎤 Mostrar diálogo de misión completada
+
+        yield return new WaitUntil(() => !panelDialogo.activeSelf); // ⏳ Espera a que termine el diálogo
+
+        // 📌 Eliminar misiones completadas
+        for (int i = misionesAEliminar.Count - 1; i >= 0; i--)
+        {
+            int idx = misionesAEliminar[i];
+            controladorMisiones.MisionesSecundarias.RemoveAt(idx);
+            controladorMisiones.MisionesScompletas.RemoveAt(idx);
+        }
+
+        // ✅ Actualizar MisionActual
+        if (controladorMisiones.MisionPrincipal != null)
+        {
+            controladorMisiones.MisionActual = controladorMisiones.MisionPrincipal;
+        }
+        else if (controladorMisiones.MisionesSecundarias.Count > 0)
+        {
+            controladorMisiones.MisionActual = controladorMisiones.MisionesSecundarias[0];
+        }
+        else
+        {
+            controladorMisiones.MisionActual = null;
+            Debug.Log("ℹ️ No hay más misiones activas.");
+        }
+        controladorMisiones.ActualizarUI();
     }
+
+    private IEnumerator EsperarYCambiarCamaraTienda()
+    {
+        CambiarACamaraDialogo();
+        yield return new WaitForSeconds(transicionDuracion);
+
+        ActivarDialogo(false); // 🎤 Mostrar diálogo secundario
+
+        yield return new WaitUntil(() => !panelDialogo.activeSelf); // Espera a que termine el diálogo
+
+        CambiarACamaraTienda();
+
+        // 👇 Aquí activas la UI de la tienda
+        if (camaraTienda != null) camaraTienda.SetActive(true);
+
+        Debug.Log("🔓 UI de tienda activada");
+    }
+
 
     //===========
     //=== Verificar estado de la misión principal ===
@@ -223,24 +323,37 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         GuardarNPC();
         Hablando = false;
 
-        if (!ViendoMisiones)
+        if (ViendoMisiones)
+        {
+            MisionesSecundariasUI.GetComponent<MisionesSecundrias_UI>().SeleccionarMision(MisionesSecundarias[0]);
+            MisionesSecundariasUI.SetActive(true);
+        }
+        else if (ViendoTienda)
+        {
+            TiendaUI.SetActive(true); // ✅ Activar UI de tienda
+                                      // La cámara ya está en la tienda, no cambies nada
+        }
+        else
         {
             if (camaraDialogo != null) camaraDialogo.SetActive(false);
             if (camaraGata != null) camaraGata.SetActive(true);
             if (!autoIniciarDialogo)
                 MostrarIconos();
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
-            //estaAdentro = false;
-        }
-        else
-        {
-            MisionesSecundariasUI.SetActive(true);
         }
     }
 
     private void CambiarACamaraDialogo()
     {
         if (camaraDialogo != null) camaraDialogo.SetActive(true);
+        if (camaraGata != null) camaraGata.SetActive(false);
+        OcultarIconos();
+    }
+
+    private void CambiarACamaraTienda()
+    {
+        if (camaraTienda != null) camaraTienda.SetActive(true);
+        if (camaraDialogo != null) camaraDialogo.SetActive(false);
         if (camaraGata != null) camaraGata.SetActive(false);
         OcultarIconos();
     }
@@ -264,12 +377,30 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         }
         else
         {
-            iconos[0].SetActive(true);
-            iconos[1].SetActive(true);
+            if (camaraTienda != null)
+            {
+                iconos[0].SetActive(true);
+                iconos[1].SetActive(true);
+                iconos[2].SetActive(true);
+                iconos[3].SetActive(true);
+            }
+            else
+            {
+                iconos[0].SetActive(true);
+                iconos[1].SetActive(true);
+            }
         }
     }
 
-    
+    public void CerrarTienda()
+    {
+        TiendaUI.SetActive(false);
+        if (camaraTienda != null) camaraTienda.SetActive(false);
+        if (camaraGata != null) camaraGata.SetActive(true);
+        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
+        ViendoTienda = false;
+    }
+
     public void GuardarNPC()
     {
         var eventosGuardado = GetComponent<Scr_EventosGuardado>();
@@ -281,7 +412,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Gata")) return;
-        Debug.Log("combe"+ estaAdentro);
+
         estaAdentro = true;
 
         if (!autoIniciarDialogo)
@@ -296,10 +427,10 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-       // Debug.Log("aa");
         if (!other.CompareTag("Gata")) return;
-        Debug.Log("aa");
+
         estaAdentro = false;
         OcultarIconos();
     }
+
 }

@@ -9,7 +9,6 @@ using UnityEngine.UI;
 
 public class MisionesSecundrias_UI : MonoBehaviour
 {
-    public List<Scr_CreadorDialogos> Misiones;
     GameObject Gata;
     [HideInInspector]
     public Scr_ActivadorDialogos activadorActual;
@@ -83,9 +82,10 @@ public class MisionesSecundrias_UI : MonoBehaviour
                 break;
             }
         }
-        if(!Encontro)
+        if (!Encontro)
         {
             ControladorMisiones.MisionesSecundarias.Add(MisionActual);
+            ControladorMisiones.MisionesScompletas.Add(false);
             ControladorMisiones.MisionActual = MisionActual;
         }
 
