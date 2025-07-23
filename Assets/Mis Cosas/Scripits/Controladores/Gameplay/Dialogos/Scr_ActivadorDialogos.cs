@@ -164,6 +164,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
                 if (mision.ObjetosQueDa.Length > 0)
                 {
                     Scr_Inventario inventario = GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>();
+                    int j = 0;
                     foreach (Scr_CreadorObjetos item in mision.ObjetosQueDa)
                     {
                         int i = 0;
@@ -171,12 +172,13 @@ public class Scr_ActivadorDialogos : MonoBehaviour
                         {
                             if (obj == item)
                             {
-                                inventario.Cantidades[i] += mision.CantidadesDa[index];
+                                inventario.Cantidades[i] += mision.CantidadesDa[j];
                                 GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>().Lista.Add(item);
-                                GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>().Cantidades.Add(mision.CantidadesDa[index]);
+                                GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>().Cantidades.Add(mision.CantidadesDa[j]);
                             }
                             i++;
                         }
+                        j++;
                     }
                 }
 
@@ -240,7 +242,11 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             controladorMisiones.MisionesScompletas.RemoveAt(idx);
         }
 
-        // ✅ Actualizar MisionActual
+        ActualizarMisionActual();
+    }
+
+    private void ActualizarMisionActual()
+    {
         if (controladorMisiones.MisionPrincipal != null)
         {
             controladorMisiones.MisionActual = controladorMisiones.MisionPrincipal;
@@ -288,6 +294,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         {
             controladorMisiones.MisionPCompleta = false;
             controladorMisiones.MisionPrincipal = null;
+            controladorMisiones.MisionActualCompleta = false;
+            ActualizarMisionActual();
             sistemaDialogos.LineaActual = 0;
             sistemaDialogos.Leido = false;
             sistemaDialogos.DialogoActual++;

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,18 +32,7 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
         moveSpeed = moveSpeed * 1000;
         arbolRectTransform = Arbol.GetComponent<RectTransform>();
 
-        foreach (GameObject Barra in Barras)
-        {
-            int CantBotones = int.Parse(Barra.name[Barra.name.Length - 1].ToString());
-
-            for (int i = 0; i < CantBotones * PlayerPrefs.GetInt("Rango " + Barra.name, 0); i++)
-            {
-                Barra.transform.GetChild(0).GetChild(i).GetComponent<Image>().color = Color.white;
-
-            }
-
-
-        }
+        ActualizarBarrasPorRango();
     }
 
     void Start()
@@ -55,26 +44,7 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
     {
         Puntos.text = PlayerPrefs.GetInt("PuntosDeHabilidad", 0).ToString();
         SeleccionarHabilidad();
-
-        //Prueba de rango
-        if (Input.GetKeyDown(KeyCode.KeypadMultiply))
-        {
-            Debug.Log("Borra");
-            PlayerPrefs.DeleteKey("Rango Barra Planos4");
-            PlayerPrefs.DeleteKey("Rango Barra Naturaleza3");
-        }
-        if (Input.GetKeyDown(KeyCode.KeypadPlus))
-        {
-            PlayerPrefs.SetInt("Rango Barra Planos4", PlayerPrefs.GetInt("Rango Barra Planos4", 0) + 1);
-            PlayerPrefs.SetInt("Rango Barra Naturaleza3", PlayerPrefs.GetInt("Rango Barra Naturaleza3", 0) + 1);
-            Debug.Log("Aumenta Rango, Rango actual:" + PlayerPrefs.GetInt("Rango Barra Naturaleza3", 0));
-        }
-        if (Input.GetKeyDown(KeyCode.KeypadMinus))
-        {
-            PlayerPrefs.SetInt("Rango Barra Planos4", PlayerPrefs.GetInt("Rango Barra Planos4", 0) - 1);
-            PlayerPrefs.SetInt("Rango Barra Naturaleza3", PlayerPrefs.GetInt("Rango Barra Naturaleza3", 0) - 1);
-            Debug.Log("Resta Rango, Rango actual:" + PlayerPrefs.GetInt("Rango Barra Naturaleza3", 0));
-        }
+        InputPruebas();
     }
     public void SeleccionarRama(string NombreRama)
     {
@@ -219,7 +189,7 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
     }
     private void SeleccionarHabilidad()
     {
-        // A�ade una verificaci�n para asegurarte de que no se vuelva a seleccionar de inmediato
+        // Añade una verificación para asegurarte de que no se vuelva a seleccionar de inmediato
         if (HabilidadActual != "" && Input.GetKeyDown(KeyCode.Mouse0) && !YaSelecciono)
         {
             YaSelecciono = true;
@@ -248,10 +218,10 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
     {
         Debug.Log("Rechaza Habilidad");
 
-        // Desactiva la selecci�n de habilidad y resetea la variable de control
+        // Desactiva la selección de habilidad y resetea la variable de control
         YaSelecciono = false;
 
-        // Aseg�rate de que la UI relacionada con la selecci�n de habilidad se oculte
+        // Asegúrate de que la UI relacionada con la selección de habilidad se oculte
         ObjetoHabilidadSeleccionada.SetActive(false);
 
     }
@@ -292,6 +262,81 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
         }
 
 
+    }
+
+    public void ActualizarBarrasPorRango()
+    {
+        foreach (GameObject Barra in Barras)
+        {
+            int rango = PlayerPrefs.GetInt("Rango " + Barra.name, 0);
+            int CantBotones = int.Parse(Barra.name[Barra.name.Length - 1].ToString());
+            int totalBotones = CantBotones * rango;
+
+            int hijosTotales = Barra.transform.GetChild(0).childCount;
+
+            for (int i = 0; i < hijosTotales; i++)
+            {
+                Image boton = Barra.transform.GetChild(0).GetChild(i).GetComponent<Image>();
+
+                if (i < totalBotones)
+                {
+                    // Botón dentro del rango → blanco
+                    boton.color = Color.white;
+                }
+                else
+                {
+                    // Botón fuera del rango → negro
+                    boton.color = Color.black;
+                }
+            }
+        }
+    }
+
+
+    public void InputPruebas()
+    {
+        //Prueba de rango
+        if (Input.GetKeyDown(KeyCode.KeypadMultiply))
+        {
+            Debug.Log("Borra rangos de todas las ramas");
+            foreach (GameObject barra in Barras)
+            {
+                string key = "Rango " + barra.name;
+                PlayerPrefs.DeleteKey(key);
+                Debug.Log($"Eliminado: {key}");
+            }
+            ActualizarBarrasPorRango();
+        }
+
+        // Verificar si se presiona Keypad2, Keypad3, Keypad4, Keypad5
+        for (int i = 0; i < Barras.Length; i++)
+        {
+            KeyCode keyPadNumber = KeyCode.Keypad0 + (i + 1); // Keypad1 = Rama[0], Keypad2 = Rama[1] ...
+
+            if (Input.GetKey(keyPadNumber))
+            {
+                string key = "Rango " + Barras[i].name;
+                int rangoActual = PlayerPrefs.GetInt(key, 0);
+
+                // Suma rango si además presiona +
+                if (Input.GetKeyDown(KeyCode.KeypadPlus))
+                {
+                    rangoActual++;
+                    PlayerPrefs.SetInt(key, rangoActual);
+                    Debug.Log($"Rama {i + 1} aumenta: {key}, Rango actual: {rangoActual}");
+                    ActualizarBarrasPorRango();
+                }
+
+                // Resta rango si además presiona -
+                if (Input.GetKeyDown(KeyCode.KeypadMinus))
+                {
+                    rangoActual = Mathf.Max(0, rangoActual - 1); // Evitar rangos negativos
+                    PlayerPrefs.SetInt(key, rangoActual);
+                    Debug.Log($"Rama {i + 1} resta: {key}, Rango actual: {rangoActual}");
+                    ActualizarBarrasPorRango();
+                }
+            }
+        }
     }
 
 }
