@@ -1,0 +1,125 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEditor.Experimental;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
+public class Tienda_3D : MonoBehaviour
+{
+    //public GameObject personajePrefab;
+    public GameObject[] Obetoscompra; 
+    //public Transform contentPanel;
+    public int objetosVender;
+    public int cantidad;
+    public int precio;
+    public float descuento = 20;
+    public TextMeshProUGUI Dinero;
+    private Transform Gata;
+    private Scr_Inventario inventario;
+    //public Button but;
+    // Start is called before the first frame update
+    void Start()
+    {
+        Gata = GameObject.Find("Gata").transform;
+        inventario = Gata.GetChild(7).GetComponent<Scr_Inventario>();
+        MostrarObjetos();
+    }
+    void OnEnable()
+    {
+        Gata = GameObject.Find("Gata").transform;
+        inventario = Gata.GetChild(7).GetComponent<Scr_Inventario>();
+        MostrarObjetos();
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        Dinero.text = "Dinero:" + PlayerPrefs.GetInt("Dinero", 0);
+    }
+    void MostrarObjetos()
+    {
+
+        List<int> numeros = Enumerable.Range(0, Obetoscompra.Length).ToList();
+        numeros = numeros.OrderBy(x => Random.value).ToList();
+
+        int num1 = numeros[0];
+        int num2 = numeros[1];
+
+        Debug.Log("tiene descuento el lugar " + num1 + " y " + num2);
+
+        for (int i = 0; i < Obetoscompra.Length; i++)
+        {
+            int index = Random.Range(0, inventario.Objetos.Length);
+            Scr_CreadorObjetos instance = inventario.Objetos[index];
+
+            Image image = Obetoscompra[i].transform.Find("Objeto").GetComponent<Image>();
+            image.sprite = instance.Icono;
+
+
+            Transform comp = Obetoscompra[i].transform.Find("BComprar");
+
+            TextMeshProUGUI texto = comp.transform.Find("Precio").GetComponent<TextMeshProUGUI>();
+
+            EventTrigger boton = Obetoscompra[i].transform.Find("BComprar").GetComponent<EventTrigger>();
+
+            
+            texto.text = $"{instance.Nombre} x{cantidad}";
+
+            // Limpiar triggers anteriores
+            boton.triggers.Clear();
+
+            int costo = precio;
+            if (i == num1 || i == num2)
+            {
+                float desc = (100 - descuento) / 100f;
+                costo = Mathf.RoundToInt(costo * desc);
+                Debug.Log(costo + " tiene descuento en el índice " + i);
+            }
+
+            boton.GetComponentInChildren<TextMeshProUGUI>().text = $"{costo}";
+
+            // Crear nueva entrada para el evento PointerDown
+            EventTrigger.Entry entry = new EventTrigger.Entry();
+            entry.eventID = EventTriggerType.PointerDown;
+            entry.callback.AddListener((eventData) => {
+                comprarobjeto(index, costo);
+            });
+
+            boton.triggers.Add(entry);
+
+            // Cambiar color del texto como indicativo de si se puede comprar
+            if (PlayerPrefs.GetInt("Dinero", 0) >= costo)
+            {
+                boton.GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
+            }
+            else
+            {
+                boton.GetComponentInChildren<TextMeshProUGUI>().color = Color.gray;
+            }
+        }
+    }
+
+    void comprarobjeto(int index, int costo)
+    {
+        if (PlayerPrefs.GetInt("Dinero", 0) >= costo)
+        {
+            for (int i = 0; i < inventario.Objetos.Length; i++)
+            {
+                if (inventario.Objetos[i] == inventario.Objetos[index])
+                {
+                    inventario.Cantidades[index] += cantidad;
+                    int newdinero = PlayerPrefs.GetInt("Dinero", 0) - precio;
+                    PlayerPrefs.SetInt("Dinero", newdinero);
+                    break;
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("Jaja no money");
+        }
+    }
+}

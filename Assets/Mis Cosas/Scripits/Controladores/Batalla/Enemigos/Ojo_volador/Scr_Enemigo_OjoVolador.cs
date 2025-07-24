@@ -5,15 +5,15 @@ using UnityEngine.AI;
 
 public class Scr_Enemigo_OjoVolador : Scr_Enemigo
 {
-
+    [SerializeField] Animator Anim;
     public GameObject gata;
     public float speed = 10f;
     public float rotationSpeed = 5f;
-    public float attackDistance = 100f;
+    public float attackDistance = 100;
     public float retreatHeight = 15f;
     public Vector3 patrolCenter;
     public float patrolRadius = 10f;
-
+    private bool yaAtaco = false;
     private enum State { Patrol, Attack, Retreat, Cooldown }
     private State currentState = State.Patrol;
 
@@ -23,32 +23,45 @@ public class Scr_Enemigo_OjoVolador : Scr_Enemigo
     {
 
         base.Start(); // en caso de que Scr_Enemigo tenga lógica en Start
+        Vector3 pos = transform.position;
+        pos.y = retreatHeight;
+        transform.position = pos;
         gata = GameObject.Find("Personaje");
         SetNewPatrolPoint();
-    }
 
+        Anim.Play(NombreAnimacionAparecer);
+        float duracion = Anim.GetCurrentAnimatorStateInfo(0).length;    
+        StartCoroutine(EsperarAparicion(4));
+    }
+    IEnumerator EsperarAparicion(float duracion)
+    {
+        yield return new WaitForSeconds(duracion);
+        Aparecio = true;
+    }
     void Update()
     {
-        switch (currentState)
+        if (Aparecio) 
         {
-            case State.Patrol:
-                Patrol();
-                break;
+            switch (currentState)
+            {
+                case State.Patrol:
+                    Patrol();
+                    break;
 
-            case State.Attack:
-                Attack();
-                break;
+                case State.Attack:
+                    Attack();
+                    break;
 
-            case State.Retreat:
-                Retreat();
-                break;
+                case State.Retreat:
+                    Retreat();
+                    break;
 
-            case State.Cooldown:
-                // Solo espera en Cooldown
-                break;
+                case State.Cooldown:
+                    // Solo espera en Cooldown
+                    break;
+            }
         }
     }
-
     void Patrol()
     {
         MoveTowards(PosiciondelObjetivo);
@@ -60,8 +73,7 @@ public class Scr_Enemigo_OjoVolador : Scr_Enemigo
 
         if (Vector3.Distance(transform.position, gata.transform.position) < attackDistance)
         {
-            currentState = State.Attack;
-            PosiciondelObjetivo = gata.transform.position; // Picado al jugador
+            StartCoroutine(Cooldown_atack());
         }
     }
 
@@ -69,23 +81,28 @@ public class Scr_Enemigo_OjoVolador : Scr_Enemigo
     {
         MoveTowards(PosiciondelObjetivo);
 
-        if (Vector3.Distance(transform.position, gata.transform.position) < 2f)
+        if (!yaAtaco && Vector3.Distance(transform.position, gata.transform.position) < .5f)
         {
+            yaAtaco = true;
+
             Debug.Log("Ataque realizado!");
 
             Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
-
             if (batalla.VidaActual >= DañoMelee)
             {
                 batalla.VidaActual -= DañoMelee;
             }
             else
             {
-                batalla.VidaActual = 0; // 🔹 Evita valores negativos
+                batalla.VidaActual = 0;
             }
 
             currentState = State.Retreat;
-            PosiciondelObjetivo = patrolCenter + new Vector3(Random.Range(-patrolRadius, patrolRadius), retreatHeight, Random.Range(-patrolRadius, patrolRadius));
+            PosiciondelObjetivo = patrolCenter + new Vector3(
+                Random.Range(-patrolRadius, patrolRadius),
+                retreatHeight,
+                Random.Range(-patrolRadius, patrolRadius)
+            );
         }
     }
 
@@ -108,7 +125,15 @@ public class Scr_Enemigo_OjoVolador : Scr_Enemigo
         currentState = State.Patrol;
         SetNewPatrolPoint();
     }
-
+    IEnumerator Cooldown_atack()
+    {
+        float waitTime = Random.Range(4f, 10f);
+        yield return new WaitForSeconds(waitTime);
+        currentState = State.Attack; 
+        Vector3 targetPos = gata.transform.position;
+        targetPos.y += 1f; // baja para atacar, pero no toca el suelo
+        PosiciondelObjetivo = targetPos;
+    }
     void MoveTowards(Vector3 point)
     {
         Vector3 direction = (point - transform.position).normalized;
@@ -121,6 +146,6 @@ public class Scr_Enemigo_OjoVolador : Scr_Enemigo
     {
         float x = Random.Range(-patrolRadius, patrolRadius);
         float z = Random.Range(-patrolRadius, patrolRadius);
-        PosiciondelObjetivo = patrolCenter + new Vector3(x, retreatHeight, z);
+        PosiciondelObjetivo = patrolCenter + new Vector3(x, retreatHeight, z); // Usa siempre altura fija
     }
 }

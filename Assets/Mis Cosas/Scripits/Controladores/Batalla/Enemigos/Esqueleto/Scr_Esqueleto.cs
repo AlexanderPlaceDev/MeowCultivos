@@ -16,6 +16,12 @@ public class Scr_Esqueleto : Scr_Enemigo
     private bool retrocede = false;
     private float Contretrocede = 0;
     public float duracionRetroceder = 1;
+
+    // 🔹 Nueva lógica para esperar después de retroceder
+    public float tiempoEsperaPostRetroceso = 1.5f;
+    private bool esperandoPostRetroceso = false;
+    private float contEsperaPostRetroceso = 0;
+
     protected override void Start()
     {
         base.Start();
@@ -47,20 +53,17 @@ public class Scr_Esqueleto : Scr_Enemigo
 
     void Update()
     {
-
         if (!Aparecio) return;
         if (EstaMuerto) return;
 
         if (Objetivo != null)
         {
             float distancia = Vector3.Distance(transform.position, Objetivo.position);
-            //Debug.Log("Distancia a la gata: " + distancia);
-            // 🔹 Se reduce el temporizador de espera en todo momento
+
             if (esperando)
             {
                 Vector3 direccion = Gata.transform.position - transform.position;
-                direccion.y = 0; // Mantener solo la rotación horizontal
-
+                direccion.y = 0;
                 if (direccion != Vector3.zero)
                 {
                     Quaternion rotacionDeseada = Quaternion.LookRotation(direccion);
@@ -68,45 +71,56 @@ public class Scr_Esqueleto : Scr_Enemigo
                 }
                 temporizadorEspera -= Time.deltaTime;
             }
-            // 🔹 Si el temporizador ha terminado, persigue a la gata
+
             if (temporizadorEspera <= 0)
             {
                 esperando = false;
             }
-            // 🔹 Lógica de ataque
+
+            // 🔹 Ataque
             if (distancia <= agente.stoppingDistance + 1f)
             {
-                if (!esperando)
+                if (!esperando && !Atacando && !retrocede && !esperandoPostRetroceso)
                 {
-                    if (!Atacando)
-                    {
-                        agente.isStopped = true;
-                        esperando = true;
-                        Atacar();
-                    }
+                    agente.isStopped = true;
+                    esperando = true;
+                    Atacar();
                 }
             }
             else
             {
-                if (!esperando && !retrocede)
+                // 🔹 Movimiento o retroceso
+                if (!esperando && !retrocede && !esperandoPostRetroceso)
                 {
                     Mover();
-
                 }
-                else if(retrocede && Contretrocede<duracionRetroceder)
+                else if (retrocede && Contretrocede < duracionRetroceder)
                 {
                     Contretrocede += Time.deltaTime;
                     PaAtras();
                 }
-                else
+                else if (retrocede && !esperandoPostRetroceso)
                 {
+                    // 🔹 Fin de retroceso → empieza espera
                     Contretrocede = 0;
                     retrocede = false;
+                    esperandoPostRetroceso = true;
+                    contEsperaPostRetroceso = 0;
+                    agente.isStopped = true;
+                }
+                else if (esperandoPostRetroceso)
+                {
+                    contEsperaPostRetroceso += Time.deltaTime;
+                    if (contEsperaPostRetroceso >= tiempoEsperaPostRetroceso)
+                    {
+                        esperandoPostRetroceso = false;
+                        contEsperaPostRetroceso = 0;
+                        agente.isStopped = false;
+                    }
                 }
             }
 
-
-            //CicloDeAtaque
+            // 🔹 Ciclo de ataque
             if (Atacando && ContAtaque < DuracionDeAtaque)
             {
                 ContAtaque += Time.deltaTime;
@@ -125,8 +139,6 @@ public class Scr_Esqueleto : Scr_Enemigo
                 agente.SetDestination(Objetivo.position);
             }
         }
-
-
     }
 
     void Mover()
@@ -142,15 +154,16 @@ public class Scr_Esqueleto : Scr_Enemigo
             agente.destination = Objetivo.position;
         }
     }
+
     void PaAtras()
     {
-
         Vector3 direccion = Gata.transform.position - transform.position;
         if (direccion != Vector3.zero)
         {
             Quaternion rotacionDeseada = Quaternion.LookRotation(direccion);
             transform.rotation = Quaternion.Slerp(transform.rotation, rotacionDeseada, Time.deltaTime * 5f);
         }
+
         if (agente != null && agente.isActiveAndEnabled && agente.isOnNavMesh)
         {
             if (!Anim.GetCurrentAnimatorStateInfo(0).IsName("Mover"))
@@ -158,7 +171,7 @@ public class Scr_Esqueleto : Scr_Enemigo
                 Anim.Play("Mover");
             }
             agente.isStopped = false;
-            agente.destination = transform.position - (transform.forward*20);
+            agente.destination = transform.position - (transform.forward * 20);
         }
     }
 
@@ -166,8 +179,8 @@ public class Scr_Esqueleto : Scr_Enemigo
     {
         Debug.Log("Comenzo Atacar");
         Atacando = true;
-        retrocede = true;
-        agente.isStopped = true; // 🔹 Evita que se mueva mientras ataca
+        agente.isStopped = true;
+
         if (Random.Range(0, 2) == 1)
         {
             Anim.Play("Ataque1");
@@ -178,16 +191,13 @@ public class Scr_Esqueleto : Scr_Enemigo
             Anim.Play("Ataque2");
             DuracionDeAtaque = 1.042f;
         }
-        Tween.ShakeCamera(Camera.main, 3);
-        Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
 
-        if (batalla.VidaActual >= DañoMelee)
-        {
-            batalla.VidaActual -= DañoMelee;
-        }
-        else
-        {
-            batalla.VidaActual = 0; // 🔹 Evita valores negativos
-        }
+        Tween.ShakeCamera(Camera.main, 3);
+
+        Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
+        batalla.VidaActual = Mathf.Max(0, batalla.VidaActual - DañoMelee);
+
+        // 🔹 Comienza retroceso después del ataque
+        retrocede = true;
     }
 }
