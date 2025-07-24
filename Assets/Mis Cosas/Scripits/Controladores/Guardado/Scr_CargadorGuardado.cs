@@ -59,10 +59,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
         {
             Gata.transform.GetChild(6).GetComponent<Scr_ControladorMenuGameplay>().enabled = false;
         }
-        //Inventario
-
         //Dialogos
-
         Personajes[0].GetComponent<Scr_SistemaDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoMiguel", 0);
         Personajes[1].GetComponent<Scr_SistemaDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoBony", 0);
         if (PlayerPrefs.GetInt("DialogoMiguel", 0) > 0)

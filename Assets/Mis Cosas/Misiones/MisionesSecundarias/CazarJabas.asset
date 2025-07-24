@@ -13,23 +13,28 @@ MonoBehaviour:
   m_Name: CazarJabas
   m_EditorClassIdentifier: 
   MisionName: CazarJabas
+  LogoMision: {fileID: 21300000, guid: 06b706640894aa1429acd00c5015d666, type: 3}
   Descripcion: Caza 10 Jabas
-  DescripcionFinal: Regresa con Rex
+  DescripcionCompleta: 
+  DialogoEnMision: {fileID: 11400000, guid: 74b724d9e77c0424c86208e7900c4ae4, type: 2}
+  DialogoMisionCompleta: {fileID: 11400000, guid: 967feffe56b4fd647a99063d30138525,
+    type: 2}
   prioridad: 1
   Tipo: 4
-  Objetivocaza:
-  - Jaba
-  cantidad_caza: 0a000000
-  Teclas: 
-  EsContinua: 0
-  QuitaObjetos: 0
-  DaObjetos: 1
   ObjetosNecesarios: []
-  ObjetosRecompensa:
-  - {fileID: 11400000, guid: 6285dd7ac81f2b54ab9b413bc37fa082, type: 2}
-  xpTotal: 10
   CantidadesQuita: 
-  CantidadesDa: 01000000
-  objetoaCostruir: []
-  CambiaPrincipal: 0
+  ObjetivosACazar:
+  - Jaba
+  CantidadACazar: 05000000
+  IconosACazar:
+  - {fileID: 21300000, guid: 58912cfc2ccd42a4b94389986c01b5a8, type: 3}
+  Teclas: 
+  EsContinua: 1
+  QuitaObjetos: 0
+  DaObjetos: 0
+  RecompensaDinero: 0
+  RecompensaXP: 20
+  ObjetosQueDa: []
+  CantidadesDa: 
+  objetosCostruir: []
   TargetExplorado: 

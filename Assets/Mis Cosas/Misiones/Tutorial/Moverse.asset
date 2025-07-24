@@ -13,15 +13,25 @@ MonoBehaviour:
   m_Name: Moverse
   m_EditorClassIdentifier: 
   MisionName: Moverse
+  LogoMision: {fileID: 0}
   Descripcion: Vamos a estirar las piernas!!
-  DescripcionFinal: Regresa con Erik
+  DescripcionCompleta: Regresa con Miguel
+  DialogoEnMision: {fileID: 0}
+  DialogoMisionCompleta: {fileID: 0}
   prioridad: 0
   Tipo: 1
+  ObjetosNecesarios: []
+  CantidadesQuita: 
+  ObjetivosACazar: []
+  CantidadACazar: 
+  IconosACazar: []
   Teclas: 61000000770000007300000064000000
   EsContinua: 0
   QuitaObjetos: 0
   DaObjetos: 0
-  ObjetosNecesarios: []
-  ObjetosRecompensa: []
-  CantidadesQuita: 
+  RecompensaDinero: 0
+  RecompensaXP: 0
+  ObjetosQueDa: []
   CantidadesDa: 
+  objetosCostruir: []
+  TargetExplorado: 

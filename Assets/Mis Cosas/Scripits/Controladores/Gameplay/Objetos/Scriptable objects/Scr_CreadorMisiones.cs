@@ -7,6 +7,7 @@ using UnityEngine;
 public class Scr_CreadorMisiones : ScriptableObject
 {
     public string MisionName;
+    public Sprite LogoMision;
     public string Descripcion;
     public string DescripcionCompleta;
     public Scr_CreadorDialogos DialogoEnMision;

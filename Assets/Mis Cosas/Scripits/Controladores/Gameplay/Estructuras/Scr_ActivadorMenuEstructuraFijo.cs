@@ -19,7 +19,6 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
     [SerializeField] Color[] ColorBotones;
     [SerializeField] GameObject CanvasMenu;
 
-    private Scr_ControladorMisiones ControladorMisiones;
     Transform Gata;
     float Tiempo = 0;
     public bool EstaDentro = false;
@@ -31,7 +30,6 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
         Camara360 = GameObject.Find("Camara 360");
         Canvas = GameObject.Find("Canvas");
-        ControladorMisiones = GameObject.Find("Gata").transform.GetChild(4).GetComponent<Scr_ControladorMisiones>();
     }
 
     void Update()
@@ -50,7 +48,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
             transform.GetChild(0).gameObject.SetActive(true);
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), -200, 1);
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 230, 1);
-            //Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(), -200, 1);
+            Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(), -810, 1);
         }
         else
         {
@@ -126,8 +124,6 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
 
     public void CerrarTablero()
     {
-        //ControladorMisiones.revisarMisionPrincipal();
-        //ControladorMisiones.RevisarTodasLasMisionesSecundarias();
         Tiempo += 1;
         EstaDentro = false;
         Camara360.SetActive(true);
@@ -136,9 +132,12 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         Gata.GetComponent<Scr_GiroGata>().enabled = true;
         transform.GetChild(0).gameObject.SetActive(false);
         BotonCerrar.GetComponent<Image>().color = ColorBotones[0];
-        BotonCerrar.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = ColorBotones[1];
+        if (BotonCerrar.transform.childCount>1)
+        {
+            BotonCerrar.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = ColorBotones[1];
+        }
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), 0, 1);
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 0, 1);
-        //Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(), 0, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(),-610, 1);
     }
 }
