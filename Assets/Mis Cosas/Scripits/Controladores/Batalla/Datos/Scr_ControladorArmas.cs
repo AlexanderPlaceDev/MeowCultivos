@@ -31,6 +31,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     public float cadencia = 0;
     public float temporizadorDisparo = 0f;
 
+    public Animator Anim;
 
     private float tiempoDesdeUltimoGolpe = 0f;
     private int numGolpe = 1;
@@ -38,10 +39,25 @@ public class Scr_ControladorArmas : MonoBehaviour
     GameObject Gata;
     void Start()
     {
+        if (ObjetoArmas == null) return;
+        //tenia el armaActual pero por ahora es 0
+        Transform ArmaAct = ObjetoArmas.transform.GetChild(0);
+
+        if (ArmaAct == null) return;
+
+        Anim = ArmaAct.GetComponent<Animator>();
+        if (Anim == null) return;
+
+        if (TodasLasArmas[ArmaActual].Tipo == "Pistola")
+        {
+            Anim.SetBool("EsPistola", true);
+        }
         Gata = GameObject.Find("Personaje");
         CantBalasActual = TodasLasArmas[ArmaActual].Capacidad;
         balascargador = TodasLasArmas[ArmaActual].CapacidadTotal;
         Physics.IgnoreLayerCollision(7, 8);
+
+        
     }
 
     //activa el arma pero si es cuerpo a cuerpo no la toma en cuenta
@@ -112,14 +128,7 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     void Disparar()
     {
-        if (ObjetoArmas == null) return;
-        //tenia el armaActual pero por ahora es 0
-        Transform ArmaAct = ObjetoArmas.transform.GetChild(0);
         
-        if (ArmaAct == null) return;
-
-        Animator Anim = ArmaAct.GetComponent<Animator>();
-        if (Anim == null) return;
         Debug.LogWarning(TodasLasArmas[ArmaActual].Tipo);
         if(TodasLasArmas[ArmaActual].Tipo == "Cuerpo a Cuerpo")
         {
@@ -157,6 +166,7 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     void DisparaBala()
     {
+        Anim.Play("Disparo_pistola");
         temporizadorDisparo = 0;
         Atacando = true;
         GameObject bala = Instantiate(balaPrefab[ArmaActual - 1], puntoDisparo.position, puntoDisparo.rotation);
@@ -181,6 +191,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         Rigidbody rb = bala.GetComponent<Rigidbody>();
         rb.AddForce(direccionDisparo * fuerzaDisparo, ForceMode.Impulse);
         CantBalasActual--;
+        //Anim.SetBool("EstaDisparando", false);
         StartCoroutine(EsperarAtaque(TodasLasArmas[ArmaActual].Cadencia));
     }
 
@@ -233,8 +244,10 @@ public class Scr_ControladorArmas : MonoBehaviour
             int cantidadarestar = TodasLasArmas[ArmaActual].Capacidad - CantBalasActual;
             if(balascargador >= cantidadarestar)
             {
+                Anim.Play("PistolaRecarga");
                 balascargador = balascargador - cantidadarestar;
                 CantBalasActual = TodasLasArmas[ArmaActual].Capacidad;
+                //Anim.SetBool("EstaRecargando", false);
             }
         }
     }
