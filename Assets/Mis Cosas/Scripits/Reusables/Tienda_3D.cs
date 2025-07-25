@@ -20,6 +20,9 @@ public class Tienda_3D : MonoBehaviour
     public TextMeshProUGUI Dinero;
     private Transform Gata;
     private Scr_Inventario inventario;
+
+
+    public List<int> objetosAvender;
     //public Button but;
     // Start is called before the first frame update
     void Start()
@@ -39,6 +42,20 @@ public class Tienda_3D : MonoBehaviour
     {
         Dinero.text = "Dinero:" + PlayerPrefs.GetInt("Dinero", 0);
     }
+
+    //se llama cada vez que se quiera reiniciar los objetos a vender
+    public void nevosObjetos()
+    {
+        objetosAvender.Clear();
+        for (int i = 0; i < Obetoscompra.Length; i++)
+        {
+            int index = Random.Range(0, inventario.Objetos.Length - 1);
+            objetosAvender.Add(index);
+        }
+    }
+
+
+    //Muestra los objetos
     void MostrarObjetos()
     {
 
@@ -52,8 +69,8 @@ public class Tienda_3D : MonoBehaviour
 
         for (int i = 0; i < Obetoscompra.Length; i++)
         {
-            int index = Random.Range(0, inventario.Objetos.Length);
-            Scr_CreadorObjetos instance = inventario.Objetos[index];
+            //int index = Random.Range(0, inventario.Objetos.Length);
+            Scr_CreadorObjetos instance = inventario.Objetos[objetosAvender[i]];
 
             Image image = Obetoscompra[i].transform.Find("Objeto").GetComponent<Image>();
             image.sprite = instance.Icono;
@@ -85,7 +102,7 @@ public class Tienda_3D : MonoBehaviour
             EventTrigger.Entry entry = new EventTrigger.Entry();
             entry.eventID = EventTriggerType.PointerDown;
             entry.callback.AddListener((eventData) => {
-                comprarobjeto(index, costo);
+                comprarobjeto(objetosAvender[i], costo);
             });
 
             boton.triggers.Add(entry);

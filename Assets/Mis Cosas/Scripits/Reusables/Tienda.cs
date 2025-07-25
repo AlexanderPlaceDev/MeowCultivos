@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class Tienda : MonoBehaviour
 {
-    public GameObject personajePrefab;
+    public GameObject personajePrefab; 
     public Transform contentPanel;
     public int objetosVender;
     public int cantidad;
@@ -18,6 +18,7 @@ public class Tienda : MonoBehaviour
     private Transform Gata;
     private Scr_Inventario inventario;
     public Button but;
+    public List<int> objetosAvender;
     // Start is called before the first frame update
     void Start()
     {
@@ -36,6 +37,21 @@ public class Tienda : MonoBehaviour
     {
         Dinero.text = "Dinero: "+PlayerPrefs.GetInt("Dinero", 0);
     }
+
+
+    //se llama cada vez que se quiera reiniciar los objetos a vender
+    public void nevosObjetos()
+    {
+        objetosAvender.Clear();
+        for (int i = 0; i < objetosVender; i++)
+        {
+            int index = Random.Range(0, inventario.Objetos.Length - 1);
+            objetosAvender.Add(index);
+        }
+    }
+
+
+    //Muestra los objetos
     void MostrarObjetos()
     {
         foreach (Transform child in contentPanel)
