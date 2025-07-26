@@ -161,7 +161,7 @@ public class Scr_SpawnerEnemigosAfueraVariable : MonoBehaviour
                 : Instantiate(Objeto, pos, Quaternion.identity, transform.parent.parent);
 
             Entidades.Add(entidadRestaurada);
-            Debug.Log($"✅ Restaurando enemigo {i} en {pos}");
+            //Debug.Log($"✅ Restaurando enemigo {i} en {pos}");
         }
     }
 

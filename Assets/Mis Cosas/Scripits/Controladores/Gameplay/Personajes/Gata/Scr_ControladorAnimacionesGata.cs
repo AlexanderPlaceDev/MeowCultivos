@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class Scr_ControladorAnimacionesGata : MonoBehaviour
@@ -23,18 +23,56 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
     public bool Recolectando;
     public bool Regando;
 
+    public bool EstaEnCinematica = false;
+
 
     void Start()
     {
-        Anim = transform.GetComponent<Animator>();
+        Anim = GetComponent<Animator>();
         Mov = GetComponent<Scr_Movimiento>();
     }
 
+    bool _estadoCinematicaAnterior = false;
+
     void Update()
     {
+        if (EstaEnCinematica)
+        {
+            // Solo ejecutar esto UNA VEZ al entrar a la cinemática
+            if (!_estadoCinematicaAnterior)
+            {
+                Talando = false;
+                Recolectando = false;
+                Regando = false;
+
+                Anim.SetBool("Talando", false);
+                Anim.SetBool("Recolectando", false);
+                Anim.SetBool("Regando", false);
+                Anim.SetBool("Caminando", false);
+                Anim.SetBool("Corriendo", false);
+                Anim.SetBool("Retrocediendo", false);
+
+                Mov.Estado = Scr_Movimiento.Estados.Quieto;
+                PuedeCaminar = false;
+
+                GetComponent<Scr_Movimiento>().enabled = false;
+                GetComponent<Scr_GiroGata>().enabled = false;
+
+                _estadoCinematicaAnterior = true; // Marcar que ya hicimos esto
+            }
+
+            return; // No ejecutar el resto de Update mientras sea cinemática
+        }
+
+        // ← Si salimos de cinemática, reiniciamos la bandera
+        if (_estadoCinematicaAnterior)
+        {
+            _estadoCinematicaAnterior = false;
+        }
+
+        // Lo demás de tu Update...
         Inputs();
 
-        // Actualizar par�metros del Animator
         Anim.SetBool("Talando", Talando);
         Anim.SetBool("Recolectando", Recolectando);
         Anim.SetBool("Regando", Regando);
@@ -47,17 +85,15 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
         }
         else
         {
-            // Detener movimiento si se est� en alguna acci�n
             Anim.SetBool("Caminando", false);
-            Anim.SetBool("Caminando", false);
+            Anim.SetBool("Corriendo", false);
             Anim.SetBool("Retrocediendo", false);
         }
 
-        // Habilitar o deshabilitar movimiento seg�n estado
-        
         GetComponent<Scr_Movimiento>().enabled = PuedeCaminar;
         GetComponent<Scr_GiroGata>().enabled = PuedeCaminar;
     }
+
 
     void Inputs()
     {
@@ -93,7 +129,6 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
     {
         int tiempo = PlayerPrefs.GetString("Habilidad:Guante", "No") == "Si" ? 2 : 1;
         yield return new WaitForSeconds(TiempoRecoleccion / tiempo);
-        Debug.Log("Termin� de recolectar");
         Recolectando = false;
     }
 
@@ -101,7 +136,63 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
     {
         int tiempo = PlayerPrefs.GetString("Habilidad:Guante", "No") == "Si" ? 2 : 1;
         yield return new WaitForSeconds(TiempoRegar / tiempo);
-        Debug.Log("Termin� de regar");
         Regando = false;
+    }
+
+    // 🎬 Llamada desde señal para reproducir animación por nombre
+    public void ReproducirAnimacionDesdeCinematica(string nombreAnimacion)
+    {
+        if (!EstaEnCinematica || string.IsNullOrEmpty(nombreAnimacion)) return;
+
+        Anim.Play(nombreAnimacion, 0, 0f);
+    }
+
+    // ✅ Activar un bool desde una señal del Timeline
+    // ✅ Activar un bool desde una señal del Timeline (y desactivar los demás)
+    public void ActivarBoolDesdeCinematica(string nombre)
+    {
+
+
+        if (!EstaEnCinematica) return;
+
+        if (nombre != "")
+        {
+            // Desactiva todos los bools relevantes
+            Anim.SetBool("Talando", false);
+            Anim.SetBool("Recolectando", false);
+            Anim.SetBool("Regando", false);
+            Anim.SetBool("Caminando", false);
+            Anim.SetBool("Corriendo", false);
+            Anim.SetBool("Retrocediendo", false);
+
+            // Activa solo el que pediste
+            Anim.SetBool(nombre, true);
+
+            // También actualiza las variables internas si aplica
+            Talando = nombre == "Talando";
+            Recolectando = nombre == "Recolectando";
+            Regando = nombre == "Regando";
+        }
+        else
+        {
+            // Desactiva todos los bools relevantes
+            Anim.SetBool("Talando", false);
+            Anim.SetBool("Recolectando", false);
+            Anim.SetBool("Regando", false);
+            Anim.SetBool("Caminando", false);
+            Anim.SetBool("Corriendo", false);
+            Anim.SetBool("Retrocediendo", false);
+        }
+
+
+    }
+
+
+    // ❌ Desactivar un bool desde una señal del Timeline
+    public void DesactivarBoolDesdeCinematica(string nombre)
+    {
+        if (!EstaEnCinematica || string.IsNullOrEmpty(nombre)) return;
+
+        Anim.SetBool(nombre, false);
     }
 }

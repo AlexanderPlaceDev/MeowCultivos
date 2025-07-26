@@ -10,18 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 12ff4b93ff67613438982eb385a7e4e9, type: 3}
-  m_Name: Platano Escopeta
+  m_Name: Sandia
   m_EditorClassIdentifier: 
   Icono: {fileID: 0}
-  Color: {r: 1, g: 0.9512944, b: 0, a: 1}
-  Tipo: Escopeta
-  Nombre: Platano
+  Color: {r: 1, g: 0.18039215, b: 0.26358393, a: 1}
+  Tipo: Cuerpo a Cuerpo
+  Nombre: Sandia
   Descripcion: 
-  Cadencia: 5
-  Capacidad: 2
-  CapacidadTotal: 100
-  Alcance: 0
-  "Da\xF1o": 20
-  PuntosXGolpe: 5
-  Velocidad: 20
+  Cadencia: 0
+  Capacidad: 0
+  CapacidadTotal: 0
+  Rango: 0
+  "Da\xF1o": 0
+  Velocidad: 0
   DobleMano: 0

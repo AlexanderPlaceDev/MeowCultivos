@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -104,18 +106,48 @@ public class Scr_SistemaDialogos : MonoBehaviour
         }
         else
         {
+            Debug.Log("Misiones");
+            // Por defecto, usar el diálogo secundario
+            DialogoArecibir = DialogoSecundario;
 
-            DialogoArecibir = DialogoSecundario; //Primero asigna el dialogo secundario
-            //Despues busca si tiene misiones activas
-            for (int i = 0; i < ControladorMisiones.MisionesSecundarias.ToArray().Length; i++)
+            // Lista de misiones completas de este NPC
+            List<Scr_CreadorMisiones> misionesCompletasDelNPC = new List<Scr_CreadorMisiones>();
+
+            for (int i = 0; i < ControladorMisiones.MisionesSecundarias.Count; i++)
             {
-                //En caso de tener una mision secundaria usa el dialogo de esa mision
-                DialogoArecibir = ControladorMisiones.MisionesSecundarias[i].DialogoEnMision;
+                var misionJugador = ControladorMisiones.MisionesSecundarias[i];
+
+                // Validar si pertenece a este NPC
+                bool esDelNPC = activadorDialogos.MisionesSecundarias.Any(m => m.MisionName == misionJugador.MisionName);
+
+                if (!esDelNPC)
+                    continue;
+
                 if (ControladorMisiones.MisionesScompletas[i])
                 {
-                    //en caso de estar completa usa el dialogo de mision completa
-                    DialogoArecibir = ControladorMisiones.MisionesSecundarias[i].DialogoMisionCompleta;
-                    break;
+                    misionesCompletasDelNPC.Add(misionJugador);
+                }
+            }
+
+            // Si hay misiones completas, elegir una al azar para mostrar su diálogo de misión completada
+            if (misionesCompletasDelNPC.Count > 0)
+            {
+                int randomIndex = Random.Range(0, misionesCompletasDelNPC.Count);
+                DialogoArecibir = misionesCompletasDelNPC[randomIndex].DialogoMisionCompleta;
+            }
+            else
+            {
+                // Si no hay ninguna completa, buscar alguna activa del NPC
+                for (int i = 0; i < ControladorMisiones.MisionesSecundarias.Count; i++)
+                {
+                    var misionJugador = ControladorMisiones.MisionesSecundarias[i];
+                    bool esDelNPC = activadorDialogos.MisionesSecundarias.Any(m => m.MisionName == misionJugador.MisionName);
+
+                    if (esDelNPC)
+                    {
+                        DialogoArecibir = misionJugador.DialogoEnMision;
+                        break;
+                    }
                 }
             }
 

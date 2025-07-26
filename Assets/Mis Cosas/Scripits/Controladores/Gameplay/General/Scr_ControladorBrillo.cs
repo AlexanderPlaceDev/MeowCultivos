@@ -27,7 +27,6 @@ public class Scr_ControladorBrillo : MonoBehaviour
         {
             brilloActual = alpha;
             overlay.color = new Color(0f, 0f, 0f, alpha);
-            Debug.Log($"Brillo: {brilloGuardado}% → Alpha: {alpha:F2}");
         }
     }
 }

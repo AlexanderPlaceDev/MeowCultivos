@@ -419,8 +419,6 @@ public class Scr_ControladorMisiones : MonoBehaviour
         }
 
         // Guardar misiones secundarias
-        Debug.Log("Guarda :" + MisionesSecundarias.Count + " Misiones s");
-        PlayerPrefs.SetInt("CantidadMisionesSecundarias", MisionesSecundarias.Count);
         for (int i = 0; i < MisionesSecundarias.Count; i++)
         {
             PlayerPrefs.SetString("MisionSecundaria_" + i, MisionesSecundarias[i].name);
@@ -464,9 +462,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
         }
 
         // Cargar misiones secundarias
-        Debug.Log("Cant Misiones secundarias: " + PlayerPrefs.GetInt("CantidadMisionesSecundarias", 0));
         int cantidadSecundarias = PlayerPrefs.GetInt("CantidadMisionesSecundarias", 0);
-        Debug.Log("Cargo: " + cantidadSecundarias + " Misiones s");
         MisionesSecundarias.Clear();
         MisionesScompletas.Clear();
         for (int i = 0; i < cantidadSecundarias; i++)

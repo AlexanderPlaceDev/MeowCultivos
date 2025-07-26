@@ -74,6 +74,10 @@ public class Scr_CargadorGuardado : MonoBehaviour
         {
             Personajes[1].SetActive(true);
         }
+        if (PlayerPrefs.GetString("Cinematica " + "Presentacion Rex", "No") == "Si")
+        {
+            Personajes[2].SetActive(true);
+        }
     }
 
     private void Update()
