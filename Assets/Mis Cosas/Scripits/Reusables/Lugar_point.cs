@@ -22,7 +22,7 @@ public class Lugar_point : MonoBehaviour
         }
         else
         {
-            Debug.Log("No se encontró ningún GameObject con ese tag.");
+            //Debug.Log("No se encontró ningún GameObject con ese tag.");
         }
     }
     GameObject BuscarGameObjectPorTag(string tag)

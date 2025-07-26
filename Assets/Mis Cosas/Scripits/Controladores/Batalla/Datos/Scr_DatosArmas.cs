@@ -22,8 +22,16 @@ public class Scr_DatosArmas : MonoBehaviour
         }
     }
 
-    void Update()
+    public void DesbloquearArma(string Nombre)
     {
+        PlayerPrefs.SetString("Arma" + Nombre, "Si");
 
+        for (int i = 1; i < TodasLasArmas.Length; i++)
+        {
+            if (TodasLasArmas[i].Nombre == Nombre)
+            {
+                ArmasDesbloqueadas[i] = true;
+            }
+        }
     }
 }

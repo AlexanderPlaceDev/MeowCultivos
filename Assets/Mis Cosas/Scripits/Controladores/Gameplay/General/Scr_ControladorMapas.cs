@@ -67,7 +67,7 @@ public class Scr_ControladorMapas : MonoBehaviour
             bool activo = (estado == "Si");
             child.gameObject.SetActive(activo);
 
-            Debug.Log($"[CargarEstadoMapas] {child.name}: {estado}");
+            //Debug.Log($"[CargarEstadoMapas] {child.name}: {estado}");
         }
     }
 

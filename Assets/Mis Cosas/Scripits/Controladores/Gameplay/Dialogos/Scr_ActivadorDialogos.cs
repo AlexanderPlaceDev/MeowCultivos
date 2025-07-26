@@ -1,6 +1,7 @@
 ﻿using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -56,6 +57,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
         if (brain != null)
         {
+            Debug.Log("Ajusta Tiempo transicion");
             brain.m_DefaultBlend.m_Time = transicionDuracion; // Ajusta duración de transición de cámara
         }
 
@@ -140,67 +142,66 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     //====================================
     private void ManejarMisionesSecundarias()
     {
+        List<int> misionesAEliminar = new List<int>();
 
-        //Primero Verifica si completo alguna mision
-        List<int> MisionesAEliminar = new List<int>();
-        int index = 0;
+        Scr_ObjetosAgregados objetosAgregados = GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>();
+        Scr_Inventario inventario = Gata.transform.GetChild(7).GetComponent<Scr_Inventario>();
 
-        foreach (var mision in controladorMisiones.MisionesSecundarias)
+        for (int i = 0; i < controladorMisiones.MisionesSecundarias.Count; i++)
         {
-            Debug.Log("Accede a " + index);
+            Scr_CreadorMisiones mision = controladorMisiones.MisionesSecundarias[i];
 
-            //Aqui comprueba
-            if (controladorMisiones.MisionesScompletas[index])
+            // Verificar si esta misión está en las misiones secundarias del activador
+            bool esMisionDelActivador = MisionesSecundarias.Any(m => m.MisionName == mision.MisionName);
+            if (!esMisionDelActivador) continue;
+
+            // Verificar si la misión está completa
+            if (!controladorMisiones.MisionesScompletas[i]) continue;
+
+            // ✅ Marca para eliminar
+            misionesAEliminar.Add(i);
+
+            // 🎁 Otorgar recompensas
+            if (mision.RecompensaDinero > 0)
+                objetosAgregados.AgregarDinero(mision.RecompensaDinero);
+
+            if (mision.RecompensaXP > 0)
+                objetosAgregados.AgregarExperiencia(mision.RecompensaXP);
+
+            // 🎒 Recompensas de objetos
+            for (int j = 0; j < mision.ObjetosQueDa.Length; j++)
             {
-                MisionesAEliminar.Add(index); // 📌 Marcar para eliminar después
+                Scr_CreadorObjetos objetoRecompensa = mision.ObjetosQueDa[j];
+                int cantidad = mision.CantidadesDa[j];
 
-                //🎁 Recompensas
-                if (mision.RecompensaDinero > 0)
-                    GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>().AgregarDinero(mision.RecompensaDinero);
-
-                if (mision.RecompensaXP > 0)
-                    GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>().AgregarExperiencia(mision.RecompensaXP);
-
-                if (mision.ObjetosQueDa.Length > 0)
+                for (int k = 0; k < inventario.Objetos.Length; k++)
                 {
-                    Scr_Inventario inventario = GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>();
-                    int j = 0;
-                    foreach (Scr_CreadorObjetos item in mision.ObjetosQueDa)
+                    if (inventario.Objetos[k] == objetoRecompensa)
                     {
-                        int i = 0;
-                        foreach (Scr_CreadorObjetos obj in inventario.Objetos)
-                        {
-                            if (obj == item)
-                            {
-                                inventario.Cantidades[i] += mision.CantidadesDa[j];
-                                GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>().Lista.Add(item);
-                                GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>().Cantidades.Add(mision.CantidadesDa[j]);
-                            }
-                            i++;
-                        }
-                        j++;
-                    }
-                }
-
-                //📦 Quitar objetos necesarios
-                if (mision.ObjetosNecesarios.Length > 0)
-                {
-                    Scr_Inventario inventario = Gata.transform.GetChild(7).GetComponent<Scr_Inventario>();
-                    int i = 0;
-                    foreach (Scr_CreadorObjetos item in mision.ObjetosNecesarios)
-                    {
-                        inventario.QuitarObjeto(mision.CantidadesQuita[i], item.Nombre);
-                        i++;
+                        inventario.Cantidades[k] += cantidad;
+                        objetosAgregados.Lista.Add(objetoRecompensa);
+                        objetosAgregados.Cantidades.Add(cantidad);
+                        break;
                     }
                 }
             }
-            index++;
+
+            // 🧹 Quitar objetos necesarios (requisitos)
+            for (int j = 0; j < mision.ObjetosNecesarios.Length; j++)
+            {
+                Scr_CreadorObjetos objetoNecesario = mision.ObjetosNecesarios[j];
+                int cantidadQuita = mision.CantidadesQuita[j];
+
+                inventario.QuitarObjeto(cantidadQuita, objetoNecesario.Nombre);
+            }
         }
 
         Debug.Log("Cambiando Camara Secundaria");
-        StartCoroutine(EsperarYCambiarCamaraSecundaria(MisionesAEliminar));
+        StartCoroutine(EsperarYCambiarCamaraSecundaria(misionesAEliminar));
+
         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
     }
+
 
     private void ManejarUIVenta()
     {

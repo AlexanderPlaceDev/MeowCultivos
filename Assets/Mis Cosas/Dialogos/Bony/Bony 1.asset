@@ -12,12 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfd7b7348ecdf544ab73fad30de2eac3, type: 3}
   m_Name: Bony 1
   m_EditorClassIdentifier: 
-  NombreDialogo: 
-  NumeroDialogo: 1
   EsUnico: 1
   EsMisionPrincipal: 0
-  EsMisionSecundaria: 0
-  Mision: {fileID: 11400000, guid: 26cf91a577a461e4a8375203ef1dbc92, type: 2}
+  Mision: {fileID: 0}
   Lineas:
   - Gracias por salvarme
   - Esos monstruos han estado destruyendo mi base
@@ -28,4 +25,3 @@ MonoBehaviour:
   - 'Que tal si me ayudas construyendo algunas cosas '
   - En el tablero azul que esta a la ezquierda puedes ver los proyectos que me encargo
     mi padre
-  LineasSecundarias: []
