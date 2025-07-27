@@ -57,7 +57,6 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
         if (brain != null)
         {
-            Debug.Log("Ajusta Tiempo transicion");
             brain.m_DefaultBlend.m_Time = transicionDuracion; // Ajusta duración de transición de cámara
         }
 
@@ -236,15 +235,35 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         yield return new WaitUntil(() => !panelDialogo.activeSelf); // ⏳ Espera a que termine el diálogo
 
         // 📌 Eliminar misiones completadas
-        for (int i = misionesAEliminar.Count - 1; i >= 0; i--)
+        for (int index = misionesAEliminar.Count - 1; index >= 0; index--)
         {
-            int idx = misionesAEliminar[i];
+            int idx = misionesAEliminar[index];
+            Scr_CreadorMisiones m = controladorMisiones.MisionesSecundarias[idx];
+
+            // ✅ BORRAR DATOS DE CAZA DE ENEMIGOS
+            if (m.ObjetivosACazar != null && m.ObjetivosACazar.Length > 0)
+            {
+                for (int j = 0; j < m.ObjetivosACazar.Length; j++)
+                {
+                    string clave = $"{m.name}_CantidadCazados_{j}";
+                    if (PlayerPrefs.HasKey(clave))
+                    {
+                        PlayerPrefs.DeleteKey(clave);
+                        Debug.Log($"🗑️ Eliminado PlayerPrefs: {clave}");
+                    }
+                }
+            }
+
+            // ✅ Eliminar misión de la lista
             controladorMisiones.MisionesSecundarias.RemoveAt(idx);
             controladorMisiones.MisionesScompletas.RemoveAt(idx);
         }
 
+        PlayerPrefs.Save(); // 💾 Guardar cambios
+
         ActualizarMisionActual();
     }
+
 
     private void ActualizarMisionActual()
     {

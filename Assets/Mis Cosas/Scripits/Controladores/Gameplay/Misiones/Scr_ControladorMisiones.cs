@@ -58,7 +58,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
     // ================================
     // === MÉTODOS UNITY ===
     // ================================
-    void Start()
+    void Awake()
     {
         // Buscar referencias importantes
         Gata = GameObject.Find("Gata").transform;
@@ -83,6 +83,8 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
         if (MisionActual != null)
         {
+            RevisarMisionesSecundarias(); // <-- MOVER AQUÍ PRIMERO
+
             string nuevaDescripcion = MisionActualCompleta ? MisionActual.DescripcionCompleta : MisionActual.Descripcion;
             if (nuevaDescripcion != ultimaDescripcion)
             {
@@ -93,7 +95,6 @@ public class Scr_ControladorMisiones : MonoBehaviour
             InputPanelMisiones();
         }
 
-        RevisarMisionesSecundarias();
     }
 
     private void InputPanelMisiones()
@@ -118,7 +119,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
     // ================================
     public void ActualizarUI()
     {
-        if (TextoDescripcion == null || TextoPagina == null) return; // Protege contra referencias nulas
+        if (TextoDescripcion == null || TextoPagina == null) return;
 
         if (MisionActual != null)
         {
@@ -126,63 +127,62 @@ public class Scr_ControladorMisiones : MonoBehaviour
             int totalPaginas = (MisionPrincipal != null ? 1 : 0) + MisionesSecundarias.Count;
             TextoPagina.text = $"{PaginaActual}/{(totalPaginas > 0 ? totalPaginas : 1)}";
 
-            if (MisionActual.Tipo == Tipos.Caza || MisionActual.Tipo == Tipos.Recoleccion)
+            // Oculta el panel si no es caza ni recolección
+            if (MisionActual.Tipo != Tipos.Caza && MisionActual.Tipo != Tipos.Recoleccion)
             {
-                // Oculta todos los hijos
-                for (int i = 0; i < ObjetosRecoleccion.transform.childCount; i++)
-                    ObjetosRecoleccion.transform.GetChild(i).gameObject.SetActive(false);
+                ObjetosRecoleccion.SetActive(false);
+                return; // Ya que no hay más que mostrar
+            }
 
-                ObjetosRecoleccion.SetActive(true);
+            // Ocultar todos los hijos
+            for (int i = 0; i < ObjetosRecoleccion.transform.childCount; i++)
+                ObjetosRecoleccion.transform.GetChild(i).gameObject.SetActive(false);
 
-                int N = 0;
+            ObjetosRecoleccion.SetActive(true);
 
-                // ======================
-                // === Objetos necesarios (RECOLECCIÓN)
-                // ======================
-                if (MisionActual.ObjetosNecesarios != null)
+            int N = 0;
+
+            // RECOLECCIÓN
+            if (MisionActual.ObjetosNecesarios != null)
+            {
+                foreach (Scr_CreadorObjetos Item in MisionActual.ObjetosNecesarios)
                 {
-                    foreach (Scr_CreadorObjetos Item in MisionActual.ObjetosNecesarios)
-                    {
-                        if (N >= ObjetosRecoleccion.transform.childCount) break;
+                    if (N >= ObjetosRecoleccion.transform.childCount) break;
 
-                        Transform hijo = ObjetosRecoleccion.transform.GetChild(N);
-                        hijo.gameObject.SetActive(true);
-                        hijo.GetComponent<Image>().sprite = Item.Icono;
-                        hijo.GetChild(0).GetComponent<TextMeshProUGUI>().text = Item.Nombre;
+                    Transform hijo = ObjetosRecoleccion.transform.GetChild(N);
+                    hijo.gameObject.SetActive(true);
+                    hijo.GetComponent<Image>().sprite = Item.Icono;
+                    hijo.GetChild(0).GetComponent<TextMeshProUGUI>().text = Item.Nombre;
 
-                        int cantidadEnInventario = 0;
-                        int index = Array.IndexOf(Inventario.Objetos, Item);
-                        if (index >= 0) cantidadEnInventario = Inventario.Cantidades[index];
+                    int cantidadEnInventario = 0;
+                    int index = Array.IndexOf(Inventario.Objetos, Item);
+                    if (index >= 0) cantidadEnInventario = Inventario.Cantidades[index];
 
-                        hijo.GetChild(1).GetComponent<TextMeshProUGUI>().text = cantidadEnInventario.ToString();
-                        hijo.GetChild(3).GetComponent<TextMeshProUGUI>().text = MisionActual.CantidadesQuita[N].ToString();
-                        N++;
-                    }
+                    hijo.GetChild(1).GetComponent<TextMeshProUGUI>().text = cantidadEnInventario.ToString();
+                    hijo.GetChild(3).GetComponent<TextMeshProUGUI>().text = MisionActual.CantidadesQuita[N].ToString();
+                    N++;
                 }
+            }
 
-                // ======================
-                // === Enemigos a cazar (CAZA)
-                // ======================
-                if (MisionActual.ObjetivosACazar.Length > 0)
+            // CAZA
+            if (MisionActual.ObjetivosACazar.Length > 0)
+            {
+                N = 0;
+                foreach (string Enemigo in MisionActual.ObjetivosACazar)
                 {
-                    N = 0;
-                    foreach (string Enemigo in MisionActual.ObjetivosACazar)
-                    {
-                        if (N >= ObjetosRecoleccion.transform.childCount) break;
+                    if (N >= ObjetosRecoleccion.transform.childCount) break;
 
-                        Transform hijo = ObjetosRecoleccion.transform.GetChild(N);
-                        hijo.gameObject.SetActive(true);
-                        hijo.GetComponent<Image>().sprite = MisionActual.IconosACazar[N];
-                        hijo.GetChild(0).GetComponent<TextMeshProUGUI>().text = Enemigo;
+                    Transform hijo = ObjetosRecoleccion.transform.GetChild(N);
+                    hijo.gameObject.SetActive(true);
+                    hijo.GetComponent<Image>().sprite = MisionActual.IconosACazar[N];
+                    hijo.GetChild(0).GetComponent<TextMeshProUGUI>().text = Enemigo;
 
-                        // Leer cantidad cazada desde PlayerPrefs
-                        string clave = $"{MisionActual.name}_CantidadCazados_{N}";
-                        int cantidadCazada = PlayerPrefs.GetInt(clave, 0);
+                    string clave = $"{MisionActual.name}_CantidadCazados_{N}";
+                    int cantidadCazada = PlayerPrefs.GetInt(clave, 0);
 
-                        hijo.GetChild(1).GetComponent<TextMeshProUGUI>().text = cantidadCazada.ToString();
-                        hijo.GetChild(3).GetComponent<TextMeshProUGUI>().text = MisionActual.CantidadACazar[N].ToString();
-                        N++;
-                    }
+                    hijo.GetChild(1).GetComponent<TextMeshProUGUI>().text = cantidadCazada.ToString();
+                    hijo.GetChild(3).GetComponent<TextMeshProUGUI>().text = MisionActual.CantidadACazar[N].ToString();
+                    N++;
                 }
             }
         }
@@ -196,6 +196,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
         GuardarMisiones();
     }
+
 
 
     // ================================
@@ -252,6 +253,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
     {
         RevisarMisionPrincipal();
         RevisarMisionesSecundarias();
+        ActualizarUI();
     }
 
     public void RevisarMisionPrincipal()
@@ -381,9 +383,6 @@ public class Scr_ControladorMisiones : MonoBehaviour
         return true; // Todos los enemigos cazados en la cantidad necesaria
     }
 
-
-
-
     private bool RevisarMisionRecoleccion(Scr_CreadorMisiones mision)
     {
         int j = 0;
@@ -409,11 +408,13 @@ public class Scr_ControladorMisiones : MonoBehaviour
     // ================================
     // === GUARDAR Y CARGAR DATOS ===
     // ================================
-    private void GuardarMisiones()
+    public void GuardarMisiones()
     {
+        Debug.Log("Guarda misiones");
         // Guardar misión principal
         if (MisionPrincipal != null)
         {
+            Debug.Log("Guarda mision principal");
             PlayerPrefs.SetString("MisionPrincipal", MisionPrincipal.name);
             PlayerPrefs.SetInt("MisionPrincipalCompleta", MisionPCompleta ? 1 : 0);
         }
@@ -424,6 +425,8 @@ public class Scr_ControladorMisiones : MonoBehaviour
             PlayerPrefs.SetString("MisionSecundaria_" + i, MisionesSecundarias[i].name);
             PlayerPrefs.SetInt("MisionSecundariaCompleta_" + i, MisionesScompletas[i] ? 1 : 0);
         }
+
+        PlayerPrefs.SetInt("CantidadMisionesSecundarias", MisionesSecundarias.Count);
 
         // Guardar misión actual
         if (MisionActual != null)
@@ -457,6 +460,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
         string nombreMisionPrincipal = PlayerPrefs.GetString("MisionPrincipal", "");
         if (!string.IsNullOrEmpty(nombreMisionPrincipal))
         {
+            Debug.Log("Encontro Mision Principal");
             MisionPrincipal = BuscarMisionPorNombre(nombreMisionPrincipal);
             MisionPCompleta = PlayerPrefs.GetInt("MisionPrincipalCompleta", 0) == 1;
         }

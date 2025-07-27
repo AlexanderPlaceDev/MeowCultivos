@@ -7,6 +7,7 @@ public class Scr_ActivadorCinematica : MonoBehaviour
 {
     [SerializeField] GameObject Elementos;
     [SerializeField] string Cinematica;
+    [SerializeField] string CinematicaAnterior;
     private bool EstaEnCinematica;
     private GameObject Gata;
 
@@ -15,7 +16,12 @@ public class Scr_ActivadorCinematica : MonoBehaviour
         // Si la cinemática ya fue reproducida, desactivar el activador completo
         if (PlayerPrefs.GetString("Cinematica " + Cinematica, "No") == "Si")
         {
-            gameObject.SetActive(false);
+            gameObject.GetComponent<Collider>().enabled = false;
+        }
+
+        if(PlayerPrefs.GetString("Cinematica " + CinematicaAnterior, "No") == "Si")
+        {
+            gameObject.GetComponent<Collider>().enabled = true;
         }
 
     }
@@ -64,6 +70,9 @@ public class Scr_ActivadorCinematica : MonoBehaviour
         // ✅ Guardar la cinemática como completada
         PlayerPrefs.SetString("Cinematica " + Cinematica, "Si");
 
+        // ✅ Activar activador siguiente cinematica
+
+
         // ✅ Reactivar movimiento y cámara
         if (Gata.TryGetComponent(out Scr_ControladorAnimacionesGata animControl))
         {
@@ -77,7 +86,7 @@ public class Scr_ActivadorCinematica : MonoBehaviour
             movimiento.enabled = true;
         }
 
-        
+
         Camera.main.GetComponent<CinemachineBrain>().m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.EaseInOut;
         Camera.main.GetComponent<CinemachineBrain>().m_DefaultBlend.m_Time = 1;
 
@@ -87,7 +96,7 @@ public class Scr_ActivadorCinematica : MonoBehaviour
 
         EstaEnCinematica = false;
         // ✅ Desactivar elementos y activador
-        gameObject.SetActive(false); // Desactiva el activador para no volver a activarlo
+        gameObject.GetComponent<Collider>().enabled = false; // Desactiva el activador para no volver a activarlo
 
     }
 }

@@ -12,7 +12,7 @@ public class Scr_ControladorMapas : MonoBehaviour
     [SerializeField] Material SkyBoxDia;
     [SerializeField] Material SkyBoxNoche;
 
-    private void Start()
+    private void Awake()
     {
         if (EsMapa)
         {
@@ -57,7 +57,7 @@ public class Scr_ControladorMapas : MonoBehaviour
         if (!EsMapa) return;
 
         int childCount = transform.childCount;
-
+        Debug.Log("Hijos" + childCount);
         for (int i = 0; i < childCount; i++)
         {
             Transform child = transform.GetChild(i);
@@ -67,14 +67,15 @@ public class Scr_ControladorMapas : MonoBehaviour
             bool activo = (estado == "Si");
             child.gameObject.SetActive(activo);
 
-            //Debug.Log($"[CargarEstadoMapas] {child.name}: {estado}");
+            Debug.Log($"[CargarEstadoMapas] {child.name}: {estado}");
         }
     }
 
     public void GuardarEstadoMapas()
     {
-        if (!EsMapa) return;
+        if (EsMapa) return;
 
+        Debug.Log("Entro guardar");
         int childCount = transform.childCount;
 
         for (int i = 0; i < childCount; i++)
