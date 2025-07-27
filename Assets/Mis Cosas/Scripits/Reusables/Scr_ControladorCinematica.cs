@@ -18,6 +18,7 @@ public class Scr_ControladorCinematica : MonoBehaviour
     public bool[] PausaAlTerminar;
     [SerializeField] GameObject[] ObjetosApagar;
     [SerializeField] GameObject[] ObjetosEncender;
+    [SerializeField] Collider ActivadorCinematicaSiguiente;
     [SerializeField] GameObject Enemigo;
     [SerializeField] int CantidadEnemigos;
     [SerializeField] Animator[] Barras;
@@ -68,6 +69,8 @@ public class Scr_ControladorCinematica : MonoBehaviour
             {
                 Objeto.SetActive(true);
             }
+
+            ActivadorCinematicaSiguiente.enabled = true;
 
             // Apagar objetos
             foreach (GameObject Objeto in ObjetosApagar)

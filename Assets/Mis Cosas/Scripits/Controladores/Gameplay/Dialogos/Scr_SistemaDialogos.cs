@@ -238,10 +238,12 @@ public class Scr_SistemaDialogos : MonoBehaviour
                         {
                             ControladorMisiones.MisionActual = DialogoArecibir.Mision;
                             ControladorMisiones.MisionPrincipal = DialogoArecibir.Mision;
+                            ControladorMisiones.GuardarMisiones(); // Guardar inmediatamente después de asignar
 
                             if (DialogoArecibir.Mision.EsContinua)
                                 DialogoActual++;
                         }
+
 
                         if (DialogoActual < Dialogos.Length - 1 && ControladorMisiones.MisionActual == null)
                         {

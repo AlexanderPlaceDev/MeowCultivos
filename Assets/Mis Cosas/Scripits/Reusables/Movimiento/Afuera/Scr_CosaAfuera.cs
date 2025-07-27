@@ -37,8 +37,6 @@ public class Scr_CosaAfuera : Scr_EnemigoFuera
 
         if (distancia < DistanciaDisparo)
         {
-            Debug.Log("Entra 1");
-
             if (!Disparando && Contador <= 0)
             {
                 Debug.Log("Entra 2");

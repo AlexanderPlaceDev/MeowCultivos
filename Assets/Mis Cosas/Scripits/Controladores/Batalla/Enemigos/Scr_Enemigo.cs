@@ -5,6 +5,7 @@ using TMPro;
 
 public class Scr_Enemigo : MonoBehaviour
 {
+    public string NombreEnemigo;
     public float Vida;
     public float Velocidad;
     public float DañoMelee;
@@ -37,6 +38,7 @@ public class Scr_Enemigo : MonoBehaviour
     public float DuracionCambioColor = 0.5f; // Duración del cambio de color en segundos
     private Material[] materialesOriginales;
     private bool cambiandoColor = false;
+    private Scr_DatosSingletonBatalla Singleton;
 
     public enum TipoEnemigo { Terrestre, Volador }
     public TipoEnemigo tipoenemigo;
@@ -64,6 +66,7 @@ public class Scr_Enemigo : MonoBehaviour
     private void OnEnable()
     {
         Controlador = GameObject.Find("Controlador");
+        Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
     }
     public void RecibirDaño(float DañoRecibido)
     {
@@ -104,14 +107,41 @@ public class Scr_Enemigo : MonoBehaviour
         }
         else
         {
+            AgregarEnemigoAlSingleton();
             Destroy(gameObject);
         }
     }
 
+    void AgregarEnemigoAlSingleton()
+    {
+        bool Encontro = false;
+        int pos = 0;
+        foreach (string Enemigo in Singleton.EnemigosCazados)
+        {
+            if (Enemigo == NombreEnemigo)
+            {
+                Encontro = true;
+                break;
+            }
+            pos++;
+        }
+
+        if (Encontro)
+        {
+            Singleton.CantidadCazados[pos]++;
+
+        }
+        else
+        {
+            Singleton.EnemigosCazados.Add(NombreEnemigo);
+            Singleton.CantidadCazados.Add(1);
+        }
+    }
 
     IEnumerator EsperarMuerte()
     {
         yield return new WaitForSeconds(ParticulasMuerte.main.duration);
+        AgregarEnemigoAlSingleton();
         Destroy(gameObject);
     }
     public void EstablecerComportamiento(TipoComportamiento NuevoComportamiento)
