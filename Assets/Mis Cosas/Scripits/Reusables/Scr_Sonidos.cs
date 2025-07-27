@@ -16,10 +16,14 @@ public class Scr_Sonidos : MonoBehaviour
     public int recoger;
     public int talar;
     public int picar;
+
+    private bool puede;
+    private Transform Gata;
     AudioSource source;
     // Start is called before the first frame update
     void Start()
     {
+        Gata = GameObject.Find("Gata").transform;
         source = gameObject.AddComponent<AudioSource>();
         source.volume = .2f;
         /*source.clip = caminar_sonido;
@@ -32,11 +36,21 @@ public class Scr_Sonidos : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        float distance = Vector3.Distance(transform.position, Gata.transform.position);
+        if (distance > source.maxDistance)
+        {
+            puede = false;
+        }
+        else
+        {
+            puede=true;
+        }
     }
 
     public void Play_caminar()
     {
+        Debug.Log(gameObject.name);
+        if (!puede) return;
         if (caminar_sonido[caminar] == null) return;
         source.clip = caminar_sonido[caminar];
         source.Play();
