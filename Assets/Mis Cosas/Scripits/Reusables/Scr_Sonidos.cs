@@ -17,14 +17,11 @@ public class Scr_Sonidos : MonoBehaviour
     public int talar;
     public int picar;
 
-    private bool puede;
-    private Transform Gata;
     AudioSource source;
     // Start is called before the first frame update
     void Start()
     {
-        Gata = GameObject.Find("Gata").transform;
-        source = gameObject.AddComponent<AudioSource>();
+        source = GetComponent<AudioSource>();
         source.volume = .2f;
         /*source.clip = caminar_sonido;
         source.spatialBlend = 1.0f; // Hacerlo 3D
@@ -36,49 +33,34 @@ public class Scr_Sonidos : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float distance = Vector3.Distance(transform.position, Gata.transform.position);
-        if (distance > source.maxDistance)
-        {
-            puede = false;
-        }
-        else
-        {
-            puede=true;
-        }
     }
 
     public void Play_caminar()
     {
-        Debug.Log(gameObject.name);
-        if (!puede) return;
         if (caminar_sonido[caminar] == null) return;
-        source.clip = caminar_sonido[caminar];
-        source.Play();
+        source.PlayOneShot(caminar_sonido[caminar]);
     }
     public void Play_correr()
     {
         if (correr_sonido[correr] == null) return;
-        source.clip = correr_sonido[correr];
-        source.Play();
+        source.PlayOneShot(correr_sonido[correr]);
     }
     public void Play_recoger()
     {
         if (recoger_sonido[recoger] == null) return;
-        source.clip = recoger_sonido[recoger];
-        source.Play();
+        source.PlayOneShot(recoger_sonido[recoger]);
     }
 
     public void Play_talar()
     {
-
-        if (recoger_sonido[talar] == null) return;
-        source.clip = recoger_sonido[talar];
-        source.Play();
+        if (talar_sonido[talar] == null) return; 
+        source.PlayOneShot(talar_sonido[talar]);
     }
+
     public void Play_picar()
     {
-        if (recoger_sonido[picar] == null) return;
-        source.clip = recoger_sonido[picar];
-        source.Play();
+        if (picar_sonido[picar] == null) return;
+        source.PlayOneShot(picar_sonido[picar]);
     }
+
 }
