@@ -32,9 +32,19 @@ public class NPC_movimiento : MonoBehaviour
         //Dialogo = GetComponent<Scr_ActivadorDialogos>();
     }
 
+    private void OnEnable()
+    {
+        Gata = GameObject.Find("Gata").transform;
+        ContolT = CTiempo.GetComponent<Scr_ControladorTiempo>();
+        agente = GetComponent<NavMeshAgent>();
+        diaAnterior = ContolT.DiaActual;
+        Anim = GetComponent<Scr_ControladorAnimacionesNPC>();
+        //Dialogo = GetComponent<Scr_ActivadorDialogos>();
+    }
+
     void Update()
     {
-
+        if (Anim.Hablando) return;
         //Debug.Log("aa"+ diaAnterior);
         if (ContolT.DiaActual != diaAnterior)
         {

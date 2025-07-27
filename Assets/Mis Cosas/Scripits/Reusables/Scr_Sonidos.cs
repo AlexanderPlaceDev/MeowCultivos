@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Scr_Sonidos : MonoBehaviour
 {
+    public AudioClip sonidoespecial;
     public AudioClip[] caminar_sonido;
     public AudioClip[] correr_sonido;
     public AudioClip[] recoger_sonido;
@@ -35,6 +36,11 @@ public class Scr_Sonidos : MonoBehaviour
     {
     }
 
+    public void Play_Sonido()
+    {
+        if (sonidoespecial == null) return;
+        source.PlayOneShot(sonidoespecial);
+    }
     public void Play_caminar()
     {
         if (caminar_sonido[caminar] == null) return;
