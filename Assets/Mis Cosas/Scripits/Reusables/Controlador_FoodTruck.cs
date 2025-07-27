@@ -20,9 +20,9 @@ public class Controlador_FoodTruck : MonoBehaviour
 
     void Start()
     {
-        source = gameObject.AddComponent<AudioSource>();
+        //source = gameObject.AddComponent<AudioSource>();
         FoodTruck.SetActive(false);
-        tienda = FoodTruck.GetComponent<Tienda_3D>();
+        //tienda = FoodTruck.GetComponent<Tienda_3D>();
         ContolT = CTiempo.GetComponent<Scr_ControladorTiempo>();
     }
 

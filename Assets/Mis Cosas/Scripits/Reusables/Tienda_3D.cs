@@ -19,7 +19,7 @@ public class Tienda_3D : MonoBehaviour
     public float descuento = 20;
     public TextMeshProUGUI Dinero;
     private Transform Gata;
-    private Scr_Inventario inventario;
+    public   Scr_Inventario inventario;
 
 
     public List<int> objetosAvender;
@@ -27,14 +27,14 @@ public class Tienda_3D : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Gata = GameObject.Find("Gata").transform;
-        inventario = Gata.GetChild(7).GetComponent<Scr_Inventario>();
-        MostrarObjetos();
+        //Gata = GameObject.Find("Gata").transform;
+        //inventario = Gata.GetChild(7).GetComponent<Scr_Inventario>();
+        //MostrarObjetos();
     }
     void OnEnable()
     {
-        Gata = GameObject.Find("Gata").transform;
-        inventario = Gata.GetChild(7).GetComponent<Scr_Inventario>();
+        //Gata = GameObject.Find("Gata").transform;
+        //inventario = Gata.GetChild(7).GetComponent<Scr_Inventario>();
         MostrarObjetos();
     }
     // Update is called once per frame
@@ -47,7 +47,7 @@ public class Tienda_3D : MonoBehaviour
     public void nevosObjetos()
     {
         objetosAvender.Clear();
-        for (int i = 0; i < Obetoscompra.Length; i++)
+        for (int i = 0; i < objetosVender; i++)
         {
             int index = Random.Range(0, inventario.Objetos.Length - 1);
             objetosAvender.Add(index);
@@ -66,26 +66,21 @@ public class Tienda_3D : MonoBehaviour
         int num2 = numeros[1];
 
         Debug.Log("tiene descuento el lugar " + num1 + " y " + num2);
-
-        for (int i = 0; i < Obetoscompra.Length; i++)
+        //Debug.Log(objetosAvender.Count + "+++++++"+ Obetoscompra.Length);
+        for (int i = 0; i < objetosAvender.Count; i++)
         {
-            //int index = Random.Range(0, inventario.Objetos.Length);
             Scr_CreadorObjetos instance = inventario.Objetos[objetosAvender[i]];
 
             Image image = Obetoscompra[i].transform.Find("Objeto").GetComponent<Image>();
             image.sprite = instance.Icono;
 
-
             Transform comp = Obetoscompra[i].transform.Find("BComprar");
 
             TextMeshProUGUI texto = comp.transform.Find("Precio").GetComponent<TextMeshProUGUI>();
-
             EventTrigger boton = Obetoscompra[i].transform.Find("BComprar").GetComponent<EventTrigger>();
 
-            
             texto.text = $"{instance.Nombre} x{cantidad}";
 
-            // Limpiar triggers anteriores
             boton.triggers.Clear();
 
             int costo = precio;
@@ -98,16 +93,19 @@ public class Tienda_3D : MonoBehaviour
 
             boton.GetComponentInChildren<TextMeshProUGUI>().text = $"{costo}";
 
-            // Crear nueva entrada para el evento PointerDown
+            // CORRECCIÓN CLAVE AQUÍ:
+            int iCopia = i;
+            int costoCopia = costo;
+
             EventTrigger.Entry entry = new EventTrigger.Entry();
             entry.eventID = EventTriggerType.PointerDown;
             entry.callback.AddListener((eventData) => {
-                comprarobjeto(objetosAvender[i], costo);
+                comprarobjeto(objetosAvender[iCopia], costoCopia);
             });
 
             boton.triggers.Add(entry);
 
-            // Cambiar color del texto como indicativo de si se puede comprar
+            // Color del texto según si puede comprar o no
             if (PlayerPrefs.GetInt("Dinero", 0) >= costo)
             {
                 boton.GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
@@ -128,7 +126,7 @@ public class Tienda_3D : MonoBehaviour
                 if (inventario.Objetos[i] == inventario.Objetos[index])
                 {
                     inventario.Cantidades[index] += cantidad;
-                    int newdinero = PlayerPrefs.GetInt("Dinero", 0) - precio;
+                    int newdinero = PlayerPrefs.GetInt("Dinero", 0) - costo;
                     PlayerPrefs.SetInt("Dinero", newdinero);
                     break;
                 }

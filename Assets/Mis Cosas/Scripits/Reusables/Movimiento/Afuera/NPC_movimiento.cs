@@ -12,7 +12,7 @@ public class NPC_movimiento : MonoBehaviour
 
     public GameObject CTiempo; //checa donde esta el controlador del tiempo
     public Scr_ControladorTiempo ContolT; //checa el tiempo y el dia
-    public Scr_ActivadorDialogos Dialogo; //el activdor de dialogos
+    public Scr_ControladorAnimacionesNPC Anim; //el activdor de dialogos
 
     private NavMeshAgent agente; //para el navmesh
     private Vector3 Destino; //destino
@@ -28,11 +28,14 @@ public class NPC_movimiento : MonoBehaviour
         ContolT = CTiempo.GetComponent<Scr_ControladorTiempo>();
         agente = GetComponent<NavMeshAgent>();
         diaAnterior = ContolT.DiaActual;
+        Anim = GetComponent<Scr_ControladorAnimacionesNPC>();
         //Dialogo = GetComponent<Scr_ActivadorDialogos>();
     }
 
     void Update()
     {
+
+        //Debug.Log("aa"+ diaAnterior);
         if (ContolT.DiaActual != diaAnterior)
         {
             Esperando = false;
@@ -105,7 +108,7 @@ public class NPC_movimiento : MonoBehaviour
             Destino = pos[posIndex].position;
             agente.isStopped = false;
             agente.SetDestination(Destino);
-
+            Anim.Caminando = true;
             //Debug.Log("AAA ya me muevo");
         }
 
@@ -151,6 +154,7 @@ public class NPC_movimiento : MonoBehaviour
         //detiene el movimiento y gira a mirar al npc
         void DetenerYMirarJugador()
         {
+            Anim.Caminando = false;
             if (agente.isOnNavMesh)
             {
                 agente.isStopped = true; // Detener el movimiento

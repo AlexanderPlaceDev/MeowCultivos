@@ -21,6 +21,7 @@ public class Scr_Sonidos : MonoBehaviour
     void Start()
     {
         source = gameObject.AddComponent<AudioSource>();
+        source.volume = .2f;
         /*source.clip = caminar_sonido;
         source.spatialBlend = 1.0f; // Hacerlo 3D
         source.minDistance = 1f;
