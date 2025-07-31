@@ -16,6 +16,7 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     [SerializeField] GameObject[] ObjetoArmas_reales; //prueba para activar la arma menos la de puños
     [SerializeField] GameObject[] balaPrefab; //bala que dispara
+    [SerializeField] AudioSource source;
     public Transform puntoDisparo; //lugar donde sale la bala
     public Camera camera;
     public float fuerzaDisparo = 70f;
@@ -52,7 +53,11 @@ public class Scr_ControladorArmas : MonoBehaviour
         {
             Anim.SetBool("EsPistola", true);
         }
-        Gata = GameObject.Find("Personaje");
+        else if (TodasLasArmas[ArmaActual].Tipo == "Escopeta")
+        {
+            Anim.SetBool("EsPistola", true);
+        }
+            Gata = GameObject.Find("Personaje");
         CantBalasActual = TodasLasArmas[ArmaActual].Capacidad;
         balascargador = TodasLasArmas[ArmaActual].CapacidadTotal;
         Physics.IgnoreLayerCollision(7, 8);
@@ -69,8 +74,11 @@ public class Scr_ControladorArmas : MonoBehaviour
         }
         cadencia = TodasLasArmas[ArmaActual].Cadencia;
         temporizadorDisparo = cadencia;
-        ObjetoArmas_reales[ArmaActual-1].SetActive(true);
-        puntoDisparo = ObjetoArmas_reales[ArmaActual - 1].GetComponentInChildren<Transform>();
+        if (ArmaActual != 0)
+        {
+            ObjetoArmas_reales[ArmaActual-1].SetActive(true);
+            puntoDisparo = ObjetoArmas_reales[ArmaActual-1].GetComponentInChildren<Transform>();
+        }
         if (TodasLasArmas[ArmaActual].Tipo != "Cuerpo a Cuerpo")
         {
             Debug.Log("aaa");
@@ -132,14 +140,19 @@ public class Scr_ControladorArmas : MonoBehaviour
         Debug.LogWarning(TodasLasArmas[ArmaActual].Tipo);
         if(TodasLasArmas[ArmaActual].Tipo == "Cuerpo a Cuerpo")
         {
+            //source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[0]);
             EjecutarAtaque(Anim);
         }
         else if(TodasLasArmas[ArmaActual].Tipo == "Escopeta")
         {
+
+            source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[0]);
             DispararEscopeta();
         }
         else
         {
+
+            source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[0]);
             DisparaBala();
         }
     }
@@ -239,6 +252,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     }
     void RecargarBala()
     {
+        if (TodasLasArmas[ArmaActual].Tipo == "Cuerpo a Cuerpo") return;
         if(CantBalasActual != TodasLasArmas[ArmaActual].Capacidad && balascargador>0)
         {
             int cantidadarestar = TodasLasArmas[ArmaActual].Capacidad - CantBalasActual;
@@ -247,6 +261,7 @@ public class Scr_ControladorArmas : MonoBehaviour
                 Anim.Play("PistolaRecarga");
                 balascargador = balascargador - cantidadarestar;
                 CantBalasActual = TodasLasArmas[ArmaActual].Capacidad;
+                source.PlayOneShot(TodasLasArmas[ArmaActual].Recarga);
                 //Anim.SetBool("EstaRecargando", false);
             }
         }

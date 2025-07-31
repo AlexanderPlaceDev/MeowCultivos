@@ -15,13 +15,16 @@ MonoBehaviour:
   Icono: {fileID: 0}
   Color: {r: 1, g: 0.9512944, b: 0, a: 1}
   Tipo: Pistola
-  Nombre: Platano2
-  Descripcion: 
+  Nombre: Platano
+  Descripcion: Dispara potacio puro
   Cadencia: 1
   Capacidad: 10
   CapacidadTotal: 100
   Alcance: 0
-  "Da\xF1o": 10
+  "Da\xF1o": 8
   PuntosXGolpe: 5
   Velocidad: 20
   DobleMano: 0
+  Sonidos:
+  - {fileID: 8300000, guid: 683dfeffbd670e1498075ec74d4b6732, type: 3}
+  Recarga: {fileID: 8300000, guid: 303e98323e2c0d84f8dfa60b4578866e, type: 3}
