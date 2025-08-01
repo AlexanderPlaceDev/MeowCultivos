@@ -16,7 +16,7 @@ MonoBehaviour:
   Color: {r: 1, g: 0.9512944, b: 0, a: 1}
   Tipo: Escopeta
   Nombre: Platano
-  Descripcion: Dispara potacio puro
+  Descripcion: Esparce potacio puro
   Cadencia: 5
   Capacidad: 2
   CapacidadTotal: 100
@@ -25,3 +25,6 @@ MonoBehaviour:
   PuntosXGolpe: 5
   Velocidad: 20
   DobleMano: 0
+  Sonidos:
+  - {fileID: 8300000, guid: 7b7adcee86180a74185de8579df17df9, type: 3}
+  Recarga: {fileID: 8300000, guid: 303e98323e2c0d84f8dfa60b4578866e, type: 3}

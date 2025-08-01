@@ -33,12 +33,14 @@ public class Balas : MonoBehaviour
         if (other.CompareTag("Enemigo"))
         {
             Debug.Log("Daño");
-            var ene = other.GetComponent<Scr_Enemigo>();
-            ene.RecibirDaño(daño);
             penetracion_menos();
+            /*var ene = other.GetComponent<Scr_Enemigo>();
+            ene.RecibirDaño(daño);
+            
             // Lógica de daño
             Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
                 GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].PuntosXGolpe;
+            */
         }
     }
     void penetracion_menos()

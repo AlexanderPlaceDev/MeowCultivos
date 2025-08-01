@@ -190,6 +190,46 @@ public class Scr_Enemigo : MonoBehaviour
 
             RecibirDaño(Daño);
         }
+        else if (other.gameObject.tag == "Bala")
+        {
+            // Verifica que las posiciones inicial y final estén asignadas
+            if (PosInicialDaño == null || PosFinalDaño == null)
+            {
+                Debug.LogWarning("PosInicialDaño o PosFinalDaño no están asignadas.");
+                return;
+            }
+
+            // Instanciar el CanvasDaño en la posición inicial
+            int Daño = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño;
+            if (CanvasDaño != null)
+            {
+                GameObject canvasInstanciado = Instantiate(CanvasDaño, PosInicialDaño.position, Quaternion.identity);
+
+                // Hacer que el Canvas sea hijo del enemigo para que se mueva con él
+                canvasInstanciado.transform.SetParent(transform);
+                canvasInstanciado.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = Daño.ToString();
+                // Iniciar el movimiento del CanvasDaño
+                StartCoroutine(MoverCanvas(canvasInstanciado, PosInicialDaño.position, PosFinalDaño.position, 1f));
+            }
+
+            // Desactivar el golpe para evitar múltiples activaciones
+            if (other.gameObject.name != "Impulso")
+            {
+                other.gameObject.SetActive(false);
+            }
+            else
+            {
+                GetComponent<Rigidbody>().AddForce(-transform.forward.normalized, ForceMode.Impulse);
+            }
+
+
+
+            // Lógica de daño
+            Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
+                GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].PuntosXGolpe;
+
+            RecibirDaño(Daño);
+        }
 
     }
     private IEnumerator MoverCanvas(GameObject canvas, Vector3 inicio, Vector3 fin, float duracion)
