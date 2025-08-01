@@ -57,7 +57,6 @@ public class Scr_ControladorMapas : MonoBehaviour
         if (!EsMapa) return;
 
         int childCount = transform.childCount;
-        Debug.Log("Hijos" + childCount);
         for (int i = 0; i < childCount; i++)
         {
             Transform child = transform.GetChild(i);
@@ -67,7 +66,6 @@ public class Scr_ControladorMapas : MonoBehaviour
             bool activo = (estado == "Si");
             child.gameObject.SetActive(activo);
 
-            Debug.Log($"[CargarEstadoMapas] {child.name}: {estado}");
         }
     }
 
@@ -75,7 +73,6 @@ public class Scr_ControladorMapas : MonoBehaviour
     {
         if (EsMapa) return;
 
-        Debug.Log("Entro guardar");
         int childCount = transform.childCount;
 
         for (int i = 0; i < childCount; i++)
@@ -85,7 +82,6 @@ public class Scr_ControladorMapas : MonoBehaviour
             string valor = child.gameObject.activeSelf ? "Si" : "No";
 
             PlayerPrefs.SetString(key, valor);
-            Debug.Log($"[GuardarEstadoMapas] {child.name}: {valor}");
         }
 
         PlayerPrefs.Save(); // 🔥 Guarda en disco

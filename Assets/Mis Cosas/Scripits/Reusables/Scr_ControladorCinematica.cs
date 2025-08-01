@@ -69,8 +69,11 @@ public class Scr_ControladorCinematica : MonoBehaviour
             {
                 Objeto.SetActive(true);
             }
-
-            ActivadorCinematicaSiguiente.enabled = true;
+            //Activar siguiente cinematica
+            if (ActivadorCinematicaSiguiente != null)
+            {
+                ActivadorCinematicaSiguiente.enabled = true;
+            }
 
             // Apagar objetos
             foreach (GameObject Objeto in ObjetosApagar)

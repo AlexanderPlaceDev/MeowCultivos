@@ -146,12 +146,16 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         Scr_ObjetosAgregados objetosAgregados = GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>();
         Scr_Inventario inventario = Gata.transform.GetChild(7).GetComponent<Scr_Inventario>();
 
+
+        int DineroAcumulado = 0;
+        int XPAcumulado = 0;
+
         for (int i = 0; i < controladorMisiones.MisionesSecundarias.Count; i++)
         {
             Scr_CreadorMisiones mision = controladorMisiones.MisionesSecundarias[i];
 
             // Verificar si esta misión está en las misiones secundarias del activador
-            bool esMisionDelActivador = MisionesSecundarias.Any(m => m.MisionName == mision.MisionName);
+            bool esMisionDelActivador = MisionesSecundarias.Any(m => m.TituloMision == mision.TituloMision);
             if (!esMisionDelActivador) continue;
 
             // Verificar si la misión está completa
@@ -160,12 +164,15 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             // ✅ Marca para eliminar
             misionesAEliminar.Add(i);
 
-            // 🎁 Otorgar recompensas
             if (mision.RecompensaDinero > 0)
-                objetosAgregados.AgregarDinero(mision.RecompensaDinero);
+            {
+                DineroAcumulado += mision.RecompensaDinero;
+            }
 
             if (mision.RecompensaXP > 0)
-                objetosAgregados.AgregarExperiencia(mision.RecompensaXP);
+            {
+                XPAcumulado += mision.RecompensaXP;
+            }
 
             // 🎒 Recompensas de objetos
             for (int j = 0; j < mision.ObjetosQueDa.Length; j++)
@@ -194,6 +201,13 @@ public class Scr_ActivadorDialogos : MonoBehaviour
                 inventario.QuitarObjeto(cantidadQuita, objetoNecesario.Nombre);
             }
         }
+
+        // 🎁 Otorgar recompensas
+        if (DineroAcumulado > 0)
+            objetosAgregados.AgregarDinero(DineroAcumulado);
+
+        if (XPAcumulado > 0)
+            objetosAgregados.AgregarExperiencia(XPAcumulado);
 
         Debug.Log("Cambiando Camara Secundaria");
         StartCoroutine(EsperarYCambiarCamaraSecundaria(misionesAEliminar));

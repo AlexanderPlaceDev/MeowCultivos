@@ -2303,7 +2303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19245279, g: 0.119609304, b: 0.060640775, a: 1}
+  m_Color: {r: 0.19245279, g: 0.119609304, b: 0.060640775, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5822,7 +5822,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7660377, g: 0.60003114, b: 0.4726308, a: 1}
+  m_Color: {r: 0.7660377, g: 0.60003114, b: 0.4726308, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5999,7 +5999,7 @@ PlayableDirector:
   m_GameObject: {fileID: 1856795120}
   m_Enabled: 1
   serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: 81813f75fc0ebf943bcd2a2ffc812151, type: 2}
+  m_PlayableAsset: {fileID: 11400000, guid: 605321e17f137fd43857812c2d7eabc1, type: 2}
   m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
@@ -6041,6 +6041,14 @@ PlayableDirector:
     value: {fileID: 1650767155}
   - key: {fileID: -4335374229814640347, guid: ff387d670e94e074cb9d1b0c91c5b158, type: 2}
     value: {fileID: 1430827782}
+  - key: {fileID: -990368450088550636, guid: b2e398383f528e34682343af62d2e4b4, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 5281172631686645133, guid: b2e398383f528e34682343af62d2e4b4, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: -6392927646519637863, guid: b2e398383f528e34682343af62d2e4b4, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: -8316593783786753158, guid: b2e398383f528e34682343af62d2e4b4, type: 2}
+    value: {fileID: 0}
   m_ExposedReferences:
     m_References: []
 --- !u!114 &1856795124
@@ -6064,13 +6072,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 16cc2a4caec66b84eae3d11f22679ff8, type: 2}
   - {fileID: 11400000, guid: 9e86277f880ee744e850829a1ca2c8fa, type: 2}
   DialogoSecundario: {fileID: 0}
-  DialogoExtra: {fileID: 0}
-  DialogoDeRecompensaSecundario: {fileID: 0}
   DialogoArecibir: {fileID: 0}
   letraDelay: 0.1
   Velocidad: 0.5
-  recompensarSecundarias: 0
-  DiaExtra: 0
   EnPausa: 1
   Leyendo: 0
   DialogoActual: 0
@@ -6102,14 +6106,14 @@ MonoBehaviour:
         - m_Target: {fileID: 1856795124}
           m_TargetAssemblyTypeName: Scr_SistemaDialogos, Assembly-CSharp
           m_MethodName: IniciarDialogo
-          m_Mode: 1
+          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
-            m_BoolArgument: 0
+            m_BoolArgument: 1
           m_CallState: 2
     - m_PersistentCalls:
         m_Calls:
@@ -6183,6 +6187,7 @@ MonoBehaviour:
   PausaAlTerminar: 0000000001
   ObjetosApagar: []
   ObjetosEncender: []
+  ActivadorCinematicaSiguiente: {fileID: 0}
   Enemigo: {fileID: 0}
   CantidadEnemigos: 0
   Barras: []
@@ -6453,7 +6458,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Bony
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c78251555233a564e8b23c0eede9ba8a, type: 2}
   m_sharedMaterial: {fileID: 2638225528570657718, guid: c78251555233a564e8b23c0eede9ba8a,
