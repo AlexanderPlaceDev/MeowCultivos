@@ -5999,7 +5999,7 @@ PlayableDirector:
   m_GameObject: {fileID: 1856795120}
   m_Enabled: 1
   serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: 605321e17f137fd43857812c2d7eabc1, type: 2}
+  m_PlayableAsset: {fileID: 11400000, guid: ff387d670e94e074cb9d1b0c91c5b158, type: 2}
   m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
@@ -6041,14 +6041,6 @@ PlayableDirector:
     value: {fileID: 1650767155}
   - key: {fileID: -4335374229814640347, guid: ff387d670e94e074cb9d1b0c91c5b158, type: 2}
     value: {fileID: 1430827782}
-  - key: {fileID: -990368450088550636, guid: b2e398383f528e34682343af62d2e4b4, type: 2}
-    value: {fileID: 0}
-  - key: {fileID: 5281172631686645133, guid: b2e398383f528e34682343af62d2e4b4, type: 2}
-    value: {fileID: 0}
-  - key: {fileID: -6392927646519637863, guid: b2e398383f528e34682343af62d2e4b4, type: 2}
-    value: {fileID: 0}
-  - key: {fileID: -8316593783786753158, guid: b2e398383f528e34682343af62d2e4b4, type: 2}
-    value: {fileID: 0}
   m_ExposedReferences:
     m_References: []
 --- !u!114 &1856795124
@@ -6133,7 +6125,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1856795126}
           m_TargetAssemblyTypeName: Scr_ControladorCinematica, Assembly-CSharp
-          m_MethodName: CambiarEscena
+          m_MethodName: CambiarEscenaForzada
           m_Mode: 3
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

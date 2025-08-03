@@ -100,7 +100,10 @@ public class Scr_ControladorCinematica : MonoBehaviour
             }
 
             //Activar camara principal
-            GameObject.Find("Cosas Inutiles").transform.GetChild(3).gameObject.SetActive(true);
+            if (GameObject.Find("Cosas Inutiles") != null)
+            {
+                GameObject.Find("Cosas Inutiles").transform.GetChild(3).gameObject.SetActive(true);
+            }
 
             Escena = 0; // Reinicia solo una vez
         }
@@ -131,7 +134,7 @@ public class Scr_ControladorCinematica : MonoBehaviour
         StartCoroutine(PrecargarEscena(Escena));
     }
 
-    private IEnumerator PrecargarEscena(int Escena)
+    public IEnumerator PrecargarEscena(int Escena)
     {
         Operacion = SceneManager.LoadSceneAsync(Escena);
         Operacion.allowSceneActivation = false;
