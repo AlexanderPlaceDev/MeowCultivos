@@ -9,11 +9,11 @@ public class Scr_CambiadorBatalla : MonoBehaviour
     [SerializeField] GameObject PrefabEnemigo;
     [SerializeField] float CantidadEnemigosMinima;
     [SerializeField] float CantidadEnemigosMaxima;
-    [SerializeField] string Mision;
-    [SerializeField] Color ColorMision;
-    [SerializeField] string Complemento;
-    [SerializeField] string Item;
-    [SerializeField] Color ColorItem;
+    [SerializeField] public string Mision;
+    [SerializeField] public Color ColorMision;
+    [SerializeField] public string Complemento;
+    [SerializeField] public string Item;
+    [SerializeField] public Color ColorItem;
 
     public bool Cambiando;
     private Transform Gata;

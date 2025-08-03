@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class Scr_GirarCamaraBatalla : MonoBehaviour
 {
-    public float mouseSensitivity = 100f;
+    public float mouseSensitivityX = 100f;
+    public float mouseSensitivityY = 100f;
     public float smoothTime = 0.1f;
 
     private float xRotation;
@@ -31,14 +32,13 @@ public class Scr_GirarCamaraBatalla : MonoBehaviour
 
     void Update()
     {
-        // Solo actualizar entrada si hay movimiento del mouse
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
 
         if (mouseX != 0 || mouseY != 0)
         {
-            targetMouseX += mouseX * mouseSensitivity * Time.deltaTime;
-            targetMouseY += mouseY * mouseSensitivity * Time.deltaTime;
+            targetMouseX += mouseX * mouseSensitivityX * Time.deltaTime;
+            targetMouseY += mouseY * mouseSensitivityY * Time.deltaTime;
         }
     }
 
@@ -46,11 +46,11 @@ public class Scr_GirarCamaraBatalla : MonoBehaviour
     {
         if (targetMouseX != 0 || targetMouseY != 0)
         {
-            // Calcular la rotación en el eje Y (horizontal) suavizada
+            // Calcular rotación Y (horizontal)
             yRotation += targetMouseX;
             float smoothYRotation = Mathf.SmoothDampAngle(playerBody.eulerAngles.y, yRotation, ref currentYVelocity, smoothTime);
 
-            // Calcular la rotación en el eje X (vertical) suavizada y limitar el ángulo
+            // Calcular rotación X (vertical)
             xRotation -= targetMouseY;
             xRotation = Mathf.Clamp(xRotation, -90f, 90f);
             float smoothXRotation = Mathf.SmoothDampAngle(transform.localEulerAngles.x, xRotation, ref currentXVelocity, smoothTime);
@@ -60,7 +60,6 @@ public class Scr_GirarCamaraBatalla : MonoBehaviour
             playerBody.rotation = Quaternion.Euler(0f, smoothYRotation, 0f);
         }
 
-        // Resetear acumuladores solo si hubo entrada
         targetMouseX = 0;
         targetMouseY = 0;
     }

@@ -152,8 +152,14 @@ public class Scr_ControladorCinematica : MonoBehaviour
 
     public void AsignarSinleton()
     {
-        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().Enemigo = Enemigo;
-        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().Luz = GameObject.Find("Sol").GetComponent<Light>().color;
+        Scr_DatosSingletonBatalla Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
+        Singleton.Enemigo = Enemigo;
+        Singleton.Mision = Enemigo.GetComponent<Scr_CambiadorBatalla>().Mision;
+        Singleton.ColorMision = Enemigo.GetComponent<Scr_CambiadorBatalla>().ColorMision;
+        Singleton.Complemento = Enemigo.GetComponent<Scr_CambiadorBatalla>().Complemento;
+        Singleton.Item = Enemigo.GetComponent<Scr_CambiadorBatalla>().Item;
+        Singleton.ColorItem = Enemigo.GetComponent<Scr_CambiadorBatalla>().ColorItem;
+        Singleton.Luz = GameObject.Find("Sol").GetComponent<Light>().color;
     }
 
     public void GuardarCinematica(string Cinematica)

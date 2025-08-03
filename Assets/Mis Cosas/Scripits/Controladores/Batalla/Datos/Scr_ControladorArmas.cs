@@ -45,7 +45,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         //aplica el volumen 
         int volumen_general = PlayerPrefs.GetInt("Volumen", 50);
         int volumen_ambiental = PlayerPrefs.GetInt("Volumen_Combate", 20);
-        float volumen = (volumen_general * volumen_ambiental)/100;
+        float volumen = (volumen_general * volumen_ambiental) / 100;
 
         //Debug.LogError(PlayerPrefs.GetInt("Volumen", 50) + "//" + PlayerPrefs.GetInt("Volumen_Combate", 20) );
         //Debug.LogError(volumen + "//"+ volumen_general +"//" + volumen_ambiental);
@@ -67,18 +67,19 @@ public class Scr_ControladorArmas : MonoBehaviour
         {
             Anim.SetBool("EsPistola", true);
         }
-            Gata = GameObject.Find("Personaje");
+        Gata = GameObject.Find("Personaje");
         CantBalasActual = TodasLasArmas[ArmaActual].Capacidad;
         balascargador = TodasLasArmas[ArmaActual].CapacidadTotal;
         Physics.IgnoreLayerCollision(7, 8);
 
-        
+
     }
 
     //activa el arma pero si es cuerpo a cuerpo no la toma en cuenta
     void OnEnable()
     {
-        for (int i = 0; i < ObjetoArmas_reales.Length; i++) 
+        Mira.SetActive(true);
+        for (int i = 0; i < ObjetoArmas_reales.Length; i++)
         {
             ObjetoArmas_reales[i].SetActive(false);
         }
@@ -86,13 +87,13 @@ public class Scr_ControladorArmas : MonoBehaviour
         temporizadorDisparo = cadencia;
         if (ArmaActual != 0)
         {
-            ObjetoArmas_reales[ArmaActual-1].SetActive(true);
-            puntoDisparo = ObjetoArmas_reales[ArmaActual-1].GetComponentInChildren<Transform>();
+            ObjetoArmas_reales[ArmaActual - 1].SetActive(true);
+            puntoDisparo = ObjetoArmas_reales[ArmaActual - 1].GetComponentInChildren<Transform>();
         }
         if (TodasLasArmas[ArmaActual].Tipo != "Cuerpo a Cuerpo")
         {
-            Debug.Log("aaa");
             Mira.SetActive(true);
+            Debug.Log("aaa");
             contador[0].SetActive(false);
             contador[1].SetActive(true);
             contadorbalas = contador[1].GetComponent<TextMeshProUGUI>();
@@ -114,7 +115,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             contadorbalas.text = CantBalasActual + "/" + balascargador;
         }
         //Debug.Log(temporizadorDisparo+ "?"+cadencia+ " +++++++++++++++" + (temporizadorDisparo >= cadencia));
-        if (cadencia > 0) 
+        if (cadencia > 0)
         {
             temporizadorDisparo += Time.deltaTime;
         }
@@ -137,6 +138,12 @@ public class Scr_ControladorArmas : MonoBehaviour
         {
             RecargarBala();
         }
+
+    }
+
+    private void LateUpdate()
+    {
+        DetectarEnemigoConRaycast();
     }
 
     bool PuedeDisparar()
@@ -146,14 +153,14 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     void Disparar()
     {
-        
+
         Debug.LogWarning(TodasLasArmas[ArmaActual].Tipo);
-        if(TodasLasArmas[ArmaActual].Tipo == "Cuerpo a Cuerpo")
+        if (TodasLasArmas[ArmaActual].Tipo == "Cuerpo a Cuerpo")
         {
             //source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[0]);
             EjecutarAtaque(Anim);
         }
-        else if(TodasLasArmas[ArmaActual].Tipo == "Escopeta")
+        else if (TodasLasArmas[ArmaActual].Tipo == "Escopeta")
         {
 
             source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[0]);
@@ -193,7 +200,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         temporizadorDisparo = 0;
         Atacando = true;
         GameObject bala = Instantiate(balaPrefab[ArmaActual - 1], puntoDisparo.position, puntoDisparo.rotation);
-        bala.GetComponent<Balas>().daño= TodasLasArmas[ArmaActual].Daño;
+        bala.GetComponent<Balas>().daño = TodasLasArmas[ArmaActual].Daño;
         // Calcular dirección del disparo
         Vector3 direccionDisparo;
 
@@ -226,7 +233,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         {
             GameObject bala = Instantiate(balaPrefab[ArmaActual - 1], puntoDisparo.position, puntoDisparo.rotation);
             bala.GetComponent<Balas>().daño = TodasLasArmas[ArmaActual].Daño;
-            bala.GetComponent<Balas>().penetracion=2;
+            bala.GetComponent<Balas>().penetracion = 2;
             // Direccion base
             Vector3 direccionBase = camera.transform.forward;
 
@@ -274,10 +281,10 @@ public class Scr_ControladorArmas : MonoBehaviour
     void RecargarBala()
     {
         if (TodasLasArmas[ArmaActual].Tipo == "Cuerpo a Cuerpo") return;
-        if(CantBalasActual != TodasLasArmas[ArmaActual].Capacidad && balascargador>0)
+        if (CantBalasActual != TodasLasArmas[ArmaActual].Capacidad && balascargador > 0)
         {
             int cantidadarestar = TodasLasArmas[ArmaActual].Capacidad - CantBalasActual;
-            if(balascargador >= cantidadarestar)
+            if (balascargador >= cantidadarestar)
             {
                 Anim.Play("PistolaRecarga");
                 balascargador = balascargador - cantidadarestar;
@@ -296,4 +303,36 @@ public class Scr_ControladorArmas : MonoBehaviour
         }
         return 0f;
     }
+
+    void DetectarEnemigoConRaycast()
+    {
+        if (Gata == null) return;
+
+        // Posición del raycast ajustando altura
+        Vector3 origen = Gata.transform.position + new Vector3(0, origenRaycast.y, 0);
+        Vector3 direccion = camera.transform.forward;
+
+        Ray rayo = new Ray(origen, direccion);
+        RaycastHit hit;
+
+        if (mostrarRaycast)
+        {
+            Debug.DrawRay(origen, direccion * LongitudRaycast, Color.red);
+        }
+
+        if (Physics.Raycast(rayo, out hit, LongitudRaycast))
+        {
+            if (hit.collider.CompareTag("Enemigo"))
+            {
+                Mira.GetComponent<Image>().color = ColoresMirillas[1];
+                Mira.GetComponent<Image>().sprite = Mirillas[1];
+                return;
+            }
+        }
+
+        // Si no golpeó enemigo o no golpeó nada
+        Mira.GetComponent<Image>().color = ColoresMirillas[0];
+        Mira.GetComponent<Image>().sprite = Mirillas[0];
+    }
+
 }
