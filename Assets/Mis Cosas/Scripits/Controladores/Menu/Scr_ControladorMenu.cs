@@ -18,8 +18,19 @@ public class Scr_ControladorMenu : MonoBehaviour
     [Header("Opciones")]
     [SerializeField]
     public GameObject Panel;
-    [SerializeField] TextMeshProUGUI TextoVolumen;
-    [SerializeField] Slider SliderVolumen;
+
+    public GameObject Panel_Opciones;
+    public GameObject Panel_Volumenes;
+
+    public GameObject Panel_Brillo;
+    [SerializeField] TextMeshProUGUI TextoVolumen_General;
+    [SerializeField] Slider SliderVolumen_General;
+    [SerializeField] TextMeshProUGUI TextoVolumen_Musica;
+    [SerializeField] Slider SliderVolumen_Musica;
+    [SerializeField] TextMeshProUGUI TextoVolumen_Ambiental;
+    [SerializeField] Slider SliderVolumen_Ambiental;
+    [SerializeField] TextMeshProUGUI TextoVolumen_Combate;
+    [SerializeField] Slider SliderVolumen_Combate;
     [SerializeField] TextMeshProUGUI TextoBrillo;
     [SerializeField] Slider SliderBrillo;
 
@@ -58,9 +69,21 @@ public class Scr_ControladorMenu : MonoBehaviour
 
 
         //InicializarOpciones
-        if (PlayerPrefs.HasKey("Volumen"))
+        if (PlayerPrefs.HasKey("Volumen\""))
         {
-            SliderVolumen.value = PlayerPrefs.GetInt("Volumen", 50);
+            SliderVolumen_General.value = PlayerPrefs.GetInt("Volumen", 50);
+        }
+        if (PlayerPrefs.HasKey("Volumen_Musica\""))
+        {
+            SliderVolumen_Musica.value = PlayerPrefs.GetInt("Volumen_Musica", 20);
+        }
+        if (PlayerPrefs.HasKey("Volumen_Ambiente\""))
+        {
+            SliderVolumen_Ambiental.value = PlayerPrefs.GetInt("Volumen_Ambiente", 20);
+        }
+        if (PlayerPrefs.HasKey("Volumen_Combate\""))
+        {
+            SliderVolumen_Combate.value = PlayerPrefs.GetInt("Volumen_Combate", 20);
         }
         if (PlayerPrefs.HasKey("Brillo"))
         {
@@ -121,20 +144,27 @@ public class Scr_ControladorMenu : MonoBehaviour
     {
         if (Panel.activeSelf)
         {
-            TextoVolumen.text = (int)SliderVolumen.value + "%";
-            TextoBrillo.text = (int)SliderBrillo.value + "%";
+
+            TextoVolumen_General.text = "Volumen General " + (int)SliderVolumen_General.value + " %";
+            TextoVolumen_Musica.text = "Musica "+(int)SliderVolumen_Musica.value + " %";
+            TextoVolumen_Ambiental.text = "Ambiental " + (int)SliderVolumen_Ambiental.value + " %";
+            TextoVolumen_Combate.text = "Combate" + (int)SliderVolumen_Combate.value + " %";
+            TextoBrillo.text = "Brillo " + (int)SliderBrillo.value + " %";
         }
     }
 
     public void GuardarOpciones()
     {
-        PlayerPrefs.SetInt("Volumen", (int)SliderVolumen.value);
+        PlayerPrefs.SetInt("Volumen", (int)SliderVolumen_General.value);
+        PlayerPrefs.SetInt("Volumen_Musica", (int)SliderVolumen_Musica.value);
+        PlayerPrefs.SetInt("Volumen_Ambiente", (int)SliderVolumen_Ambiental.value);
+        PlayerPrefs.SetInt("Volumen_Combate", (int)SliderVolumen_Combate.value);
         PlayerPrefs.SetInt("Brillo", (int)SliderBrillo.value);
         Panel.SetActive(false);
     }
     public void ReiniciarOpciones()
     {
-        SliderVolumen.value = 50;
+        SliderVolumen_Musica.value = 50;
         SliderBrillo.value = 50;
     }
     private void SpawnNubes()
@@ -154,8 +184,27 @@ public class Scr_ControladorMenu : MonoBehaviour
         }
     }
 
+    public void aparecerVolumenes()
+    {
+        Panel_Opciones.SetActive(false);
+        Panel_Volumenes.SetActive(true);
+        Panel_Brillo.SetActive(false);
+    }
 
 
+    public void aparecerBrillo()
+    {
+        Panel_Opciones.SetActive(false);
+        Panel_Volumenes.SetActive(false);
+        Panel_Brillo.SetActive(true);
+    }
+
+    public void aparecerOpciones()
+    {
+        Panel_Opciones.SetActive(true);
+        Panel_Volumenes.SetActive(false);
+        Panel_Brillo.SetActive(false);
+    }
     void RandomEase()
     {
         int r = Random.Range(0, 33);

@@ -31,6 +31,8 @@ public class Scr_ControladorArmas : MonoBehaviour
     public float dispersion = 25f; // en grados de dispersion
     public float cadencia = 0;
     public float temporizadorDisparo = 0f;
+    public bool hizoHit = false; //detecta si golpeo algo
+
 
     public Animator Anim;
 
@@ -40,6 +42,14 @@ public class Scr_ControladorArmas : MonoBehaviour
     GameObject Gata;
     void Start()
     {
+        //aplica el volumen 
+        int volumen_general = PlayerPrefs.GetInt("Volumen", 50);
+        int volumen_ambiental = PlayerPrefs.GetInt("Volumen_Combate", 20);
+        float volumen = (volumen_general * volumen_ambiental)/100;
+
+        //Debug.LogError(PlayerPrefs.GetInt("Volumen", 50) + "//" + PlayerPrefs.GetInt("Volumen_Combate", 20) );
+        //Debug.LogError(volumen + "//"+ volumen_general +"//" + volumen_ambiental);
+        source.volume = volumen;
         if (ObjetoArmas == null) return;
         //tenia el armaActual pero por ahora es 0
         Transform ArmaAct = ObjetoArmas.transform.GetChild(0);
@@ -234,6 +244,17 @@ public class Scr_ControladorArmas : MonoBehaviour
     IEnumerator EsperarAtaque(float segundos)
     {
         yield return new WaitForSeconds(segundos);
+        if (hizoHit)
+        {
+            //Debug.LogError("Golpe");
+            source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[0]); // Golpe con impacto
+        }
+        else
+        {
+            //Debug.LogError("NO Golpe");
+            source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[1]); // Golpe sin impacto
+        }
+        hizoHit = false;
         Atacando = false;  // Ahora puede volver a atacar
     }
 

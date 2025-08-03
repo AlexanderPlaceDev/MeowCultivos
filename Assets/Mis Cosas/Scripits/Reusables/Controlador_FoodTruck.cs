@@ -23,6 +23,12 @@ public class Controlador_FoodTruck : MonoBehaviour
         //source = gameObject.AddComponent<AudioSource>();
         FoodTruck.SetActive(false);
         //tienda = FoodTruck.GetComponent<Tienda_3D>();
+
+        //aplica el volumen 
+        int volumen_general = PlayerPrefs.GetInt("Volumen", 50);
+        int volumen_ambiental = PlayerPrefs.GetInt("Volumen_Ambiente", 20);
+        float volumen = (volumen_general * volumen_ambiental) / 100;
+        source.volume = volumen;
         ContolT = CTiempo.GetComponent<Scr_ControladorTiempo>();
     }
 
