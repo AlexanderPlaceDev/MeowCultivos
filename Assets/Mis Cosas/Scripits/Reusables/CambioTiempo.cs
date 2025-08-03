@@ -15,7 +15,7 @@ public class CambioTiempo : MonoBehaviour
     public GameObject CTiempo;
     public Scr_ControladorTiempo ContolT;
     public GameObject camb;
-    public bool can_C;
+    public bool Puede_Ajustar;//si puede ajustar la hora
     public TMP_InputField Hora;
     public TMP_InputField Minuto;
 
@@ -35,6 +35,9 @@ public class CambioTiempo : MonoBehaviour
         {
             
         }*/
+
+        Hora.text = HoraPredeterminada.ToString();
+        Minuto.text = MinutoPredeterminada.ToString();
         cabTiempo();
     }
 
@@ -44,13 +47,17 @@ public class CambioTiempo : MonoBehaviour
     }
     public void cabTiempo()
     {
-        if (can_C)
+        if (Puede_Ajustar)
         {
             camb.SetActive(true);
+            Hora.interactable = false;
+            Minuto.interactable=false;
         }
         else
         {
             camb.SetActive(false);
+            Hora.interactable = true;
+            Minuto.interactable = true;
         }
     }
 
@@ -138,7 +145,7 @@ public class CambioTiempo : MonoBehaviour
 
     public void Duerme()
     {
-        if (can_C)
+        if (Puede_Ajustar)
         {
             ContolT.Descansar(ObtenerMiuntoActual(), ObtenerHoraActual());
         }

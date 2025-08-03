@@ -152,6 +152,7 @@ public class Scr_Enemigo : MonoBehaviour
     {
         if (other.gameObject.tag == "Golpe")
         {
+            GameObject.Find("Controlador").GetComponent<Scr_ControladorArmas>().hizoHit = true;
             // Verifica que las posiciones inicial y final estén asignadas
             if (PosInicialDaño == null || PosFinalDaño == null)
             {
@@ -211,7 +212,7 @@ public class Scr_Enemigo : MonoBehaviour
                 // Iniciar el movimiento del CanvasDaño
                 StartCoroutine(MoverCanvas(canvasInstanciado, PosInicialDaño.position, PosFinalDaño.position, 1f));
             }
-
+            /*
             // Desactivar el golpe para evitar múltiples activaciones
             if (other.gameObject.name != "Impulso")
             {
@@ -220,7 +221,7 @@ public class Scr_Enemigo : MonoBehaviour
             else
             {
                 GetComponent<Rigidbody>().AddForce(-transform.forward.normalized, ForceMode.Impulse);
-            }
+            }*/
 
 
 
