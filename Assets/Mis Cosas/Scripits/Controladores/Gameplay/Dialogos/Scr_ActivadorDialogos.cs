@@ -27,9 +27,9 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     //==========================================
     //=== Referencias a Objetos de la Escena ===
     //==========================================
-    [SerializeField] private GameObject MisionesSecundariasUI;
-    [SerializeField] private GameObject TiendaUI;
-    [SerializeField] private GameObject panelDialogo;
+    [SerializeField] public GameObject MisionesSecundariasUI;
+    [SerializeField] public GameObject TiendaUI;
+    [SerializeField] public GameObject panelDialogo;
     [SerializeField] private GameObject[] iconos;
     [SerializeField] private GameObject camaraTienda;
     [SerializeField] private GameObject camaraDialogo;
