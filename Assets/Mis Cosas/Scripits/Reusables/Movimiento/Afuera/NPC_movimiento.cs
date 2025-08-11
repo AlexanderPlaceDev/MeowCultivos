@@ -53,7 +53,7 @@ public class NPC_movimiento : MonoBehaviour
                 Esperando = false;
                 ReiniciarPosiciones();
                 diaAnterior = ContolT.DiaActual;
-                Debug.Log("aa");
+                //Debug.Log("aa");
                 MoverAlLugarMasCercano();
             }
 
@@ -62,7 +62,7 @@ public class NPC_movimiento : MonoBehaviour
 
                 if (YaLlegoAlDestino() && !Esperando)
                 {
-                    Debug.Log("aaaaaattttt");
+                    //Debug.Log("aaaaaattttt");
                     // Aquí podrías hacer alguna acción al llegar, como empezar una animación
                     BoxCollider[] colliders = GetComponents<BoxCollider>();
                     colliders[1].enabled = true; // Desactiva el segundo BoxCollider
@@ -72,17 +72,13 @@ public class NPC_movimiento : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("atttttta");
+                    //Debug.Log("atttttta");
                     BoxCollider[] colliders = GetComponents<BoxCollider>();
                     colliders[1].enabled = false; // Desactiva el segundo BoxCollider
                 }
                 checarcambio();
 
             }
-        }
-        else
-        {
-            Debug.Log("eeeee");
         }
 
         

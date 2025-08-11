@@ -186,7 +186,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         // Obtiene la duración del golpe y espera antes de permitir otro ataque
         float duracion = GetAnimationClipDuration(Anim, animacion);
         StartCoroutine(EsperarAtaque(duracion));
-
+        StartCoroutine(EsperarHit(duracion*.4f));
         // Avanza en la secuencia de golpes
         numGolpe = (numGolpe % 3) + 1;
 
@@ -251,6 +251,11 @@ public class Scr_ControladorArmas : MonoBehaviour
     IEnumerator EsperarAtaque(float segundos)
     {
         yield return new WaitForSeconds(segundos);
+        Atacando = false;  // Ahora puede volver a atacar
+    }
+    IEnumerator EsperarHit(float segundos)
+    {
+        yield return new WaitForSeconds(segundos);
         if (hizoHit)
         {
             //Debug.LogError("Golpe");
@@ -262,7 +267,6 @@ public class Scr_ControladorArmas : MonoBehaviour
             source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[1]); // Golpe sin impacto
         }
         hizoHit = false;
-        Atacando = false;  // Ahora puede volver a atacar
     }
 
     Vector3 DireccionConDispersion(Vector3 direccion, float dispersionEnGrados)

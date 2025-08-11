@@ -69,7 +69,7 @@ public class Scr_BarrilSembradio : MonoBehaviour
                 {
                     estaLejos = false;
                     ActivarUI();
-                    if (gata.GetChild(0).GetComponent<Animator>().GetBool("Recolectar"))
+                    if (gata.GetComponent<Animator>().GetBool("Recolectando"))
                     {
                         gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = true;
                         recolectando = true;
@@ -105,10 +105,10 @@ public class Scr_BarrilSembradio : MonoBehaviour
         {
             animSpeed = 2f; // Doble de velocidad si la habilidad está activa
         }
-        gata.GetChild(0).GetComponent<Animator>().speed = animSpeed;
+        gata.GetComponent<Animator>().speed = animSpeed;
 
         yield return new WaitForSeconds(5.22f / animSpeed);
-        gata.GetChild(0).GetComponent<Animator>().speed = 1;
+        gata.GetComponent<Animator>().speed = 1;
 
         recolectando = false;
         gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = false;
@@ -129,7 +129,7 @@ public class Scr_BarrilSembradio : MonoBehaviour
 
     void ActualizarInventario(int cantidad, Scr_CreadorObjetos objeto)
     {
-        Scr_Inventario inventario = gata.GetChild(6).GetComponent<Scr_Inventario>();
+        Scr_Inventario inventario = gata.GetChild(7).GetComponent<Scr_Inventario>();
         inventario.AgregarObjeto(cantidad, objeto.Nombre);
         Scr_ObjetosAgregados controlador = GameObject.Find("Canvas").transform.GetChild(4).GetComponent<Scr_ObjetosAgregados>();
         if (controlador.Lista.Contains(objeto))

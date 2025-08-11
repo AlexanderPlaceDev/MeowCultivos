@@ -90,6 +90,7 @@ public class Scr_LoboAfuera : Scr_EnemigoFuera
                 if (hit.collider.CompareTag("Gata"))
                 {
                     Debug.Log("La mira");
+                    
                     return true;
                 }
             }
