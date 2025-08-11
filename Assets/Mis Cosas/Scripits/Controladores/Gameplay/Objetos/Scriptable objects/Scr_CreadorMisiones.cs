@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CrearObjeto", menuName = "Crear Objeto/Mision", order = 0)]
 public class Scr_CreadorMisiones : ScriptableObject
 {
-    public string MisionName;
+    public string TituloMision;
     public Sprite LogoMision;
     public string Descripcion;
     public string DescripcionCompleta;

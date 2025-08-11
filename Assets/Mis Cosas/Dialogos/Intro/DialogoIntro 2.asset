@@ -12,11 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfd7b7348ecdf544ab73fad30de2eac3, type: 3}
   m_Name: DialogoIntro 2
   m_EditorClassIdentifier: 
-  NumeroDialogo: 1
-  EsUnico: 0
-  EsMision: 0
+  EsUnico: 1
+  EsMisionPrincipal: 0
   Mision: {fileID: 0}
   Lineas:
   - Si tan solo pudiera estar alla arriba investigando el universo
   - En lugar de arrastrarme por el suelo...
-  LineasRadio: []

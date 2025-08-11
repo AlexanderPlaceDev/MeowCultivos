@@ -92,7 +92,7 @@ public class Scr_ObjetosAgregados : MonoBehaviour
         PlayerPrefs.SetInt("Dinero", dineroActual);
 
         // Muestra el dinero ganado en el Canvas Dinero
-        DineroText.text = "💰 + " + cantidad; // Puedes cambiar el emoji por "$", "₡", etc.
+        DineroText.text = "+$" + cantidad.ToString("N0"); // Puedes cambiar el emoji por "$", "₡", etc.
 
         if (!DineroAnimator.GetCurrentAnimatorStateInfo(0).IsName("Desaparecer"))
         {

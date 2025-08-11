@@ -23,7 +23,6 @@ public class Scr_ControladorBatalla : MonoBehaviour
     public float PuntosActualesHabilidad = 0;
 
     [SerializeField] public TextMeshProUGUI NumeroCuenta;
-    [SerializeField] GameObject Mirilla;
 
     private float Cuenta = 4;
     private bool ComenzarCuenta = false;

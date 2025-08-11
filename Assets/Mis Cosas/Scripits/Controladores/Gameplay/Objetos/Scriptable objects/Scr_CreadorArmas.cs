@@ -16,4 +16,6 @@ public class Scr_CreadorArmas : ScriptableObject
     public float PuntosXGolpe;
     public int Velocidad;
     public bool DobleMano;
+    public AudioClip[] Sonidos;
+    public AudioClip Recarga;
 }

@@ -32,8 +32,14 @@ public class Scr_ControladorIntro : MonoBehaviour
     float cont10 = 0;
     float cont11 = 0;
 
+    private void Awake()
+    {
+        
+    }
+
     void Start()
     {
+        StartCoroutine(GetComponent<Scr_ControladorCinematica>().PrecargarEscena(2));
         PantallaNegra.GetComponent<Animator>().Play("Aclarar");
     }
 

@@ -2152,8 +2152,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.29, y: 5.4342}
-  m_SizeDelta: {x: 19.92, y: 39.1315}
+  m_AnchoredPosition: {x: -0.2986, y: 3.6831}
+  m_SizeDelta: {x: 11.8352, y: 23.4458}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &438381696
 MonoBehaviour:
@@ -2177,8 +2177,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: E
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 2f10b07a658eab54f8da01ad4e65322d, type: 2}
-  m_sharedMaterial: {fileID: 2638225528570657718, guid: 2f10b07a658eab54f8da01ad4e65322d,
+  m_fontAsset: {fileID: 11400000, guid: 64d02a9f06171254db0c303902dfafbc, type: 2}
+  m_sharedMaterial: {fileID: 6698746321703187679, guid: 64d02a9f06171254db0c303902dfafbc,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -2203,11 +2203,11 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16.6
-  m_fontSizeBase: 16.6
+  m_fontSize: 14.9
+  m_fontSizeBase: 14.9
   m_fontWeight: 400
   m_enableAutoSizing: 0
-  m_fontSizeMin: 18
+  m_fontSizeMin: 0
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
@@ -2303,7 +2303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19245279, g: 0.119609304, b: 0.060640775, a: 1}
+  m_Color: {r: 0.19245279, g: 0.119609304, b: 0.060640775, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5822,7 +5822,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7660377, g: 0.60003114, b: 0.4726308, a: 1}
+  m_Color: {r: 0.7660377, g: 0.60003114, b: 0.4726308, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5999,7 +5999,7 @@ PlayableDirector:
   m_GameObject: {fileID: 1856795120}
   m_Enabled: 1
   serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: 81813f75fc0ebf943bcd2a2ffc812151, type: 2}
+  m_PlayableAsset: {fileID: 11400000, guid: ff387d670e94e074cb9d1b0c91c5b158, type: 2}
   m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
@@ -6064,13 +6064,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 16cc2a4caec66b84eae3d11f22679ff8, type: 2}
   - {fileID: 11400000, guid: 9e86277f880ee744e850829a1ca2c8fa, type: 2}
   DialogoSecundario: {fileID: 0}
-  DialogoExtra: {fileID: 0}
-  DialogoDeRecompensaSecundario: {fileID: 0}
   DialogoArecibir: {fileID: 0}
   letraDelay: 0.1
   Velocidad: 0.5
-  recompensarSecundarias: 0
-  DiaExtra: 0
   EnPausa: 1
   Leyendo: 0
   DialogoActual: 0
@@ -6102,14 +6098,14 @@ MonoBehaviour:
         - m_Target: {fileID: 1856795124}
           m_TargetAssemblyTypeName: Scr_SistemaDialogos, Assembly-CSharp
           m_MethodName: IniciarDialogo
-          m_Mode: 1
+          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
-            m_BoolArgument: 0
+            m_BoolArgument: 1
           m_CallState: 2
     - m_PersistentCalls:
         m_Calls:
@@ -6129,7 +6125,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1856795126}
           m_TargetAssemblyTypeName: Scr_ControladorCinematica, Assembly-CSharp
-          m_MethodName: CambiarEscena
+          m_MethodName: CambiarEscenaForzada
           m_Mode: 3
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -6183,6 +6179,7 @@ MonoBehaviour:
   PausaAlTerminar: 0000000001
   ObjetosApagar: []
   ObjetosEncender: []
+  ActivadorCinematicaSiguiente: {fileID: 0}
   Enemigo: {fileID: 0}
   CantidadEnemigos: 0
   Barras: []
@@ -6453,7 +6450,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Bony
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c78251555233a564e8b23c0eede9ba8a, type: 2}
   m_sharedMaterial: {fileID: 2638225528570657718, guid: c78251555233a564e8b23c0eede9ba8a,
@@ -6481,7 +6478,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 56.65
+  m_fontSize: 36
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

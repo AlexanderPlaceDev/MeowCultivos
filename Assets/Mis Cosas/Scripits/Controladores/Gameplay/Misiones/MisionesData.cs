@@ -12,7 +12,7 @@ public class MisionesData : ScriptableObject
     {
         foreach (var a in Mision)
         {
-            if (a.MisionName == name)
+            if (a.TituloMision == name)
                 return a;
         }
 

@@ -83,7 +83,6 @@ public class Scr_Arbusto : MonoBehaviour
 
         // Ajusta el tiempo de espera según la velocidad de la animación
         yield return new WaitForSeconds(5.22f / animSpeed);
-        gata.GetComponent<Animator>().speed = 1;
         gata.GetComponent<Animator>().speed = 1f; // Restablece la velocidad de la animación a 1x
         recolectando = false;
         gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = false;

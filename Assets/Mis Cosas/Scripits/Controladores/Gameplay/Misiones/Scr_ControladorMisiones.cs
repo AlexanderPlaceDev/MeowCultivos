@@ -23,6 +23,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
     public bool MisionActualCompleta;           // ¿La misión actual está completa?
     public bool MisionPCompleta;                // ¿La misión principal está completa?
     public List<bool> MisionesScompletas;       // Estado de todas las misiones secundarias
+    private string ultimaDescripcion = "";
 
     // ================================
     // === CONTROL DE OBJETOS ===
@@ -63,6 +64,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
         // Buscar referencias importantes
         Gata = GameObject.Find("Gata").transform;
         Inventario = Gata.GetChild(7).GetComponent<Scr_Inventario>();
+        Inventario.OnInventarioActualizado += OnInventarioCambiado;
         TodasLasConstrucciones = Buscartag.BuscarObjetosConTagInclusoInactivos("Construcciones");
 
         // Cargar datos guardados
@@ -71,7 +73,20 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
     }
 
-    private string ultimaDescripcion = "";
+    private void OnInventarioCambiado()
+    {
+        // Solo revisar si hay misiones de recolección en curso
+        if (MisionActual != null && MisionActual.Tipo == Tipos.Recoleccion)
+        {
+            RevisarProgresoMisiones(); // Esto también actualiza la UI
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (Inventario != null)
+            Inventario.OnInventarioActualizado -= OnInventarioCambiado;
+    }
 
     void Update()
     {
@@ -410,11 +425,9 @@ public class Scr_ControladorMisiones : MonoBehaviour
     // ================================
     public void GuardarMisiones()
     {
-        Debug.Log("Guarda misiones");
         // Guardar misión principal
         if (MisionPrincipal != null)
         {
-            Debug.Log("Guarda mision principal");
             PlayerPrefs.SetString("MisionPrincipal", MisionPrincipal.name);
             PlayerPrefs.SetInt("MisionPrincipalCompleta", MisionPCompleta ? 1 : 0);
         }
@@ -460,7 +473,6 @@ public class Scr_ControladorMisiones : MonoBehaviour
         string nombreMisionPrincipal = PlayerPrefs.GetString("MisionPrincipal", "");
         if (!string.IsNullOrEmpty(nombreMisionPrincipal))
         {
-            Debug.Log("Encontro Mision Principal");
             MisionPrincipal = BuscarMisionPorNombre(nombreMisionPrincipal);
             MisionPCompleta = PlayerPrefs.GetInt("MisionPrincipalCompleta", 0) == 1;
         }

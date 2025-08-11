@@ -5325,6 +5325,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6239445077362720863}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: caa63f37c21c4064b93b00e85427ef29,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5192303565149150699}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: caa63f37c21c4064b93b00e85427ef29,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1311006281806059995}
   m_SourcePrefab: {fileID: 100100000, guid: caa63f37c21c4064b93b00e85427ef29, type: 3}
 --- !u!1 &178227796199041654 stripped
 GameObject:
@@ -5472,7 +5480,7 @@ MonoBehaviour:
   SpawnMedio: 1
   SpawnLejos: 0
   SpawnDistancia: 0
-  CantidadDeOleadas: 2
+  CantidadDeOleadas: 5
   CantidadEnemigosPorOleada: 3
   DificultadInicial: 1
   PuntoDeHuida: 2
@@ -5501,6 +5509,127 @@ MonoBehaviour:
   "PosInicialDa\xF1o": {fileID: 3494351243285941114}
   "PosFinalDa\xF1o": {fileID: 221946623249957700}
   Anim: {fileID: 2930522013648248140}
+--- !u!114 &5192303565149150699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 178227796199041654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b42132e2543310740b92c355691d0a5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sonidoespecial: {fileID: 8300000, guid: aaff6a2b81a0b3247a839706cc64349d, type: 3}
+  caminar_sonido:
+  - {fileID: 8300000, guid: ff9b3229d47060547a7dee6d0886807d, type: 3}
+  correr_sonido:
+  - {fileID: 8300000, guid: ff9b3229d47060547a7dee6d0886807d, type: 3}
+  recoger_sonido: []
+  talar_sonido: []
+  picar_sonido: []
+  caminar: 0
+  correr: 0
+  recoger: 0
+  talar: 0
+  picar: 0
+--- !u!82 &1311006281806059995
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 178227796199041654}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 0.2
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 100
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &662840104225288396 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: caa63f37c21c4064b93b00e85427ef29,

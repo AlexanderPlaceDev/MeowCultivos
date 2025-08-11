@@ -168,7 +168,7 @@ public class MisionesUI : MonoBehaviour
             Button boton = botons[0];
 
             //comprueba si ya esta completa o no para poder elejir la descripcion
-            texto1.text = $"{instance.MisionName}";
+            texto1.text = $"{instance.TituloMision}";
             if (!MisionesenCursoCompletadas[i])
             {
 

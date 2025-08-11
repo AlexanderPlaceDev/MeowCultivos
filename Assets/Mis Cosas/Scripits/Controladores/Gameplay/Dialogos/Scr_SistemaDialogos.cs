@@ -118,7 +118,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
                 var misionJugador = ControladorMisiones.MisionesSecundarias[i];
 
                 // Validar si pertenece a este NPC
-                bool esDelNPC = activadorDialogos.MisionesSecundarias.Any(m => m.MisionName == misionJugador.MisionName);
+                bool esDelNPC = activadorDialogos.MisionesSecundarias.Any(m => m.TituloMision == misionJugador.TituloMision);
 
                 if (!esDelNPC)
                     continue;
@@ -137,19 +137,32 @@ public class Scr_SistemaDialogos : MonoBehaviour
             }
             else
             {
-                // Si no hay ninguna completa, buscar alguna activa del NPC
+                // Si no hay ninguna completa, buscar TODAS las activas de este NPC
+                List<Scr_CreadorMisiones> misionesActivasDelNPC = new List<Scr_CreadorMisiones>();
+
                 for (int i = 0; i < ControladorMisiones.MisionesSecundarias.Count; i++)
                 {
                     var misionJugador = ControladorMisiones.MisionesSecundarias[i];
-                    bool esDelNPC = activadorDialogos.MisionesSecundarias.Any(m => m.MisionName == misionJugador.MisionName);
+                    bool esDelNPC = activadorDialogos.MisionesSecundarias.Any(m => m.TituloMision == misionJugador.TituloMision);
 
                     if (esDelNPC)
                     {
-                        DialogoArecibir = misionJugador.DialogoEnMision;
-                        break;
+                        misionesActivasDelNPC.Add(misionJugador);
                     }
                 }
+
+                if (misionesActivasDelNPC.Count > 0)
+                {
+                    int randomIndex = Random.Range(0, misionesActivasDelNPC.Count);
+                    DialogoArecibir = misionesActivasDelNPC[randomIndex].DialogoEnMision;
+                }
+                else
+                {
+                    // Si no hay ninguna activa ni completa, usar diálogo secundario por defecto
+                    DialogoArecibir = DialogoSecundario;
+                }
             }
+
 
         }
 

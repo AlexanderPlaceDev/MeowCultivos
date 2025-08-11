@@ -12,7 +12,12 @@ public class Musica_fondo : MonoBehaviour
 
     void Start()
     {
-        source = gameObject.AddComponent<AudioSource>();
+        source = GetComponent<AudioSource>();
+        //aplica el volumen 
+        int volumen_general = PlayerPrefs.GetInt("Volumen", 50);
+        int volumen_ambiental = PlayerPrefs.GetInt("Volumen_Musica", 20);
+        float volumen = (volumen_general * volumen_ambiental) / 100;
+        source.volume = volumen;
         IniciaLoopAtealorio(musica_fondo, MintiempoEspera, MaztiempoEspera);
     }
 

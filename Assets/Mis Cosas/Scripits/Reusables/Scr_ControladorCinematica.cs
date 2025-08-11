@@ -69,8 +69,11 @@ public class Scr_ControladorCinematica : MonoBehaviour
             {
                 Objeto.SetActive(true);
             }
-
-            ActivadorCinematicaSiguiente.enabled = true;
+            //Activar siguiente cinematica
+            if (ActivadorCinematicaSiguiente != null)
+            {
+                ActivadorCinematicaSiguiente.enabled = true;
+            }
 
             // Apagar objetos
             foreach (GameObject Objeto in ObjetosApagar)
@@ -97,7 +100,10 @@ public class Scr_ControladorCinematica : MonoBehaviour
             }
 
             //Activar camara principal
-            GameObject.Find("Cosas Inutiles").transform.GetChild(3).gameObject.SetActive(true);
+            if (GameObject.Find("Cosas Inutiles") != null)
+            {
+                GameObject.Find("Cosas Inutiles").transform.GetChild(3).gameObject.SetActive(true);
+            }
 
             Escena = 0; // Reinicia solo una vez
         }
@@ -128,7 +134,7 @@ public class Scr_ControladorCinematica : MonoBehaviour
         StartCoroutine(PrecargarEscena(Escena));
     }
 
-    private IEnumerator PrecargarEscena(int Escena)
+    public IEnumerator PrecargarEscena(int Escena)
     {
         Operacion = SceneManager.LoadSceneAsync(Escena);
         Operacion.allowSceneActivation = false;
@@ -146,8 +152,14 @@ public class Scr_ControladorCinematica : MonoBehaviour
 
     public void AsignarSinleton()
     {
-        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().Enemigo = Enemigo;
-        GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().Luz = GameObject.Find("Sol").GetComponent<Light>().color;
+        Scr_DatosSingletonBatalla Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
+        Singleton.Enemigo = Enemigo;
+        Singleton.Mision = Enemigo.GetComponent<Scr_CambiadorBatalla>().Mision;
+        Singleton.ColorMision = Enemigo.GetComponent<Scr_CambiadorBatalla>().ColorMision;
+        Singleton.Complemento = Enemigo.GetComponent<Scr_CambiadorBatalla>().Complemento;
+        Singleton.Item = Enemigo.GetComponent<Scr_CambiadorBatalla>().Item;
+        Singleton.ColorItem = Enemigo.GetComponent<Scr_CambiadorBatalla>().ColorItem;
+        Singleton.Luz = GameObject.Find("Sol").GetComponent<Light>().color;
     }
 
     public void GuardarCinematica(string Cinematica)

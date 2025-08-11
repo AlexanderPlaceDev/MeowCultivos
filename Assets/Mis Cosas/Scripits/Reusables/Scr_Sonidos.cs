@@ -23,7 +23,11 @@ public class Scr_Sonidos : MonoBehaviour
     void Start()
     {
         source = GetComponent<AudioSource>();
-        source.volume = .2f;
+        //aplica el volumen 
+        int volumen_general = PlayerPrefs.GetInt("Volumen", 50);
+        int volumen_ambiental = PlayerPrefs.GetInt("Volumen_Ambiente", 20);
+        float volumen = (volumen_general * volumen_ambiental) / 100;
+        source.volume = volumen;
         /*source.clip = caminar_sonido;
         source.spatialBlend = 1.0f; // Hacerlo 3D
         source.minDistance = 1f;

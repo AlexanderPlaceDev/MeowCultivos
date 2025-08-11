@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +9,8 @@ public class Scr_Inventario : MonoBehaviour
     [SerializeField] int Limite;
 
     public Scr_ControladorMisiones ControladorMisiones;
-
+    public event System.Action OnInventarioActualizado;
+    private Scr_ObjetosAgregados objetosAgregados;
     private void Start()
     {
         // Cargar las cantidades desde PlayerPrefs al iniciar
@@ -29,11 +30,14 @@ public class Scr_Inventario : MonoBehaviour
         {
             ControladorMisiones = GameObject.Find("Gata").transform.GetChild(4).GetComponent<Scr_ControladorMisiones>();
         }
+
+        objetosAgregados = FindObjectOfType<Scr_ObjetosAgregados>();
+
     }
 
     private void Update()
     {
-        // Guardar autom�ticamente los valores actualizados
+        // Guardar automáticamente los valores actualizados
         GuardarInventario();
     }
 
@@ -52,15 +56,21 @@ public class Scr_Inventario : MonoBehaviour
                 {
                     Cantidades[i] += Cantidad;
                 }
+
+                // 🆕 Agregar XP si aplica
+                if (Objeto.XPRecolecta > 0 && objetosAgregados != null)
+                {
+                    objetosAgregados.AgregarExperiencia(Objeto.XPRecolecta);
+                }
+
                 break;
             }
             i++;
         }
-        if(ControladorMisiones!= null)
-        {
-            //ControladorMisiones.RevisarTodasLasMisionesSecundarias();
-        }
+
+        OnInventarioActualizado?.Invoke();
     }
+
 
     public void QuitarObjeto(int Cantidad, string Nombre)
     {
@@ -81,6 +91,8 @@ public class Scr_Inventario : MonoBehaviour
             }
             i++;
         }
+
+        OnInventarioActualizado?.Invoke();
     }
 
     private void GuardarInventario()
@@ -98,7 +110,7 @@ public class Scr_Inventario : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        // Guardar inventario al salir de la aplicaci�n
+        // Guardar inventario al salir de la aplicación
         GuardarInventario();
     }
 }
