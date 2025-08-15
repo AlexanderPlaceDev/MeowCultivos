@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.PlayerSettings;
 
 public class Scr_SistemaDialogos : MonoBehaviour
 {
@@ -36,11 +37,15 @@ public class Scr_SistemaDialogos : MonoBehaviour
     public int LineaActual = 0; // Línea actual del diálogo mostrado
     private Coroutine currentCoroutine; // Referencia a la coroutine activa
 
+    private bool TieneMovimiento=false;//Checa si tiene movimiento el npc
+
     private Scr_ControladorMisiones ControladorMisiones; // Controlador de misiones de la gata
     private Scr_ActivadorDialogos activadorDialogos; // Referencia al activador de diálogos asociado
 
     private void Start()
     {
+
+        TieneMovimiento = GetComponent<NPC_movimiento>() != null;
         // Buscar controlador de misiones dentro de la jerarquía de la gata
         if (GameObject.Find("Gata"))
         {
@@ -68,6 +73,14 @@ public class Scr_SistemaDialogos : MonoBehaviour
                     SiguienteLinea(); // Avanza a la siguiente línea
                 }
             }
+        }
+        if (TieneMovimiento)
+        {
+            Vector3 pos = transform.position;
+            PlayerPrefs.SetFloat($"{NombreNPC}_X", pos.x);
+            PlayerPrefs.SetFloat($"{NombreNPC}_Y", pos.y);
+            PlayerPrefs.SetFloat($"{NombreNPC}_Z", pos.z);
+            //Debug.Log(NombreNPC + "_Guardado"+pos);
         }
     }
 

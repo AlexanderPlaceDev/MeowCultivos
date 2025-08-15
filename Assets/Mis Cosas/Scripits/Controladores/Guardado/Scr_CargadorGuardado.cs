@@ -2,6 +2,7 @@ using Cinemachine;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.Playables;
+using static UnityEditor.PlayerSettings;
 
 public class Scr_CargadorGuardado : MonoBehaviour
 {
@@ -40,6 +41,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
             Gata.transform.position = new Vector3(PlayerPrefs.GetFloat("GataPosX", 62), PlayerPrefs.GetFloat("GataPosY", 7), PlayerPrefs.GetFloat("GataPosZ", 103.5f));
             Gata.transform.rotation = Quaternion.Euler(PlayerPrefs.GetFloat("GataRotX", 0), PlayerPrefs.GetFloat("GataRotY", -67), PlayerPrefs.GetFloat("GataRotZ", 0));
             Camara360.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.x = 0;
+            Personajes[0].SetActive(true);
         }
         //Movimiento
         if (PlayerPrefs.GetString("Movimiento", "No") == "Si")
@@ -78,13 +80,36 @@ public class Scr_CargadorGuardado : MonoBehaviour
         {
             Personajes[2].SetActive(true);
         }
-    }
 
+        //actualiza la posicion de los npc que tienen movimiento
+        for (int i = 0; i < Personajes.Length; i++)
+        {
+            posicionPersonaje(i);
+        }
+    }
     private void Update()
     {
         if (Moviendo)
         {
             Gata.transform.position = new Vector3(65, 7, 122);
+        }
+    }
+
+    public void posicionPersonaje(int i)
+    {
+        string keyX = $"{Personajes[i].GetComponent<Scr_SistemaDialogos>().NombreNPC}_X";
+        string keyY = $"{Personajes[i].GetComponent<Scr_SistemaDialogos>().NombreNPC}_Y";
+        string keyZ = $"{Personajes[i].GetComponent<Scr_SistemaDialogos>().NombreNPC}_Z";
+        Vector3 pos = transform.position;
+        pos = new Vector3(
+                    PlayerPrefs.GetFloat(keyX),
+                    PlayerPrefs.GetFloat(keyY),
+                    PlayerPrefs.GetFloat(keyZ)
+                    );
+        if (pos != Vector3.zero)
+        {
+            Personajes[i].transform.position = pos;
+            Debug.Log(Personajes[i].GetComponent<Scr_SistemaDialogos>().NombreNPC + pos + "////////" + Personajes[i].transform.position);
         }
     }
 }
