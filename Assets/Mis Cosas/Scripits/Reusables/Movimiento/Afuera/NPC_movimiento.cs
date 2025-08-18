@@ -18,30 +18,42 @@ public class NPC_movimiento : MonoBehaviour
     private Vector3 Destino; //destino
     private bool Esperando = false; //se utiliza para pausar el movimento en caso de necesitaro
     private string diaAnterior; //checa un dia para poder moverse a la ultima posicion que deberia estar
-    private Scr_ActivadorDialogos Dialogo; //checa cosas del activador
+    private Scr_ActivadorDialogos Dialogo;
+    private Scr_SistemaDialogos SisDialogo;//checa cosas del activador
     private Transform Gata;
 
     void Start()
     {
 
         Gata = GameObject.Find("Gata").transform;
+        CTiempo = GameObject.Find("Controlador Tiempo");
         ContolT = CTiempo.GetComponent<Scr_ControladorTiempo>();
         agente = GetComponent<NavMeshAgent>();
         diaAnterior = ContolT.DiaActual;
         Anim = GetComponent<Scr_ControladorAnimacionesNPC>();
         Dialogo = GetComponent<Scr_ActivadorDialogos>();
+        SisDialogo=GetComponent<Scr_SistemaDialogos>();
     }
 
     private void OnEnable()
     {
         Gata = GameObject.Find("Gata").transform;
+        CTiempo = GameObject.Find("Controlador Tiempo");
         ContolT = CTiempo.GetComponent<Scr_ControladorTiempo>();
         agente = GetComponent<NavMeshAgent>();
         diaAnterior = ContolT.DiaActual;
         Anim = GetComponent<Scr_ControladorAnimacionesNPC>();
         Dialogo = GetComponent<Scr_ActivadorDialogos>();
+        SisDialogo = GetComponent<Scr_SistemaDialogos>();
     }
-
+    void FixedUpdate()
+    {
+        Vector3 pos = transform.position;
+        PlayerPrefs.SetFloat($"{SisDialogo.NombreNPC}_X", pos.x);
+        PlayerPrefs.SetFloat($"{SisDialogo.NombreNPC}_Y", pos.y);
+        PlayerPrefs.SetFloat($"{SisDialogo.NombreNPC}_Z", pos.z);
+        //Debug.Log(NombreNPC + "_Guardado"+pos);
+    }
     void Update()
     {
 

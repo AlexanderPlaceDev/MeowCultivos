@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static Unity.VisualScripting.Member;
 using static UnityEditor.PlayerSettings;
 
 public class Scr_SistemaDialogos : MonoBehaviour
@@ -37,15 +38,22 @@ public class Scr_SistemaDialogos : MonoBehaviour
     public int LineaActual = 0; // Línea actual del diálogo mostrado
     private Coroutine currentCoroutine; // Referencia a la coroutine activa
 
-    private bool TieneMovimiento=false;//Checa si tiene movimiento el npc
+    //private bool TieneMovimiento=false;//Checa si tiene movimiento el npc
 
     private Scr_ControladorMisiones ControladorMisiones; // Controlador de misiones de la gata
     private Scr_ActivadorDialogos activadorDialogos; // Referencia al activador de diálogos asociado
 
+    public AudioClip[] SonidoHabla;
+    AudioSource source;
     private void Start()
     {
-
-        TieneMovimiento = GetComponent<NPC_movimiento>() != null;
+        source = GetComponent<AudioSource>();
+        //aplica el volumen 
+        int volumen_general = PlayerPrefs.GetInt("Volumen", 50);
+        int volumen_ambiental = PlayerPrefs.GetInt("Volumen_Ambiente", 20);
+        float volumen = (volumen_general * volumen_ambiental) / 100;
+        source.volume = volumen;
+        //TieneMovimiento = GetComponent<NPC_movimiento>() != null;
         // Buscar controlador de misiones dentro de la jerarquía de la gata
         if (GameObject.Find("Gata"))
         {
@@ -55,7 +63,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
         // Obtener referencia al activador de diálogos
         activadorDialogos = GetComponent<Scr_ActivadorDialogos>();
     }
-
+    
     private void Update()
     {
         // Si el diálogo no está en pausa y es una cinemática o activador válido...
@@ -73,14 +81,6 @@ public class Scr_SistemaDialogos : MonoBehaviour
                     SiguienteLinea(); // Avanza a la siguiente línea
                 }
             }
-        }
-        if (TieneMovimiento)
-        {
-            Vector3 pos = transform.position;
-            PlayerPrefs.SetFloat($"{NombreNPC}_X", pos.x);
-            PlayerPrefs.SetFloat($"{NombreNPC}_Y", pos.y);
-            PlayerPrefs.SetFloat($"{NombreNPC}_Z", pos.z);
-            //Debug.Log(NombreNPC + "_Guardado"+pos);
         }
     }
 
@@ -193,6 +193,11 @@ public class Scr_SistemaDialogos : MonoBehaviour
         // Escribir letra por letra la línea actual
         foreach (char letter in DialogoArecibir.Lineas[LineaActual].ToCharArray())
         {
+            int h=Random.Range(0, SonidoHabla.Length - 1);
+            if (letter == ' ')
+            {
+                source.PlayOneShot(SonidoHabla[h]);
+            }
             Texto.text += letter;
             yield return new WaitForSeconds(letraDelay * Velocidad);
         }

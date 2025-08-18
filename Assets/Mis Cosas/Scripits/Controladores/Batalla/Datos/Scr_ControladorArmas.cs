@@ -32,7 +32,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     public float cadencia = 0;
     public float temporizadorDisparo = 0f;
     public bool hizoHit = false; //detecta si golpeo algo
-
+    private bool yasonohit = false;
 
     public Animator Anim;
 
@@ -186,7 +186,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         // Obtiene la duración del golpe y espera antes de permitir otro ataque
         float duracion = GetAnimationClipDuration(Anim, animacion);
         StartCoroutine(EsperarAtaque(duracion));
-        StartCoroutine(EsperarHit(duracion*.4f));
+        StartCoroutine(EsperarHit(duracion*.48f));
         // Avanza en la secuencia de golpes
         numGolpe = (numGolpe % 3) + 1;
 
@@ -256,17 +256,26 @@ public class Scr_ControladorArmas : MonoBehaviour
     IEnumerator EsperarHit(float segundos)
     {
         yield return new WaitForSeconds(segundos);
+        golpe();
+        hizoHit = false;
+        yasonohit = false;
+    }
+
+    public void golpe()
+    {
+        if (yasonohit) return;
         if (hizoHit)
         {
             //Debug.LogError("Golpe");
             source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[0]); // Golpe con impacto
+            yasonohit = true;
         }
         else
         {
             //Debug.LogError("NO Golpe");
             source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[1]); // Golpe sin impacto
+            yasonohit = true;
         }
-        hizoHit = false;
     }
 
     Vector3 DireccionConDispersion(Vector3 direccion, float dispersionEnGrados)

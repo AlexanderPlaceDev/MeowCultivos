@@ -153,13 +153,14 @@ public class Scr_Enemigo : MonoBehaviour
         if (other.gameObject.tag == "Golpe")
         {
             GameObject.Find("Controlador").GetComponent<Scr_ControladorArmas>().hizoHit = true;
+            GameObject.Find("Controlador").GetComponent<Scr_ControladorArmas>().golpe();
             // Verifica que las posiciones inicial y final estén asignadas
             if (PosInicialDaño == null || PosFinalDaño == null)
             {
                 Debug.LogWarning("PosInicialDaño o PosFinalDaño no están asignadas.");
                 return;
             }
-
+            
             // Instanciar el CanvasDaño en la posición inicial
             int Daño = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño;
             if (CanvasDaño != null)
@@ -184,7 +185,7 @@ public class Scr_Enemigo : MonoBehaviour
             }
 
 
-
+            
             // Lógica de daño
             Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
                 GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].PuntosXGolpe;

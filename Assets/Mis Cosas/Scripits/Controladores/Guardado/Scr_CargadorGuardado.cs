@@ -1,6 +1,7 @@
 using Cinemachine;
 using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Playables;
 using static UnityEditor.PlayerSettings;
 
@@ -108,7 +109,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
                     );
         if (pos != Vector3.zero)
         {
-            Personajes[i].transform.position = pos;
+            Personajes[i].GetComponent<NavMeshAgent>().Warp(pos);
             Debug.Log(Personajes[i].GetComponent<Scr_SistemaDialogos>().NombreNPC + pos + "////////" + Personajes[i].transform.position);
         }
     }
