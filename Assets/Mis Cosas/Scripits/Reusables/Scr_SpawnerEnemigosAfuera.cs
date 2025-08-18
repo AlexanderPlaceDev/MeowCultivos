@@ -14,7 +14,7 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 
     public int haveAcivate;
 
-    public float a;
+    //public float a;
     void Start()
     {
         // Recuperar el tiempo de respawn guardado
