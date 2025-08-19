@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using PrimeTween;
+using Unity.VisualScripting;
 
 public class Scr_ControladorMenuHabilidades : MonoBehaviour
 {
@@ -43,7 +44,6 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
     void Update()
     {
         Puntos.text = PlayerPrefs.GetInt("PuntosDeHabilidad", 0).ToString();
-        SeleccionarHabilidad();
         InputPruebas();
     }
     public void SeleccionarRama(string NombreRama)
@@ -187,41 +187,191 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
         }
         RamaActual = "";
     }
-    private void SeleccionarHabilidad()
+    public void SeleccionarHabilidad()
     {
         // Añade una verificación para asegurarte de que no se vuelva a seleccionar de inmediato
-        if (HabilidadActual != "" && Input.GetKeyDown(KeyCode.Mouse0) && !YaSelecciono)
+        if (HabilidadActual != "" && !YaSelecciono)
         {
+            Debug.Log("Entra");
             YaSelecciono = true;
             BotonSeleccionado = BotonActual;
-            Debug.Log("Habilidad Seleccionada");
+
+
+
+            Debug.Log("Habilidad Seleccionada" + BotonSeleccionado);
 
             foreach (Scr_CreadorHabilidades Habilidad in Habilidades)
             {
                 if (Habilidad.NombreBoton == HabilidadActual)
                 {
+                    ObjetoHabilidadSeleccionada.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = Habilidad.Icono;
+                    ObjetoHabilidadSeleccionada.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = Habilidad.Nombre;
+                    ObjetoHabilidadSeleccionada.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = Habilidad.Descripcion;
+                    ObjetoHabilidadSeleccionada.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = "Costo:" + Habilidad.Costo;
+
+
+                    //Actualiza los items necesarios
+                    if (Habilidad.RequiereItems)
+                    {
+                        ObjetoHabilidadSeleccionada.transform.GetChild(4).gameObject.SetActive(true);
+                        int c = 0;
+                        foreach (Transform Hijo in ObjetoHabilidadSeleccionada.transform.GetChild(4).GetComponentInChildren<Transform>())
+                        {
+                            if (c < Habilidad.CantidadesRequeridas.Length)
+                            {
+                                Hijo.gameObject.SetActive(true);
+                                Hijo.GetComponent<Image>().sprite = Habilidad.ItemsRequeridos[c].IconoInventario;
+                                Hijo.GetChild(0).GetComponent<TextMeshProUGUI>().text = Habilidad.CantidadesRequeridas[c].ToString();
+
+                            }
+                            else
+                            {
+                                Hijo.gameObject.SetActive(false);
+                            }
+                            c++;
+                        }
+                    }
+                    else
+                    {
+                        ObjetoHabilidadSeleccionada.transform.GetChild(4).gameObject.SetActive(false);
+                    }
+
+                    //Activa o desactiva el boton Aceptar
                     if (PlayerPrefs.GetInt("PuntosDeHabilidad", 0) >= Habilidad.Costo && PlayerPrefs.GetString("Habilidad:" + HabilidadActual, "No") == "No")
                     {
-                        BotonAceptar.SetActive(true);
+                        //Regresa al alpha original en caso de no tenerla comprada
+                        Color color = BotonSeleccionado.GetComponent<Image>().color;
+                        color.a = 100f / 255f;
+                        BotonSeleccionado.GetComponent<Image>().color = color;
+                        //En caso de requerir itmes actualiza la info de estos
+                        if (Habilidad.RequiereItems)
+                        {
+                            Scr_Inventario Inventario = GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>();
+
+                            bool Pasa = true; // Lo inicializamos en true y lo ponemos en false si falta algo
+                            for (int N1 = 0; N1 < Habilidad.ItemsRequeridos.Length; N1++)
+                            {
+                                Scr_CreadorObjetos itemRequerido = Habilidad.ItemsRequeridos[N1];
+                                bool encontrado = false;
+
+                                for (int N = 0; N < Inventario.Objetos.Length; N++)
+                                {
+                                    if (itemRequerido == Inventario.Objetos[N])
+                                    {
+                                        encontrado = true;
+                                        if (Inventario.Cantidades[N] >= Habilidad.CantidadesRequeridas[N1])
+                                        {
+                                            ObjetoHabilidadSeleccionada.transform.GetChild(4).GetChild(N1).GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
+                                        }
+                                        else
+                                        {
+                                            ObjetoHabilidadSeleccionada.transform.GetChild(4).GetChild(N1).GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.red;
+                                            Pasa = false; // No tienes la cantidad suficiente
+                                        }
+                                        break;
+                                    }
+                                }
+
+                                if (!encontrado) // No lo tienes en el inventario
+                                {
+                                    Pasa = false;
+                                    ObjetoHabilidadSeleccionada.transform.GetChild(4).GetChild(N1).GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.red;
+                                }
+                            }
+
+                            BotonAceptar.SetActive(Pasa);
+                        }
+                        else
+                        {
+                            BotonAceptar.SetActive(true);
+                        }
+
                     }
                     else
                     {
                         BotonAceptar.SetActive(false);
                     }
+                    break;
                 }
             }
 
             ObjetoHabilidadSeleccionada.SetActive(true);
         }
     }
+    public void ComprarHabilidad()
+    {
+        Debug.Log($"[DEBUG] Intentando comprar: {HabilidadActual}");
+
+        if (string.IsNullOrEmpty(HabilidadActual))
+        {
+            Debug.LogWarning("[DEBUG] No hay habilidad seleccionada para comprar.");
+            return;
+        }
+
+        foreach (Scr_CreadorHabilidades habilidad in Habilidades)
+        {
+            if (habilidad.NombreBoton == HabilidadActual)
+            {
+                int puntosActuales = PlayerPrefs.GetInt("PuntosDeHabilidad", 0);
+
+                Debug.Log($"[DEBUG] Puntos actuales: {puntosActuales}, Costo: {habilidad.Costo}");
+
+                if (puntosActuales >= habilidad.Costo && PlayerPrefs.GetString("Habilidad:" + HabilidadActual, "No") == "No")
+                {
+                    //Quitar items
+                    if (habilidad.RequiereItems)
+                    {
+                        int Obj = 0;
+                        foreach (Scr_CreadorObjetos Objeto in habilidad.ItemsRequeridos)
+                        {
+                            GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>().QuitarObjeto(habilidad.CantidadesRequeridas[Obj], habilidad.ItemsRequeridos[Obj].Nombre);
+                            Obj++;
+                        }
+                    }
+
+                    // Guardar la compra
+                    PlayerPrefs.SetString("Habilidad:" + HabilidadActual, "Si");
+
+                    // Restar puntos
+                    puntosActuales -= habilidad.Costo;
+                    PlayerPrefs.SetInt("PuntosDeHabilidad", puntosActuales);
+
+                    // Guardar cambios en disco
+                    PlayerPrefs.Save();
+
+                    Debug.Log($"[DEBUG] Habilidad '{habilidad.NombreBoton}' comprada. Puntos restantes: {puntosActuales}");
+
+                    // Actualizar barras
+                    ActualizarBarrasPorRango();
+
+                    // Ocultar el panel de selección
+                    YaSelecciono = false;
+                    ObjetoHabilidadSeleccionada.SetActive(false);
+                    BotonAceptar.SetActive(false);
+                }
+                else
+                {
+                    Debug.LogWarning("[DEBUG] No tienes puntos suficientes o la habilidad ya está comprada.");
+                }
+
+                return; // Salir del foreach
+            }
+        }
+
+        YaSelecciono = false;
+        BotonActual = null;
+        HabilidadActual = "";
+        ObjetoHabilidadSeleccionada.SetActive(false);
+        BotonAceptar.SetActive(false);
+
+    }
     public void RechazarHabilidad()
     {
         Debug.Log("Rechaza Habilidad");
 
-        // Desactiva la selección de habilidad y resetea la variable de control
         YaSelecciono = false;
-
-        // Asegúrate de que la UI relacionada con la selección de habilidad se oculte
+        BotonActual = null;
+        HabilidadActual = "";
         ObjetoHabilidadSeleccionada.SetActive(false);
 
     }
@@ -243,27 +393,58 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
             }
         }
     }
-    public void EntraHabilidad(string Habilidad)
+    public void EntraHabilidad(GameObject boton)
     {
+        if (YaSelecciono) return;
+
+        Debug.Log($"[DEBUG] EntraHabilidad() → Botón: {boton.name}");
+
+        // Verificar si está desbloqueado por rango
+        if (boton.GetComponent<Image>().color == Color.black)
+        {
+            Debug.Log("[DEBUG] Botón fuera de rango, no se cambia alpha.");
+            return; // No hacer nada si está bloqueado
+        }
+
+        BotonActual = boton;
+        HabilidadActual = boton.name;
+
+        // Cambiar alpha de la imagen a 255 (totalmente visible)
+        Image imagenBoton = boton.GetComponent<Image>();
+        if (imagenBoton != null)
+        {
+            Color color = imagenBoton.color;
+            color.a = 1f;
+            imagenBoton.color = color;
+        }
+
+        Debug.Log($"[DEBUG] HabilidadActual asignada: {HabilidadActual}, BotonActual: {BotonActual.name}");
     }
+
     public void SaleHabilidad()
     {
+        if (YaSelecciono) return;
+
+        Debug.Log($"[DEBUG] SaleHabilidad() → Saliendo de {HabilidadActual}");
+
         HabilidadActual = "";
         if (BotonActual != null)
         {
-            BotonActual.transform.GetChild(1).gameObject.SetActive(false);
             if (PlayerPrefs.GetString("Habilidad:" + BotonActual.name, "No") == "No")
             {
-                BotonActual.GetComponent<Image>().color = new Color32(50, 50, 50, 255);
-                BotonActual.transform.GetChild(0).GetComponent<Image>().color = new Color32(50, 50, 50, 255);
+                Image imagenBoton = BotonActual.GetComponent<Image>();
+                if (imagenBoton != null)
+                {
+                    Color color = imagenBoton.color;
+                    color.a = 100f / 255f;
+                    imagenBoton.color = color;
+                }
             }
+
+            Debug.Log($"[DEBUG] Botón {BotonActual.name} reseteado.");
             BotonActual = null;
-
         }
-
-
     }
-
     public void ActualizarBarrasPorRango()
     {
         foreach (GameObject Barra in Barras)
@@ -280,8 +461,19 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
 
                 if (i < totalBotones)
                 {
-                    // Botón dentro del rango → blanco
-                    boton.color = Color.white;
+                    string nombreHabilidad = boton.name;
+                    bool estaComprada = PlayerPrefs.GetString("Habilidad:" + nombreHabilidad, "No") == "Si";
+
+                    if (estaComprada)
+                    {
+                        boton.color = Color.white;
+                    }
+                    else
+                    {
+                        Color color = Color.white;
+                        color.a = 100f / 255f;
+                        boton.color = color;
+                    }
                 }
                 else
                 {
@@ -291,8 +483,6 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
             }
         }
     }
-
-
     public void InputPruebas()
     {
         //Prueba de rango
@@ -338,5 +528,7 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
             }
         }
     }
+
+
 
 }

@@ -12,5 +12,6 @@ public class Scr_CreadorEstructuras : ScriptableObject
     public string Descripcion;
     public Scr_CreadorObjetos[] Materiales;
     public int[] Cantidades;
-    public string HabilidadRequerida;
+    public string PlanoRequerido;
+    public bool AumentaRango;
 }

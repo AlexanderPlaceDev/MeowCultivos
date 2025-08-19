@@ -6,9 +6,11 @@ using UnityEngine;
 public class Scr_CreadorHabilidades : ScriptableObject
 {
     public string Nombre;
+    public Sprite Icono;
     public string NombreBoton;
     public string Descripcion;
-    public string[] HabilidadesAnteriores;
-    public string[] NombresBarrasCarga;
     public int Costo;
+    public bool RequiereItems;
+    public Scr_CreadorObjetos[] ItemsRequeridos;
+    public int[] CantidadesRequeridas;
 }

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -17,7 +17,7 @@ public class Scr_MenuTablero : MonoBehaviour
     private float TransicionDuracion = 3f;
     [SerializeField] private GameObject camara_tablero;
     [SerializeField] private GameObject camaraGata;
-    [Header("Men�")]
+    [Header("Menú")]
     [SerializeField] private TextMeshProUGUI Nombre;
     [SerializeField] private TextMeshProUGUI Descripcion;
     [SerializeField] private GameObject[] Botones;
@@ -26,6 +26,9 @@ public class Scr_MenuTablero : MonoBehaviour
     [SerializeField] private Image Imagen;
     [SerializeField] private Image[] Materiales;
     [SerializeField] private TextMeshProUGUI[] Cantidades;
+    [SerializeField] private Image Notificacion;
+    [SerializeField] private GameObject PanelNotificacion;
+    private bool NotificacionParpadeando = false;
 
     [Header("Inventario")]
     [SerializeField] private Scr_Inventario Inventario;
@@ -45,7 +48,7 @@ public class Scr_MenuTablero : MonoBehaviour
         EstructuraActual = PlayerPrefs.GetInt("EstructuraTablero", 0);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (Tablero.EstaDentro)
         {
@@ -61,12 +64,21 @@ public class Scr_MenuTablero : MonoBehaviour
 
         for (int i = 0; i < Estructuras.Length; i++)
         {
-            estructurasFiltradas.Add(Estructuras[i]);
-            objEstructurasFiltradas.Add(ObjEstructuras[i]);
-            /*if (VerificarEstructura(Estructuras[i].HabilidadRequerida))
+            if (Estructuras[i].PlanoRequerido == "")
             {
-               
-            }*/
+                estructurasFiltradas.Add(Estructuras[i]);
+                objEstructurasFiltradas.Add(ObjEstructuras[i]);
+            }
+            else
+            {
+                if (VerificarEstructura(Estructuras[i].PlanoRequerido))
+                {
+                    estructurasFiltradas.Add(Estructuras[i]);
+                    objEstructurasFiltradas.Add(ObjEstructuras[i]);
+
+                }
+
+            }
         }
     }
 
@@ -116,6 +128,22 @@ public class Scr_MenuTablero : MonoBehaviour
         Nombre.text = estructura.Nombre;
         Descripcion.text = estructura.Descripcion;
         Imagen.sprite = estructura.Imagen;
+        if (estructura.AumentaRango)
+        {
+            Notificacion.gameObject.SetActive(true);
+
+            if (!NotificacionParpadeando)
+            {
+                StartCoroutine(ParpadearNotificacion());
+            }
+
+
+        }
+        else
+        {
+            NotificacionParpadeando = false; // Esto detiene el parpadeo
+            Notificacion.gameObject.SetActive(false);
+        }
 
         Botones[1].SetActive(EstructuraActual != 0);
         Botones[2].SetActive(EstructuraActual != estructurasFiltradas.Count - 1);
@@ -212,6 +240,12 @@ public class Scr_MenuTablero : MonoBehaviour
         if (Botones[3].GetComponent<Image>().color == Color.green)
         {
             PlayerPrefs.SetInt("Estructura" + EstructuraActual, 1);
+            if (estructurasFiltradas[EstructuraActual].AumentaRango)
+            {
+                PlayerPrefs.SetInt("Rango Barra Naturaleza3", PlayerPrefs.GetInt("Rango Barra Naturaleza3", 0) + 1);
+                PlayerPrefs.SetInt("Rango Barra Naturaleza3", PlayerPrefs.GetInt("Rango Barra Planos4", 0) + 1);
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_ControladorMenuHabilidades>().ActualizarBarrasPorRango();
+            }
             QuitarObjetos(estructurasFiltradas[EstructuraActual].Materiales, estructurasFiltradas[EstructuraActual].Cantidades);
             camara_tablero.SetActive(false);
             ObjEstructuras[EstructuraActual].transform.GetChild(0).gameObject.SetActive(true);
@@ -284,5 +318,32 @@ public class Scr_MenuTablero : MonoBehaviour
         {
             return false;
         }
+    }
+
+    private IEnumerator ParpadearNotificacion()
+    {
+        NotificacionParpadeando = true;
+        Color blanco = Color.white;
+        Color gris = Color.gray;
+        bool colorBlanco = true;
+
+        while (NotificacionParpadeando)
+        {
+            Notificacion.color = colorBlanco ? blanco : gris;
+            colorBlanco = !colorBlanco;
+            yield return new WaitForSeconds(1f);
+        }
+
+        // Al terminar, aseguramos que quede en blanco
+        Notificacion.color = blanco;
+    }
+
+    public void EntraNotificacion()
+    {
+        PanelNotificacion.SetActive(true);
+    }
+    public void SaleNotificacion()
+    {
+        PanelNotificacion.SetActive(false);
     }
 }

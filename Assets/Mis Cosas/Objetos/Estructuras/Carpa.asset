@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e1bb1519068a5649a5ec7108d58217e, type: 3}
+  m_Name: Carpa
+  m_EditorClassIdentifier: 
+  Nombre: Casa De Campar
+  Imagen: {fileID: 21300000, guid: 6dfb71a3b8c0e1e4696ea87318a261f0, type: 3}
+  Descripcion: Al construir esta comoda carpa podras descansar durante la noche
+  Materiales:
+  - {fileID: 11400000, guid: 16d59de0d61659641a6f7c640e284942, type: 2}
+  - {fileID: 11400000, guid: a1dcbf004b25dc8478076e9ce3ec3b63, type: 2}
+  - {fileID: 11400000, guid: 4a1357594e65d8047b0e6ca45c64e293, type: 2}
+  - {fileID: 11400000, guid: f2dd07ffe30451b4d9ced2110326053a, type: 2}
+  Cantidades: 1e0000000f0000000a0000000a000000
+  PlanoRequerido: 
+  AumentaRango: 1

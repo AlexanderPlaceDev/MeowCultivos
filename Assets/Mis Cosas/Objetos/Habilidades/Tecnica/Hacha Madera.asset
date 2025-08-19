@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fe1247833e7ec341b5e9f52348f5369, type: 3}
+  m_Name: Hacha Madera
+  m_EditorClassIdentifier: 
+  Nombre: "LE\xD1ADOR"
+  Icono: {fileID: 21300000, guid: 612fa4433c21c2944947b598e4603b08, type: 3}
+  NombreBoton: Hacha Madera
+  Descripcion: Aprende a tumbar arboles
+  Costo: 3
+  RequiereItems: 1
+  ItemsRequeridos:
+  - {fileID: 11400000, guid: 98bf319b9993e4e449955b29496b058f, type: 2}
+  - {fileID: 11400000, guid: 98057a97554cd0a4ba29639b7360daad, type: 2}
+  - {fileID: 11400000, guid: e2e5c9ac1c1b77d4b91658849ea31af6, type: 2}
+  CantidadesRequeridas: 0a000000140000001e000000

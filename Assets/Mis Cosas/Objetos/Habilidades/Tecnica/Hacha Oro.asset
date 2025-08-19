@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fe1247833e7ec341b5e9f52348f5369, type: 3}
+  m_Name: Hacha Oro
+  m_EditorClassIdentifier: 
+  Nombre: MADERA DURA
+  Icono: {fileID: 21300000, guid: 6249b641718d1cb4a91ef95760a4883c, type: 3}
+  NombreBoton: Hacha Oro
+  Descripcion: Puedes talar madera rara
+  Costo: 3
+  RequiereItems: 0
