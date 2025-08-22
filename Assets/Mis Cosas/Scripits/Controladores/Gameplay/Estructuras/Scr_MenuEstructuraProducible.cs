@@ -18,6 +18,7 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
     [SerializeField] private string[] DialogosFinales;
     [SerializeField] private Color[] ColoresBotones;
     [SerializeField] private GameObject[] Botones;
+    [SerializeField] private string HabilidadMejoraVelocidad;
 
     [Header("Objetos del menú")]
     [SerializeField] private TextMeshProUGUI TextoNombre;
@@ -35,7 +36,7 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
     private float TiempoProduciendo = 0;
     private int cantidadAProducir = 0;
     private int cantidadProducida = 0;
-    public bool Produciendo=false;
+    public bool Produciendo = false;
 
     void Start()
     {
@@ -60,7 +61,14 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
             {
                 transform.GetChild(0).GetComponent<Scr_GirarObjeto>().enabled = true;
             }
-            TiempoProduciendo += Time.deltaTime;
+            if (PlayerPrefs.GetString("Habilidad:" + HabilidadMejoraVelocidad, "No") == "Si")
+            {
+                TiempoProduciendo += Time.deltaTime * 2;
+            }
+            else
+            {
+                TiempoProduciendo += Time.deltaTime;
+            }
             Carga.fillAmount = TiempoProduciendo / ObjetosQueProduce[ObjetoActual].TiempoDeProduccion;
 
             if (Carga.fillAmount >= 1)
@@ -100,7 +108,14 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
         var objetoActual = ObjetosQueProduce[ObjetoActual];
         TextoNombre.text = objetoActual.Nombre;
         TextoDescripcion.text = objetoActual.Descripcion;
-        TextoSegundos.text = $"{objetoActual.TiempoDeProduccion}s";
+        if (PlayerPrefs.GetString("Habilidad:" + HabilidadMejoraVelocidad, "No") == "Si")
+        {
+            TextoSegundos.text = $"{objetoActual.TiempoDeProduccion / 2}s";
+        }
+        else
+        {
+            TextoSegundos.text = $"{objetoActual.TiempoDeProduccion}s";
+        }
         ObjetosInfo.transform.GetChild(ObjetoActual).GetComponent<Image>().color = Color.white;
 
 
@@ -115,7 +130,7 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
                 var cantidadText = casilla.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
                 cantidadText.text = objetoActual.CantidadMaterialesDeProduccion[i].ToString();
 
-                if (GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_Inventario>() !=null)
+                if (GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_Inventario>() != null)
                 {
                     var inventario = GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_Inventario>();
                     var cantidadEnInventario = inventario.Cantidades[Array.IndexOf(inventario.Objetos, material)];

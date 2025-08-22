@@ -94,7 +94,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alpha: 1
+    - _Alpha: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _Ambient_Light_Strength: 0.5
@@ -115,6 +115,8 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
+    - _EsPlanta: 0
+    - _Fuerza_Del_Viento: 10
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -125,11 +127,13 @@ Material:
     - _Mode: 3
     - _OcclusionStrength: 1
     - _Offset: 0
+    - _Opacidad_Ruido: 0
     - _Parallax: 0.02
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReadMask: 255
     - _ReceiveShadows: 1
+    - _RecibeDa_o: 0
     - _Shadow: 0.019
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
@@ -145,6 +149,7 @@ Material:
     - _StencilZFail: 0
     - _Surface: 0
     - _UVSec: 0
+    - _Velocidad_Del_Viento: 1
     - _WorkflowMode: 0
     - _WriteMask: 255
     - _ZTest: 4
@@ -154,8 +159,11 @@ Material:
     - _Base_Color: {r: 0, g: 0, b: 0, a: 1}
     - _Color: {r: 0, g: 0, b: 0, a: 0}
     - _Cutoff_Thresholds: {r: -1, g: 1, b: 0, a: 0}
+    - _Direccion_Del_Viento: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Escala_Ruido: {r: 0, g: 0, b: 0, a: 0}
     - _HDR: {r: 0, g: 0, b: 0, a: 0}
+    - _Offset_Ruido: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _Tresshold: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
