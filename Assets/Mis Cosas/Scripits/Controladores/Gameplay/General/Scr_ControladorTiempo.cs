@@ -29,12 +29,16 @@ public class Scr_ControladorTiempo : MonoBehaviour
     private float tiempoTranscurrido = 0; // Controla el tiempo que pasa entre frames
     private int[] intervalosMinutos = { 0, 10, 20, 30, 40, 50 }; // Intervalos de 10 minutos
 
+    public int DineroRecompensa; //Dinero a entregar por la caja de venta
+
+
     void Awake()
     {
         // Cargar la fecha y hora desde PlayerPrefs si ya existen
         DiaActual = PlayerPrefs.GetString("DiaActual", "LUN");
         HoraActual = PlayerPrefs.GetInt("HoraActual", 11);
         MinutoActual = PlayerPrefs.GetFloat("MinutoActual", 0);
+        DineroRecompensa = PlayerPrefs.GetInt("DineroCajaVenta", 0);
 
         ActualizarTextoFecha();
         ActualizarTextoHora();
@@ -79,6 +83,23 @@ public class Scr_ControladorTiempo : MonoBehaviour
 
         // Actualizar la rotación del Skybox
         RotarSkybox();
+
+        EntregarDineroCajaVenta();
+    }
+
+    public void EntregarDineroCajaVenta()
+    {
+        if (DineroRecompensa != 0)
+        {
+            PlayerPrefs.SetInt("DineroCajaVenta", DineroRecompensa);
+            if (HoraActual == 0 && MinutoActual == 0)
+            {
+
+                GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>().AgregarDinero(DineroRecompensa);
+                DineroRecompensa = 0;
+                PlayerPrefs.DeleteKey("DineroCajaVenta");
+            }
+        }
     }
 
     public void Descansar(float m, int h)
