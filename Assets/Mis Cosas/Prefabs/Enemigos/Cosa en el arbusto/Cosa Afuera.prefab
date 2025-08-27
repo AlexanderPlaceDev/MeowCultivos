@@ -20134,7 +20134,41 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4134716618170541393}
+    - targetCorrespondingSourceObject: {fileID: 3743993344710040121, guid: 0971a354750a6d04488c5cc5f8226ffc,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8038251601016695302}
   m_SourcePrefab: {fileID: 100100000, guid: 0971a354750a6d04488c5cc5f8226ffc, type: 3}
+--- !u!137 &1609210040207871718 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -1750197354950549132, guid: 0971a354750a6d04488c5cc5f8226ffc,
+    type: 3}
+  m_PrefabInstance: {fileID: 8206434583748358034}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4762075958101636523 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3743993344710040121, guid: 0971a354750a6d04488c5cc5f8226ffc,
+    type: 3}
+  m_PrefabInstance: {fileID: 8206434583748358034}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8038251601016695302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4762075958101636523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 160474298ff4e9a4a85ebe6246d4eed0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rendererMalla: {fileID: 1609210040207871718}
+  nombreMaterialOjo: Material Ojos Cosa
+  intervaloMin: 1
+  intervaloMax: 5
+  duracionCierre: 0.07
+  duracionApertura: 0.25
 --- !u!4 &8532533192722237561 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0971a354750a6d04488c5cc5f8226ffc,
