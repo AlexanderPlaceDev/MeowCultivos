@@ -19,6 +19,8 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
     [SerializeField] Color[] ColorBotones;
     [SerializeField] GameObject CanvasMenu;
 
+    [SerializeField] Scr_Taller Taller;
+
     Transform Gata;
     float Tiempo = 0;
     public bool EstaDentro = false;
@@ -95,7 +97,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
             Gata.GetChild(3).gameObject.SetActive(true);
             Gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Letra;
             Gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = IconoTecla;
-
+            Taller.checarSeccion();
         }
     }
 

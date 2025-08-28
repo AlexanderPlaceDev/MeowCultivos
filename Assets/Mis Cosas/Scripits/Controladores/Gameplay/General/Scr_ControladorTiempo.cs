@@ -29,6 +29,17 @@ public class Scr_ControladorTiempo : MonoBehaviour
     private float tiempoTranscurrido = 0; // Controla el tiempo que pasa entre frames
     private int[] intervalosMinutos = { 0, 10, 20, 30, 40, 50 }; // Intervalos de 10 minutos
 
+    public enum climas
+    {
+        Despejado,
+        Nublado,
+        Lluvioso,
+        Nevado,
+        Tormenta
+    }
+    public List<climas> ClimaSemanal;
+    public List<int> ProbabilidadesClimaSemanal = new List<int>(); // Probabilidad de que ese clima fuera elegido
+
     void Awake()
     {
         // Cargar la fecha y hora desde PlayerPrefs si ya existen
@@ -44,6 +55,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
 
         // Actualizar el Skybox inicial
         ActualizarSkybox();
+        climaSemanal();
     }
 
     void Update()
@@ -79,6 +91,28 @@ public class Scr_ControladorTiempo : MonoBehaviour
 
         // Actualizar la rotación del Skybox
         RotarSkybox();
+    }
+
+    public void LimpiarClimaSemanal()
+    {
+        ClimaSemanal.Clear();
+        ProbabilidadesClimaSemanal.Clear();
+    }
+    public void climaSemanal()
+    {
+        if (ClimaSemanal.Count == 0)
+        {
+            System.Random random = new System.Random();
+
+            for (int i = 0; i < 7; i++)
+            {
+                // Elegir un valor aleatorio del enum
+                int climaIndex = random.Next(0, System.Enum.GetValues(typeof(climas)).Length);
+                climas climaAleatorio = (climas)climaIndex;
+                ProbabilidadesClimaSemanal.Add(random.Next(0, 100));
+                ClimaSemanal.Add(climaAleatorio);
+            }
+        }
     }
 
     public void Descansar(float m, int h)
@@ -123,6 +157,15 @@ public class Scr_ControladorTiempo : MonoBehaviour
         string[] dias = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
         int diaActualIndex = System.Array.IndexOf(dias, DiaActual);
         DiaActual = dias[(diaActualIndex + 1) % dias.Length];
+    }
+
+    public string checarDia()
+    {
+        string[] dias = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
+        int diaActualIndex = System.Array.IndexOf(dias, DiaActual);
+
+        string diaManana = dias[(diaActualIndex + 1) % dias.Length];
+        return diaManana;
     }
 
     void ActualizarTextoFecha()

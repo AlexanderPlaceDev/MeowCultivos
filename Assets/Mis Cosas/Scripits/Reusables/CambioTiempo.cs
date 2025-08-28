@@ -15,7 +15,12 @@ public class CambioTiempo : MonoBehaviour
     public GameObject CTiempo;
     public Scr_ControladorTiempo ContolT;
     public GameObject camb;
+    public GameObject Radio;
+    public Controlador_FoodTruck FoodTruck;
+    public TextMeshProUGUI Dia;
+    public GameObject Icono_Foodtruck;
     public bool Puede_Ajustar;//si puede ajustar la hora
+    public bool Tiene_Radio;//si puede ajustar la hora
     public TMP_InputField Hora;
     public TMP_InputField Minuto;
 
@@ -29,8 +34,8 @@ public class CambioTiempo : MonoBehaviour
     private int maxValueM = 60;
     // Start is called before the first frame update
     void Start()
-    {
-        ContolT = CTiempo.GetComponent<Scr_ControladorTiempo>();/*
+    {/*
+        ContolT = CTiempo.GetComponent<Scr_ControladorTiempo>();
         if (CTiempo == null)
         {
             
@@ -39,11 +44,32 @@ public class CambioTiempo : MonoBehaviour
         Hora.text = HoraPredeterminada.ToString();
         Minuto.text = MinutoPredeterminada.ToString();
         cabTiempo();
+        if (Tiene_Radio)
+        {
+            Radio.SetActive(true);
+            Radio_not();
+
+        }
     }
 
-    public void cambioTiempo()
+    private void OnEnable()
     {
+        Radio_not();
+    }
 
+    public void Radio_not()
+    {
+        string diamanana = ContolT.checarDia();
+        Dia.text = diamanana;
+        for (int i = 0; i < FoodTruck.DiasActivo.Length; i++) 
+        {
+            if (diamanana == FoodTruck.DiasActivo[i])
+            {
+                //Debug.LogError("Eytt");
+                Icono_Foodtruck.SetActive(true);
+                break;
+            }
+        }
     }
     public void cabTiempo()
     {
@@ -158,7 +184,17 @@ public class CambioTiempo : MonoBehaviour
         {
             carpa.openUI = false;
         }
+        cerrarUI();
+    }
+
+    public void cerrarUI()
+    {
+        Icono_Foodtruck.SetActive(false);
         PanelCambio.SetActive(false);
+    }
+    public void checarTiempo()
+    {
+
     }
     // Update is called once per frame
     void Update()
