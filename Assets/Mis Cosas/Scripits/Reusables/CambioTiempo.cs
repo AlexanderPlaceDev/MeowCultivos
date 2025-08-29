@@ -10,7 +10,6 @@ public class CambioTiempo : MonoBehaviour
 {
 
     public Carpas carpa;
-
     public GameObject PanelCambio;
     public GameObject CTiempo;
     public Scr_ControladorTiempo ContolT;
@@ -30,28 +29,19 @@ public class CambioTiempo : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        ContolT = CTiempo.GetComponent<Scr_ControladorTiempo>();/*
-        if (CTiempo == null)
-        {
-            
-        }*/
-
+        ContolT = CTiempo.GetComponent<Scr_ControladorTiempo>();
         Hora.text = HoraPredeterminada.ToString();
         Minuto.text = MinutoPredeterminada.ToString();
         cabTiempo();
     }
 
-    public void cambioTiempo()
-    {
-
-    }
     public void cabTiempo()
     {
         if (Puede_Ajustar)
         {
             camb.SetActive(true);
             Hora.interactable = false;
-            Minuto.interactable=false;
+            Minuto.interactable = false;
         }
         else
         {
@@ -81,7 +71,7 @@ public class CambioTiempo : MonoBehaviour
         {
             hA = maxValueH;
         }
-        else 
+        else
         {
             hA = Mathf.Clamp(hA - 1, minValueH, maxValueH);
         }
@@ -100,12 +90,6 @@ public class CambioTiempo : MonoBehaviour
         {
             hM = Mathf.Clamp(hM + 1, minValueM, maxValueM);
         }
-        /*
-        int ha = ObtenerHoraActual();
-        if (ha==24)
-        {
-            aumentH();
-        }*/
         Minuto.text = hM.ToString();
     }
     public void disminuirM()
@@ -133,14 +117,14 @@ public class CambioTiempo : MonoBehaviour
         if (int.TryParse(Hora.text, out int valor))
             return valor;
         else
-            return minValueH; 
+            return minValueH;
     }
     private int ObtenerMiuntoActual()
     {
         if (int.TryParse(Minuto.text, out int valor))
             return valor;
         else
-            return minValueM; 
+            return minValueM;
     }
 
     public void Duerme()
@@ -154,7 +138,7 @@ public class CambioTiempo : MonoBehaviour
             ContolT.Descansar(MinutoPredeterminada, HoraPredeterminada);
         }
 
-        if(carpa!=null)
+        if (carpa != null)
         {
             carpa.openUI = false;
         }
@@ -163,6 +147,6 @@ public class CambioTiempo : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

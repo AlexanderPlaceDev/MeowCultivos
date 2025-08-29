@@ -5220,6 +5220,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1836544712270226349}
+    - targetCorrespondingSourceObject: {fileID: -2909969703269092573, guid: 61a1e30d5ee4d6b43b3b1cde3ed981d8,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8005042844525833863}
   m_SourcePrefab: {fileID: 100100000, guid: 61a1e30d5ee4d6b43b3b1cde3ed981d8, type: 3}
 --- !u!4 &494820017717424672 stripped
 Transform:
@@ -5336,6 +5340,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42cbde6c6374c884ba225361c9f27e54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NombreEnemigo: 
   Vida: 10
   Velocidad: 10
   "Da\xF1oMelee": 1
@@ -5402,9 +5407,33 @@ CapsuleCollider:
   m_Height: 8.75
   m_Direction: 2
   m_Center: {x: 0, y: 2.03, z: 0}
+--- !u!137 &3212354935260607971 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -5925647934067597272, guid: 61a1e30d5ee4d6b43b3b1cde3ed981d8,
+    type: 3}
+  m_PrefabInstance: {fileID: 96630932826609099}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6254084444539250408 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -2909969703269092573, guid: 61a1e30d5ee4d6b43b3b1cde3ed981d8,
     type: 3}
   m_PrefabInstance: {fileID: 96630932826609099}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8005042844525833863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6254084444539250408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 160474298ff4e9a4a85ebe6246d4eed0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rendererMalla: {fileID: 3212354935260607971}
+  nombreMaterialOjo: Ojos Lobo
+  intervaloMin: 1
+  intervaloMax: 5
+  duracionCierre: 0.07
+  duracionApertura: 0.25

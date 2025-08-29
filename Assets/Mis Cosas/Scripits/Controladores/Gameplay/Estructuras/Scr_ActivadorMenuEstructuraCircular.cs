@@ -73,7 +73,7 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
             }
             else
             {
-                transform.GetChild(3).gameObject.SetActive(true);
+                transform.GetChild(2).gameObject.SetActive(true);
             }
         }
 
@@ -111,7 +111,7 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
             Gata.GetComponent<Scr_GiroGata>().enabled = false;
             transform.GetChild(0).gameObject.SetActive(true);//Activa la camara hoguera
-            transform.GetChild(2).gameObject.SetActive(true);//Activa la camara hoguera
+            transform.GetChild(1).gameObject.SetActive(true);//Activa la camara hoguera
             ControladorMenu.GetComponent<Scr_ControladorMenuGameplay>().enabled = false;// Desactiva logica reloj
             Canvas.transform.GetChild(2).gameObject.SetActive(false);//Desactiva UI reloj
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(3).GetChild(0).GetComponent<RectTransform>(), -250, 1);
@@ -151,8 +151,8 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
         Gata.GetComponent<Scr_GiroGata>().enabled = true;
         transform.GetChild(0).gameObject.SetActive(false);
+        transform.GetChild(1).gameObject.SetActive(false);
         transform.GetChild(2).gameObject.SetActive(false);
-        transform.GetChild(3).gameObject.SetActive(false);
         ControladorMenu.GetComponent<Scr_ControladorMenuGameplay>().enabled = true; //Activa logica del reloj
         Canvas.transform.GetChild(2).gameObject.SetActive(true);// Activa UI Reloj
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(3).GetChild(0).GetComponent<RectTransform>(), 30, 1);

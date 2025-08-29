@@ -19,6 +19,8 @@ public class Scr_CreadorObjetos : ScriptableObject
     public float ValorComposta;
     public int[] MinimoMaximoSembradio;
     public int XPRecolecta;
+    public int CantidadVentaMinima;
+    public int ValorVentaIndividual;
 }
 
 

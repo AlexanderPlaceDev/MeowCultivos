@@ -243,7 +243,7 @@ public class Scr_MenuTablero : MonoBehaviour
             if (estructurasFiltradas[EstructuraActual].AumentaRango)
             {
                 PlayerPrefs.SetInt("Rango Barra Naturaleza3", PlayerPrefs.GetInt("Rango Barra Naturaleza3", 0) + 1);
-                PlayerPrefs.SetInt("Rango Barra Naturaleza3", PlayerPrefs.GetInt("Rango Barra Planos4", 0) + 1);
+                PlayerPrefs.SetInt("Rango Barra Planos4", PlayerPrefs.GetInt("Rango Barra Planos4", 0) + 1);
                 GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_ControladorMenuHabilidades>().ActualizarBarrasPorRango();
             }
             QuitarObjetos(estructurasFiltradas[EstructuraActual].Materiales, estructurasFiltradas[EstructuraActual].Cantidades);

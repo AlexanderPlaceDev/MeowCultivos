@@ -4,8 +4,6 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static Unity.VisualScripting.Member;
-using static UnityEditor.PlayerSettings;
 
 public class Scr_SistemaDialogos : MonoBehaviour
 {
