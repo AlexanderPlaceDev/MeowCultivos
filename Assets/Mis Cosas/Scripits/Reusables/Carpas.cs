@@ -10,6 +10,7 @@ public class Carpas : MonoBehaviour
     [SerializeField] string Letra;
 
 
+    public Scr_ControladorTiempo ContolT;
     public GameObject carpaUI;
     public CambioTiempo cam;
     Transform Gata;
@@ -47,10 +48,14 @@ public class Carpas : MonoBehaviour
     {
         if (other.name == "Gata" || other.name == "Gato Mesh")
         {
-            EstaEnRango = true;
-            Gata.GetChild(3).gameObject.SetActive(true);
-            Gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Letra;
-            Gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = IconoTecla;
+            if (ContolT.HoraActual > 19)
+            {
+                Debug.LogError(ContolT.HoraActual > 19);
+                EstaEnRango = true;
+                Gata.GetChild(3).gameObject.SetActive(true);
+                Gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Letra;
+                Gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = IconoTecla;
+            }
         }
     }
 

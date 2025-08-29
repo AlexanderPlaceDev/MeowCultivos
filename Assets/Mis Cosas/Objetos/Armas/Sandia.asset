@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12ff4b93ff67613438982eb385a7e4e9, type: 3}
   m_Name: Sandia
   m_EditorClassIdentifier: 
-  Icono: {fileID: 0}
+  Icono: {fileID: 21300000, guid: c62080e2f7fe6c248acfb07e68fffb6c, type: 3}
   Color: {r: 1, g: 0.18039215, b: 0.26358393, a: 1}
   Tipo: Cuerpo a Cuerpo
   Nombre: Sandia
@@ -20,7 +20,10 @@ MonoBehaviour:
   Cadencia: 0
   Capacidad: 0
   CapacidadTotal: 0
-  Rango: 0
+  Alcance: 0
   "Da\xF1o": 0
+  PuntosXGolpe: 0
   Velocidad: 0
   DobleMano: 0
+  Sonidos: []
+  Recarga: {fileID: 0}

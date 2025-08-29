@@ -59,7 +59,7 @@ public class Farol_controlador : MonoBehaviour
         }
 
         float distance = Vector3.Distance(transform.position, target.position);
-        UnityEngine.Debug.Log(distance);
+        //UnityEngine.Debug.Log(distance);
         if (distance > maxDistance)
         {
             gameObject.transform.GetChild(0).gameObject.SetActive(false); // Desactiva este objeto

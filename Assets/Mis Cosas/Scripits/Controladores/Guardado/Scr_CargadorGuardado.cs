@@ -109,7 +109,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
         if (pos != Vector3.zero)
         {
             Personajes[i].GetComponent<NavMeshAgent>().Warp(pos);
-            Debug.Log(Personajes[i].GetComponent<Scr_SistemaDialogos>().NombreNPC + pos + "////////" + Personajes[i].transform.position);
+            //Debug.Log(Personajes[i].GetComponent<Scr_SistemaDialogos>().NombreNPC + pos + "////////" + Personajes[i].transform.position);
         }
     }
 }
