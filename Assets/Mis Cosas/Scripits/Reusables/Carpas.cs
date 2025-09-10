@@ -14,12 +14,12 @@ public class Carpas : MonoBehaviour
     public GameObject carpaUI;
     public CambioTiempo cam;
     Transform Gata;
-    public bool openUI=false;
+    public bool openUI = false;
     bool EstaEnRango = false;
     // Start is called before the first frame update
     void Start()
     {
-        cam= carpaUI.GetComponent<CambioTiempo>();
+        cam = carpaUI.GetComponent<CambioTiempo>();
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
     }
 
@@ -34,6 +34,14 @@ public class Carpas : MonoBehaviour
             cam.cabTiempo();
             openUI = true;
         }
+
+
+        if ((PlayerPrefs.GetString("Habilidad:Despertador", "No") == "Si") && !transform.GetChild(1).gameObject.activeSelf)
+        {
+            transform.GetChild(1).gameObject.SetActive(true);
+            cam.Puede_Ajustar = true;
+        }
+
     }
 
     private void OnTriggerEnter(Collider other)

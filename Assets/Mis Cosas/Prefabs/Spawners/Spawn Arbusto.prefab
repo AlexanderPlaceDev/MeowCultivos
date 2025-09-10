@@ -134,8 +134,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f2dd07ffe30451b4d9ced2110326053a, type: 2}
   - {fileID: 11400000, guid: f2dd07ffe30451b4d9ced2110326053a, type: 2}
   minimoMaximo: 01000000050000000100000003000000
-  Habilidad: Guante
-  Habilidad2: Hierba
+  HabilidadGuante: Guante
+  HabilidadRamas: Ramas
+  Rama: {fileID: 11400000, guid: 16d59de0d61659641a6f7c640e284942, type: 2}
 --- !u!208 &8053932176220176297
 NavMeshObstacle:
   m_ObjectHideFlags: 0

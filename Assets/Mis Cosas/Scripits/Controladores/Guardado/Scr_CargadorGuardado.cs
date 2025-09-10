@@ -3,7 +3,6 @@ using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Playables;
-using static UnityEditor.PlayerSettings;
 
 public class Scr_CargadorGuardado : MonoBehaviour
 {
