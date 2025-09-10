@@ -45,6 +45,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
             EstaDentro = true;
             Camara360.SetActive(false);
             Gata.GetChild(2).gameObject.SetActive(false);
+            Gata.GetChild(3).gameObject.SetActive(false);
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
             Gata.GetComponent<Scr_GiroGata>().enabled = false;
             transform.GetChild(0).gameObject.SetActive(true);
@@ -97,7 +98,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
             Gata.GetChild(3).gameObject.SetActive(true);
             Gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Letra;
             Gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = IconoTecla;
-            Taller.checarSeccion();
+            //Taller.checarSeccion();
         }
     }
 

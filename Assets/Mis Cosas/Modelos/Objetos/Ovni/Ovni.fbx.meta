@@ -7,13 +7,28 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material.001
+      name: Material Capsula
     second: {fileID: 2100000, guid: f59a7ac2e52c1894ea2f34c5c4291046, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Material Ovni
+    second: {fileID: 2100000, guid: e32bbfeed828b8b4580260212fb57cbe, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material Pata
+    second: {fileID: 2100000, guid: e32bbfeed828b8b4580260212fb57cbe, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {instanceID: 0}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Material.002
-    second: {fileID: 2100000, guid: eec57e3e81cc4524782ea12ced387d9d, type: 2}
+    second: {instanceID: 0}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule

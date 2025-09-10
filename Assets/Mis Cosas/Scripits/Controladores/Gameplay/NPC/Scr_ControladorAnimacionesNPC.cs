@@ -16,7 +16,7 @@ public class Scr_ControladorAnimacionesNPC : MonoBehaviour
         try
         {
             Dialogos = GetComponent<Scr_SistemaDialogos>();
-            ActivadorDialogos=GetComponent<Scr_ActivadorDialogos>();
+            ActivadorDialogos = GetComponent<Scr_ActivadorDialogos>();
         }
         catch
         {
@@ -28,7 +28,14 @@ public class Scr_ControladorAnimacionesNPC : MonoBehaviour
 
     void Update()
     {
-        if (Dialogos.Leyendo || ActivadorDialogos.ViendoMisiones)
+        if (ActivadorDialogos != null)
+        {
+            if (ActivadorDialogos.ViendoMisiones)
+            {
+                Hablando = true;
+            }
+        }
+        if (Dialogos.Leyendo)
         {
             Hablando = true;
         }

@@ -267,20 +267,23 @@ public class Scr_SistemaDialogos : MonoBehaviour
                         {
                             ControladorMisiones.MisionActual = DialogoArecibir.Mision;
                             ControladorMisiones.MisionPrincipal = DialogoArecibir.Mision;
-                            ControladorMisiones.GuardarMisiones(); // Guardar inmediatamente después de asignar
+                            ControladorMisiones.GuardarMisiones();
 
                             if (DialogoArecibir.Mision.EsContinua)
                                 DialogoActual++;
                         }
-
-
-                        if (DialogoActual < Dialogos.Length - 1 && ControladorMisiones.MisionActual == null)
+                        else
                         {
-                            DialogoActual++;
+                            // 👇 Aquí fuerza el avance si no es misión principal
+                            if (DialogoActual < Dialogos.Length - 1)
+                            {
+                                DialogoActual++;
+                            }
                         }
 
                         DialogoActual = Mathf.Clamp(DialogoActual, 0, Dialogos.Length - 1);
                     }
+
 
                     Texto.transform.parent.gameObject.SetActive(false); // Ocultar diálogo
                 }
