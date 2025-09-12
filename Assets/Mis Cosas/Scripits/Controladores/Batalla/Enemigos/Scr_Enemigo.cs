@@ -48,6 +48,9 @@ public class Scr_Enemigo : MonoBehaviour
 
     public GameObject Controlador;
 
+    public bool estaStuneado=false;
+    public bool estaCongelado = false;
+    
     [SerializeField] GameObject CanvasDaño;
     [SerializeField] private Transform PosInicialDaño; // Posición inicial del CanvasDaño
     [SerializeField] private Transform PosFinalDaño;  // Posición final del CanvasDaño
@@ -150,10 +153,12 @@ public class Scr_Enemigo : MonoBehaviour
     }
     protected virtual void OnTriggerEnter(Collider other)
     {
+        Scr_ControladorArmas arma= GameObject.Find("Controlador").GetComponent<Scr_ControladorArmas>();
+        
         if (other.gameObject.tag == "Golpe")
         {
-            GameObject.Find("Controlador").GetComponent<Scr_ControladorArmas>().hizoHit = true;
-            GameObject.Find("Controlador").GetComponent<Scr_ControladorArmas>().golpe();
+            arma.hizoHit = true;
+            arma.golpe();
             // Verifica que las posiciones inicial y final estén asignadas
             if (PosInicialDaño == null || PosFinalDaño == null)
             {
@@ -189,7 +194,7 @@ public class Scr_Enemigo : MonoBehaviour
             // Lógica de daño
             Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
                 GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].PuntosXGolpe;
-
+            checarEfecto(arma.efecto);
             RecibirDaño(Daño);
         }
         else if (other.gameObject.tag == "Bala")
@@ -213,26 +218,48 @@ public class Scr_Enemigo : MonoBehaviour
                 // Iniciar el movimiento del CanvasDaño
                 StartCoroutine(MoverCanvas(canvasInstanciado, PosInicialDaño.position, PosFinalDaño.position, 1f));
             }
-            /*
-            // Desactivar el golpe para evitar múltiples activaciones
-            if (other.gameObject.name != "Impulso")
-            {
-                other.gameObject.SetActive(false);
-            }
-            else
-            {
-                GetComponent<Rigidbody>().AddForce(-transform.forward.normalized, ForceMode.Impulse);
-            }*/
-
-
-
             // Lógica de daño
             Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
                 GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].PuntosXGolpe;
-
+            checarEfecto(arma.efecto);
             RecibirDaño(Daño);
         }
 
+    }
+
+    private void checarEfecto(string efecto)
+    {
+        switch (efecto)
+        {
+            case "Stunear":
+                StartCoroutine(EstadoStuneado(3f));
+                break;
+
+            case "Quemar":
+                StartCoroutine(EstadoQuemando(5f, 2f)); // duración 5s, 2 de daño por segundo
+                break;
+
+            case "Veneno":
+                StartCoroutine(EstadoVeneno(5f, 1f)); // duración 5s, 1 de daño por segundo
+                break;
+
+            case "Congelar":
+                StartCoroutine(EstadoCongelado(4f)); // duración 4s
+                break;
+
+            case "Empujar":
+                StartCoroutine(EstadoEmpujado(Vector3.back, 10f)); // dirección y fuerza
+                break;
+
+            case "Electrificar":
+                StartCoroutine(EstadoElectrificado(3f, 3f)); // duración 3s, daño 3 por segundo
+                efecto = "Rebotar"; // esto parece un cambio de lógica que puede necesitar explicación
+                break;
+
+            case "Explotar":
+                StartCoroutine(EstadoExplotado(20f, 15f, transform.position - Vector3.forward)); // daño, fuerza, origen
+                break;
+        }
     }
     private IEnumerator MoverCanvas(GameObject canvas, Vector3 inicio, Vector3 fin, float duracion)
     {
@@ -305,5 +332,75 @@ public class Scr_Enemigo : MonoBehaviour
         }
     }
 
+    IEnumerator EstadoStuneado(float duracion)
+    {
+        estaStuneado = true;
+        Debug.Log("Enemigo stuneado");
+        yield return new WaitForSeconds(duracion);
+        estaStuneado = false;
+        Debug.Log("Enemigo recuperado del stun");
+    }
 
+    IEnumerator EstadoQuemando(float duracion, float dañoPorSegundo)
+    {
+        float tiempoPasado = 0f;
+        while (tiempoPasado < duracion)
+        {
+            RecibirDaño(dañoPorSegundo);
+            yield return new WaitForSeconds(1f);
+            tiempoPasado += 1f;
+        }
+        Debug.Log("Efecto de quemadura terminado");
+    }
+
+    IEnumerator EstadoVeneno(float duracion, float dañoPorSegundo)
+    {
+        float tiempoPasado = 0f;
+        while (tiempoPasado < duracion)
+        {
+            RecibirDaño(dañoPorSegundo);
+            yield return new WaitForSeconds(1f);
+            tiempoPasado += 1f;
+        }
+        Debug.Log("Efecto de veneno terminado");
+    }
+
+    IEnumerator EstadoCongelado(float duracion)
+    {
+        estaCongelado = true;
+        Debug.Log("Enemigo congelado");
+        yield return new WaitForSeconds(duracion);
+        estaCongelado = true;
+        Debug.Log("Enemigo descongelado");
+    }
+
+    IEnumerator EstadoEmpujado(Vector3 direccion, float fuerza)
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.AddForce(direccion.normalized * fuerza, ForceMode.Impulse);
+        Debug.Log("Enemigo empujado");
+        yield return null;
+    }
+
+    IEnumerator EstadoExplotado(float daño, float fuerzaEmpuje, Vector3 origenExplosion)
+    {
+        RecibirDaño(daño);
+        Vector3 direccion = transform.position - origenExplosion;
+        GetComponent<Rigidbody>().AddForce(direccion.normalized * fuerzaEmpuje, ForceMode.Impulse);
+        Debug.Log("Enemigo explotado");
+        yield return null;
+    }
+
+    IEnumerator EstadoElectrificado(float duracion, float dañoPorSegundo)
+    {
+        float tiempoPasado = 0f;
+        while (tiempoPasado < duracion)
+        {
+            RecibirDaño(dañoPorSegundo);
+            Debug.Log("Descarga eléctrica!");
+            yield return new WaitForSeconds(1f);
+            tiempoPasado += 1f;
+        }
+        Debug.Log("Efecto eléctrico terminado");
+    }
 }

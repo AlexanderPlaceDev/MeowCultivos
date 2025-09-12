@@ -26,6 +26,12 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     [SerializeField] TextMeshProUGUI Velocidadtxt;
     [SerializeField] Image VelocidadBarra;
     [SerializeField] GameObject[] Armas;
+    [Header("Habilidades")]//para acomodar visaulmente los iconos de las habilidades
+    [SerializeField] Sprite IconoVacio;
+    [SerializeField] Image HabilidadTemporal;
+    [SerializeField] Image Habilidad1;
+    [SerializeField] Image Habilidad2;
+    [SerializeField] Image HabilidadEspecial;
     [Header("Alerta")]
     [SerializeField] GameObject Alerta;
     [SerializeField] GameObject PanelAlerta;
@@ -44,9 +50,11 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     [Header("Generales")]
     public int BotonActual = -1;
     GameObject Singleton;
-
+    Scr_DatosArmas datos;
+    Scr_ControladorBatalla ControladorBatalla;
     void Start()
     {
+        ControladorBatalla = GetComponent<Scr_ControladorBatalla>();
     }
 
     void Update()
@@ -77,6 +85,8 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         {
             Singleton = GameObject.Find("Singleton");
         }
+
+        datos = Singleton.GetComponent<Scr_DatosArmas>();
     }
 
     private void ActualizarArma()
@@ -134,6 +144,34 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         Descripciontxt.text = DatosArma.Descripcion;
         Tipotxt.text = DatosArma.Tipo;
 
+        ControladorBatalla.ConseguirHabilidadesArma(DatosArma.Nombre);
+        // Guardar referencias una sola vez
+        
+
+        // Obtener nombres de habilidades desde el controlador
+        string ht = ControladorBatalla.HabilidadT;
+        string h1 = ControladorBatalla.Habilidad1;
+        string h2 = ControladorBatalla.Habilidad2;
+        string hE = ControladorBatalla.HabilidadEspecial;
+
+        // Buscar habilidades usando el script de datos
+        Scr_CreadorHabilidadesBatalla HabT = datos.BuscarHabilidadTemporalPorNombre(ht);
+        Scr_CreadorHabilidadesBatalla Hab1 = datos.BuscarHabilidadPermanentePorNombre(h1);
+        Scr_CreadorHabilidadesBatalla Hab2 = datos.BuscarHabilidadPermanentePorNombre(h2);
+        Scr_CreadorHabilidadesBatalla HabE = datos.BuscarHabilidadPermanentePorNombre(hE);
+
+
+        if (ht == "Nada")
+        {
+            HabilidadTemporal.sprite = IconoVacio;
+        }
+        else
+        {
+            HabilidadTemporal.sprite = HabT.Icono;
+        }
+        Habilidad1.sprite=Hab1.Icono;
+        Habilidad2.sprite=Hab2.Icono;
+        HabilidadEspecial.sprite=HabE.Icono;
         //Actualizar Datos
         Cadenciatxt.text = DatosArma.Cadencia + " s";
         if (DatosArma.CapacidadTotal == 0)
@@ -266,7 +304,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             {
                 ArmaActual = i;
                 break;
-
             }
         }
     }
@@ -279,7 +316,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             {
                 ArmaActual = i;
                 break;
-
             }
         }
     }
@@ -319,8 +355,8 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         CanvasSeleccionDeArmas.SetActive(false);
         CanvasGameplay.SetActive(true);
         ObjetosArmas.SetActive(true);
-        GetComponent<Scr_ControladorBatalla>().IniciarCuentaRegresiva();
-        GetComponent<Scr_ControladorBatalla>().ArmaActual = Armas[ArmaActual];
+        ControladorBatalla.IniciarCuentaRegresiva();
+        ControladorBatalla.ArmaActual = Armas[ArmaActual];
         GetComponent<Scr_ControladorArmas>().ArmaActual = ArmaActual;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;

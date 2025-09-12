@@ -29,6 +29,17 @@ public class Scr_Habilidades : MonoBehaviour
     private Coroutine LensCoroutine; // Manejo de ColorAdjustments
     private float DañoAnterior = 0;
 
+    private int PerdigonesAnterior =0;
+    private GameObject balaAnterior;
+
+    private float DispersionAnterior = 0;
+
+    private float SaltoAnterior = 0;
+
+
+    private float VagachadoAnterior = 0;
+    private float VcaminarAnterior = 0;
+    private float VcorrerAnterior = 0;
     private void Start()
     {
         Singleton = GameObject.Find("Singleton");
@@ -81,7 +92,161 @@ public class Scr_Habilidades : MonoBehaviour
                     StartCoroutine(RegresarVelocidad(5f, enemigo));
                 }
                 break;
+            case "Aumento de Carga":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(HabilidadAumentoCarga());
+                }
 
+                StartCoroutine(ActivarEfectoVisual(5f));
+                break;
+
+            case "Crecimiento Rapido":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(HabilidadMasArea());
+                }
+                StartCoroutine(ActivarEfectoVisual(5f));
+                break;
+            case "Disparo explosivo":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(HabilidadGranada());
+                }
+
+                StartCoroutine(ActivarEfectoVisual(5f));
+                break;
+
+            case "Disparo maciso":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(HabilidadMascizo());
+                }
+
+                StartCoroutine(ActivarEfectoVisual(5f));
+                break;
+
+            case "Fuerza Imparable":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(HabilidadImparable());
+                }
+
+                StartCoroutine(ActivarEfectoVisual(5f));
+                break;
+            case "Municion Perpetua":
+                HabilidadMinima();
+                break;
+
+            case "Pequeña planta":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(HabilidadPlantaMini());
+                }
+
+                StartCoroutine(ActivarEfectoVisual(5f));
+                break;
+
+            case "Protección del Coloso":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(HabilidadColoso());
+                }
+
+                StartCoroutine(ActivarEfectoVisual(5f));
+                break;
+
+            case "Pulso Sonoro":
+                Habilidadempuje();
+                break;
+
+            case "Puño Blindado":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(HabilidadBlindado());
+                }
+                StartCoroutine(ActivarEfectoVisual(5f));
+                break;
+
+            case "Puño Sangria":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(HabilidadSangria());
+                }
+                StartCoroutine(ActivarEfectoVisual(5f));
+                break;
+
+            case "Puño volador":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(HabilidadVolador());
+                }
+                StartCoroutine(ActivarEfectoVisual(5f));
+                break;
+
+            case "Raices Eternas":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(HabilidadRaizEterna());
+                }
+                StartCoroutine(ActivarEfectoVisual(5f));
+                break;
+
+            case "Reflejos Felinos":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(HabilidadFelina());
+                }
+                StartCoroutine(ActivarEfectoVisual(5f));
+                break;
+
+            case "Rugido de la Tierra":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(HabilidadRugidoTierra());
+                }
+                StartCoroutine(ActivarEfectoVisual(5f));
+                break;
+
+            case "Semilla explosiva":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(HabilidadSemillaExplosiva());
+                }
+                StartCoroutine(ActivarEfectoVisual(5f));
+                break;
+
+            case "Tiro explosivo":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(HabilidadGranada());
+                }
+                StartCoroutine(ActivarEfectoVisual(5f));
+                break;
+
+            case "Tiro Imparable":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(HabilidadTiroImparable());
+                }
+                StartCoroutine(ActivarEfectoVisual(5f));
+                break;
             default:
                 Debug.Log("No se encontró la habilidad.");
                 break;
@@ -131,6 +296,179 @@ public class Scr_Habilidades : MonoBehaviour
         AreasGarras[1].SetActive(false);
     }
 
+    IEnumerator HabilidadAumentoCarga()
+    {
+        //Guardamos La cantidad de perdigones que tenia
+        PerdigonesAnterior = Controlador.GetComponent<Scr_ControladorArmas>().cantidadPerdigones;
+        //Multiplicamos La cantidad de perdigones x 2
+        Controlador.GetComponent<Scr_ControladorArmas>().cantidadPerdigones = (PerdigonesAnterior * 2);
+        
+
+        yield return new WaitForSeconds(3f);
+        Controlador.GetComponent<Scr_ControladorArmas>().cantidadPerdigones = PerdigonesAnterior;
+    }
+    IEnumerator HabilidadGranada()
+    {
+        //Guardamos La cantidad de perdigones que tenia
+        balaAnterior = Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar;
+
+        Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar = Controlador.GetComponent<Scr_ControladorArmas>().GranadaPrefab[0];
+        yield return new WaitForSeconds(3f);
+        Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar = balaAnterior;
+    }
+    IEnumerator HabilidadMascizo()
+    {
+        //Guardamos La cantidad de perdigones que tenia
+        DispersionAnterior = Controlador.GetComponent<Scr_ControladorArmas>().dispersion;
+
+        Controlador.GetComponent<Scr_ControladorArmas>().dispersion = .1f;
+        yield return new WaitForSeconds(3f);
+        Controlador.GetComponent<Scr_ControladorArmas>().dispersion = DispersionAnterior;
+    }
+
+    IEnumerator HabilidadImparable()
+    {
+
+        Controlador.GetComponent<Scr_ControladorArmas>().havecombo = true;
+        yield return new WaitForSeconds(3f);
+        Controlador.GetComponent<Scr_ControladorArmas>().havecombo = false;
+    }
+   
+    IEnumerator HabilidadPlantaMini()
+    {
+        //Guardamos La cantidad de perdigones que tenia
+        balaAnterior = Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar;
+
+        Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar = Controlador.GetComponent<Scr_ControladorArmas>().GranadaPrefab[2];
+        yield return new WaitForSeconds(3f);
+        Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar = balaAnterior;
+    }
+
+    IEnumerator HabilidadColoso()
+    {
+        Controlador.GetComponent<Scr_ControladorArmas>().empuje = true;
+        Controlador.GetComponent<Scr_ControladorBatalla>().PorcentajeQuitar = .7f;
+        yield return new WaitForSeconds(3f);
+        Controlador.GetComponent<Scr_ControladorBatalla>().PorcentajeQuitar = 1f;
+        Controlador.GetComponent<Scr_ControladorArmas>().empuje = false;
+    }
+
+    IEnumerator HabilidadBlindado()
+    {
+        Controlador.GetComponent<Scr_ControladorBatalla>().PorcentajeQuitar = .7f;
+        yield return new WaitForSeconds(3f);
+        Controlador.GetComponent<Scr_ControladorBatalla>().PorcentajeQuitar = 1f;
+    }
+
+    IEnumerator HabilidadSangria()
+    {
+        Controlador.GetComponent<Scr_ControladorArmas>().sangria = true;
+        yield return new WaitForSeconds(3f);
+        Controlador.GetComponent<Scr_ControladorArmas>().sangria = false;
+    }
+
+    IEnumerator HabilidadVolador()
+    {
+        Controlador.GetComponent<Scr_ControladorArmas>().empuje = true;
+        yield return new WaitForSeconds(3f);
+        Controlador.GetComponent<Scr_ControladorArmas>().empuje = false;
+    }
+
+    IEnumerator HabilidadRaizEterna()
+    {
+        Controlador.GetComponent<Scr_ControladorArmas>().empuje = true;
+        yield return new WaitForSeconds(3f);
+        Controlador.GetComponent<Scr_ControladorArmas>().empuje = false;
+    }
+
+    IEnumerator HabilidadFelina()
+    {
+        GameObject personaje = GameObject.Find("Personaje");
+        Scr_Movimiento mov=personaje.GetComponent<Scr_Movimiento>();
+        SaltoAnterior = mov.FuerzaSalto;
+        mov.FuerzaSalto = SaltoAnterior * 2;
+        VagachadoAnterior= mov.VelAgachado;
+        VcaminarAnterior = mov.VelCaminar;
+        VcorrerAnterior = mov.VelCorrer;
+        yield return new WaitForSeconds(3f);
+        mov.VelAgachado = VagachadoAnterior;
+        mov.VelCaminar = VcaminarAnterior;
+        mov.VelCorrer = VcorrerAnterior;
+    }
+
+    IEnumerator HabilidadRugidoTierra()
+    {
+        GameObject personaje = GameObject.Find("Armas");
+        Transform onda = personaje.transform.GetChild(3);
+        onda.gameObject.SetActive(true); 
+        yield return new WaitForSeconds(.1f);
+        onda.gameObject.SetActive(false);
+    }
+
+    IEnumerator HabilidadSemillaExplosiva()
+    {
+        GameObject personaje = GameObject.Find("Armas");
+        Transform point = personaje.transform.GetChild(2);
+        yield return new WaitForSeconds(2f);
+        Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar = balaAnterior;
+
+        DispararObjeto(15, Controlador.GetComponent<Scr_ControladorArmas>().GranadaPrefab[2], point);
+    }
+    void DispararObjeto(int cantidad, GameObject prefab, Transform point)
+    {
+        for (int i = 0; i < cantidad; i++)
+        {
+            GameObject bala = Instantiate(prefab, point.position, point.rotation);
+            // Direccion base
+            Vector3 direccionBase = point.up;
+
+            // Añadir dispersión aleatoria
+            Vector3 direccionConDispersion = DireccionConDispersion(direccionBase, Random.Range(0, 15));
+
+            // Aplicar fuerza
+            Rigidbody rb = bala.GetComponent<Rigidbody>();
+            rb.AddForce(direccionConDispersion * 50, ForceMode.Impulse);
+        }
+    }
+    Vector3 DireccionConDispersion(Vector3 direccion, float dispersionEnGrados)
+    {
+        // Convertir grados a radianes
+        float maxAngle = dispersionEnGrados / 2f;
+
+        // Generar un pequeño desvío aleatorio
+        float angleX = Random.Range(-maxAngle, maxAngle);
+        float angleY = Random.Range(-maxAngle, maxAngle);
+
+        // Aplicar rotación a la dirección
+        Quaternion rot = Quaternion.Euler(angleX, angleY, 0);
+        return rot * direccion;
+    }
+
+
+    IEnumerator HabilidadTiroImparable()
+    {
+
+        Controlador.GetComponent<Scr_ControladorArmas>().Maspenetracion = 2;
+        yield return new WaitForSeconds(3f);
+        Controlador.GetComponent<Scr_ControladorArmas>().Maspenetracion = 0;
+    }
+
+    IEnumerator HabilidadMasArea()
+    {
+        Controlador.GetComponent<Scr_ControladorArmas>().MasDistancia = 50;
+        yield return new WaitForSeconds(3f);
+        Controlador.GetComponent<Scr_ControladorArmas>().MasDistancia = 0;
+    }
+
+    private void Habilidadempuje()
+    {
+        Controlador.GetComponent<Scr_ControladorArmas>().empuje = true;
+    }
+    private void HabilidadMinima()
+    {
+        Controlador.GetComponent<Scr_ControladorArmas>().minLimit = true;
+    }
+
     // Transiciona el Vignette y lo restaura tras una duración
     private IEnumerator ModificarVignette(Vignette vignette, Color colorFinal, float intensidadFinal, float duracion)
     {
@@ -144,6 +482,7 @@ public class Scr_Habilidades : MonoBehaviour
 
         vignetteCoroutine = null;
     }
+
 
     // Transiciona el Lens Distortion y lo restaura tras una duración
     private IEnumerator ModificarLensDistortion(LensDistortion lens, float intensidadFinal, float duracion)
