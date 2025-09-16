@@ -33,7 +33,8 @@ public class Scr_Taller : MonoBehaviour
     [SerializeField] private TextMeshProUGUI NombreHabilidad;
     [SerializeField] private TextMeshProUGUI DescripcionHabilidad;
     [SerializeField] private GameObject MostarDescipcion;
-    private string htEnEspera;
+    private string htEnEspera; 
+    private int cantidadht;
     private string ht;
     private string h1;
     private string h2;
@@ -742,6 +743,7 @@ public class Scr_Taller : MonoBehaviour
         {
             case 0:
                 htEnEspera = HabilidadesTemporales[habS].Nombre;
+                cantidadht = HabilidadesTemporales[habS].Usos;
                 NuevaHabilidadTemporal();
                 break;
             case 1:
@@ -789,13 +791,14 @@ public class Scr_Taller : MonoBehaviour
 
     public void Escondervertencia()
     {
+        cantidadht = 0;
         advertencia.SetActive(false);
         HabilidadesSec.SetActive(true);
     }
     public void mostrarArmasHabilidades()
     {
         string arma = Datosarmas.TodasLasArmas[objetoPrincipalInt].Nombre;
-        
+        //cantidadht = PlayerPrefs.GetInt(arma + "Usos", 0);
         ht = PlayerPrefs.GetString(arma + "HT", "Nada");
         h1 = PlayerPrefs.GetString(arma + "H1", "Ojo");
         h2 = PlayerPrefs.GetString(arma + "H2", "Rugido");
@@ -827,6 +830,7 @@ public class Scr_Taller : MonoBehaviour
         PlayerPrefs.SetString(arma + "H2", h2);
         PlayerPrefs.SetString(arma + "HE", hE);
 
+        PlayerPrefs.SetInt(arma + "Usos", cantidadht);
         Datosarmas.guardarHabilidades();
     }
     //checa las armas que deben de mostrar

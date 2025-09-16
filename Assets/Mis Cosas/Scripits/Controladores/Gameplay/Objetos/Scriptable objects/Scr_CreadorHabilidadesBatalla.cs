@@ -12,5 +12,6 @@ public class Scr_CreadorHabilidadesBatalla : ScriptableObject
     public bool RequiereCraftear;
     public Scr_CreadorObjetos[] ItemsRequeridos;
     public int[] CantidadesRequeridas;
+    public int Usos;
     public string Arma;
 }

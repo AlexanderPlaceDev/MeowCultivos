@@ -18,6 +18,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
     public GameObject ArmaActual;
 
+    public int usosHabilidad;
     public string HabilidadT;
     public string Habilidad1;
     public string Habilidad2;
@@ -98,6 +99,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     //obtiene las habilidades que tiene la arma
     public void ConseguirHabilidadesArma(string arma)
     {
+        usosHabilidad = PlayerPrefs.GetInt(arma + "Usos", 0);
         HabilidadT = PlayerPrefs.GetString(arma + "HT", "Nada");
         Habilidad1 = PlayerPrefs.GetString(arma + "H1", "Ojo");
         Habilidad2 = PlayerPrefs.GetString(arma + "H2", "Rugido");
