@@ -54,6 +54,12 @@ public class Scr_Enemigo : MonoBehaviour
     [SerializeField] GameObject CanvasDaño;
     [SerializeField] private Transform PosInicialDaño; // Posición inicial del CanvasDaño
     [SerializeField] private Transform PosFinalDaño;  // Posición final del CanvasDaño
+
+    private Color quemado = new Color(255, 93, 34);
+    private Color congelado = new Color(15, 208, 255);
+    private Color electrificado = new Color(255, 235, 30);
+    private Color envenenado = new Color(213, 73, 255);
+
     protected virtual void Start()
     {
         // Asumiendo que el material está en el segundo hijo
@@ -332,6 +338,54 @@ public class Scr_Enemigo : MonoBehaviour
         }
     }
 
+
+    private IEnumerator ChangeMaterial(Color mat, float time)
+    {
+        cambiandoColor = true;
+
+        Renderer renderer = transform.GetChild(1).GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            // Obtener los materiales actuales
+            Material[] materiales = renderer.materials;
+
+            // Guardar una copia de los materiales originales
+            Material[] materialesOriginales = new Material[materiales.Length];
+            for (int i = 0; i < materiales.Length; i++)
+            {
+                materialesOriginales[i] = new Material(materiales[i]);
+            }
+
+            // Crear copias modificadas de los materiales y cambiar el _BaseColor
+            Material[] materialesModificados = new Material[materiales.Length];
+            for (int i = 0; i < materiales.Length; i++)
+            {
+                materialesModificados[i] = new Material(materiales[i]);
+                materialesModificados[i].SetColor("_BaseColor", mat); // Cambiar el color
+            }
+
+            // Aplicar materiales modificados
+            renderer.materials = materialesModificados;
+
+            // Esperar el tiempo deseado
+            float tiempo = 0;
+            while (tiempo < time)
+            {
+                tiempo += Time.deltaTime;
+                yield return null;
+            }
+
+            // Restaurar materiales originales
+            renderer.materials = materialesOriginales;
+            foreach (Material Mat in renderer.materials)
+            {
+                Mat.SetColor("_BaseColor", new Color(255,255,255)); // Cambiar el color a normal
+            }
+
+
+            cambiandoColor = false;
+        }
+    }
     IEnumerator EstadoStuneado(float duracion)
     {
         estaStuneado = true;
@@ -347,6 +401,7 @@ public class Scr_Enemigo : MonoBehaviour
         while (tiempoPasado < duracion)
         {
             RecibirDaño(dañoPorSegundo);
+            StartCoroutine(ChangeMaterial(quemado,.3f));
             yield return new WaitForSeconds(1f);
             tiempoPasado += 1f;
         }
@@ -359,6 +414,7 @@ public class Scr_Enemigo : MonoBehaviour
         while (tiempoPasado < duracion)
         {
             RecibirDaño(dañoPorSegundo);
+            StartCoroutine(ChangeMaterial(envenenado, .3f));
             yield return new WaitForSeconds(1f);
             tiempoPasado += 1f;
         }
@@ -369,6 +425,7 @@ public class Scr_Enemigo : MonoBehaviour
     {
         estaCongelado = true;
         Debug.Log("Enemigo congelado");
+        StartCoroutine(ChangeMaterial(congelado, .3f));
         yield return new WaitForSeconds(duracion);
         estaCongelado = true;
         Debug.Log("Enemigo descongelado");
@@ -397,6 +454,7 @@ public class Scr_Enemigo : MonoBehaviour
         while (tiempoPasado < duracion)
         {
             RecibirDaño(dañoPorSegundo);
+            StartCoroutine(ChangeMaterial(electrificado, .3f));
             Debug.Log("Descarga eléctrica!");
             yield return new WaitForSeconds(1f);
             tiempoPasado += 1f;

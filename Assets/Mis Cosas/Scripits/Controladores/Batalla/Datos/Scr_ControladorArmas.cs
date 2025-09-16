@@ -248,7 +248,15 @@ public class Scr_ControladorArmas : MonoBehaviour
         // Aplicamos fuerza a la bala
         Rigidbody rb = bala.GetComponent<Rigidbody>();
         rb.AddForce(direccionDisparo * fuerzaDisparo, ForceMode.Impulse);
-        if (efecto != "Fantasma")
+        if (efecto == "Fantasma")
+        {
+            int checar = Random.Range(0,100);
+            if (checar < 60)
+            {
+                CantBalasActual--;
+            }
+        }
+        else
         {
             CantBalasActual--;
         }
@@ -284,7 +292,15 @@ public class Scr_ControladorArmas : MonoBehaviour
             Rigidbody rb = bala.GetComponent<Rigidbody>();
             rb.AddForce(direccionConDispersion * fuerzaDisparo, ForceMode.Impulse);
         }
-        if(efecto != "Fantasma")
+        if (efecto == "Fantasma")
+        {
+            int checar = Random.Range(0, 100);
+            if (checar < 60)
+            {
+                CantBalasActual--;
+            }
+        }
+        else
         {
             CantBalasActual--;
         }

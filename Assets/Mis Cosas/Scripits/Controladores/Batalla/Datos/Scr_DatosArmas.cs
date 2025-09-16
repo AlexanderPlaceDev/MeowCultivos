@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 public class Scr_DatosArmas : MonoBehaviour
@@ -26,7 +27,7 @@ public class Scr_DatosArmas : MonoBehaviour
             }
             else
             {
-                ArmasDesbloqueadas[i] = false;
+                ArmasDesbloqueadas[i] = true;
             }
         }
 
@@ -39,8 +40,10 @@ public class Scr_DatosArmas : MonoBehaviour
             }
             else
             {
-                HabilidatTDesbloqueadas[i] = false;
+                HabilidatTDesbloqueadas[i] = true;
             }
+
+            UsosHabilidadesT[i] = PlayerPrefs.GetInt("UsoTemporal" + HabilidadesTemporales[i].Nombre, 0);
         }
 
         for (int i = 0; i < HabilidadesPermanentes.Length; i++)
@@ -52,7 +55,7 @@ public class Scr_DatosArmas : MonoBehaviour
             }
             else
             {
-                HabilidatPDesbloqueadas[i] = false;
+                HabilidatPDesbloqueadas[i] = true;
             }
         }
     }
@@ -66,6 +69,68 @@ public class Scr_DatosArmas : MonoBehaviour
             if (TodasLasArmas[i].Nombre == Nombre)
             {
                 ArmasDesbloqueadas[i] = true;
+            }
+        }
+    }
+
+    public void guardarHabilidades()
+    {
+        guardarHabilidadesTemporales();
+        guardarHabilidadesPermanentes();
+    }
+    public void guardarHabilidadesTemporales()
+    {
+        for (int i = 0; i < HabilidadesTemporales.Length; i++)
+        {
+            if (HabilidatTDesbloqueadas[i])
+            {
+                PlayerPrefs.SetString("Habilidad" + HabilidadesTemporales[i].Nombre, "Si");
+
+            }
+            else
+            {
+                PlayerPrefs.SetString("Habilidad" + HabilidadesTemporales[i].Nombre, "No");
+            }
+            PlayerPrefs.SetInt("UsoTemporal" + HabilidadesTemporales[i].Nombre, UsosHabilidadesT[i]);
+        }
+    }
+    public void guardarHabilidadesPermanentes()
+    {
+        for (int i = 0; i < HabilidadesPermanentes.Length; i++)
+        {
+            if (HabilidatPDesbloqueadas[i])
+            {
+                PlayerPrefs.SetString("Habilidad" + HabilidadesPermanentes[i].Nombre, "Si");
+
+            }
+            else
+            {
+                PlayerPrefs.SetString("Habilidad" + HabilidadesPermanentes[i].Nombre, "No");
+            }
+        }
+    }
+    public void AgregarUsosTemporales(string Nombre)
+    {
+
+        for (int i = 1; i < HabilidadesTemporales.Length; i++)
+        {
+            if (HabilidadesTemporales[i].Nombre == Nombre)
+            {
+                UsosHabilidadesT[i]++;
+                break;
+            }
+        }
+    }
+
+    public void QuitarUsosTemporales(string Nombre)
+    {
+
+        for (int i = 1; i < HabilidadesTemporales.Length; i++)
+        {
+            if (HabilidadesTemporales[i].Nombre == Nombre)
+            {
+                UsosHabilidadesT[i]++;
+                break;
             }
         }
     }
