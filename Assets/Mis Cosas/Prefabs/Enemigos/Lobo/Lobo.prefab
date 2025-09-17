@@ -5315,7 +5315,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 979010116969621658}
   m_Enabled: 0
   m_AgentTypeID: -1923039037
-  m_Radius: 1.96
+  m_Radius: 0.85
   m_Speed: 10
   m_Acceleration: 300
   avoidancePriority: 50
@@ -5355,7 +5355,7 @@ MonoBehaviour:
   SpawnLejos: 1
   SpawnDistancia: 0
   CantidadDeOleadas: 5
-  CantidadEnemigosPorOleada: 20
+  CantidadEnemigosPorOleada: 3
   DificultadInicial: 1
   PuntoDeHuida: 2
   EstaMuerto: 0
@@ -5399,7 +5399,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 2048
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
