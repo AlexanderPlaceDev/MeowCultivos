@@ -9,10 +9,14 @@ public class Balas : MonoBehaviour
     private float contar=0;
     public int penetracion=0;
     public GameObject Controlador;
+    public bool Rebota = false;
+
+    private Rigidbody rb;
     // Start is called before the first frame update
     void Start()
     {
         Controlador = GameObject.Find("Controlador");
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -28,7 +32,6 @@ public class Balas : MonoBehaviour
     {
         //Debug.Log("Daño");
         //if (!other.CompareTag("Gata")) return;
-
         Debug.Log("Daño");
         if (other.CompareTag("Enemigo"))
         {
@@ -41,6 +44,19 @@ public class Balas : MonoBehaviour
             Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
                 GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].PuntosXGolpe;
             */
+        }
+
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        // Rebote
+        if (Rebota)
+        {
+            ContactPoint contact = collision.contacts[0];
+            Vector3 direccionActual = rb.velocity;
+            Vector3 direccionRebote = Vector3.Reflect(direccionActual, contact.normal);
+            rb.velocity = direccionRebote;
         }
     }
     void penetracion_menos()

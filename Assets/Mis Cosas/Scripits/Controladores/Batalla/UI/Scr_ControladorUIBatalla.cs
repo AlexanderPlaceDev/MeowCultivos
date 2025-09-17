@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +12,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     [SerializeField] Image[] BotonesMenus;
     [SerializeField] GameObject PanelMenus;
     [Header("Datos Armas")]
-    public int ArmaActual = 1;
+    public int ArmaActual = 0;
     [SerializeField] GameObject FlechaDerechaArma;
     [SerializeField] GameObject FlechaIzquierdaArma;
     [SerializeField] TextMeshProUGUI Tipotxt;
@@ -26,6 +27,14 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     [SerializeField] TextMeshProUGUI Velocidadtxt;
     [SerializeField] Image VelocidadBarra;
     [SerializeField] GameObject[] Armas;
+    [Header("Habilidades")]//para acomodar visaulmente los iconos de las habilidades
+    [SerializeField] Sprite IconoVacio;
+    [SerializeField] Image HabilidadTemporal;
+    [SerializeField] Image Habilidad1;
+    [SerializeField] Image Habilidad2;
+    [SerializeField] Image HabilidadEspecial;
+    [SerializeField] Image BarraHabilidadTemporal;
+    [SerializeField] GameObject usosHabilidadT;
     [Header("Alerta")]
     [SerializeField] GameObject Alerta;
     [SerializeField] GameObject PanelAlerta;
@@ -44,9 +53,13 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     [Header("Generales")]
     public int BotonActual = -1;
     GameObject Singleton;
-
+    Scr_DatosArmas datos;
+    Scr_ControladorBatalla ControladorBatalla;
+    Scr_CreadorArmas DatosArma;
     void Start()
     {
+        ControladorBatalla = GetComponent<Scr_ControladorBatalla>();
+
     }
 
     void Update()
@@ -77,6 +90,8 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         {
             Singleton = GameObject.Find("Singleton");
         }
+
+        datos = Singleton.GetComponent<Scr_DatosArmas>();
     }
 
     private void ActualizarArma()
@@ -122,8 +137,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             FlechaDerechaArma.SetActive(false);
             FlechaIzquierdaArma.SetActive(false);
         }
-
-        Scr_CreadorArmas DatosArma = Singleton.GetComponent<Scr_DatosArmas>().TodasLasArmas[ArmaActual];
+        DatosArma = Singleton.GetComponent<Scr_DatosArmas>().TodasLasArmas[ArmaActual];
         //Actualiza Nombre, Descripcion y Tipo
         Nombretxt.text = DatosArma.Nombre;
         Color colorSuperior = DatosArma.Color;
@@ -134,6 +148,37 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         Descripciontxt.text = DatosArma.Descripcion;
         Tipotxt.text = DatosArma.Tipo;
 
+        ControladorBatalla.ConseguirHabilidadesArma(DatosArma.Nombre);
+        // Guardar referencias una sola vez
+        
+
+        // Obtener nombres de habilidades desde el controlador
+        string ht = ControladorBatalla.HabilidadT;
+        string h1 = ControladorBatalla.Habilidad1;
+        string h2 = ControladorBatalla.Habilidad2;
+        string hE = ControladorBatalla.HabilidadEspecial;
+        int us = ControladorBatalla.usosHabilidad;
+        // Buscar habilidades usando el script de datos
+        Scr_CreadorHabilidadesBatalla HabT = datos.BuscarHabilidadTemporalPorNombre(ht);
+        Scr_CreadorHabilidadesBatalla Hab1 = datos.BuscarHabilidadPermanentePorNombre(h1);
+        Scr_CreadorHabilidadesBatalla Hab2 = datos.BuscarHabilidadPermanentePorNombre(h2);
+        Scr_CreadorHabilidadesBatalla HabE = datos.BuscarHabilidadPermanentePorNombre(hE);
+
+
+        if (ht == "Nada")
+        {
+            HabilidadTemporal.sprite = IconoVacio;
+            usosHabilidadT.SetActive(false);
+        }
+        else
+        {
+            usosHabilidadT.SetActive(true);
+            HabilidadTemporal.sprite = HabT.Icono;
+            BarraHabilidadTemporal.fillAmount = us / HabT.Usos;
+        }
+        Habilidad1.sprite=Hab1.Icono;
+        Habilidad2.sprite=Hab2.Icono;
+        HabilidadEspecial.sprite=HabE.Icono;
         //Actualizar Datos
         Cadenciatxt.text = DatosArma.Cadencia + " s";
         if (DatosArma.CapacidadTotal == 0)
@@ -266,7 +311,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             {
                 ArmaActual = i;
                 break;
-
             }
         }
     }
@@ -279,7 +323,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             {
                 ArmaActual = i;
                 break;
-
             }
         }
     }
@@ -316,16 +359,28 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
 
     public void AceptarBatalla()
     {
+        checarUsosHabilidad();
         CanvasSeleccionDeArmas.SetActive(false);
         CanvasGameplay.SetActive(true);
         ObjetosArmas.SetActive(true);
-        GetComponent<Scr_ControladorBatalla>().IniciarCuentaRegresiva();
-        GetComponent<Scr_ControladorBatalla>().ArmaActual = Armas[ArmaActual];
+        ControladorBatalla.IniciarCuentaRegresiva();
+        ControladorBatalla.ArmaActual = Armas[ArmaActual];
         GetComponent<Scr_ControladorArmas>().ArmaActual = ArmaActual;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+    public void checarUsosHabilidad()
+    {
+        int resultado = ControladorBatalla.usosHabilidad - 1;
+        if (resultado < 0)
+        {
+
+            PlayerPrefs.SetString(DatosArma.Nombre + "HT", "Nada");
+            PlayerPrefs.SetInt(DatosArma.Nombre + "Usos", 0);
+        }
+        
+    }
     public void CambiarColorBotonAceptar(bool Entra)
     {
         if (Entra)

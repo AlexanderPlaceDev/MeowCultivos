@@ -26,7 +26,6 @@ public class Scr_ActivadorHabilidad : MonoBehaviour
     void Start()
     {
         ControladorBatalla = GameObject.Find("Controlador").GetComponent<Scr_ControladorBatalla>();
-
         // Buscar el script Scr_Habilidades en el mismo objeto o en otro específico
         habilidades = GetComponent<Scr_Habilidades>();
     }

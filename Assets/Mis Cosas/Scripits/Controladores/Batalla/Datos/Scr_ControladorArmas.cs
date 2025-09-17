@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+//using System.Numerics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +17,9 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     [SerializeField] GameObject[] ObjetoArmas_reales; //prueba para activar la arma menos la de puños
     [SerializeField] GameObject[] balaPrefab; //bala que dispara
+    [SerializeField] public GameObject[] GranadaPrefab; //Granada que dispara
     [SerializeField] AudioSource source;
+    public GameObject BalaADisparar; //que va a disparar
     public Transform puntoDisparo; //lugar donde sale la bala
     public Camera camera;
     public float fuerzaDisparo = 70f;
@@ -36,8 +39,22 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     public Animator Anim;
 
+    public bool havecombo=false;
     private float tiempoDesdeUltimoGolpe = 0f;
     private int numGolpe = 1;
+
+    public bool empuje=false;
+    public bool sangria=false;
+
+    public int Maspenetracion=0;
+
+    public float MasDistancia = 0f;
+
+    public float MenosCadencia = 1;
+
+    public bool minLimit=false;
+
+    public string efecto = "";
 
     GameObject Gata;
     void Start()
@@ -104,7 +121,8 @@ public class Scr_ControladorArmas : MonoBehaviour
             contador[0].SetActive(true);
             contador[1].SetActive(false);
         }
-
+        BalaADisparar = balaPrefab[ArmaActual - 1];
+        ChecarTemporal();
     }
 
 
@@ -129,7 +147,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             }
         }
         // Solo permite atacar si no está atacando y puede disparar
-        if (Input.GetKey(KeyCode.Mouse0) && !Atacando && PuedeDisparar() && temporizadorDisparo >= cadencia)
+        if (Input.GetKey(KeyCode.Mouse0) && !Atacando && PuedeDisparar() && temporizadorDisparo >= (cadencia * MenosCadencia))
         {
             Disparar();
         }
@@ -199,8 +217,18 @@ public class Scr_ControladorArmas : MonoBehaviour
         Anim.Play("Disparo_pistola");
         temporizadorDisparo = 0;
         Atacando = true;
-        GameObject bala = Instantiate(balaPrefab[ArmaActual - 1], puntoDisparo.position, puntoDisparo.rotation);
-        bala.GetComponent<Balas>().daño = TodasLasArmas[ArmaActual].Daño;
+        GameObject bala = Instantiate(BalaADisparar, puntoDisparo.position, puntoDisparo.rotation);
+        float masdaño = 0;
+        if (minLimit && CantBalasActual<2)
+        {
+            masdaño = TodasLasArmas[ArmaActual].Daño + 2;
+        }
+        if(efecto == "Rebotar")
+        {
+            bala.GetComponent<Balas>().Rebota = true;
+        }
+        bala.GetComponent<Balas>().daño = TodasLasArmas[ArmaActual].Daño + masdaño;
+        bala.GetComponent<Balas>().penetracion += Maspenetracion;
         // Calcular dirección del disparo
         Vector3 direccionDisparo;
 
@@ -220,7 +248,18 @@ public class Scr_ControladorArmas : MonoBehaviour
         // Aplicamos fuerza a la bala
         Rigidbody rb = bala.GetComponent<Rigidbody>();
         rb.AddForce(direccionDisparo * fuerzaDisparo, ForceMode.Impulse);
-        CantBalasActual--;
+        if (efecto == "Fantasma")
+        {
+            int checar = Random.Range(0,100);
+            if (checar < 60)
+            {
+                CantBalasActual--;
+            }
+        }
+        else
+        {
+            CantBalasActual--;
+        }
         //Anim.SetBool("EstaDisparando", false);
         StartCoroutine(EsperarAtaque(TodasLasArmas[ArmaActual].Cadencia));
     }
@@ -231,9 +270,18 @@ public class Scr_ControladorArmas : MonoBehaviour
         Atacando = true;
         for (int i = 0; i < cantidadPerdigones; i++)
         {
-            GameObject bala = Instantiate(balaPrefab[ArmaActual - 1], puntoDisparo.position, puntoDisparo.rotation);
-            bala.GetComponent<Balas>().daño = TodasLasArmas[ArmaActual].Daño;
-            bala.GetComponent<Balas>().penetracion = 2;
+            GameObject bala = Instantiate(BalaADisparar, puntoDisparo.position, puntoDisparo.rotation);
+            float masdaño = 0;
+            if (minLimit && CantBalasActual < 2)
+            {
+                masdaño = TodasLasArmas[ArmaActual].Daño + 2;
+            }
+            if (efecto == "Rebotar")
+            {
+                bala.GetComponent<Balas>().Rebota = true;
+            }
+            bala.GetComponent<Balas>().daño = TodasLasArmas[ArmaActual].Daño + masdaño;
+            bala.GetComponent<Balas>().penetracion = 2+Maspenetracion;
             // Direccion base
             Vector3 direccionBase = camera.transform.forward;
 
@@ -244,7 +292,18 @@ public class Scr_ControladorArmas : MonoBehaviour
             Rigidbody rb = bala.GetComponent<Rigidbody>();
             rb.AddForce(direccionConDispersion * fuerzaDisparo, ForceMode.Impulse);
         }
-        CantBalasActual--;
+        if (efecto == "Fantasma")
+        {
+            int checar = Random.Range(0, 100);
+            if (checar < 60)
+            {
+                CantBalasActual--;
+            }
+        }
+        else
+        {
+            CantBalasActual--;
+        }
         StartCoroutine(EsperarAtaque(TodasLasArmas[ArmaActual].Cadencia));
     }
 
@@ -347,5 +406,78 @@ public class Scr_ControladorArmas : MonoBehaviour
         Mira.GetComponent<Image>().color = ColoresMirillas[0];
         Mira.GetComponent<Image>().sprite = Mirillas[0];
     }
+    
+    private void ChecarTemporal()
+    {
+        switch (GetComponent<Scr_ControladorBatalla>().HabilidadT)
+        {
+            case "Nada":
+                efecto = "";
+                break;
 
+            case "Aturdimiento":
+                efecto = "Stunear";
+                break;
+
+            case "Bala Incendiaria":
+                efecto = "Quemar";
+                break;
+
+            case "Boca Venenosa":
+                efecto = "Veneno";
+                break;
+
+            case "Cañon Congelante":
+                efecto = "Congelar";
+                break;
+
+            case "Disparo rebote":
+                efecto = "Rebotar";
+                break;
+
+            case "Empuje":
+                efecto = "Empujar";
+                break;
+
+            case "Golpe con mas area":
+                MasDistancia = 15;
+                break;
+
+            case "Golpe de fuego":
+                efecto = "Quemar";
+                break;
+
+            case "Puño Relampago":
+                efecto = "Electrificar";
+                break;
+
+            case "Puño Veneno":
+                efecto = "Veneno";
+                break;
+
+            case "Raiz Atadora":
+                efecto = "Stunear";
+                break;
+
+            case "Rebote":
+                efecto = "Rebotar";
+                break;
+
+            case "Tiro Explosivo":
+                efecto = "Explotar";
+                break;
+
+            case "Tiro fantasma":
+                efecto = "Fantasma";
+                break;
+
+            case "Tiro Paralizante":
+                efecto = "Electrificar";
+                break;
+
+            case "Velocidad mordida":
+                MenosCadencia = .6f;
+                break;
+        }
+    }
 }
