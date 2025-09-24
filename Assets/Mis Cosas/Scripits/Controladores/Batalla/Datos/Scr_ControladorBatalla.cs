@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.AI.Navigation;
@@ -42,6 +42,8 @@ public class Scr_ControladorBatalla : MonoBehaviour
     public float PorcentajeQuitar = 1;
     public float VidaAnterior = 3;
     public float VidaActual = 3;
+    public bool Stuneado = false;
+    public bool Congelado = false;
     [SerializeField] Slider BarraVida;
 
     [Header("Objetivo")]
@@ -61,6 +63,11 @@ public class Scr_ControladorBatalla : MonoBehaviour
     private Scr_DatosSingletonBatalla Singleton;
     private Scr_ControladorOleadas controladorOleadas;
     private bool DioRecompensa = false;
+
+    private Color quemado = new Color(255, 93, 34);
+    private Color congelado = new Color(15, 208, 255);
+    private Color electrificado = new Color(255, 235, 30);
+    private Color envenenado = new Color(213, 73, 255);
     void Start()
     {
         Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
@@ -339,5 +346,154 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
         // Reconstruir NavMesh
         GameObject.Find("NavMesh Surface").GetComponent<NavMeshSurface>().BuildNavMesh();
+    }
+
+
+    //////////////////////////////////////////////////Estado de efecto para el jugador
+    public void RecibirDaño(float DañoRecibido)
+    {
+        // Reducir la vida del enemigo
+        
+        if (VidaActual >= DañoRecibido)
+        {
+            VidaActual -= DañoRecibido;
+        }
+        else
+        {
+            VidaActual = 0; // 🔹 Evita valores negativos
+        }
+    }
+    private void checarEfecto(string efecto)
+    {
+        switch (efecto)
+        {
+            case "Stunear":
+                StartCoroutine(EstadoStuneado(3f));
+                break;
+
+            case "Quemar":
+                StartCoroutine(EstadoQuemando(5f, 2f)); // duración 5s, 2 de daño por segundo
+                break;
+
+            case "Veneno":
+                StartCoroutine(EstadoVeneno(5f, 1f)); // duración 5s, 1 de daño por segundo
+                break;
+
+            case "Congelar":
+                StartCoroutine(EstadoCongelado(4f)); // duración 4s
+                break;
+
+            case "Empujar":
+                StartCoroutine(EstadoEmpujado(Vector3.back, 10f)); // dirección y fuerza
+                break;
+
+            case "Electrificar":
+                StartCoroutine(EstadoElectrificado(3f, 3f)); // duración 3s, daño 3 por segundo
+                efecto = "Rebotar"; // esto parece un cambio de lógica que puede necesitar explicación
+                break;
+
+            case "Explotar":
+                StartCoroutine(EstadoExplotado(20f, 15f, transform.position - Vector3.forward)); // daño, fuerza, origen
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private IEnumerator ChangeMaterial(Color mat, float time)
+    {
+        Color ColorBarra = BarraVida.GetComponent<Image>().color;
+        if (ColorBarra != null)
+        {
+            Color ColorOriginal = ColorBarra;
+            ColorBarra = mat;
+
+            // Esperar el tiempo deseado
+            float tiempo = 0;
+            while (tiempo < time)
+            {
+                tiempo += Time.deltaTime;
+                yield return null;
+            }
+
+            // Restaurar materiales originales
+            ColorBarra = ColorOriginal;
+        }
+    }
+    IEnumerator EstadoStuneado(float duracion)
+    {
+        Stuneado = true;
+        Debug.Log("Enemigo stuneado");
+        yield return new WaitForSeconds(duracion);
+        Stuneado = false;
+        Debug.Log("Enemigo recuperado del stun");
+    }
+
+    IEnumerator EstadoQuemando(float duracion, float dañoPorSegundo)
+    {
+        float tiempoPasado = 0f;
+        while (tiempoPasado < duracion)
+        {
+            RecibirDaño(dañoPorSegundo);
+            StartCoroutine(ChangeMaterial(quemado, .3f));
+            yield return new WaitForSeconds(1f);
+            tiempoPasado += 1f;
+        }
+        Debug.Log("Efecto de quemadura terminado");
+    }
+
+    IEnumerator EstadoVeneno(float duracion, float dañoPorSegundo)
+    {
+        float tiempoPasado = 0f;
+        while (tiempoPasado < duracion)
+        {
+            RecibirDaño(dañoPorSegundo);
+            StartCoroutine(ChangeMaterial(envenenado, .3f));
+            yield return new WaitForSeconds(1f);
+            tiempoPasado += 1f;
+        }
+        Debug.Log("Efecto de veneno terminado");
+    }
+
+    IEnumerator EstadoCongelado(float duracion)
+    {
+        Congelado = true;
+        Debug.Log("Enemigo congelado");
+        StartCoroutine(ChangeMaterial(congelado, .3f));
+        yield return new WaitForSeconds(duracion);
+        Congelado = true;
+        Debug.Log("Enemigo descongelado");
+    }
+
+    IEnumerator EstadoEmpujado(Vector3 direccion, float fuerza)
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.AddForce(direccion.normalized * fuerza, ForceMode.Impulse);
+        Debug.Log("Enemigo empujado");
+        yield return null;
+    }
+
+    IEnumerator EstadoExplotado(float daño, float fuerzaEmpuje, Vector3 origenExplosion)
+    {
+        RecibirDaño(daño);
+        Vector3 direccion = transform.position - origenExplosion;
+        GetComponent<Rigidbody>().AddForce(direccion.normalized * fuerzaEmpuje, ForceMode.Impulse);
+        Debug.Log("Enemigo explotado");
+        yield return null;
+    }
+
+    IEnumerator EstadoElectrificado(float duracion, float dañoPorSegundo)
+    {
+        float tiempoPasado = 0f;
+        while (tiempoPasado < duracion)
+        {
+            RecibirDaño(dañoPorSegundo);
+            StartCoroutine(ChangeMaterial(electrificado, .3f));
+            Debug.Log("Descarga eléctrica!");
+            yield return new WaitForSeconds(1f);
+            tiempoPasado += 1f;
+        }
+        Debug.Log("Efecto eléctrico terminado");
     }
 }
