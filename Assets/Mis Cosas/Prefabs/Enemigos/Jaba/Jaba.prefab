@@ -5338,6 +5338,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1311006281806059995}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: caa63f37c21c4064b93b00e85427ef29,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -6406268355588470228}
     - targetCorrespondingSourceObject: {fileID: 3690449590506178401, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
       insertIndex: -1
@@ -5546,11 +5550,8 @@ MonoBehaviour:
   recoger_sonido: []
   talar_sonido: []
   picar_sonido: []
-  caminar: 0
-  correr: 0
-  recoger: 0
-  talar: 0
-  picar: 0
+  Dinero_sonido: []
+  Nivel_sonido: []
 --- !u!82 &1311006281806059995
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5647,6 +5648,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-6406268355588470228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 178227796199041654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d5364f17fb28794e90a6af4d8f0bf2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  categoria: 3
 --- !u!4 &662840104225288396 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: caa63f37c21c4064b93b00e85427ef29,

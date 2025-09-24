@@ -167,8 +167,8 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
 
         if (ht == "Nada")
         {
-            HabilidadTemporal.sprite = IconoVacio;
-            usosHabilidadT.SetActive(false);
+            //HabilidadTemporal.sprite = IconoVacio;
+            //usosHabilidadT.SetActive(false);
         }
         else
         {
@@ -176,9 +176,9 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             HabilidadTemporal.sprite = HabT.Icono;
             BarraHabilidadTemporal.fillAmount = us / HabT.Usos;
         }
-        Habilidad1.sprite=Hab1.Icono;
-        Habilidad2.sprite=Hab2.Icono;
-        HabilidadEspecial.sprite=HabE.Icono;
+        //Habilidad1.sprite=Hab1.Icono;
+        //Habilidad2.sprite=Hab2.Icono;
+        //HabilidadEspecial.sprite=HabE.Icono;
         //Actualizar Datos
         Cadenciatxt.text = DatosArma.Cadencia + " s";
         if (DatosArma.CapacidadTotal == 0)

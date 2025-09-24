@@ -9,7 +9,7 @@ public class scr_Luciernaga : MonoBehaviour
 
     [Header("Movimiento")]
     public float radioMovimiento = 10f;
-    public float velocidad = 3.5f;
+    public float velocidad = 3.5f; // velocidad base
 
     [Header("Tiempos de espera")]
     public float tiempoEsperaMin = 2f;
@@ -30,16 +30,19 @@ public class scr_Luciernaga : MonoBehaviour
     private Material[] materiales;
     private Vector3[] posicionesIniciales;
 
-    // Offsets para el titileo
+    // Offsets
     private float[] titileoOffsets;
+    private float oscilacionOffset;   // nuevo offset de oscilación
 
     void Start()
     {
+        // Escala aleatoria
         float tamaño = Random.Range(TamañoMinimo, TamañoMaximo);
         transform.localScale = new Vector3(tamaño, tamaño, tamaño);
 
+        // Velocidad aleatoria
         agent = GetComponent<NavMeshAgent>();
-        agent.speed = velocidad;
+        agent.speed = velocidad * Random.Range(0.5f, 1.5f);
         MoverANuevaPosicion();
 
         // Guardar referencias a los hijos y materiales
@@ -60,9 +63,12 @@ public class scr_Luciernaga : MonoBehaviour
                 materiales[i] = rend.material;
             }
 
-            // Generamos un offset aleatorio para el titileo
+            // Offset aleatorio para titileo
             titileoOffsets[i] = Random.Range(0f, duracionTitileo);
         }
+
+        // Offset aleatorio para oscilación
+        oscilacionOffset = Random.Range(0f, duracionOscilacion);
     }
 
     void Update()
@@ -101,7 +107,8 @@ public class scr_Luciernaga : MonoBehaviour
     {
         if (hijos == null || hijos.Length == 0) return;
 
-        float t = Mathf.PingPong(Time.time / duracionOscilacion, 1f);
+        // Se añade offset para que no estén sincronizadas
+        float t = Mathf.PingPong((Time.time + oscilacionOffset) / duracionOscilacion, 1f);
         float nuevaY = Mathf.Lerp(alturaMinY, alturaMaxY, t);
 
         for (int i = 0; i < hijos.Length; i++)
@@ -120,7 +127,6 @@ public class scr_Luciernaga : MonoBehaviour
         {
             if (materiales[i] != null)
             {
-                // Aplicamos el offset único de cada hijo
                 float t = Mathf.PingPong((Time.time + titileoOffsets[i]) / duracionTitileo, 1f);
                 float alpha = Mathf.Lerp(0f, 1f, t);
                 materiales[i].SetFloat("_Alpha", alpha);

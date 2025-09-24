@@ -121,7 +121,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             contador[0].SetActive(true);
             contador[1].SetActive(false);
         }
-        BalaADisparar = balaPrefab[ArmaActual - 1];
+        //BalaADisparar = balaPrefab[ArmaActual - 1];
         ChecarTemporal();
     }
 
