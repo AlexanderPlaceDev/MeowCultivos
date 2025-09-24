@@ -56,6 +56,9 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     public string efecto = "";
 
+
+    public string Tipo = "";
+
     GameObject Gata;
     void Start()
     {
@@ -84,6 +87,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         {
             Anim.SetBool("EsPistola", true);
         }
+        Tipo = TodasLasArmas[ArmaActual].Tipo;
         Gata = GameObject.Find("Personaje");
         CantBalasActual = TodasLasArmas[ArmaActual].Capacidad;
         balascargador = TodasLasArmas[ArmaActual].CapacidadTotal;
@@ -121,14 +125,16 @@ public class Scr_ControladorArmas : MonoBehaviour
             contador[0].SetActive(true);
             contador[1].SetActive(false);
         }
-        BalaADisparar = balaPrefab[ArmaActual - 1];
+
+        Tipo = TodasLasArmas[ArmaActual].Tipo;
+        BalaADisparar = balaPrefab[ArmaActual];
         ChecarTemporal();
     }
 
 
     void Update()
     {
-        if (TodasLasArmas[ArmaActual].Tipo != "Cuerpo a Cuerpo")
+        if (Tipo != "Cuerpo a Cuerpo")
         {
             contadorbalas.text = CantBalasActual + "/" + balascargador;
         }
@@ -173,12 +179,12 @@ public class Scr_ControladorArmas : MonoBehaviour
     {
 
         Debug.LogWarning(TodasLasArmas[ArmaActual].Tipo);
-        if (TodasLasArmas[ArmaActual].Tipo == "Cuerpo a Cuerpo")
+        if (Tipo == "Cuerpo a Cuerpo")
         {
             //source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[0]);
             EjecutarAtaque(Anim);
         }
-        else if (TodasLasArmas[ArmaActual].Tipo == "Escopeta")
+        else if (Tipo == "Escopeta")
         {
 
             source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[0]);
@@ -352,7 +358,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     }
     void RecargarBala()
     {
-        if (TodasLasArmas[ArmaActual].Tipo == "Cuerpo a Cuerpo") return;
+        if (Tipo == "Cuerpo a Cuerpo") return;
         if (CantBalasActual != TodasLasArmas[ArmaActual].Capacidad && balascargador > 0)
         {
             int cantidadarestar = TodasLasArmas[ArmaActual].Capacidad - CantBalasActual;

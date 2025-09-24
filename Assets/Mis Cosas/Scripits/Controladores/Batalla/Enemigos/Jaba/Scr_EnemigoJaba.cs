@@ -45,7 +45,8 @@ public class Scr_EnemigoJaba : Scr_Enemigo
 
     void Update()
     {
-
+        if (estaCongelado) return;
+        if (estaStuneado) return;
         if (!Aparecio) return;
         if (EstaMuerto) return;
         {
@@ -155,13 +156,14 @@ public class Scr_EnemigoJaba : Scr_Enemigo
         Tween.ShakeCamera(Camera.main, 3);
         Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
 
-        if (batalla.VidaActual >= DañoMelee)
+        batalla.RecibirDaño(DañoMelee);
+        /*if (batalla.VidaActual >= DañoMelee)
         {
             batalla.VidaActual -= DañoMelee;
         }
         else
         {
             batalla.VidaActual = 0; // 🔹 Evita valores negativos
-        }
+        }*/
     }
 }

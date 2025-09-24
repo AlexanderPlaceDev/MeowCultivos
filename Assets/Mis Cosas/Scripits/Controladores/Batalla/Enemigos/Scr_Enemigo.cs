@@ -54,11 +54,11 @@ public class Scr_Enemigo : MonoBehaviour
     [SerializeField] GameObject CanvasDaño;
     [SerializeField] private Transform PosInicialDaño; // Posición inicial del CanvasDaño
     [SerializeField] private Transform PosFinalDaño;  // Posición final del CanvasDaño
-
-    private Color quemado = new Color(255, 93, 34);
-    private Color congelado = new Color(15, 208, 255);
-    private Color electrificado = new Color(255, 235, 30);
-    private Color envenenado = new Color(213, 73, 255);
+    private Color dañado = new Color(1f, 0f, 0f);      // Rojo
+    private Color quemado = new Color(1f, 0.365f, 0.133f);  // Naranja
+    private Color congelado = new Color(0.059f, 0.816f, 1f);  // Azul claro
+    private Color electrificado = new Color(1f, 0.922f, 0.118f); // Amarillo
+    private Color envenenado = new Color(0.835f, 0.286f, 1f);  // Morado
 
     protected virtual void Start()
     {
@@ -77,11 +77,11 @@ public class Scr_Enemigo : MonoBehaviour
         Controlador = GameObject.Find("Controlador");
         Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
     }
-    public void RecibirDaño(float DañoRecibido)
+    public void RecibirDaño(float DañoRecibido, Color efectoDaño)
     {
         // Reducir la vida del enemigo
         Vida -= DañoRecibido;
-
+        mostrarDaño(DañoRecibido);
         // Verificar si el enemigo debe morir
         if (Vida <= 0)
         {
@@ -90,9 +90,9 @@ public class Scr_Enemigo : MonoBehaviour
         else
         {
             // Cambiar temporalmente el color si está herido
-            if (!cambiandoColor)
+            if (!cambiandoColor && efectoDaño!= null)
             {
-                StartCoroutine(ChangeMaterialColor());
+                StartCoroutine(ChangeMaterial(efectoDaño, DuracionCambioColor));
             }
         }
     }
@@ -165,15 +165,14 @@ public class Scr_Enemigo : MonoBehaviour
         {
             arma.hizoHit = true;
             arma.golpe();
+            /*
             // Verifica que las posiciones inicial y final estén asignadas
             if (PosInicialDaño == null || PosFinalDaño == null)
             {
                 Debug.LogWarning("PosInicialDaño o PosFinalDaño no están asignadas.");
                 return;
             }
-            
-            // Instanciar el CanvasDaño en la posición inicial
-            int Daño = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño;
+
             if (CanvasDaño != null)
             {
                 GameObject canvasInstanciado = Instantiate(CanvasDaño, PosInicialDaño.position, Quaternion.identity);
@@ -183,8 +182,10 @@ public class Scr_Enemigo : MonoBehaviour
                 canvasInstanciado.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = Daño.ToString();
                 // Iniciar el movimiento del CanvasDaño
                 StartCoroutine(MoverCanvas(canvasInstanciado, PosInicialDaño.position, PosFinalDaño.position, 1f));
-            }
-
+            }*/
+            // Instanciar el CanvasDaño en la posición inicial
+            int Daño = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño;
+            
             // Desactivar el golpe para evitar múltiples activaciones
             if (other.gameObject.name != "Impulso")
             {
@@ -200,11 +201,15 @@ public class Scr_Enemigo : MonoBehaviour
             // Lógica de daño
             Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
                 GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].PuntosXGolpe;
+            RecibirDaño(Daño, dañado);
             checarEfecto(arma.efecto);
-            RecibirDaño(Daño);
         }
         else if (other.gameObject.tag == "Bala")
         {
+            
+            // Instanciar el CanvasDaño en la posición inicial
+            int Daño = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño;
+            /*
             // Verifica que las posiciones inicial y final estén asignadas
             if (PosInicialDaño == null || PosFinalDaño == null)
             {
@@ -212,8 +217,6 @@ public class Scr_Enemigo : MonoBehaviour
                 return;
             }
 
-            // Instanciar el CanvasDaño en la posición inicial
-            int Daño = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño;
             if (CanvasDaño != null)
             {
                 GameObject canvasInstanciado = Instantiate(CanvasDaño, PosInicialDaño.position, Quaternion.identity);
@@ -223,14 +226,36 @@ public class Scr_Enemigo : MonoBehaviour
                 canvasInstanciado.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = Daño.ToString();
                 // Iniciar el movimiento del CanvasDaño
                 StartCoroutine(MoverCanvas(canvasInstanciado, PosInicialDaño.position, PosFinalDaño.position, 1f));
-            }
+            }*/
             // Lógica de daño
             Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
                 GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].PuntosXGolpe;
+
+            RecibirDaño(Daño, dañado);
             checarEfecto(arma.efecto);
-            RecibirDaño(Daño);
         }
 
+    }
+
+    private void mostrarDaño(float daño)
+    {
+        // Verifica que las posiciones inicial y final estén asignadas
+        if (PosInicialDaño == null || PosFinalDaño == null)
+        {
+            Debug.LogWarning("PosInicialDaño o PosFinalDaño no están asignadas.");
+            return;
+        }
+
+        if (CanvasDaño != null)
+        {
+            GameObject canvasInstanciado = Instantiate(CanvasDaño, PosInicialDaño.position, Quaternion.identity);
+
+            // Hacer que el Canvas sea hijo del enemigo para que se mueva con él
+            canvasInstanciado.transform.SetParent(transform);
+            canvasInstanciado.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = daño.ToString();
+            // Iniciar el movimiento del CanvasDaño
+            StartCoroutine(MoverCanvas(canvasInstanciado, PosInicialDaño.position, PosFinalDaño.position, 1f));
+        }
     }
 
     private void checarEfecto(string efecto)
@@ -361,7 +386,7 @@ public class Scr_Enemigo : MonoBehaviour
             for (int i = 0; i < materiales.Length; i++)
             {
                 materialesModificados[i] = new Material(materiales[i]);
-                materialesModificados[i].SetColor("_BaseColor", mat); // Cambiar el color
+                materialesModificados[i].SetColor("_Base_Color", mat); // Cambiar el color
             }
 
             // Aplicar materiales modificados
@@ -377,11 +402,12 @@ public class Scr_Enemigo : MonoBehaviour
 
             // Restaurar materiales originales
             renderer.materials = materialesOriginales;
-            foreach (Material Mat in renderer.materials)
-            {
-                Mat.SetColor("_BaseColor", new Color(255,255,255)); // Cambiar el color a normal
-            }
 
+            // Restaurar color base original
+            foreach (Material material in renderer.materials)
+            {
+                material.SetColor("_Base_Color", Color.white); // Cambiar el color a blanco (o restaurar el color original)
+            }
 
             cambiandoColor = false;
         }
@@ -400,8 +426,7 @@ public class Scr_Enemigo : MonoBehaviour
         float tiempoPasado = 0f;
         while (tiempoPasado < duracion)
         {
-            RecibirDaño(dañoPorSegundo);
-            StartCoroutine(ChangeMaterial(quemado,.3f));
+            RecibirDaño(dañoPorSegundo,quemado);
             yield return new WaitForSeconds(1f);
             tiempoPasado += 1f;
         }
@@ -413,8 +438,7 @@ public class Scr_Enemigo : MonoBehaviour
         float tiempoPasado = 0f;
         while (tiempoPasado < duracion)
         {
-            RecibirDaño(dañoPorSegundo);
-            StartCoroutine(ChangeMaterial(envenenado, .3f));
+            RecibirDaño(dañoPorSegundo, envenenado);
             yield return new WaitForSeconds(1f);
             tiempoPasado += 1f;
         }
@@ -441,7 +465,7 @@ public class Scr_Enemigo : MonoBehaviour
 
     IEnumerator EstadoExplotado(float daño, float fuerzaEmpuje, Vector3 origenExplosion)
     {
-        RecibirDaño(daño);
+        RecibirDaño(daño,dañado);
         Vector3 direccion = transform.position - origenExplosion;
         GetComponent<Rigidbody>().AddForce(direccion.normalized * fuerzaEmpuje, ForceMode.Impulse);
         Debug.Log("Enemigo explotado");
@@ -453,8 +477,7 @@ public class Scr_Enemigo : MonoBehaviour
         float tiempoPasado = 0f;
         while (tiempoPasado < duracion)
         {
-            RecibirDaño(dañoPorSegundo);
-            StartCoroutine(ChangeMaterial(electrificado, .3f));
+            RecibirDaño(dañoPorSegundo,electrificado);
             Debug.Log("Descarga eléctrica!");
             yield return new WaitForSeconds(1f);
             tiempoPasado += 1f;
