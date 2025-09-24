@@ -40,6 +40,9 @@ public class Scr_Habilidades : MonoBehaviour
     private float VagachadoAnterior = 0;
     private float VcaminarAnterior = 0;
     private float VcorrerAnterior = 0;
+
+
+    private string TipoAnterior = "";
     private void Start()
     {
         Singleton = GameObject.Find("Singleton");
@@ -98,8 +101,6 @@ public class Scr_Habilidades : MonoBehaviour
                     StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
                     StartCoroutine(HabilidadAumentoCarga());
                 }
-
-                StartCoroutine(ActivarEfectoVisual(5f));
                 break;
 
             case "Crecimiento Rapido":
@@ -108,7 +109,6 @@ public class Scr_Habilidades : MonoBehaviour
                     StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
                     StartCoroutine(HabilidadMasArea());
                 }
-                StartCoroutine(ActivarEfectoVisual(5f));
                 break;
             case "Disparo explosivo":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
@@ -117,7 +117,6 @@ public class Scr_Habilidades : MonoBehaviour
                     StartCoroutine(HabilidadGranada());
                 }
 
-                StartCoroutine(ActivarEfectoVisual(5f));
                 break;
 
             case "Disparo maciso":
@@ -126,8 +125,6 @@ public class Scr_Habilidades : MonoBehaviour
                     StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
                     StartCoroutine(HabilidadMascizo());
                 }
-
-                StartCoroutine(ActivarEfectoVisual(5f));
                 break;
 
             case "Fuerza Imparable":
@@ -137,7 +134,6 @@ public class Scr_Habilidades : MonoBehaviour
                     StartCoroutine(HabilidadImparable());
                 }
 
-                StartCoroutine(ActivarEfectoVisual(5f));
                 break;
             case "Municion Perpetua":
                 HabilidadMinima();
@@ -149,8 +145,6 @@ public class Scr_Habilidades : MonoBehaviour
                     StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
                     StartCoroutine(HabilidadPlantaMini());
                 }
-
-                StartCoroutine(ActivarEfectoVisual(5f));
                 break;
 
             case "Protección del Coloso":
@@ -160,7 +154,6 @@ public class Scr_Habilidades : MonoBehaviour
                     StartCoroutine(HabilidadColoso());
                 }
 
-                StartCoroutine(ActivarEfectoVisual(5f));
                 break;
 
             case "Pulso Sonoro":
@@ -173,7 +166,6 @@ public class Scr_Habilidades : MonoBehaviour
                     StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
                     StartCoroutine(HabilidadBlindado());
                 }
-                StartCoroutine(ActivarEfectoVisual(5f));
                 break;
 
             case "Puño Sangria":
@@ -182,7 +174,6 @@ public class Scr_Habilidades : MonoBehaviour
                     StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
                     StartCoroutine(HabilidadSangria());
                 }
-                StartCoroutine(ActivarEfectoVisual(5f));
                 break;
 
             case "Puño volador":
@@ -191,7 +182,6 @@ public class Scr_Habilidades : MonoBehaviour
                     StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
                     StartCoroutine(HabilidadVolador());
                 }
-                StartCoroutine(ActivarEfectoVisual(5f));
                 break;
 
             case "Raices Eternas":
@@ -200,7 +190,6 @@ public class Scr_Habilidades : MonoBehaviour
                     StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
                     StartCoroutine(HabilidadRaizEterna());
                 }
-                StartCoroutine(ActivarEfectoVisual(5f));
                 break;
 
             case "Reflejos Felinos":
@@ -209,7 +198,6 @@ public class Scr_Habilidades : MonoBehaviour
                     StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
                     StartCoroutine(HabilidadFelina());
                 }
-                StartCoroutine(ActivarEfectoVisual(5f));
                 break;
 
             case "Rugido de la Tierra":
@@ -218,7 +206,6 @@ public class Scr_Habilidades : MonoBehaviour
                     StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
                     StartCoroutine(HabilidadRugidoTierra());
                 }
-                StartCoroutine(ActivarEfectoVisual(5f));
                 break;
 
             case "Semilla explosiva":
@@ -227,7 +214,6 @@ public class Scr_Habilidades : MonoBehaviour
                     StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
                     StartCoroutine(HabilidadSemillaExplosiva());
                 }
-                StartCoroutine(ActivarEfectoVisual(5f));
                 break;
 
             case "Tiro explosivo":
@@ -236,7 +222,6 @@ public class Scr_Habilidades : MonoBehaviour
                     StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
                     StartCoroutine(HabilidadGranada());
                 }
-                StartCoroutine(ActivarEfectoVisual(5f));
                 break;
 
             case "Tiro Imparable":
@@ -245,7 +230,13 @@ public class Scr_Habilidades : MonoBehaviour
                     StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
                     StartCoroutine(HabilidadTiroImparable());
                 }
-                StartCoroutine(ActivarEfectoVisual(5f));
+                break;
+            case "Tiro Esparcido":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(HabilidadTiroEsparcido());
+                }
                 break;
             default:
                 Debug.Log("No se encontró la habilidad.");
@@ -304,7 +295,7 @@ public class Scr_Habilidades : MonoBehaviour
         Controlador.GetComponent<Scr_ControladorArmas>().cantidadPerdigones = (PerdigonesAnterior * 2);
         
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(5f);
         Controlador.GetComponent<Scr_ControladorArmas>().cantidadPerdigones = PerdigonesAnterior;
     }
     IEnumerator HabilidadGranada()
@@ -322,7 +313,7 @@ public class Scr_Habilidades : MonoBehaviour
         DispersionAnterior = Controlador.GetComponent<Scr_ControladorArmas>().dispersion;
 
         Controlador.GetComponent<Scr_ControladorArmas>().dispersion = .1f;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(7f);
         Controlador.GetComponent<Scr_ControladorArmas>().dispersion = DispersionAnterior;
     }
 
@@ -330,7 +321,7 @@ public class Scr_Habilidades : MonoBehaviour
     {
 
         Controlador.GetComponent<Scr_ControladorArmas>().havecombo = true;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(5f);
         Controlador.GetComponent<Scr_ControladorArmas>().havecombo = false;
     }
    
@@ -340,7 +331,7 @@ public class Scr_Habilidades : MonoBehaviour
         balaAnterior = Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar;
 
         Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar = Controlador.GetComponent<Scr_ControladorArmas>().GranadaPrefab[2];
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(9f);
         Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar = balaAnterior;
     }
 
@@ -348,7 +339,7 @@ public class Scr_Habilidades : MonoBehaviour
     {
         Controlador.GetComponent<Scr_ControladorArmas>().empuje = true;
         Controlador.GetComponent<Scr_ControladorBatalla>().PorcentajeQuitar = .7f;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(8f);
         Controlador.GetComponent<Scr_ControladorBatalla>().PorcentajeQuitar = 1f;
         Controlador.GetComponent<Scr_ControladorArmas>().empuje = false;
     }
@@ -356,7 +347,7 @@ public class Scr_Habilidades : MonoBehaviour
     IEnumerator HabilidadBlindado()
     {
         Controlador.GetComponent<Scr_ControladorBatalla>().PorcentajeQuitar = .7f;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(6f);
         Controlador.GetComponent<Scr_ControladorBatalla>().PorcentajeQuitar = 1f;
     }
 
@@ -370,14 +361,14 @@ public class Scr_Habilidades : MonoBehaviour
     IEnumerator HabilidadVolador()
     {
         Controlador.GetComponent<Scr_ControladorArmas>().empuje = true;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(7f);
         Controlador.GetComponent<Scr_ControladorArmas>().empuje = false;
     }
 
     IEnumerator HabilidadRaizEterna()
     {
         Controlador.GetComponent<Scr_ControladorArmas>().empuje = true;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(7f);
         Controlador.GetComponent<Scr_ControladorArmas>().empuje = false;
     }
 
@@ -386,14 +377,18 @@ public class Scr_Habilidades : MonoBehaviour
         GameObject personaje = GameObject.Find("Personaje");
         Scr_Movimiento mov=personaje.GetComponent<Scr_Movimiento>();
         SaltoAnterior = mov.FuerzaSalto;
-        mov.FuerzaSalto = SaltoAnterior * 2;
-        VagachadoAnterior= mov.VelAgachado;
+        VagachadoAnterior = mov.VelAgachado;
         VcaminarAnterior = mov.VelCaminar;
         VcorrerAnterior = mov.VelCorrer;
+        mov.FuerzaSalto = mov.FuerzaSalto * 2;
+        mov.VelAgachado = mov.VelAgachado * 2;
+        mov.VelCaminar = mov.VelCaminar * 2;
+        mov.VelCorrer = mov.VelCorrer * 2;
         yield return new WaitForSeconds(3f);
         mov.VelAgachado = VagachadoAnterior;
         mov.VelCaminar = VcaminarAnterior;
         mov.VelCorrer = VcorrerAnterior;
+        mov.FuerzaSalto = SaltoAnterior ;
     }
 
     IEnumerator HabilidadRugidoTierra()
@@ -452,11 +447,19 @@ public class Scr_Habilidades : MonoBehaviour
         yield return new WaitForSeconds(3f);
         Controlador.GetComponent<Scr_ControladorArmas>().Maspenetracion = 0;
     }
+    IEnumerator HabilidadTiroEsparcido()
+    {
+        TipoAnterior= Controlador.GetComponent<Scr_ControladorArmas>().Tipo;
+        Controlador.GetComponent<Scr_ControladorArmas>().Tipo = "Escopeta";
+        yield return new WaitForSeconds(3f);
+        Controlador.GetComponent<Scr_ControladorArmas>().Tipo = TipoAnterior;
+        Controlador.GetComponent<Scr_ControladorArmas>().Maspenetracion = 0;
+    }
 
     IEnumerator HabilidadMasArea()
     {
         Controlador.GetComponent<Scr_ControladorArmas>().MasDistancia = 50;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(9f);
         Controlador.GetComponent<Scr_ControladorArmas>().MasDistancia = 0;
     }
 

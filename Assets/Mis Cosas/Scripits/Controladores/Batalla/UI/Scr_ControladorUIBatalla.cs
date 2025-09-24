@@ -48,7 +48,9 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     [SerializeField] GameObject CanvasGameplay;
     [SerializeField] GameObject ObjetosArmas;
     [SerializeField] GameObject Mapa;
-
+    [SerializeField] GameObject IconoHabilidad1;
+    [SerializeField] GameObject IconoHabilidad2;
+    [SerializeField] GameObject IconoHabilidadE;
 
     [Header("Generales")]
     public int BotonActual = -1;
@@ -56,6 +58,12 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     Scr_DatosArmas datos;
     Scr_ControladorBatalla ControladorBatalla;
     Scr_CreadorArmas DatosArma;
+
+
+    Scr_CreadorHabilidadesBatalla HabT;
+    Scr_CreadorHabilidadesBatalla Hab1;
+    Scr_CreadorHabilidadesBatalla Hab2;
+    Scr_CreadorHabilidadesBatalla HabE;
     void Start()
     {
         ControladorBatalla = GetComponent<Scr_ControladorBatalla>();
@@ -159,10 +167,10 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         string hE = ControladorBatalla.HabilidadEspecial;
         int us = ControladorBatalla.usosHabilidad;
         // Buscar habilidades usando el script de datos
-        Scr_CreadorHabilidadesBatalla HabT = datos.BuscarHabilidadTemporalPorNombre(ht);
-        Scr_CreadorHabilidadesBatalla Hab1 = datos.BuscarHabilidadPermanentePorNombre(h1);
-        Scr_CreadorHabilidadesBatalla Hab2 = datos.BuscarHabilidadPermanentePorNombre(h2);
-        Scr_CreadorHabilidadesBatalla HabE = datos.BuscarHabilidadPermanentePorNombre(hE);
+        HabT = datos.BuscarHabilidadTemporalPorNombre(ht);
+        Hab1 = datos.BuscarHabilidadPermanentePorNombre(h1);
+        Hab2 = datos.BuscarHabilidadPermanentePorNombre(h2);
+        HabE = datos.BuscarHabilidadPermanentePorNombre(hE);
 
 
         if (ht == "Nada")
@@ -363,6 +371,21 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         CanvasSeleccionDeArmas.SetActive(false);
         CanvasGameplay.SetActive(true);
         ObjetosArmas.SetActive(true);
+        IconoHabilidad1.transform.GetChild(0).GetComponent<Image>().sprite = Hab1.Icono;
+        IconoHabilidad2.transform.GetChild(0).GetComponent<Image>().sprite = Hab2.Icono;
+        IconoHabilidadE.transform.GetChild(0).GetComponent<Image>().sprite = HabE.Icono;
+        if (Hab1.Tipo == "Pasiva")
+        {
+            IconoHabilidad1.transform.GetChild(1).gameObject.SetActive(false);
+        }
+        if (Hab2.Tipo == "Pasiva")
+        {
+            IconoHabilidad2.transform.GetChild(1).gameObject.SetActive(false);
+        }
+        if (HabE.Tipo == "Pasiva")
+        {
+            IconoHabilidadE.transform.GetChild(1).gameObject.SetActive(false);
+        }
         ControladorBatalla.IniciarCuentaRegresiva();
         ControladorBatalla.ArmaActual = Armas[ArmaActual];
         GetComponent<Scr_ControladorArmas>().ArmaActual = ArmaActual;
