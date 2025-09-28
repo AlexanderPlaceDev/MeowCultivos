@@ -73,8 +73,16 @@ public class Scr_Movimiento : MonoBehaviour
     float FovOriginal;
     float NFov = 0;
 
+
+    public GameObject Controlador;
+    Scr_ControladorBatalla batalla;
     private void Start()
     {
+        if (Controlador != null)
+        {
+            Controlador = GameObject.Find("Controlador");
+            batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
+        }
         Origen = GetComponent<Transform>();
         RB = GetComponent<Rigidbody>();
         RB.freezeRotation = true;
@@ -276,6 +284,12 @@ public class Scr_Movimiento : MonoBehaviour
 
     private void Mover()
     {
+        if (batalla != null)
+        {
+            if (batalla.Stuneado) return;
+            if (batalla.Congelado) return;
+            if (batalla.Stuneado) return;
+        }
         // Dirección de movimiento basada en la entrada
         Direccion = transform.forward * InputVer + transform.right * InputHor;
 

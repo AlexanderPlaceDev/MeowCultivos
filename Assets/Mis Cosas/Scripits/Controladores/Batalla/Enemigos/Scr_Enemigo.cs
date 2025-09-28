@@ -54,6 +54,10 @@ public class Scr_Enemigo : MonoBehaviour
     [SerializeField] GameObject CanvasDaño;
     [SerializeField] private Transform PosInicialDaño; // Posición inicial del CanvasDaño
     [SerializeField] private Transform PosFinalDaño;  // Posición final del CanvasDaño
+
+
+    public enum TipoEfecfto { Nada,Stunear, Quemar, Veneno, Congelar, Empujar, Electrificar, Explotar }
+    public TipoEfecfto Efecto;
     private Color dañado = new Color(1f, 0f, 0f);      // Rojo
     private Color quemado = new Color(1f, 0.365f, 0.133f);  // Naranja
     private Color congelado = new Color(0.059f, 0.816f, 1f);  // Azul claro
@@ -68,7 +72,6 @@ public class Scr_Enemigo : MonoBehaviour
         {
             materialesOriginales = renderer.materials;
         }
-
 
     }
 
@@ -279,7 +282,7 @@ public class Scr_Enemigo : MonoBehaviour
                 break;
 
             case "Empujar":
-                StartCoroutine(EstadoEmpujado(Vector3.back, 10f)); // dirección y fuerza
+                StartCoroutine(EstadoEmpujado(250)); // dirección y fuerza
                 break;
 
             case "Electrificar":
@@ -288,7 +291,7 @@ public class Scr_Enemigo : MonoBehaviour
                 break;
 
             case "Explotar":
-                StartCoroutine(EstadoExplotado(20f, 15f, transform.position - Vector3.forward)); // daño, fuerza, origen
+                StartCoroutine(EstadoExplotado(20f, 170f, transform.position - Vector3.forward)); // daño, fuerza, origen
                 break;
         }
     }
@@ -423,9 +426,14 @@ public class Scr_Enemigo : MonoBehaviour
 
     IEnumerator EstadoQuemando(float duracion, float dañoPorSegundo)
     {
+        // Muestra el efecto
+        
         float tiempoPasado = 0f;
         while (tiempoPasado < duracion)
         {
+            GameObject explosion = Instantiate(Controlador.GetComponent<Scr_ControladorBatalla>().particulaQuemado, transform.position, transform.rotation);
+            explosion.transform.SetParent(transform);
+            Destroy(explosion,0.6f);
             RecibirDaño(dañoPorSegundo,quemado);
             yield return new WaitForSeconds(1f);
             tiempoPasado += 1f;
@@ -435,9 +443,14 @@ public class Scr_Enemigo : MonoBehaviour
 
     IEnumerator EstadoVeneno(float duracion, float dañoPorSegundo)
     {
+        // Muestra el efecto
+        
         float tiempoPasado = 0f;
         while (tiempoPasado < duracion)
         {
+            GameObject explosion = Instantiate(Controlador.GetComponent<Scr_ControladorBatalla>().particulaEnvenado, transform.position, transform.rotation);
+            explosion.transform.SetParent(transform);
+            Destroy(explosion, 0.6f);
             RecibirDaño(dañoPorSegundo, envenenado);
             yield return new WaitForSeconds(1f);
             tiempoPasado += 1f;
@@ -447,18 +460,23 @@ public class Scr_Enemigo : MonoBehaviour
 
     IEnumerator EstadoCongelado(float duracion)
     {
+        // Muestra el efecto
+        GameObject explosion = Instantiate(Controlador.GetComponent<Scr_ControladorBatalla>().particulaCongelado, transform.position, transform.rotation);
+        explosion.transform.SetParent(transform);
         estaCongelado = true;
         Debug.Log("Enemigo congelado");
         StartCoroutine(ChangeMaterial(congelado, .3f));
         yield return new WaitForSeconds(duracion);
         estaCongelado = true;
         Debug.Log("Enemigo descongelado");
+        Destroy(explosion);
     }
 
-    IEnumerator EstadoEmpujado(Vector3 direccion, float fuerza)
+    IEnumerator EstadoEmpujado(float fuerza)
     {
         Rigidbody rb = GetComponent<Rigidbody>();
-        rb.AddForce(direccion.normalized * fuerza, ForceMode.Impulse);
+        Vector3 direccion = -transform.forward; // dirección hacia atrás del personaje
+        rb.AddForce(direccion * fuerza, ForceMode.Impulse);
         Debug.Log("Enemigo empujado");
         yield return null;
     }
@@ -466,7 +484,8 @@ public class Scr_Enemigo : MonoBehaviour
     IEnumerator EstadoExplotado(float daño, float fuerzaEmpuje, Vector3 origenExplosion)
     {
         RecibirDaño(daño,dañado);
-        Vector3 direccion = transform.position - origenExplosion;
+        //Vector3 direccion = transform.position - origenExplosion;
+        Vector3 direccion = -transform.forward; // dirección hacia atrás del personaje
         GetComponent<Rigidbody>().AddForce(direccion.normalized * fuerzaEmpuje, ForceMode.Impulse);
         Debug.Log("Enemigo explotado");
         yield return null;
@@ -477,10 +496,14 @@ public class Scr_Enemigo : MonoBehaviour
         float tiempoPasado = 0f;
         while (tiempoPasado < duracion)
         {
+            // Muestra el efecto
+            GameObject explosion = Instantiate(Controlador.GetComponent<Scr_ControladorBatalla>().particulaElectrica, transform.position, transform.rotation);
+            explosion.transform.SetParent(transform);
             RecibirDaño(dañoPorSegundo,electrificado);
             Debug.Log("Descarga eléctrica!");
             yield return new WaitForSeconds(1f);
             tiempoPasado += 1f;
+            Destroy(explosion);
         }
         Debug.Log("Efecto eléctrico terminado");
     }

@@ -37,6 +37,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
     [Header("Vida")]
     [SerializeField] GameObject Vidas;
+    [SerializeField] GameObject BarraVidaImage;
     [SerializeField] TextMeshProUGUI TextoVidas;
     [SerializeField] float VidaMaxima;
     public float PorcentajeQuitar = 1;
@@ -61,17 +62,28 @@ public class Scr_ControladorBatalla : MonoBehaviour
     [Header("Otros")]
     [SerializeField] Light OrigenLuz;
     private Scr_DatosSingletonBatalla Singleton;
+    private GameObject Personaje;
     private Scr_ControladorOleadas controladorOleadas;
     private bool DioRecompensa = false;
 
-    private Color quemado = new Color(255, 93, 34);
-    private Color congelado = new Color(15, 208, 255);
-    private Color electrificado = new Color(255, 235, 30);
-    private Color envenenado = new Color(213, 73, 255);
+    [SerializeField] public GameObject particulaElectrica;
+    [SerializeField] public GameObject particulaQuemado;
+    [SerializeField] public GameObject particulaCongelado;
+    [SerializeField] public GameObject particulaEnvenado;
+
+    private Color ColorPrincipal = new Color(0, 0, 0);
+
+    private Color dañado = new Color(1f, 0f, 0f);      // Rojo
+    private Color quemado = new Color(1f, 0.365f, 0.133f);  // Naranja
+    private Color congelado = new Color(0.059f, 0.816f, 1f);  // Azul claro
+    private Color electrificado = new Color(1f, 0.922f, 0.118f); // Amarillo
+    private Color envenenado = new Color(0.835f, 0.286f, 1f);  // Morado
+
     void Start()
     {
         Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
         controladorOleadas = GetComponent<Scr_ControladorOleadas>();
+        Personaje = GameObject.Find("Personaje");
 
         Mision.text = Singleton.Mision;
         Mision.color = Singleton.ColorMision;
@@ -82,6 +94,8 @@ public class Scr_ControladorBatalla : MonoBehaviour
         Habilidad1 = PlayerPrefs.GetString("Habilidad1", "Ojo");
         Habilidad2 = PlayerPrefs.GetString("Habilidad2", "Rugido");
         HabilidadEspecial = PlayerPrefs.GetString("HabilidadEspecial", "Garras");
+
+        ColorPrincipal = BarraVidaImage.GetComponent<Image>().color;
 
         TextoVidas.text = VidaMaxima + "/" + VidaMaxima;
         if (Singleton.HoraActual > 7 && Singleton.HoraActual < 19)
@@ -111,6 +125,11 @@ public class Scr_ControladorBatalla : MonoBehaviour
         Habilidad1 = PlayerPrefs.GetString(arma + "H1", "Ojo");
         Habilidad2 = PlayerPrefs.GetString(arma + "H2", "Rugido");
         HabilidadEspecial = PlayerPrefs.GetString(arma + "HE", "Garras");
+    }
+
+    public void HabilidadEsPasiva()
+    {
+
     }
     private void ActualizarVida()
     {
@@ -363,28 +382,28 @@ public class Scr_ControladorBatalla : MonoBehaviour
             VidaActual = 0; // 🔹 Evita valores negativos
         }
     }
-    private void checarEfecto(string efecto)
+    public void checarEfecto(string efecto)
     {
         switch (efecto)
         {
             case "Stunear":
-                StartCoroutine(EstadoStuneado(3f));
+                StartCoroutine(EstadoStuneado(1f));
                 break;
 
             case "Quemar":
-                StartCoroutine(EstadoQuemando(5f, 2f)); // duración 5s, 2 de daño por segundo
+                StartCoroutine(EstadoQuemando(1.6f, 2f)); // duración 5s, 2 de daño por segundo
                 break;
 
             case "Veneno":
-                StartCoroutine(EstadoVeneno(5f, 1f)); // duración 5s, 1 de daño por segundo
+                StartCoroutine(EstadoVeneno(4f, 1f)); // duración 5s, 1 de daño por segundo
                 break;
 
             case "Congelar":
-                StartCoroutine(EstadoCongelado(4f)); // duración 4s
+                StartCoroutine(EstadoCongelado(2f)); // duración 4s
                 break;
 
             case "Empujar":
-                StartCoroutine(EstadoEmpujado(Vector3.back, 10f)); // dirección y fuerza
+                StartCoroutine(EstadoEmpujado(250f)); // dirección y fuerza
                 break;
 
             case "Electrificar":
@@ -393,7 +412,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 break;
 
             case "Explotar":
-                StartCoroutine(EstadoExplotado(20f, 15f, transform.position - Vector3.forward)); // daño, fuerza, origen
+                StartCoroutine(EstadoExplotado(20f, 170f, transform.position - Vector3.forward)); // daño, fuerza, origen
                 break;
 
             default:
@@ -424,76 +443,88 @@ public class Scr_ControladorBatalla : MonoBehaviour
     IEnumerator EstadoStuneado(float duracion)
     {
         Stuneado = true;
-        Debug.Log("Enemigo stuneado");
+        BarraVidaImage.GetComponent<Image>().color = dañado;
         yield return new WaitForSeconds(duracion);
+        BarraVidaImage.GetComponent<Image>().color = ColorPrincipal;
         Stuneado = false;
-        Debug.Log("Enemigo recuperado del stun");
     }
 
     IEnumerator EstadoQuemando(float duracion, float dañoPorSegundo)
     {
+        // Muestra el efecto
+        //GameObject explosion = Instantiate(particulaQuemado, transform.position, transform.rotation);
+
         float tiempoPasado = 0f;
         while (tiempoPasado < duracion)
         {
             RecibirDaño(dañoPorSegundo);
-            StartCoroutine(ChangeMaterial(quemado, .3f));
+            BarraVidaImage.GetComponent<Image>().color = quemado;
             yield return new WaitForSeconds(1f);
+            BarraVidaImage.GetComponent<Image>().color = ColorPrincipal;
             tiempoPasado += 1f;
         }
-        Debug.Log("Efecto de quemadura terminado");
+        //Destroy(explosion);
     }
 
     IEnumerator EstadoVeneno(float duracion, float dañoPorSegundo)
     {
+        // Muestra el efecto
+        //GameObject explosion = Instantiate(particulaEnvenado, transform.position, transform.rotation);
         float tiempoPasado = 0f;
         while (tiempoPasado < duracion)
         {
             RecibirDaño(dañoPorSegundo);
-            StartCoroutine(ChangeMaterial(envenenado, .3f));
+            BarraVidaImage.GetComponent<Image>().color = envenenado;
             yield return new WaitForSeconds(1f);
+            BarraVidaImage.GetComponent<Image>().color = ColorPrincipal;
             tiempoPasado += 1f;
         }
-        Debug.Log("Efecto de veneno terminado");
+        //Destroy(explosion);
     }
 
     IEnumerator EstadoCongelado(float duracion)
     {
+        // Muestra el efecto
+        //GameObject explosion = Instantiate(particulaCongelado, transform.position, transform.rotation);
         Congelado = true;
         Debug.Log("Enemigo congelado");
-        StartCoroutine(ChangeMaterial(congelado, .3f));
+        BarraVidaImage.GetComponent<Image>().color = congelado;
         yield return new WaitForSeconds(duracion);
+        BarraVidaImage.GetComponent<Image>().color = ColorPrincipal;
         Congelado = true;
-        Debug.Log("Enemigo descongelado");
+        //Destroy(explosion);
     }
 
-    IEnumerator EstadoEmpujado(Vector3 direccion, float fuerza)
+    IEnumerator EstadoEmpujado(float fuerza)
     {
-        Rigidbody rb = GetComponent<Rigidbody>();
-        rb.AddForce(direccion.normalized * fuerza, ForceMode.Impulse);
-        Debug.Log("Enemigo empujado");
+        Rigidbody rb = Personaje.GetComponent<Rigidbody>();
+        Vector3 direccion = -Personaje.transform.forward; // dirección hacia atrás del personaje
+        rb.AddForce(direccion * fuerza, ForceMode.Impulse);
         yield return null;
     }
 
     IEnumerator EstadoExplotado(float daño, float fuerzaEmpuje, Vector3 origenExplosion)
     {
         RecibirDaño(daño);
-        Vector3 direccion = transform.position - origenExplosion;
-        GetComponent<Rigidbody>().AddForce(direccion.normalized * fuerzaEmpuje, ForceMode.Impulse);
-        Debug.Log("Enemigo explotado");
+        //Vector3 direccion = transform.position - origenExplosion;
+        Vector3 direccion = -Personaje.transform.forward; // dirección hacia atrás del personaje
+        Personaje.GetComponent<Rigidbody>().AddForce(direccion.normalized * fuerzaEmpuje, ForceMode.Impulse);
         yield return null;
     }
 
     IEnumerator EstadoElectrificado(float duracion, float dañoPorSegundo)
     {
+        // Muestra el efecto
+        //GameObject explosion = Instantiate(particulaElectrica, transform.position, transform.rotation);
         float tiempoPasado = 0f;
         while (tiempoPasado < duracion)
         {
             RecibirDaño(dañoPorSegundo);
-            StartCoroutine(ChangeMaterial(electrificado, .3f));
-            Debug.Log("Descarga eléctrica!");
+            BarraVidaImage.GetComponent<Image>().color = congelado;
             yield return new WaitForSeconds(1f);
+            BarraVidaImage.GetComponent<Image>().color = ColorPrincipal;
             tiempoPasado += 1f;
         }
-        Debug.Log("Efecto eléctrico terminado");
+        //Destroy(explosion);
     }
 }

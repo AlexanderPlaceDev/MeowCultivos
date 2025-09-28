@@ -33,11 +33,10 @@ public class Scr_ControladorTiempo : MonoBehaviour
 
     public enum climas
     {
-        Despejado,
+        Soleado,
         Nublado,
         Lluvioso,
-        Nevado,
-        Tormenta
+        Vientoso
     }
     public List<climas> ClimaSemanal;
     public List<int> ProbabilidadesClimaSemanal = new List<int>(); // Probabilidad de que ese clima fuera elegido
@@ -117,12 +116,12 @@ public class Scr_ControladorTiempo : MonoBehaviour
             }
         }
     }
-    public string checarDia()
+    public string checarSiguienteDia()
     {
         string[] dias = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
         int diaActualIndex = System.Array.IndexOf(dias, DiaActual);
-
-        string diaManana = dias[(diaActualIndex + 1) % dias.Length];
+        // Aquí se asegura de que si es domingo, vuelva a lunes
+        string diaManana = dias[(diaActualIndex + 1) % 7];  // El tamaño del array es 7, pero para el cálculo, utilizamos 7
         return diaManana;
     }
 

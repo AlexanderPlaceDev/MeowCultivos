@@ -10,17 +10,19 @@ public class Carpas : MonoBehaviour
     [SerializeField] string Letra;
 
 
-    public Scr_ControladorTiempo ContolT;
+    public Scr_ControladorTiempo ControlT;
     public GameObject carpaUI;
     public CambioTiempo cam;
     Transform Gata;
     public bool openUI = false;
     bool EstaEnRango = false;
+    public int HoraDeSiesta=19;
     // Start is called before the first frame update
     void Start()
     {
         cam = carpaUI.GetComponent<CambioTiempo>();
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
+        ControlT = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
     }
 
     // Update is called once per frame
@@ -32,6 +34,7 @@ public class Carpas : MonoBehaviour
             carpaUI.SetActive(true);
             cam.carpa = this;
             cam.cabTiempo();
+            cam.cabRadio();
             openUI = true;
         }
 
@@ -48,9 +51,9 @@ public class Carpas : MonoBehaviour
     {
         if (other.name == "Gata" || other.name == "Gato Mesh")
         {
-            if (ContolT.HoraActual > 19)
+            if (ControlT.HoraActual > HoraDeSiesta)
             {
-                Debug.LogError(ContolT.HoraActual > 19);
+                //Debug.LogError(ContolT.HoraActual > HoraDeSiesta);
                 EstaEnRango = true;
                 Gata.GetChild(3).gameObject.SetActive(true);
                 Gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Letra;

@@ -18,20 +18,27 @@ public class Scr_ActivadorHabilidad : MonoBehaviour
     [SerializeField] Color[] Colores;
     [SerializeField] KeyCode Tecla;
 
+    public bool EsPasiva;
     // Referencia al script Scr_Habilidades
     private Scr_Habilidades habilidades;
 
     Scr_ControladorBatalla ControladorBatalla;
 
+    Scr_DatosArmas Singleton;
     void Start()
     {
         ControladorBatalla = GameObject.Find("Controlador").GetComponent<Scr_ControladorBatalla>();
+        Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>();
         // Buscar el script Scr_Habilidades en el mismo objeto o en otro específico
         habilidades = GetComponent<Scr_Habilidades>();
     }
-
+    private void OnEnable()
+    {
+        ActivarHabilidadPasiva();
+    }
     void Update()
     {
+        if (EsPasiva) return;
         ActivarHabilidad();
         if (EsFinal)
         {
@@ -115,7 +122,7 @@ public class Scr_ActivadorHabilidad : MonoBehaviour
 
     private void ActivarHabilidad()
     {
-        if (Input.GetKeyDown(Tecla))
+        if (Input.GetKeyDown(Tecla) && !EsPasiva)
         {
             if (EsFinal)
             {
@@ -157,6 +164,22 @@ public class Scr_ActivadorHabilidad : MonoBehaviour
                 else
                 {
                     Debug.LogWarning("No se encontró el script Scr_Habilidades");
+                }
+            }
+        }
+    }
+
+    private void ActivarHabilidadPasiva()
+    {
+        if (EsPasiva)
+        {
+            for (int i = 0; i < Singleton.HabilidadesPermanentes.Length; i++)
+            {
+                if (Singleton.HabilidadesPermanentes[i].Tipo == "Pasiva")
+                {
+                    Transform hijo = transform.GetChild(1);
+                    hijo.gameObject.SetActive(false);
+                    break;
                 }
             }
         }

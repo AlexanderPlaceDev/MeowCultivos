@@ -11,6 +11,8 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class Scr_Taller : MonoBehaviour
 {
+    [SerializeField] private GameObject Plano;//ui de Plano
+    [SerializeField] private GameObject Menu;//ui de Menu
     [SerializeField] private GameObject[] OjetosSelec; //objetos que puede seleccionar
     [SerializeField] private List<int> Ojetosint;// cantidad de objetos que tiene el jugador
     [SerializeField] private GameObject[] BotonesOBJ; //flechas de objetos que puede seleccionar
@@ -19,6 +21,8 @@ public class Scr_Taller : MonoBehaviour
     [SerializeField] private TextMeshProUGUI Seccion; //que seccion del taller muestra
     [SerializeField] private int lugar;// que seccion del taller esta
 
+
+    [SerializeField] private Sprite[] Rango; //Marco para mostar que esta seleccionado
     [SerializeField] private GameObject Slots;// ui de slots de habilidades
     [SerializeField] private GameObject HabilidadesSec;
     [SerializeField] private GameObject[] Habilidades;// ui de slots de habilidades
@@ -57,11 +61,16 @@ public class Scr_Taller : MonoBehaviour
 
     private Transform Gata;
     private Scr_Inventario inventario;
+    Animator Anim;
+
+    private bool isOpen = false;
+    private Scr_ActivadorMenuEstructuraFijo Tablero => GetComponent<Scr_ActivadorMenuEstructuraFijo>();
     // Start is called before the first frame update
     void Start()
     {
         BuscarSingleton();
         checarSeccion();
+        Anim = Plano.gameObject.GetComponent<Animator>();
         Gata = GameObject.Find("Gata").transform;
         inventario = Gata.GetChild(7).GetComponent<Scr_Inventario>();
     }
@@ -71,10 +80,47 @@ public class Scr_Taller : MonoBehaviour
     {
         
     }
+
+    private void FixedUpdate()
+    {
+        if (Tablero.EstaDentro)
+        {
+            abrirPlano();
+        }
+        else
+        {
+            cerrarPlano();
+        }
+    }
     private void OnEnable()
     {
+        Anim = Plano.gameObject.GetComponent<Animator>();
         BuscarSingleton();
         checarSeccion();
+    }
+    public void abrirPlano()
+    {
+        if (isOpen) return;
+        StartCoroutine(EsperarAbrir(1f));
+        StartCoroutine(EsperarAbrirMenu(1.4f));
+        isOpen = true;
+    }
+    IEnumerator EsperarAbrir(float duracion)
+    {
+        yield return new WaitForSeconds(duracion);
+        Anim.Play("Abriendo"); 
+    }
+    IEnumerator EsperarAbrirMenu(float duracion)
+    {
+        yield return new WaitForSeconds(duracion);
+        Menu.SetActive(true);
+    }
+    public void cerrarPlano()
+    {
+        if (!isOpen) return;
+        Anim.Play("Cerrando");
+        Menu.SetActive(false);
+        isOpen = false;
     }
     private void BuscarSingleton()
     {
@@ -87,34 +133,34 @@ public class Scr_Taller : MonoBehaviour
     //cuando seleccione cambia el contorno
     public void objeto_ON(int i)
     {
-        Escondervertencia();
+        //Escondervertencia();
         OjetosSelec[i].transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().sprite = MarcoSelec[1]; 
         MostarDescipcion.SetActive(false);
     }
     public void objeto_Exit(int i)
     {
-        Escondervertencia();
+        //Escondervertencia();
         OjetosSelec[i].transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().sprite = MarcoSelec[0];
         MostarDescipcion.SetActive(false);
     }
 
     public void slot_ON(int i)
     {
-        Escondervertencia();
+        //Escondervertencia();
         SlotHabilidad[i].transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().sprite = MarcoSelec[1];
         MostarDescipcion.SetActive(false);
         ObjetoPrincipal.SetActive(true);
     }
     public void slot_Exit(int i)
     {
-        Escondervertencia();
+        //Escondervertencia();
         SlotHabilidad[i].transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().sprite = MarcoSelec[0];
         MostarDescipcion.SetActive(false);
         ObjetoPrincipal.SetActive(true);
     }
     public void habilidad_Exit(int i)
     {
-        Escondervertencia();
+        //Escondervertencia();
         HabilidadesSelec[i].transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().sprite = MarcoSelec[0];
         MostarDescipcion.SetActive(false);
         ObjetoPrincipal.SetActive(true);
@@ -122,9 +168,10 @@ public class Scr_Taller : MonoBehaviour
     //cuando seleccione cambia el contorno
     public void Habilidad_ON(int i)
     {
-        Escondervertencia();
+        //Escondervertencia();
         HabilidadesSelec[i].transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().sprite = MarcoSelec[1];
         MostarDescipcion.SetActive(true);
+
         ObjetoPrincipal.SetActive(false);
         int habS = Habilidadesint[i];
         switch (Hablugar)
@@ -147,7 +194,6 @@ public class Scr_Taller : MonoBehaviour
                 break;
         }
     }
-    
     //muestra los objetos, habilidades o armas dependiendo de la seccion
     public void mostrarObj(int i)
     {
@@ -184,9 +230,11 @@ public class Scr_Taller : MonoBehaviour
                 ObjetoPrincipal.SetActive(true);
                 ObjetoPrincipal.transform.GetChild(0).gameObject.SetActive(true);
                 ObjetoPrincipal.transform.GetChild(1).gameObject.SetActive(true);
-
+                int e = PlayerPrefs.GetInt("Rango " + Datosarmas.TodasLasArmas[objShow].Nombre, 2);
+                Debug.Log(e);
                 ObjetoPrincipal.transform.GetChild(0).GetComponent<Image>().sprite = Datosarmas.TodasLasArmas[objShow].Icono;
-                objetoPrincipalInt= objShow;
+                ObjetoPrincipal.transform.GetChild(1).GetComponent<Image>().sprite = Rango[e];
+                objetoPrincipalInt = objShow;
                 Slots.SetActive(true);
                 Crafteo.SetActive(false);
                 HabilidadesSec.SetActive(false);
@@ -243,7 +291,7 @@ public class Scr_Taller : MonoBehaviour
                 break;
 
             case 1:
-                Seccion.text = "Habilidades";
+                Seccion.text = "Gadgets";
                 checar_HabilidadesTemporales();
                 mostrar_HabilidadesCrafteables();
                 break;
@@ -297,60 +345,6 @@ public class Scr_Taller : MonoBehaviour
 
         Ojetosint[0] = ultimoValor;
         checarIconosOBJ();
-        /*
-        if (Ojetosint.Count == 6)
-        {
-            int e = 0;
-
-            switch (lugar)
-            {
-                case 0:
-                    e = ObjetosACraftear.Length;
-                    break;
-                case 1:
-
-                    break;
-                case 2:
-                    e = Singleton.GetComponent<Scr_DatosArmas>().ArmasDesbloqueadas.Length;
-                    break;
-            }
-
-            List<int> copiaDer = new List<int>(Ojetosint);
-
-            // Guardamos el último valor que vamos a procesar
-            int valorProcesado = copiaDer[5];
-
-            // Desplazar todos los valores hacia la derecha
-            for (int i = Ojetosint.Count - 1; i > 0; i--)
-            {
-                Ojetosint[i] = copiaDer[i - 1];
-                switch (lugar)
-                {
-                    case 0:
-                        OjetosSelec[i].GetComponent<Image>().sprite = ObjetosACraftear[copiaDer[i - 1]].Icono;
-                        break;
-                    case 1:
-                        // Aquí puedes agregar la lógica para herramientas si quieres
-                        break;
-                    case 2:
-                        OjetosSelec[i].GetComponent<Image>().sprite = Singleton.GetComponent<Scr_DatosArmas>().TodasLasArmas[copiaDer[i - 1]].Icono;
-                        break;
-                }
-            }
-
-            // Procesar y colocar el último valor al inicio (posición 0)
-            if (valorProcesado == 5)
-            {
-                if ((valorProcesado + 1) <= e)
-                    Ojetosint[0] = 0;
-                else
-                    Ojetosint[0] = valorProcesado + 1;
-            }
-            else
-            {
-                Ojetosint[0] = valorProcesado;
-            }
-        }*/
     }
 
     //cambia el objeto u habilidad dependiendo de la seccion pero desde lado izquierdo
@@ -678,15 +672,15 @@ public class Scr_Taller : MonoBehaviour
         {
             if (HabilidadesPermanentes[i].Arma == Datosarmas.TodasLasArmas[objetoPrincipalInt].Nombre || HabilidadesPermanentes[i].Arma == "Todos")
             {
-                if (show < 3)
+                if (HabilidadesPermanentes[i].Tipo == "Normal" || HabilidadesPermanentes[i].Tipo == "Pasiva")
                 {
-                    if (HabilidadesPermanentes[i].Tipo=="Normal" || HabilidadesPermanentes[i].Tipo == "Pasiva")
+                    if (show < 3)
                     {
                         HabilidadesSelec[show].SetActive(true);
                         HabilidadesSelec[show].GetComponent<Image>().sprite = HabilidadesPermanentes[i].Icono;
                         show++;
-                        Habilidadesint.Add(i);
                     }
+                    Habilidadesint.Add(i);
                 }
             }
 
@@ -706,15 +700,15 @@ public class Scr_Taller : MonoBehaviour
         {
             if (HabilidadesPermanentes[i].Arma == Datosarmas.TodasLasArmas[objetoPrincipalInt].Nombre || HabilidadesPermanentes[i].Arma == "Todos")
             {
-                if (show < 3)
+                if (HabilidadesPermanentes[i].Tipo == "Especial")
                 {
-                    if (HabilidadesPermanentes[i].Tipo == "Especial")
+                    if (show < 3)
                     {
                         HabilidadesSelec[show].SetActive(true);
                         HabilidadesSelec[show].GetComponent<Image>().sprite = HabilidadesPermanentes[i].Icono;
                         show++;
-                        Habilidadesint.Add(i);
                     }
+                    Habilidadesint.Add(i);
                 }
             }
         }
