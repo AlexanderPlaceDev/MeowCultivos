@@ -1,9 +1,22 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Scr_ActivadorColisiones : MonoBehaviour
 {
     [SerializeField] GameObject Colision1;
     [SerializeField] GameObject Colision2;
+
+
+    private Scr_ControladorArmas Controlador;
+    void Start()
+    {
+        Controlador = GameObject.Find("Controlador").GetComponent<Scr_ControladorArmas>();
+    }
+
+    public void ActivarGolpeDistancia()
+    {
+        Controlador.DoMeleeAttack();
+    }
     public void ActivarColision1()
     {
         Colision1.SetActive(true);

@@ -27,6 +27,8 @@ public class Scr_ControladorArmas : MonoBehaviour
     public GameObject[] contador;//es para mostar las balas o si es infinito
     private TextMeshProUGUI contadorbalas;
 
+
+    public Transform PuntodeArma;//pundo para daño melee
     bool Atacando = false;  // Evita que se interrumpa la animación actual
     public int CantBalasActual = 0;
     public int balascargador = 0;
@@ -38,6 +40,8 @@ public class Scr_ControladorArmas : MonoBehaviour
     private bool yasonohit = false;
 
     public Animator Anim;
+
+    public Animator AnimArma;
 
     public bool havecombo=false;
     private float tiempoDesdeUltimoGolpe = 0f;
@@ -73,20 +77,14 @@ public class Scr_ControladorArmas : MonoBehaviour
         if (ObjetoArmas == null) return;
         //tenia el armaActual pero por ahora es 0
         Transform ArmaAct = ObjetoArmas.transform.GetChild(0);
-
+        GameObject Hijo = GameObject.Find("Armas");
+        PuntodeArma = Hijo.transform.GetChild(0);
         if (ArmaAct == null) return;
 
         Anim = ArmaAct.GetComponent<Animator>();
         if (Anim == null) return;
-
-        if (TodasLasArmas[ArmaActual].Tipo == "Pistola")
-        {
-            Anim.SetBool("EsPistola", true);
-        }
-        else if (TodasLasArmas[ArmaActual].Tipo == "Escopeta")
-        {
-            Anim.SetBool("EsPistola", true);
-        }
+        checarIdle();
+        ChecarTemporal();
         Tipo = TodasLasArmas[ArmaActual].Tipo;
         Gata = GameObject.Find("Personaje");
         CantBalasActual = TodasLasArmas[ArmaActual].Capacidad;
@@ -95,7 +93,27 @@ public class Scr_ControladorArmas : MonoBehaviour
 
 
     }
+    private void checarIdle()
+    {
+        Debug.Log(TodasLasArmas[ArmaActual].Nombre);
+        switch (TodasLasArmas[ArmaActual].Nombre)
+        {
+            case "Platano":
+                Anim.SetBool("EsPistola", true);
+                break;
 
+            case "Platanon":
+                Anim.SetBool("EsPistola", true);
+                break;
+
+            case "Sandia":
+                Anim.SetBool("EsSandia", true);
+                break;
+            case "Planta":
+                Anim.SetBool("EsPlanta", true);
+                break;
+        }
+    }
     //activa el arma pero si es cuerpo a cuerpo no la toma en cuenta
     void OnEnable()
     {
@@ -108,7 +126,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         temporizadorDisparo = cadencia;
         if (ArmaActual != 0)
         {
-            ObjetoArmas_reales[ArmaActual - 1].SetActive(true);
+            ObjetoArmas_reales[ArmaActual].SetActive(true);
             puntoDisparo = ObjetoArmas_reales[ArmaActual - 1].GetComponentInChildren<Transform>();
         }
         if (TodasLasArmas[ArmaActual].Tipo != "Cuerpo a Cuerpo")
@@ -119,6 +137,8 @@ public class Scr_ControladorArmas : MonoBehaviour
             contador[1].SetActive(true);
             contadorbalas = contador[1].GetComponent<TextMeshProUGUI>();
             contadorbalas.text = CantBalasActual + "/" + balascargador;
+
+            BalaADisparar = balaPrefab[ArmaActual];
         }
         else
         {
@@ -126,9 +146,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             contador[1].SetActive(false);
         }
 
-        Tipo = TodasLasArmas[ArmaActual].Tipo;
-        BalaADisparar = balaPrefab[ArmaActual];
-        ChecarTemporal();
+        Tipo = TodasLasArmas[ArmaActual].Tipo; 
     }
 
 
@@ -177,11 +195,9 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     void Disparar()
     {
-
-        Debug.LogWarning(TodasLasArmas[ArmaActual].Tipo);
+        //Debug.LogWarning(TodasLasArmas[ArmaActual].Tipo);
         if (Tipo == "Cuerpo a Cuerpo")
         {
-            //source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[0]);
             EjecutarAtaque(Anim);
         }
         else if (Tipo == "Escopeta")
@@ -192,7 +208,6 @@ public class Scr_ControladorArmas : MonoBehaviour
         }
         else
         {
-
             source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[0]);
             DisparaBala();
         }
@@ -204,9 +219,9 @@ public class Scr_ControladorArmas : MonoBehaviour
         Atacando = true;
 
         // Selecciona la animación según el golpe actual
-        string animacion = "Golpe " + numGolpe;
+        string animacion = checaranimacionGolpe();
+        //Debug.Log(animacion);
         Anim.Play(animacion);
-
         // Obtiene la duración del golpe y espera antes de permitir otro ataque
         float duracion = GetAnimationClipDuration(Anim, animacion);
         StartCoroutine(EsperarAtaque(duracion));
@@ -218,9 +233,45 @@ public class Scr_ControladorArmas : MonoBehaviour
         tiempoDesdeUltimoGolpe = 5f;
     }
 
+    public void DoMeleeAttack()
+    {
+        // rango es currentWeapon.range, attackOrigin es el punto del jugador (ej. frente)
+        Vector3 center = PuntodeArma != null ? PuntodeArma.position : transform.position;
+        float radius = TodasLasArmas[ArmaActual].Alcance;
+
+        Collider[] colliders = Physics.OverlapSphere(center, radius);
+
+        foreach (Collider col in colliders)
+        {
+            Scr_Enemigo ene = col.GetComponent<Scr_Enemigo>();
+            if (ene != null)
+            {
+                ene.RecibirDaño(TodasLasArmas[ArmaActual].Daño, Color.red);
+            }
+        }
+        // Debug
+        Debug.DrawRay(center, transform.forward * radius, Color.red, 0.5f);
+    }
+    private string checaranimacionGolpe()
+    {
+        switch (TodasLasArmas[ArmaActual].Nombre)
+        {
+            case "Puños":
+                return "Golpe " + numGolpe;
+
+            case "Sandia":
+                return "SandiaGolpe";
+
+            case "Planta":
+                return "Golpe " + numGolpe;
+
+            default:
+                return "Golpe " + numGolpe;
+        }
+    }
     void DisparaBala()
     {
-        Anim.Play("Disparo_pistola");
+        Anim.Play(checaranimacionDisparo());
         temporizadorDisparo = 0;
         Atacando = true;
         GameObject bala = Instantiate(BalaADisparar, puntoDisparo.position, puntoDisparo.rotation);
@@ -272,6 +323,7 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     void DispararEscopeta()
     {
+        Anim.Play(checaranimacionDisparo());
         temporizadorDisparo = 0;
         Atacando = true;
         for (int i = 0; i < cantidadPerdigones; i++)
@@ -312,7 +364,23 @@ public class Scr_ControladorArmas : MonoBehaviour
         }
         StartCoroutine(EsperarAtaque(TodasLasArmas[ArmaActual].Cadencia));
     }
+    private string checaranimacionDisparo()
+    {
+        switch (TodasLasArmas[ArmaActual].Nombre)
+        {
+            case "Platano":
+                return "Disparo_pistola";
 
+            case "PLatanon":
+                return "Disparo_pistola";
+
+            case "Chile":
+                return "Disparo_pistola";
+
+            default:
+                return "Disparo_pistola";
+        }
+    }
     IEnumerator EsperarAtaque(float segundos)
     {
         yield return new WaitForSeconds(segundos);

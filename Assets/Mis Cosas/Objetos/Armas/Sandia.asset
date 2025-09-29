@@ -16,14 +16,17 @@ MonoBehaviour:
   Color: {r: 1, g: 0.18039215, b: 0.26358393, a: 1}
   Tipo: Cuerpo a Cuerpo
   Nombre: Sandia
-  Descripcion: 
-  Cadencia: 0
+  Descripcion: Ahora la sandia aplasta
+  Cadencia: 0.3
   Capacidad: 0
   CapacidadTotal: 0
-  Alcance: 0
-  "Da\xF1o": 0
-  PuntosXGolpe: 0
-  Velocidad: 0
+  Alcance: 2
+  "Da\xF1o": 10
+  PuntosXGolpe: 20
+  Velocidad: 20
+  DolpeConDistancia: 0
   DobleMano: 0
-  Sonidos: []
+  Sonidos:
+  - {fileID: 8300000, guid: 1bf443e6abbe3cd4883d2d1829698ab9, type: 3}
+  - {fileID: 8300000, guid: 2273ebe4d56aced4caea07f7ed28652e, type: 3}
   Recarga: {fileID: 0}
