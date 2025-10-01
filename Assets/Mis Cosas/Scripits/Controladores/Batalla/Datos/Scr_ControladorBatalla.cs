@@ -70,7 +70,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     [SerializeField] public GameObject particulaQuemado;
     [SerializeField] public GameObject particulaCongelado;
     [SerializeField] public GameObject particulaEnvenado;
-
+    [SerializeField] float Aguanta=20;
     private Color ColorPrincipal = new Color(0, 0, 0);
 
     private Color dañado = new Color(1f, 0f, 0f);      // Rojo
@@ -380,6 +380,27 @@ public class Scr_ControladorBatalla : MonoBehaviour
         else
         {
             VidaActual = 0; // 🔹 Evita valores negativos
+        }
+    }
+    public void Curar(float CuraRecibida)
+    {
+        VidaActual = VidaActual + CuraRecibida;
+        if (VidaActual > VidaMaxima)
+        {
+            VidaActual = VidaMaxima;
+        }
+    }
+    public void RecibirEfecto(string efecto)
+    {
+        float numeroAleatorio = Random.Range(0, 100); 
+        checarEfecto(efecto);
+        if (Random.value > Aguanta)
+        {
+            
+        }
+        else
+        {
+            Debug.Log("No ocurrió el efecto esta vez.");
         }
     }
     public void checarEfecto(string efecto)

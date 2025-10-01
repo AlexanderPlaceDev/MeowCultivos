@@ -145,7 +145,7 @@ public class Scr_EnemigoJaba : Scr_Enemigo
         Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
 
         batalla.RecibirDaño(DañoMelee);
-        batalla.checarEfecto(base.Efecto.ToString());
+        batalla.RecibirEfecto(base.Efecto.ToString());
         /*if (batalla.VidaActual >= DañoMelee)
         {
             batalla.VidaActual -= DañoMelee;

@@ -41,8 +41,9 @@ public class Scr_Habilidades : MonoBehaviour
     private float VcaminarAnterior = 0;
     private float VcorrerAnterior = 0;
 
-
     private string TipoAnterior = "";
+
+    public GameObject EfectoHabilidad;
     private void Start()
     {
         Singleton = GameObject.Find("Singleton");
@@ -238,6 +239,14 @@ public class Scr_Habilidades : MonoBehaviour
                     StartCoroutine(HabilidadTiroEsparcido());
                 }
                 break;
+
+            case "Cuidado Automata":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    curar(10);
+                }
+                break;
             default:
                 Debug.Log("No se encontró la habilidad.");
                 break;
@@ -368,6 +377,7 @@ public class Scr_Habilidades : MonoBehaviour
     IEnumerator HabilidadRaizEterna()
     {
         Controlador.GetComponent<Scr_ControladorArmas>().empuje = true;
+        Controlador.GetComponent<Scr_ControladorArmas>().GolpeAdelante(EfectoHabilidad);
         yield return new WaitForSeconds(7f);
         Controlador.GetComponent<Scr_ControladorArmas>().empuje = false;
     }
@@ -463,6 +473,10 @@ public class Scr_Habilidades : MonoBehaviour
         Controlador.GetComponent<Scr_ControladorArmas>().MasDistancia = 0;
     }
 
+    private void curar(float curar)
+    {
+        Controlador.GetComponent<Scr_ControladorBatalla>().Curar(curar);
+    }
     private void Habilidadempuje()
     {
         Controlador.GetComponent<Scr_ControladorArmas>().empuje = true;

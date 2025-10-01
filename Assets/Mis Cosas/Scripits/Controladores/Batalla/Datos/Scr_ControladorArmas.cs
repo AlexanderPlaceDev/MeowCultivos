@@ -19,6 +19,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     [SerializeField] GameObject[] balaPrefab; //bala que dispara
     [SerializeField] public GameObject[] GranadaPrefab; //Granada que dispara
     [SerializeField] AudioSource source;
+
     public GameObject BalaADisparar; //que va a disparar
     public Transform puntoDisparo; //lugar donde sale la bala
     public Camera camera;
@@ -90,7 +91,6 @@ public class Scr_ControladorArmas : MonoBehaviour
         CantBalasActual = TodasLasArmas[ArmaActual].Capacidad;
         balascargador = TodasLasArmas[ArmaActual].CapacidadTotal;
         Physics.IgnoreLayerCollision(7, 8);
-
 
     }
     private void checarIdle()
@@ -233,7 +233,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         tiempoDesdeUltimoGolpe = 5f;
     }
 
-    public void DoMeleeAttack()
+    public void Golpea()
     {
         // rango es currentWeapon.range, attackOrigin es el punto del jugador (ej. frente)
         Vector3 center = PuntodeArma != null ? PuntodeArma.position : transform.position;
@@ -247,10 +247,32 @@ public class Scr_ControladorArmas : MonoBehaviour
             if (ene != null)
             {
                 ene.RecibirDaño(TodasLasArmas[ArmaActual].Daño, Color.red);
+                ene.realizardaño(TodasLasArmas[ArmaActual].Daño, efecto);
             }
         }
         // Debug
-        Debug.DrawRay(center, transform.forward * radius, Color.red, 0.5f);
+        //Debug.DrawRay(center, transform.forward * radius, Color.red, 0.5f);
+    }
+    public void GolpeAdelante(GameObject EfectoHabilidad)
+    {
+        // rango es currentWeapon.range, attackOrigin es el punto del jugador (ej. frente)
+        Vector3 center = PuntodeArma != null ? PuntodeArma.position : transform.position;
+        float radius = TodasLasArmas[ArmaActual].Alcance*10;
+        GameObject part = Instantiate(EfectoHabilidad, PuntodeArma.transform.position, EfectoHabilidad.transform.rotation);
+        Destroy(part, 2f);
+        Collider[] colliders = Physics.OverlapSphere(center, radius);
+
+        foreach (Collider col in colliders)
+        {
+            Scr_Enemigo ene = col.GetComponent<Scr_Enemigo>();
+            if (ene != null)
+            {
+                ene.RecibirDaño(TodasLasArmas[ArmaActual].Daño, Color.red);
+                ene.realizardaño((TodasLasArmas[ArmaActual].Daño)*.1f, efecto);
+            }
+        }
+        // Debug
+        //Debug.DrawRay(center, transform.forward * radius, Color.red, 0.5f);
     }
     private string checaranimacionGolpe()
     {

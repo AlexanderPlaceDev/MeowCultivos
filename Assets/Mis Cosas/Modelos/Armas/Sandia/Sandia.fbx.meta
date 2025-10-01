@@ -3,7 +3,12 @@ guid: 81c9a122d52021b47ad0acc9e35759f1
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Arma Sandia
+    second: {fileID: 2100000, guid: 9515f42e63ac2da4c953d4366d11c1db, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

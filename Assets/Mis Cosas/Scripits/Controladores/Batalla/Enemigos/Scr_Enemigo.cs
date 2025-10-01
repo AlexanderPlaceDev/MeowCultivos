@@ -1,7 +1,8 @@
-using UnityEngine;
 using System.Collections;
-using UnityEngine.AI;
 using TMPro;
+using Unity.Burst.Intrinsics;
+using UnityEngine;
+using UnityEngine.AI;
 
 public class Scr_Enemigo : MonoBehaviour
 {
@@ -200,12 +201,12 @@ public class Scr_Enemigo : MonoBehaviour
             }
 
 
-            
+            realizardaño(Daño, arma.efecto);
             // Lógica de daño
-            Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
+            /*Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
                 GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].PuntosXGolpe;
             RecibirDaño(Daño, dañado);
-            checarEfecto(arma.efecto);
+            checarEfecto(arma.efecto);*/
         }
         else if (other.gameObject.tag == "Bala")
         {
@@ -231,13 +232,22 @@ public class Scr_Enemigo : MonoBehaviour
                 StartCoroutine(MoverCanvas(canvasInstanciado, PosInicialDaño.position, PosFinalDaño.position, 1f));
             }*/
             // Lógica de daño
-            Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
+            realizardaño(Daño, arma.efecto);
+            /*Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
                 GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].PuntosXGolpe;
 
             RecibirDaño(Daño, dañado);
-            checarEfecto(arma.efecto);
+            checarEfecto(arma.efecto);*/
         }
 
+    }
+    public void realizardaño(float daño, string efecto) 
+    {
+        // Lógica de daño
+        Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
+            GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].PuntosXGolpe;
+        RecibirDaño(daño, dañado);
+        checarEfecto(efecto);
     }
 
     private void mostrarDaño(float daño)

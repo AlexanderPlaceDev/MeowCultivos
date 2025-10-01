@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38f2b4ebd0bbe284880532d11712e1b8, type: 3}
   m_Name: "Ra\xEDces Eternas"
   m_EditorClassIdentifier: 
-  Nombre: "Ra\xEDces Eternas "
+  Nombre: Raices Eternas
   Icono: {fileID: 21300000, guid: b75be8abf4b21dd49a3e1b1945f85a9e, type: 3}
   Tipo: Especial
   Descripcion: "Lanza un camino o rayo de raices que sacan volando a los enemigos
@@ -21,4 +21,6 @@ MonoBehaviour:
   ItemsRequeridos: []
   CantidadesRequeridas: 
   Usos: 0
+  Enfriamiento: 120
+  Efecto: {fileID: 4772634663576830964, guid: 1dc13073a5593f247855d7bb86d4ca52, type: 3}
   Arma: Planta
