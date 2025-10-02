@@ -196,6 +196,7 @@ public class Scr_ActivadorHabilidad : MonoBehaviour
                 habilidades.EfectoHabilidad = DatosArmas.HabilidadesPermanentes[i].Efecto;
                 TiempoMaximo = DatosArmas.HabilidadesPermanentes[i].Enfriamiento;
                 cargaHabilidad = DatosArmas.HabilidadesPermanentes[i].Enfriamiento;
+                habilidades.duracionHabilidad = DatosArmas.HabilidadesPermanentes[i].duracion;
                 if (DatosArmas.HabilidadesPermanentes[i].Tipo == "Pasiva")
                 {
                     Transform hijo = transform.GetChild(1);

@@ -1,6 +1,9 @@
 ﻿using System.Collections;
+using System.Runtime.InteropServices;
+
 //using System.Numerics;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -50,8 +53,11 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     public bool empuje=false;
     public bool sangria=false;
+    public bool sangriaEspera = false;
 
     public int Maspenetracion=0;
+
+    public int daño = 0;
 
     public float MasDistancia = 0f;
 
@@ -64,6 +70,7 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     public string Tipo = "";
 
+    public bool ModoAutomático = false;
     GameObject Gata;
     void Start()
     {
@@ -101,16 +108,23 @@ public class Scr_ControladorArmas : MonoBehaviour
             case "Platano":
                 Anim.SetBool("EsPistola", true);
                 break;
-
             case "Platanon":
                 Anim.SetBool("EsPistola", true);
                 break;
-
             case "Sandia":
                 Anim.SetBool("EsSandia", true);
                 break;
             case "Planta":
                 Anim.SetBool("EsPlanta", true);
+                break;
+            case "Mango":
+                Anim.SetBool("EsMango", true);
+                break;
+            case "Papa":
+                Anim.SetBool("EsPapa", true);
+                break;
+            case "Coco":
+                Anim.SetBool("EsCoco", true);
                 break;
         }
     }
@@ -128,6 +142,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         {
             ObjetoArmas_reales[ArmaActual].SetActive(true);
             puntoDisparo = ObjetoArmas_reales[ArmaActual - 1].GetComponentInChildren<Transform>();
+            AnimArma = ObjetoArmas_reales[ArmaActual].GetComponent<Animator>();
         }
         if (TodasLasArmas[ArmaActual].Tipo != "Cuerpo a Cuerpo")
         {
@@ -145,7 +160,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             contador[0].SetActive(true);
             contador[1].SetActive(false);
         }
-
+        daño = TodasLasArmas[ArmaActual].Daño;
         Tipo = TodasLasArmas[ArmaActual].Tipo; 
     }
 
@@ -170,10 +185,24 @@ public class Scr_ControladorArmas : MonoBehaviour
                 numGolpe = 1; // Si pasan más de 5s sin atacar, vuelve a Golpe 1
             }
         }
-        // Solo permite atacar si no está atacando y puede disparar
-        if (Input.GetKey(KeyCode.Mouse0) && !Atacando && PuedeDisparar() && temporizadorDisparo >= (cadencia * MenosCadencia))
+        // Disparo basado en el modo seleccionado (automático o semiautomático)
+        if (Tipo != "Automatica")
         {
-            Disparar();
+            // Modo automático: Dispara continuamente mientras se mantiene presionado el botón del ratón
+            if (Input.GetKey(KeyCode.Mouse0) && !Atacando && PuedeDisparar() && temporizadorDisparo >= cadencia * MenosCadencia)
+            {
+                Disparar();
+                temporizadorDisparo = 0f; // Reinicia el temporizador después de disparar
+            }
+        }
+        else
+        {
+            // Modo semiautomático: Dispara solo cuando se presiona el botón
+            if (Input.GetKeyDown(KeyCode.Mouse0) && !Atacando && PuedeDisparar() && temporizadorDisparo >= cadencia * MenosCadencia)
+            {
+                Disparar();
+                temporizadorDisparo = 0f; // Reinicia el temporizador después de disparar
+            }
         }
         //prueba de recarga
         if (Input.GetKey(KeyCode.R))
@@ -221,7 +250,10 @@ public class Scr_ControladorArmas : MonoBehaviour
         // Selecciona la animación según el golpe actual
         string animacion = checaranimacionGolpe();
         //Debug.Log(animacion);
-        Anim.Play(animacion);
+        if (animacion != "")
+        {
+            Anim.Play(animacion);
+        }
         // Obtiene la duración del golpe y espera antes de permitir otro ataque
         float duracion = GetAnimationClipDuration(Anim, animacion);
         StartCoroutine(EsperarAtaque(duracion));
@@ -246,20 +278,18 @@ public class Scr_ControladorArmas : MonoBehaviour
             Scr_Enemigo ene = col.GetComponent<Scr_Enemigo>();
             if (ene != null)
             {
-                ene.RecibirDaño(TodasLasArmas[ArmaActual].Daño, Color.red);
-                ene.realizardaño(TodasLasArmas[ArmaActual].Daño, efecto);
+                ene.RecibirDaño(daño, Color.red);
+                ene.realizardaño(daño, efecto);
             }
         }
         // Debug
         //Debug.DrawRay(center, transform.forward * radius, Color.red, 0.5f);
     }
-    public void GolpeAdelante(GameObject EfectoHabilidad)
+    public void GolpeAdelante()
     {
         // rango es currentWeapon.range, attackOrigin es el punto del jugador (ej. frente)
         Vector3 center = PuntodeArma != null ? PuntodeArma.position : transform.position;
         float radius = TodasLasArmas[ArmaActual].Alcance*10;
-        GameObject part = Instantiate(EfectoHabilidad, PuntodeArma.transform.position, EfectoHabilidad.transform.rotation);
-        Destroy(part, 2f);
         Collider[] colliders = Physics.OverlapSphere(center, radius);
 
         foreach (Collider col in colliders)
@@ -267,12 +297,20 @@ public class Scr_ControladorArmas : MonoBehaviour
             Scr_Enemigo ene = col.GetComponent<Scr_Enemigo>();
             if (ene != null)
             {
-                ene.RecibirDaño(TodasLasArmas[ArmaActual].Daño, Color.red);
-                ene.realizardaño((TodasLasArmas[ArmaActual].Daño)*.1f, efecto);
+                ene.RecibirDaño(daño, Color.red);
+                ene.realizardaño((daño) *.1f, efecto);
             }
         }
         // Debug
         //Debug.DrawRay(center, transform.forward * radius, Color.red, 0.5f);
+    }
+    public void EfectoHabilidad(GameObject EfectoHabilidad, float espera)
+    {
+        // rango es currentWeapon.range, attackOrigin es el punto del jugador (ej. frente)
+        Vector3 center = PuntodeArma != null ? PuntodeArma.position : transform.position;
+        float radius = TodasLasArmas[ArmaActual].Alcance * 10;
+        GameObject part = Instantiate(EfectoHabilidad, PuntodeArma.transform.position, EfectoHabilidad.transform.rotation);
+        Destroy(part, espera);
     }
     private string checaranimacionGolpe()
     {
@@ -285,13 +323,23 @@ public class Scr_ControladorArmas : MonoBehaviour
                 return "SandiaGolpe";
 
             case "Planta":
-                return "Golpe " + numGolpe;
+                AnimArma.Play("Morder_Planta");
+                return "";
+
+            case "Mango":
+                return "MangoGolpe";
+
+            case "Papa":
+                return "PapaLanzar";
+
+            case "Coco":
+                return "CocoGolpe";
 
             default:
                 return "Golpe " + numGolpe;
         }
     }
-    void DisparaBala()
+    public void DisparaBala()
     {
         Anim.Play(checaranimacionDisparo());
         temporizadorDisparo = 0;
@@ -300,13 +348,13 @@ public class Scr_ControladorArmas : MonoBehaviour
         float masdaño = 0;
         if (minLimit && CantBalasActual<2)
         {
-            masdaño = TodasLasArmas[ArmaActual].Daño + 2;
+            masdaño = daño + 2;
         }
         if(efecto == "Rebotar")
         {
             bala.GetComponent<Balas>().Rebota = true;
         }
-        bala.GetComponent<Balas>().daño = TodasLasArmas[ArmaActual].Daño + masdaño;
+        bala.GetComponent<Balas>().daño = daño + masdaño;
         bala.GetComponent<Balas>().penetracion += Maspenetracion;
         // Calcular dirección del disparo
         Vector3 direccionDisparo;
@@ -343,7 +391,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         StartCoroutine(EsperarAtaque(TodasLasArmas[ArmaActual].Cadencia));
     }
 
-    void DispararEscopeta()
+    public void DispararEscopeta()
     {
         Anim.Play(checaranimacionDisparo());
         temporizadorDisparo = 0;
@@ -354,13 +402,13 @@ public class Scr_ControladorArmas : MonoBehaviour
             float masdaño = 0;
             if (minLimit && CantBalasActual < 2)
             {
-                masdaño = TodasLasArmas[ArmaActual].Daño + 2;
+                masdaño = daño + 2;
             }
             if (efecto == "Rebotar")
             {
                 bala.GetComponent<Balas>().Rebota = true;
             }
-            bala.GetComponent<Balas>().daño = TodasLasArmas[ArmaActual].Daño + masdaño;
+            bala.GetComponent<Balas>().daño = daño + masdaño;
             bala.GetComponent<Balas>().penetracion = 2+Maspenetracion;
             // Direccion base
             Vector3 direccionBase = camera.transform.forward;

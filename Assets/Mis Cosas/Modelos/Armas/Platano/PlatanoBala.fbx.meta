@@ -3,7 +3,12 @@ guid: ef4cb62731943c14795dbf53fbaf9ce9
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Textura Platano Bala
+    second: {fileID: 2100000, guid: 07583c16545459d4bb9fa8101dbfbf9a, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

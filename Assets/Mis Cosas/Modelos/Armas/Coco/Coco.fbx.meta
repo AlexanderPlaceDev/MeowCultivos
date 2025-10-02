@@ -3,7 +3,12 @@ guid: 24de8edb77907d1439a208b40a058003
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Coco
+    second: {fileID: 2100000, guid: 5acf556118c7e914db4ebf87c99f32cb, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

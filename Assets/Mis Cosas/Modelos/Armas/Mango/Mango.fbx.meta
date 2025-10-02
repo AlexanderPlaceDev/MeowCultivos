@@ -3,7 +3,12 @@ guid: 27bd79ff05bd85248ba7322378b87173
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mango Arma.001
+    second: {fileID: 2100000, guid: ecc6e25a8fa672940b5a8a7b462a98b3, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

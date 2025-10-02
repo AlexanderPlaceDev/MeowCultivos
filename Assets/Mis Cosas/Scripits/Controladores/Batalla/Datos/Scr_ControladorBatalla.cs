@@ -45,6 +45,8 @@ public class Scr_ControladorBatalla : MonoBehaviour
     public float VidaActual = 3;
     public bool Stuneado = false;
     public bool Congelado = false;
+    public float acumularCura = 0;
+    public float menosDaño = 0;
     [SerializeField] Slider BarraVida;
 
     [Header("Objetivo")]
@@ -372,7 +374,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     public void RecibirDaño(float DañoRecibido)
     {
         // Reducir la vida del enemigo
-        
+        DañoRecibido = DañoRecibido * menosDaño;
         if (VidaActual >= DañoRecibido)
         {
             VidaActual -= DañoRecibido;

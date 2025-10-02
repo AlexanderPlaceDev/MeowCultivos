@@ -248,6 +248,15 @@ public class Scr_Enemigo : MonoBehaviour
             GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].PuntosXGolpe;
         RecibirDaño(daño, dañado);
         checarEfecto(efecto);
+        Scr_ControladorArmas cont = GameObject.Find("Controlador").GetComponent<Scr_ControladorArmas>();
+        if (cont.sangria)
+        {
+            Controlador.GetComponent<Scr_ControladorBatalla>().Curar(daño*.2f);
+        }
+        else if (cont.sangriaEspera)
+        {
+            Controlador.GetComponent<Scr_ControladorBatalla>().acumularCura+= (daño * .2f);
+        }
     }
 
     private void mostrarDaño(float daño)

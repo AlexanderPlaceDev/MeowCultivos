@@ -27,6 +27,8 @@ public class Scr_Habilidades : MonoBehaviour
     private Coroutine vignetteCoroutine; // Manejo de Vignette
     private Coroutine colorAdjustmentsCoroutine; // Manejo de ColorAdjustments
     private Coroutine LensCoroutine; // Manejo de ColorAdjustments
+    public float duracionHabilidad=2f;
+
     private float DañoAnterior = 0;
 
     private int PerdigonesAnterior =0;
@@ -100,7 +102,7 @@ public class Scr_Habilidades : MonoBehaviour
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
                     StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
-                    StartCoroutine(HabilidadAumentoCarga());
+                    StartCoroutine(HabilidadAumentoCarga(duracionHabilidad));
                 }
                 break;
 
@@ -115,7 +117,7 @@ public class Scr_Habilidades : MonoBehaviour
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
                     StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
-                    StartCoroutine(HabilidadGranada());
+                    StartCoroutine(HabilidadGranada(duracionHabilidad));
                 }
 
                 break;
@@ -124,7 +126,7 @@ public class Scr_Habilidades : MonoBehaviour
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
                     StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
-                    StartCoroutine(HabilidadMascizo());
+                    StartCoroutine(HabilidadMascizo(duracionHabilidad));
                 }
                 break;
 
@@ -132,7 +134,7 @@ public class Scr_Habilidades : MonoBehaviour
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
                     StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
-                    StartCoroutine(HabilidadImparable());
+                    StartCoroutine(HabilidadImparable(duracionHabilidad));
                 }
 
                 break;
@@ -144,7 +146,7 @@ public class Scr_Habilidades : MonoBehaviour
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
                     StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
-                    StartCoroutine(HabilidadPlantaMini());
+                    StartCoroutine(HabilidadPlantaMini(duracionHabilidad));
                 }
                 break;
 
@@ -152,7 +154,7 @@ public class Scr_Habilidades : MonoBehaviour
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
                     StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
-                    StartCoroutine(HabilidadColoso());
+                    StartCoroutine(HabilidadColoso(duracionHabilidad));
                 }
 
                 break;
@@ -165,7 +167,7 @@ public class Scr_Habilidades : MonoBehaviour
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
                     StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
-                    StartCoroutine(HabilidadBlindado());
+                    StartCoroutine(HabilidadBlindado(duracionHabilidad));
                 }
                 break;
 
@@ -173,7 +175,7 @@ public class Scr_Habilidades : MonoBehaviour
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
                     StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
-                    StartCoroutine(HabilidadSangria());
+                    StartCoroutine(HabilidadSangria(duracionHabilidad));
                 }
                 break;
 
@@ -181,7 +183,7 @@ public class Scr_Habilidades : MonoBehaviour
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
                     StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
-                    StartCoroutine(HabilidadVolador());
+                    StartCoroutine(HabilidadVolador(duracionHabilidad));
                 }
                 break;
 
@@ -197,7 +199,7 @@ public class Scr_Habilidades : MonoBehaviour
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
                     StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
-                    StartCoroutine(HabilidadFelina());
+                    StartCoroutine(HabilidadFelina(duracionHabilidad));
                 }
                 break;
 
@@ -213,7 +215,7 @@ public class Scr_Habilidades : MonoBehaviour
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
                     StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
-                    StartCoroutine(HabilidadSemillaExplosiva());
+                    StartCoroutine(HabilidadSemillaExplosiva(duracionHabilidad));
                 }
                 break;
 
@@ -221,7 +223,7 @@ public class Scr_Habilidades : MonoBehaviour
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
                     StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
-                    StartCoroutine(HabilidadGranada());
+                    StartCoroutine(HabilidadGranada(duracionHabilidad));
                 }
                 break;
 
@@ -229,14 +231,14 @@ public class Scr_Habilidades : MonoBehaviour
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
                     StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
-                    StartCoroutine(HabilidadTiroImparable());
+                    StartCoroutine(HabilidadTiroImparable(duracionHabilidad));
                 }
                 break;
             case "Tiro Esparcido":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
                     StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
-                    StartCoroutine(HabilidadTiroEsparcido());
+                    StartCoroutine(HabilidadTiroEsparcido(duracionHabilidad));
                 }
                 break;
 
@@ -245,6 +247,41 @@ public class Scr_Habilidades : MonoBehaviour
                 {
                     StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
                     curar(10);
+                }
+                break;
+            case "Inyección de potasio":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(HabilidadPotasio(duracionHabilidad));
+                }
+                break;
+            case "Cuello extensible"://pendiente
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    curar(10);
+                }
+                break;
+            case "Ira del berserker":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(HabilidadBerserk(duracionHabilidad));
+                }
+                break;
+            case "Tiro de gracia":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(HabilidadTiroEsparcido(duracionHabilidad));
+                }
+                break;
+            case "Disparo tipo subfusil":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(HabilidadTiroRapido(duracionHabilidad));
                 }
                 break;
             default:
@@ -296,7 +333,7 @@ public class Scr_Habilidades : MonoBehaviour
         AreasGarras[1].SetActive(false);
     }
 
-    IEnumerator HabilidadAumentoCarga()
+    IEnumerator HabilidadAumentoCarga(float espera)
     {
         //Guardamos La cantidad de perdigones que tenia
         PerdigonesAnterior = Controlador.GetComponent<Scr_ControladorArmas>().cantidadPerdigones;
@@ -304,85 +341,83 @@ public class Scr_Habilidades : MonoBehaviour
         Controlador.GetComponent<Scr_ControladorArmas>().cantidadPerdigones = (PerdigonesAnterior * 2);
         
 
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(espera);
         Controlador.GetComponent<Scr_ControladorArmas>().cantidadPerdigones = PerdigonesAnterior;
     }
-    IEnumerator HabilidadGranada()
+    IEnumerator HabilidadGranada(float espera)
     {
         //Guardamos La cantidad de perdigones que tenia
         balaAnterior = Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar;
 
         Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar = Controlador.GetComponent<Scr_ControladorArmas>().GranadaPrefab[0];
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(espera);
         Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar = balaAnterior;
     }
-    IEnumerator HabilidadMascizo()
+    IEnumerator HabilidadMascizo(float espera)
     {
         //Guardamos La cantidad de perdigones que tenia
         DispersionAnterior = Controlador.GetComponent<Scr_ControladorArmas>().dispersion;
-
         Controlador.GetComponent<Scr_ControladorArmas>().dispersion = .1f;
-        yield return new WaitForSeconds(7f);
+        yield return new WaitForSeconds(espera);
         Controlador.GetComponent<Scr_ControladorArmas>().dispersion = DispersionAnterior;
     }
 
-    IEnumerator HabilidadImparable()
+    IEnumerator HabilidadImparable(float espera)
     {
 
         Controlador.GetComponent<Scr_ControladorArmas>().havecombo = true;
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(espera);
         Controlador.GetComponent<Scr_ControladorArmas>().havecombo = false;
     }
    
-    IEnumerator HabilidadPlantaMini()
+    IEnumerator HabilidadPlantaMini(float espera)
     {
         //Guardamos La cantidad de perdigones que tenia
         balaAnterior = Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar;
-
         Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar = Controlador.GetComponent<Scr_ControladorArmas>().GranadaPrefab[2];
-        yield return new WaitForSeconds(9f);
+        yield return new WaitForSeconds(espera);
         Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar = balaAnterior;
     }
 
-    IEnumerator HabilidadColoso()
+    IEnumerator HabilidadColoso(float espera)
     {
         Controlador.GetComponent<Scr_ControladorArmas>().empuje = true;
         Controlador.GetComponent<Scr_ControladorBatalla>().PorcentajeQuitar = .7f;
-        yield return new WaitForSeconds(8f);
+        yield return new WaitForSeconds(espera);
         Controlador.GetComponent<Scr_ControladorBatalla>().PorcentajeQuitar = 1f;
         Controlador.GetComponent<Scr_ControladorArmas>().empuje = false;
     }
 
-    IEnumerator HabilidadBlindado()
+    IEnumerator HabilidadBlindado(float espera)
     {
         Controlador.GetComponent<Scr_ControladorBatalla>().PorcentajeQuitar = .7f;
-        yield return new WaitForSeconds(6f);
+        yield return new WaitForSeconds(espera);
         Controlador.GetComponent<Scr_ControladorBatalla>().PorcentajeQuitar = 1f;
     }
 
-    IEnumerator HabilidadSangria()
+    IEnumerator HabilidadSangria(float espera)
     {
         Controlador.GetComponent<Scr_ControladorArmas>().sangria = true;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(espera);
         Controlador.GetComponent<Scr_ControladorArmas>().sangria = false;
     }
 
-    IEnumerator HabilidadVolador()
+    IEnumerator HabilidadVolador(float espera)
     {
         Controlador.GetComponent<Scr_ControladorArmas>().empuje = true;
-        yield return new WaitForSeconds(7f);
+        yield return new WaitForSeconds(espera);
         Controlador.GetComponent<Scr_ControladorArmas>().empuje = false;
     }
 
     IEnumerator HabilidadRaizEterna()
     {
-        Controlador.GetComponent<Scr_ControladorArmas>().empuje = true;
-        Controlador.GetComponent<Scr_ControladorArmas>().GolpeAdelante(EfectoHabilidad);
-        yield return new WaitForSeconds(7f);
-        Controlador.GetComponent<Scr_ControladorArmas>().empuje = false;
+        Controlador.GetComponent<Scr_ControladorArmas>().EfectoHabilidad(EfectoHabilidad,1.5f);
+        yield return new WaitForSeconds(1f);
+        StartCoroutine(HabilidadVolador(3));
+        Controlador.GetComponent<Scr_ControladorArmas>().GolpeAdelante();
     }
 
-    IEnumerator HabilidadFelina()
+    IEnumerator HabilidadFelina(float espera)
     {
         GameObject personaje = GameObject.Find("Personaje");
         Scr_Movimiento mov=personaje.GetComponent<Scr_Movimiento>();
@@ -394,7 +429,7 @@ public class Scr_Habilidades : MonoBehaviour
         mov.VelAgachado = mov.VelAgachado * 2;
         mov.VelCaminar = mov.VelCaminar * 2;
         mov.VelCorrer = mov.VelCorrer * 2;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(espera);
         mov.VelAgachado = VagachadoAnterior;
         mov.VelCaminar = VcaminarAnterior;
         mov.VelCorrer = VcorrerAnterior;
@@ -410,11 +445,11 @@ public class Scr_Habilidades : MonoBehaviour
         onda.gameObject.SetActive(false);
     }
 
-    IEnumerator HabilidadSemillaExplosiva()
+    IEnumerator HabilidadSemillaExplosiva(float espera)
     {
         GameObject personaje = GameObject.Find("Armas");
         Transform point = personaje.transform.GetChild(2);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(espera);
         Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar = balaAnterior;
 
         DispararObjeto(15, Controlador.GetComponent<Scr_ControladorArmas>().GranadaPrefab[2], point);
@@ -450,29 +485,54 @@ public class Scr_Habilidades : MonoBehaviour
     }
 
 
-    IEnumerator HabilidadTiroImparable()
+    IEnumerator HabilidadTiroImparable(float espera)
     {
 
         Controlador.GetComponent<Scr_ControladorArmas>().Maspenetracion = 2;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(espera);
         Controlador.GetComponent<Scr_ControladorArmas>().Maspenetracion = 0;
     }
-    IEnumerator HabilidadTiroEsparcido()
+    IEnumerator HabilidadTiroEsparcido(float espera)
     {
         TipoAnterior= Controlador.GetComponent<Scr_ControladorArmas>().Tipo;
         Controlador.GetComponent<Scr_ControladorArmas>().Tipo = "Escopeta";
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(espera);
         Controlador.GetComponent<Scr_ControladorArmas>().Tipo = TipoAnterior;
         Controlador.GetComponent<Scr_ControladorArmas>().Maspenetracion = 0;
     }
-
+    IEnumerator HabilidadTiroRapido(float espera)
+    {
+        TipoAnterior = Controlador.GetComponent<Scr_ControladorArmas>().Tipo;
+        Controlador.GetComponent<Scr_ControladorArmas>().Tipo = "Automatica";
+        yield return new WaitForSeconds(espera);
+        Controlador.GetComponent<Scr_ControladorArmas>().Tipo = TipoAnterior;
+        Controlador.GetComponent<Scr_ControladorArmas>().Maspenetracion = 0;
+    }
     IEnumerator HabilidadMasArea()
     {
         Controlador.GetComponent<Scr_ControladorArmas>().MasDistancia = 50;
         yield return new WaitForSeconds(9f);
         Controlador.GetComponent<Scr_ControladorArmas>().MasDistancia = 0;
     }
+    IEnumerator HabilidadPotasio(float espera)
+    {
+        curar(20);
+        Controlador.GetComponent<Scr_ControladorArmas>().daño = Controlador.GetComponent<Scr_ControladorArmas>().daño * 2;
+        yield return new WaitForSeconds(espera);
+        Controlador.GetComponent<Scr_ControladorArmas>().daño = Controlador.GetComponent<Scr_ControladorArmas>().daño / 2;
+    }
 
+    IEnumerator HabilidadBerserk(float espera)
+    {
+        curar(5);
+        Controlador.GetComponent<Scr_ControladorBatalla>().menosDaño = .2f;
+        Controlador.GetComponent<Scr_ControladorArmas>().sangriaEspera = true;
+        yield return new WaitForSeconds(espera);
+        Controlador.GetComponent<Scr_ControladorArmas>().sangriaEspera = false;
+        curar(Controlador.GetComponent<Scr_ControladorBatalla>().acumularCura);
+        Controlador.GetComponent<Scr_ControladorBatalla>().acumularCura = 0;
+        Controlador.GetComponent<Scr_ControladorBatalla>().menosDaño = 0;
+    }
     private void curar(float curar)
     {
         Controlador.GetComponent<Scr_ControladorBatalla>().Curar(curar);
