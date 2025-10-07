@@ -1,6 +1,7 @@
 ﻿using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+//using System.Diagnostics;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -75,7 +76,10 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         {
             sistemaDialogos.EnPausa = true; // Pausa sistema de diálogos si el panel está inactivo
         }
-
+        if (panelDialogo.activeSelf)
+        {
+            Girar();
+        }
         if (!autoIniciarDialogo)
         {
             //==========================================
@@ -85,6 +89,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             {
                 Hablando = true;
                 Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
+                Gata.GetComponent<Scr_ControladorAnimacionesGata>().DetenerGata();
                 ManejarDialogoPrincipal();
             }
 
@@ -94,7 +99,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.F) && !Hablando && !Comprando)
             {
                 Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
-
+                Gata.GetComponent<Scr_ControladorAnimacionesGata>().DetenerGata();
                 if (MuestraMisiones)
                 {
                     ControladorMisionesSecundariasUI.activadorActual = this;
@@ -359,7 +364,11 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             }
         }
     }
-
+    private void Girar()
+    {
+        Quaternion objetivo = Quaternion.LookRotation(new Vector3(transform.position.x, Gata.position.y, transform.position.z) - Gata.position);
+        Gata.rotation = Quaternion.RotateTowards(Gata.rotation, objetivo, 200 * Time.deltaTime);
+    }
     public void DesactivarDialogo()
     {
         GuardarNPC();
@@ -400,7 +409,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         OcultarIconos();
     }
 
-    private void OcultarIconos()
+    public void OcultarIconos()
     {
         foreach (var icono in iconos)
         {

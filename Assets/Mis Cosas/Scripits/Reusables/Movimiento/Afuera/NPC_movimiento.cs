@@ -87,6 +87,7 @@ public class NPC_movimiento : MonoBehaviour
                     //Debug.Log("atttttta");
                     BoxCollider[] colliders = GetComponents<BoxCollider>();
                     colliders[1].enabled = false; // Desactiva el segundo BoxCollider
+                    Dialogo.OcultarIconos();
                 }
                 checarcambio();
 

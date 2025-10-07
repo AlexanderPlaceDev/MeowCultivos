@@ -230,7 +230,7 @@ public class Scr_Taller : MonoBehaviour
                 ObjetoPrincipal.SetActive(true);
                 ObjetoPrincipal.transform.GetChild(0).gameObject.SetActive(true);
                 ObjetoPrincipal.transform.GetChild(1).gameObject.SetActive(true);
-                int e = PlayerPrefs.GetInt("Rango " + Datosarmas.TodasLasArmas[objShow].Nombre, 2);
+                int e = PlayerPrefs.GetInt("Rango " + Datosarmas.TodasLasArmas[objShow].Nombre, 1);
                 Debug.Log(e);
                 ObjetoPrincipal.transform.GetChild(0).GetComponent<Image>().sprite = Datosarmas.TodasLasArmas[objShow].Icono;
                 ObjetoPrincipal.transform.GetChild(1).GetComponent<Image>().sprite = Rango[e];
@@ -614,13 +614,16 @@ public class Scr_Taller : MonoBehaviour
         {
             if (HabilidadesTemporales[i].Arma== Datosarmas.TodasLasArmas[objetoPrincipalInt].Nombre || HabilidadesTemporales[i].Arma== "Todos")
             {
-                if (show < 3 && Datosarmas.UsosHabilidadesT[i]>0)
+                if(ht != HabilidadesTemporales[i].Nombre)
                 {
-                    HabilidadesSelec[show].SetActive(true);
-                    HabilidadesSelec[show].GetComponent<Image>().sprite = HabilidadesTemporales[i].Icono;
-                    show++;
+                    if (show < 3 && Datosarmas.UsosHabilidadesT[i] > 0)
+                    {
+                        HabilidadesSelec[show].SetActive(true);
+                        HabilidadesSelec[show].GetComponent<Image>().sprite = HabilidadesTemporales[i].Icono;
+                        show++;
+                    }
+                    Habilidadesint.Add(i);
                 }
-                Habilidadesint.Add(i);
             }
             
         }
@@ -672,15 +675,18 @@ public class Scr_Taller : MonoBehaviour
         {
             if (HabilidadesPermanentes[i].Arma == Datosarmas.TodasLasArmas[objetoPrincipalInt].Nombre || HabilidadesPermanentes[i].Arma == "Todos")
             {
-                if (HabilidadesPermanentes[i].Tipo == "Normal" || HabilidadesPermanentes[i].Tipo == "Pasiva")
+                if(h1 != HabilidadesPermanentes[i].Nombre && h2 != HabilidadesPermanentes[i].Nombre)
                 {
-                    if (show < 3)
+                    if (HabilidadesPermanentes[i].Tipo == "Normal" || HabilidadesPermanentes[i].Tipo == "Pasiva")
                     {
-                        HabilidadesSelec[show].SetActive(true);
-                        HabilidadesSelec[show].GetComponent<Image>().sprite = HabilidadesPermanentes[i].Icono;
-                        show++;
+                        if (show < 3)
+                        {
+                            HabilidadesSelec[show].SetActive(true);
+                            HabilidadesSelec[show].GetComponent<Image>().sprite = HabilidadesPermanentes[i].Icono;
+                            show++;
+                        }
+                        Habilidadesint.Add(i);
                     }
-                    Habilidadesint.Add(i);
                 }
             }
 
@@ -700,15 +706,18 @@ public class Scr_Taller : MonoBehaviour
         {
             if (HabilidadesPermanentes[i].Arma == Datosarmas.TodasLasArmas[objetoPrincipalInt].Nombre || HabilidadesPermanentes[i].Arma == "Todos")
             {
-                if (HabilidadesPermanentes[i].Tipo == "Especial")
+                if(hE != HabilidadesPermanentes[i].Nombre)
                 {
-                    if (show < 3)
+                    if (HabilidadesPermanentes[i].Tipo == "Especial")
                     {
-                        HabilidadesSelec[show].SetActive(true);
-                        HabilidadesSelec[show].GetComponent<Image>().sprite = HabilidadesPermanentes[i].Icono;
-                        show++;
+                        if (show < 3)
+                        {
+                            HabilidadesSelec[show].SetActive(true);
+                            HabilidadesSelec[show].GetComponent<Image>().sprite = HabilidadesPermanentes[i].Icono;
+                            show++;
+                        }
+                        Habilidadesint.Add(i);
                     }
-                    Habilidadesint.Add(i);
                 }
             }
         }

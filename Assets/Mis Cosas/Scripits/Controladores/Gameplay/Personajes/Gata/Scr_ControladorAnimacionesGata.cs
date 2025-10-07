@@ -41,22 +41,7 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
             // Solo ejecutar esto UNA VEZ al entrar a la cinemática
             if (!_estadoCinematicaAnterior)
             {
-                Talando = false;
-                Recolectando = false;
-                Regando = false;
-
-                Anim.SetBool("Talando", false);
-                Anim.SetBool("Recolectando", false);
-                Anim.SetBool("Regando", false);
-                Anim.SetBool("Caminando", false);
-                Anim.SetBool("Corriendo", false);
-                Anim.SetBool("Retrocediendo", false);
-
-                Mov.Estado = Scr_Movimiento.Estados.Quieto;
-                PuedeCaminar = false;
-
-                GetComponent<Scr_Movimiento>().enabled = false;
-                GetComponent<Scr_GiroGata>().enabled = false;
+                DetenerGata();
 
                 _estadoCinematicaAnterior = true; // Marcar que ya hicimos esto
             }
@@ -94,7 +79,25 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
         GetComponent<Scr_GiroGata>().enabled = PuedeCaminar;
     }
 
+    public void DetenerGata()
+    {
+        Talando = false;
+        Recolectando = false;
+        Regando = false;
 
+        Anim.SetBool("Talando", false);
+        Anim.SetBool("Recolectando", false);
+        Anim.SetBool("Regando", false);
+        Anim.SetBool("Caminando", false);
+        Anim.SetBool("Corriendo", false);
+        Anim.SetBool("Retrocediendo", false);
+
+        Mov.Estado = Scr_Movimiento.Estados.Quieto;
+        PuedeCaminar = false;
+
+        GetComponent<Scr_Movimiento>().enabled = false;
+        GetComponent<Scr_GiroGata>().enabled = false;
+    }
     void Inputs()
     {
         if (!Talando && !Recolectando && !Regando)
