@@ -9,6 +9,7 @@ public class Scr_ControladorAnimacionesNPC : MonoBehaviour
     Scr_ActivadorDialogos ActivadorDialogos;
     public bool Hablando;
     public bool Caminando;
+    [SerializeField]
     Animator Anim;
 
     void Start()
@@ -23,7 +24,10 @@ public class Scr_ControladorAnimacionesNPC : MonoBehaviour
             Debug.Log(gameObject.name + " No Tiene Dialogos")
             ;
         }
-        Anim = GetComponent<Animator>();
+        if (Anim == null)
+        {
+            Anim = GetComponent<Animator>();
+        }
     }
 
     void Update()

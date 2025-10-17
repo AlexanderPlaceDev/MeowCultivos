@@ -5263,17 +5263,17 @@ PrefabInstance:
     - target: {fileID: 8879528566716807029, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 40
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8879528566716807029, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 40
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8879528566716807029, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 40
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8879528566716807029, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
@@ -5310,10 +5310,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2930522013648248140}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: caa63f37c21c4064b93b00e85427ef29,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1857684654691750749}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
       insertIndex: -1
@@ -5380,27 +5376,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!135 &1857684654691750749
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 178227796199041654}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 2.3938036
-  m_Center: {x: -0.043555982, y: 2.38, z: 0.28512073}
 --- !u!54 &4900658720287335753
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5550,8 +5525,6 @@ MonoBehaviour:
   recoger_sonido: []
   talar_sonido: []
   picar_sonido: []
-  Dinero_sonido: []
-  Nivel_sonido: []
 --- !u!82 &1311006281806059995
 AudioSource:
   m_ObjectHideFlags: 0

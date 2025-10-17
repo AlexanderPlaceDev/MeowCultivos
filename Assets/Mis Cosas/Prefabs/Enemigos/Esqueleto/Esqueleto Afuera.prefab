@@ -856,7 +856,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 77685bcc504a4b04da92d2fe82a5f497, type: 3}
   - {fileID: 8300000, guid: ab440b6debcd08748b3004018a2c872d, type: 3}
   - {fileID: 8300000, guid: 2b4c74729d6ce354fa8bb18a9e18a173, type: 3}
-  SonidosEspecificos: []
+  SonidosCaminar:
+  - {fileID: 8300000, guid: 5de0da896dc8e034b94df0260c6ffeea, type: 3}
+  - {fileID: 8300000, guid: b404237edfcf4ad46bf3356ccf6380fd, type: 3}
   TiempoSonidoMinIddle: 5
   TiempoSonidoMaxIddle: 15
   TiempoSonidoMinPersecucion: 1

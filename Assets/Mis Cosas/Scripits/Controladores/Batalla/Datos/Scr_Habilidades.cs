@@ -452,8 +452,6 @@ public class Scr_Habilidades : MonoBehaviour
         yield return new WaitForSeconds(3f);
         Controlador.GetComponent<Scr_ControladorArmas>().Maspenetracion = 0;
     }
-<<<<<<< Updated upstream
-=======
     IEnumerator HabilidadTiroEsparcido()
     {
         //TipoAnterior= Controlador.GetComponent<Scr_ControladorArmas>().Tipo;
@@ -462,7 +460,6 @@ public class Scr_Habilidades : MonoBehaviour
         //Controlador.GetComponent<Scr_ControladorArmas>().Tipo = TipoAnterior;
         Controlador.GetComponent<Scr_ControladorArmas>().Maspenetracion = 0;
     }
->>>>>>> Stashed changes
 
     IEnumerator HabilidadMasArea()
     {

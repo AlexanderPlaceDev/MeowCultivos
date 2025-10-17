@@ -19,7 +19,7 @@ public class Scr_JabaAfuera : Scr_EnemigoFuera
     [Header("Sonidos")]
     [SerializeField] private List<AudioClip> SonidosPersecucion = new List<AudioClip>();
     [SerializeField] private List<AudioClip> SonidosIddle = new List<AudioClip>();
-    [SerializeField] private List<AudioClip> SonidosEspecificos = new List<AudioClip>();
+    [SerializeField] private List<AudioClip> SonidosCaminar = new List<AudioClip>();
 
     [Header("Tiempos de sonidos Iddle")]
     [SerializeField] private float TiempoSonidoMinIddle = 4f;
@@ -209,12 +209,12 @@ public class Scr_JabaAfuera : Scr_EnemigoFuera
         }
     }
 
-    public void ReproducirSonidoEspecifico()
+    public void ReproducirSonidoCaminar()
     {
-        if (SonidosEspecificos != null && SonidosEspecificos.Count > 0)
+        if (SonidosCaminar != null && SonidosCaminar.Count > 0)
         {
             // Elegir un clip aleatorio de la lista
-            AudioClip clip = SonidosEspecificos[Random.Range(0, SonidosEspecificos.Count)];
+            AudioClip clip = SonidosCaminar[Random.Range(0, SonidosCaminar.Count)];
 
             // Usar el AudioSource principal (o el del hijo si quieres mantenerlo)
             AudioSource source = transform.GetChild(0).GetComponent<AudioSource>();
