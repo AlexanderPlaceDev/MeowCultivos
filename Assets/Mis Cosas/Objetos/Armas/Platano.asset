@@ -14,17 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Icono: {fileID: 21300000, guid: 794f3e69e4f85064e83ec6cb026fc751, type: 3}
   Color: {r: 1, g: 0.9512944, b: 0, a: 1}
-  Tipo: Escopeta
-  Nombre: Platanon
-  Descripcion: Esparce potacio puro
-  Cadencia: 5
-  Capacidad: 2
+  Tipo: Pistola
+  Nombre: Platano
+  Descripcion: Dispara potacio puro
+  Cadencia: 1
+  Capacidad: 10
   CapacidadTotal: 100
   Alcance: 0
-  "Da\xF1o": 20
+  "Da\xF1o": 8
   PuntosXGolpe: 5
   Velocidad: 20
   DobleMano: 0
   Sonidos:
-  - {fileID: 8300000, guid: 7b7adcee86180a74185de8579df17df9, type: 3}
+  - {fileID: 8300000, guid: 683dfeffbd670e1498075ec74d4b6732, type: 3}
   Recarga: {fileID: 8300000, guid: 303e98323e2c0d84f8dfa60b4578866e, type: 3}

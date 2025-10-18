@@ -19,6 +19,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     [SerializeField] bool mostrarRaycast = false;
 
     [SerializeField] GameObject[] ObjetoArmas_reales; //prueba para activar la arma menos la de puños
+    [SerializeField] GameObject[] Objeto_Izquierdo; //prueba para activar la arma menos la de puños
     [SerializeField] GameObject[] balaPrefab; //bala que dispara
     [SerializeField] public GameObject[] GranadaPrefab; //Granada que dispara
     [SerializeField] AudioSource source;
@@ -72,6 +73,11 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     public bool ModoAutomático = false;
     GameObject Gata;
+    private bool Manteniendo;
+    private bool isGrappling = false;
+    private Vector3 grapplePoint;
+    private float currentDistance;
+    public LineRenderer lineRenderer;
     void Start()
     {
         //aplica el volumen 
@@ -85,48 +91,28 @@ public class Scr_ControladorArmas : MonoBehaviour
         if (ObjetoArmas == null) return;
         //tenia el armaActual pero por ahora es 0
         Transform ArmaAct = ObjetoArmas.transform.GetChild(0);
-        GameObject Hijo = GameObject.Find("Armas");
-        PuntodeArma = Hijo.transform.GetChild(0);
-        if (ArmaAct == null) return;
-
-        Anim = ArmaAct.GetComponent<Animator>();
+        GameObject Hijo = ObjetoArmas_reales[ArmaActual];
+        if (ArmaAct != null)
+        {
+            Anim = ArmaAct.GetComponent<Animator>();
+        }
         if (Anim == null) return;
+        if (Hijo.transform.GetChild(0) != null)
+        {
+            PuntodeArma = Hijo.transform.GetChild(0);
+        }
         checarIdle();
         ChecarTemporal();
+        if (efecto == "" && TodasLasArmas[ArmaActual].Nombre== "Chilenon")
+        {
+            efecto = "Quemar";
+        }
         Tipo = TodasLasArmas[ArmaActual].Tipo;
         Gata = GameObject.Find("Personaje");
         CantBalasActual = TodasLasArmas[ArmaActual].Capacidad;
         balascargador = TodasLasArmas[ArmaActual].CapacidadTotal;
         Physics.IgnoreLayerCollision(7, 8);
 
-    }
-    private void checarIdle()
-    {
-        Debug.Log(TodasLasArmas[ArmaActual].Nombre);
-        switch (TodasLasArmas[ArmaActual].Nombre)
-        {
-            case "Platano":
-                Anim.SetBool("EsPistola", true);
-                break;
-            case "Platanon":
-                Anim.SetBool("EsPistola", true);
-                break;
-            case "Sandia":
-                Anim.SetBool("EsSandia", true);
-                break;
-            case "Planta":
-                Anim.SetBool("EsPlanta", true);
-                break;
-            case "Mango":
-                Anim.SetBool("EsMango", true);
-                break;
-            case "Papa":
-                Anim.SetBool("EsPapa", true);
-                break;
-            case "Coco":
-                Anim.SetBool("EsCoco", true);
-                break;
-        }
     }
     //activa el arma pero si es cuerpo a cuerpo no la toma en cuenta
     void OnEnable()
@@ -167,9 +153,13 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     void Update()
     {
+        if (isGrappling)
+        {
+            GanchoMover();
+        }
         if (Tipo != "Cuerpo a Cuerpo")
         {
-            contadorbalas.text = CantBalasActual + "/" + balascargador;
+            contadorbalas.text = CantBalasActual+""; //+ "/" + balascargador;
         }
         //Debug.Log(temporizadorDisparo+ "?"+cadencia+ " +++++++++++++++" + (temporizadorDisparo >= cadencia));
         if (cadencia > 0)
@@ -189,7 +179,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         if (Tipo != "Automatica")
         {
             // Modo automático: Dispara continuamente mientras se mantiene presionado el botón del ratón
-            if (Input.GetKey(KeyCode.Mouse0) && !Atacando && PuedeDisparar() && temporizadorDisparo >= cadencia * MenosCadencia)
+            if (Input.GetKey(KeyCode.Mouse0) && !Atacando && PuedeDisparar() && temporizadorDisparo >= (cadencia * MenosCadencia))
             {
                 Disparar();
                 temporizadorDisparo = 0f; // Reinicia el temporizador después de disparar
@@ -198,10 +188,23 @@ public class Scr_ControladorArmas : MonoBehaviour
         else
         {
             // Modo semiautomático: Dispara solo cuando se presiona el botón
-            if (Input.GetKeyDown(KeyCode.Mouse0) && !Atacando && PuedeDisparar() && temporizadorDisparo >= cadencia * MenosCadencia)
+            if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                Disparar();
-                temporizadorDisparo = 0f; // Reinicia el temporizador después de disparar
+                Manteniendo = true;
+            }
+            if (Input.GetKeyUp(KeyCode.Mouse0))
+            {
+                Manteniendo=false;
+            }
+            if (Manteniendo)
+            {
+                rotarUva();
+                if (!Atacando && PuedeDisparar() && temporizadorDisparo >= (cadencia * MenosCadencia))
+                {
+                    Disparar();
+                    temporizadorDisparo = 0f; // Reinicia el temporizador después de disparar
+
+                }
             }
         }
         //prueba de recarga
@@ -211,7 +214,6 @@ public class Scr_ControladorArmas : MonoBehaviour
         }
 
     }
-
     private void LateUpdate()
     {
         DetectarEnemigoConRaycast();
@@ -234,6 +236,12 @@ public class Scr_ControladorArmas : MonoBehaviour
 
             source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[0]);
             DispararEscopeta();
+        }
+        else if (Tipo == "Lanzallamas")
+        {
+
+            source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[0]);
+            Lazer();
         }
         else
         {
@@ -304,6 +312,152 @@ public class Scr_ControladorArmas : MonoBehaviour
         // Debug
         //Debug.DrawRay(center, transform.forward * radius, Color.red, 0.5f);
     }
+    public void DisparaBala()
+    {
+        if (TodasLasArmas[ArmaActual].Nombre != "Papa")
+        {
+            Anim.Play(checaranimacionDisparo());
+        }
+        temporizadorDisparo = 0;
+        Atacando = true;
+        GameObject bala = Instantiate(BalaADisparar, puntoDisparo.position, puntoDisparo.rotation);
+        float masdaño = 0;
+        if (minLimit && CantBalasActual < 2)
+        {
+            masdaño = daño + 2;
+        }
+        if (efecto == "Rebotar")
+        {
+            bala.GetComponent<Balas>().Rebota = true;
+        }
+        bala.GetComponent<Balas>().daño = daño + masdaño;
+        bala.GetComponent<Balas>().penetracion += Maspenetracion;
+        // Calcular dirección del disparo
+        Vector3 direccionDisparo;
+
+        // Lanzamos un raycast desde el centro de la cámara hacia adelante
+        Ray ray = camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+        {
+            // Si choca algo, disparamos hacia ese punto
+            direccionDisparo = (hit.point - puntoDisparo.position).normalized;
+        }
+        else
+        {
+            // Si no choca nada, disparamos hacia adelante de la cámara
+            direccionDisparo = ray.direction;
+        }
+
+        // Aplicamos fuerza a la bala
+        Rigidbody rb = bala.GetComponent<Rigidbody>();
+        rb.AddForce(direccionDisparo * fuerzaDisparo, ForceMode.Impulse);
+        if (efecto == "Fantasma")
+        {
+            int checar = Random.Range(0, 100);
+            if (checar < 60)
+            {
+                CantBalasActual--;
+            }
+        }
+        else
+        {
+            CantBalasActual--;
+        }
+        //Anim.SetBool("EstaDisparando", false);
+        StartCoroutine(EsperarAtaque(TodasLasArmas[ArmaActual].Cadencia));
+    }
+
+    public void DispararEscopeta()
+    {
+        if (TodasLasArmas[ArmaActual].Nombre != "Papa")
+        {
+            Anim.Play(checaranimacionDisparo());
+        }
+        temporizadorDisparo = 0;
+        Atacando = true;
+        for (int i = 0; i < cantidadPerdigones; i++)
+        {
+            GameObject bala = Instantiate(BalaADisparar, puntoDisparo.position, puntoDisparo.rotation);
+            float masdaño = 0;
+            if (minLimit && CantBalasActual < 2)
+            {
+                masdaño = daño + 2;
+            }
+            if (efecto == "Rebotar")
+            {
+                bala.GetComponent<Balas>().Rebota = true;
+            }
+            bala.GetComponent<Balas>().daño = daño + masdaño;
+            bala.GetComponent<Balas>().penetracion = 2 + Maspenetracion;
+            // Direccion base
+            Vector3 direccionBase = camera.transform.forward;
+
+            // Añadir dispersión aleatoria
+            Vector3 direccionConDispersion = DireccionConDispersion(direccionBase, Random.Range(0, dispersion));
+
+            // Aplicar fuerza
+            Rigidbody rb = bala.GetComponent<Rigidbody>();
+            rb.AddForce(direccionConDispersion * fuerzaDisparo, ForceMode.Impulse);
+        }
+        if (efecto == "Fantasma")
+        {
+            int checar = Random.Range(0, 100);
+            if (checar < 60)
+            {
+                CantBalasActual--;
+            }
+        }
+        else
+        {
+            CantBalasActual--;
+        }
+        StartCoroutine(EsperarAtaque(TodasLasArmas[ArmaActual].Cadencia));
+    }
+    public void Lazer()
+    {
+        Anim.Play(checaranimacionDisparo());
+        // Definir el centro del láser (punto del arma o la posición del jugador)
+        Vector3 center = PuntodeArma != null ? PuntodeArma.position : transform.position;
+
+        // Calcular el radio del láser (rango del arma escalado)
+        float radius = TodasLasArmas[ArmaActual].Alcance * 10;
+
+        // Definir la dirección del láser (hacia donde apunta el arma)
+        Vector3 direction = camera.transform.forward;
+
+        // Calcular el punto final de la cápsula (centro + rango en la dirección del frente)
+        Vector3 capsuleEnd = center + direction * radius;
+
+        // Usar Physics.OverlapCapsule para detectar colisiones dentro del área del láser
+        Collider[] colliders = Physics.OverlapCapsule(center, capsuleEnd, 0.5f); // 0.5f es el radio de la cápsula
+
+        foreach (Collider col in colliders)
+        {
+            Scr_Enemigo ene = col.GetComponent<Scr_Enemigo>();
+            if (ene != null)
+            {
+                // Aplicar daño con efecto visual (color rojo)
+                ene.RecibirDaño(daño, Color.red);
+
+                // Aplicar efecto secundario (daño escalado)
+                ene.realizardaño(daño * 0.1f, efecto);
+            }
+        }
+        if (efecto == "Fantasma")
+        {
+            int checar = Random.Range(0, 100);
+            if (checar < 60)
+            {
+                CantBalasActual--;
+            }
+        }
+        else
+        {
+            CantBalasActual--;
+        }
+        // Depuración: visualizar el rango del láser
+        //Debug.DrawLine(center, capsuleEnd, Color.red, 0.5f);
+    }
     public void EfectoHabilidad(GameObject EfectoHabilidad, float espera)
     {
         // rango es currentWeapon.range, attackOrigin es el punto del jugador (ej. frente)
@@ -312,6 +466,124 @@ public class Scr_ControladorArmas : MonoBehaviour
         GameObject part = Instantiate(EfectoHabilidad, PuntodeArma.transform.position, EfectoHabilidad.transform.rotation);
         Destroy(part, espera);
     }
+
+    public void DisparaGancho()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(PuntodeArma.transform.position, PuntodeArma.transform.forward, out hit, 40))
+        {
+            if (hit.collider != null)
+            {
+                isGrappling = true;
+                grapplePoint = hit.point; // Punto donde el gancho se engancha
+                currentDistance = Vector3.Distance(PuntodeArma.position, grapplePoint);
+                // Activar el LineRenderer para mostrar la cuerda
+                lineRenderer.enabled = true;
+                lineRenderer.SetPosition(0, PuntodeArma.position);
+                lineRenderer.SetPosition(1, grapplePoint);
+                temporizadorDisparo = 0;
+                AnimArma.SetBool("Mantiene", true);
+            }
+        }
+    }
+    void GanchoMover()
+    {
+        float step = 10f * Time.deltaTime;
+        temporizadorDisparo += Time.deltaTime;
+        Gata.transform.position = Vector3.MoveTowards(Gata.transform.position, grapplePoint, step);
+        lineRenderer.SetPosition(0, PuntodeArma.position);
+        lineRenderer.SetPosition(1, grapplePoint);
+        if (Vector3.Distance(Gata.transform.position, grapplePoint) < 0.5f || temporizadorDisparo > 7f) // Cuando el jugador llega al punto de anclaje
+        {
+            AnimArma.SetBool("Mantiene", false);
+            lineRenderer.enabled = false; // Desactivar la cuerda
+            isGrappling = false;
+        }
+    }
+    void RecargarBala()
+    {
+        if (Tipo == "Cuerpo a Cuerpo") return;
+        if (CantBalasActual < balascargador)
+        {
+            Anim.Play(checaranimacionRecarga());
+            //balascargador = balascargador - cantidadarestar;
+            CantBalasActual = TodasLasArmas[ArmaActual].Capacidad;
+            source.PlayOneShot(TodasLasArmas[ArmaActual].Recarga);
+            //Anim.SetBool("EstaRecargando", false);
+        }
+        /*if (CantBalasActual != TodasLasArmas[ArmaActual].Capacidad && balascargador > 0)
+        {
+            int cantidadarestar = TodasLasArmas[ArmaActual].Capacidad - CantBalasActual;
+           
+        }*/
+    }
+    public void Lanzar()
+    {
+        BalaADisparar = GranadaPrefab[0];
+        ObjetoArmas_reales[ArmaActual].SetActive(false);
+        DisparaBala();
+    }
+    public void Recoger()
+    {
+        ObjetoArmas_reales[ArmaActual].SetActive(true);
+    }
+    
+
+    //Rota la Uva
+    public void rotarUva()
+    {
+        if (TodasLasArmas[ArmaActual].Nombre == "Uvalon")
+        {
+            GameObject rot = ObjetoArmas_reales[ArmaActual].transform.GetChild(1).gameObject;
+            rot.transform.Rotate(0, 0, Time.deltaTime * 70);
+            float rotz = rot.transform.rotation.z + Time.deltaTime;
+            ///rot.transform.rotation = Quaternion.Euler(rot.transform.rotation.x, rot.transform.rotation.y, rotz);
+        }
+    }
+
+    //
+    // Checa que arma tiene y la agrega su estado de animacion
+    //
+    private void checarIdle()
+    {
+        Debug.Log(TodasLasArmas[ArmaActual].Nombre);
+        switch (TodasLasArmas[ArmaActual].Nombre)
+        {
+            case "Platano":
+                Anim.SetBool("EsPistola", true);
+                break;
+            case "Platanon":
+                Anim.SetBool("EsPistola", true);
+                break;
+            case "Sandia":
+                Anim.SetBool("EsSandia", true);
+                break;
+            case "Planta":
+                Anim.SetBool("EsPlanta", true);
+                break;
+            case "Mango":
+                Anim.SetBool("EsMango", true);
+                Objeto_Izquierdo[0].SetActive(true);
+                break;
+            case "Papa":
+                Anim.SetBool("EsPapa", true);
+                break;
+            case "Coco":
+                Anim.SetBool("EsCoco", true);
+                break;
+            case "Chilenon":
+                Anim.SetBool("EsChile", true);
+                Objeto_Izquierdo[1].SetActive(true);
+                break;
+            case "Uvalon":
+                Anim.SetBool("EsUva", true);
+                break;
+        }
+    }
+
+    //
+    //Checa la animacion de golpe de las armas cuerpo a cuerpo
+    //
     private string checaranimacionGolpe()
     {
         switch (TodasLasArmas[ArmaActual].Nombre)
@@ -339,101 +611,10 @@ public class Scr_ControladorArmas : MonoBehaviour
                 return "Golpe " + numGolpe;
         }
     }
-    public void DisparaBala()
-    {
-        Anim.Play(checaranimacionDisparo());
-        temporizadorDisparo = 0;
-        Atacando = true;
-        GameObject bala = Instantiate(BalaADisparar, puntoDisparo.position, puntoDisparo.rotation);
-        float masdaño = 0;
-        if (minLimit && CantBalasActual<2)
-        {
-            masdaño = daño + 2;
-        }
-        if(efecto == "Rebotar")
-        {
-            bala.GetComponent<Balas>().Rebota = true;
-        }
-        bala.GetComponent<Balas>().daño = daño + masdaño;
-        bala.GetComponent<Balas>().penetracion += Maspenetracion;
-        // Calcular dirección del disparo
-        Vector3 direccionDisparo;
 
-        // Lanzamos un raycast desde el centro de la cámara hacia adelante
-        Ray ray = camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f))
-        {
-            // Si choca algo, disparamos hacia ese punto
-            direccionDisparo = (hit.point - puntoDisparo.position).normalized;
-        }
-        else
-        {
-            // Si no choca nada, disparamos hacia adelante de la cámara
-            direccionDisparo = ray.direction;
-        }
-
-        // Aplicamos fuerza a la bala
-        Rigidbody rb = bala.GetComponent<Rigidbody>();
-        rb.AddForce(direccionDisparo * fuerzaDisparo, ForceMode.Impulse);
-        if (efecto == "Fantasma")
-        {
-            int checar = Random.Range(0,100);
-            if (checar < 60)
-            {
-                CantBalasActual--;
-            }
-        }
-        else
-        {
-            CantBalasActual--;
-        }
-        //Anim.SetBool("EstaDisparando", false);
-        StartCoroutine(EsperarAtaque(TodasLasArmas[ArmaActual].Cadencia));
-    }
-
-    public void DispararEscopeta()
-    {
-        Anim.Play(checaranimacionDisparo());
-        temporizadorDisparo = 0;
-        Atacando = true;
-        for (int i = 0; i < cantidadPerdigones; i++)
-        {
-            GameObject bala = Instantiate(BalaADisparar, puntoDisparo.position, puntoDisparo.rotation);
-            float masdaño = 0;
-            if (minLimit && CantBalasActual < 2)
-            {
-                masdaño = daño + 2;
-            }
-            if (efecto == "Rebotar")
-            {
-                bala.GetComponent<Balas>().Rebota = true;
-            }
-            bala.GetComponent<Balas>().daño = daño + masdaño;
-            bala.GetComponent<Balas>().penetracion = 2+Maspenetracion;
-            // Direccion base
-            Vector3 direccionBase = camera.transform.forward;
-
-            // Añadir dispersión aleatoria
-            Vector3 direccionConDispersion = DireccionConDispersion(direccionBase, Random.Range(0, dispersion));
-
-            // Aplicar fuerza
-            Rigidbody rb = bala.GetComponent<Rigidbody>();
-            rb.AddForce(direccionConDispersion * fuerzaDisparo, ForceMode.Impulse);
-        }
-        if (efecto == "Fantasma")
-        {
-            int checar = Random.Range(0, 100);
-            if (checar < 60)
-            {
-                CantBalasActual--;
-            }
-        }
-        else
-        {
-            CantBalasActual--;
-        }
-        StartCoroutine(EsperarAtaque(TodasLasArmas[ArmaActual].Cadencia));
-    }
+    //
+    // Checa la animacion de golpe de las armas a distancia
+    //
     private string checaranimacionDisparo()
     {
         switch (TodasLasArmas[ArmaActual].Nombre)
@@ -441,21 +622,48 @@ public class Scr_ControladorArmas : MonoBehaviour
             case "Platano":
                 return "Disparo_pistola";
 
-            case "PLatanon":
-                return "Disparo_pistola";
+            case "Tomate":
+                return "Disparo_Tomate";
 
-            case "Chile":
-                return "Disparo_pistola";
+            case "Chilenon":
+                return "ChileDisparo";
 
+            case "Uvalon":
+                return "UvaDisparo";
             default:
                 return "Disparo_pistola";
         }
     }
+    //
+    // Checa la animacion de recarga de las armas
+    //
+    private string checaranimacionRecarga()
+    {
+        switch (TodasLasArmas[ArmaActual].Nombre)
+        {
+            case "Platano":
+                return "PistolaRecarga";
+
+            case "Tomate":
+                return "TomateRecarga";
+
+            case "Chilenon":
+                return "ChileRecarga";
+
+            case "Uvalon":
+                return "UvaRecarga";
+            default:
+                return "PistolaRecarga";
+        }
+    }
+
+    //Espera el ataque
     IEnumerator EsperarAtaque(float segundos)
     {
         yield return new WaitForSeconds(segundos);
         Atacando = false;  // Ahora puede volver a atacar
     }
+    //Espera el ataque
     IEnumerator EsperarHit(float segundos)
     {
         yield return new WaitForSeconds(segundos);
@@ -494,22 +702,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         Quaternion rot = Quaternion.Euler(angleX, angleY, 0);
         return rot * direccion;
     }
-    void RecargarBala()
-    {
-        if (Tipo == "Cuerpo a Cuerpo") return;
-        if (CantBalasActual != TodasLasArmas[ArmaActual].Capacidad && balascargador > 0)
-        {
-            int cantidadarestar = TodasLasArmas[ArmaActual].Capacidad - CantBalasActual;
-            if (balascargador >= cantidadarestar)
-            {
-                Anim.Play("PistolaRecarga");
-                balascargador = balascargador - cantidadarestar;
-                CantBalasActual = TodasLasArmas[ArmaActual].Capacidad;
-                source.PlayOneShot(TodasLasArmas[ArmaActual].Recarga);
-                //Anim.SetBool("EstaRecargando", false);
-            }
-        }
-    }
+    
     float GetAnimationClipDuration(Animator animator, string clipName)
     {
         if (animator == null) return 0f;

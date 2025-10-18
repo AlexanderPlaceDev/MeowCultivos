@@ -260,7 +260,7 @@ public class Scr_Habilidades : MonoBehaviour
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
                     StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
-                    curar(10);
+                    HabilidadGancho();
                 }
                 break;
             case "Ira del berserker":
@@ -452,7 +452,7 @@ public class Scr_Habilidades : MonoBehaviour
         yield return new WaitForSeconds(espera);
         Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar = balaAnterior;
 
-        DispararObjeto(15, Controlador.GetComponent<Scr_ControladorArmas>().GranadaPrefab[2], point);
+        DispararObjeto(15, Controlador.GetComponent<Scr_ControladorArmas>().GranadaPrefab[1], point);
     }
     void DispararObjeto(int cantidad, GameObject prefab, Transform point)
     {
@@ -545,7 +545,10 @@ public class Scr_Habilidades : MonoBehaviour
     {
         Controlador.GetComponent<Scr_ControladorArmas>().minLimit = true;
     }
-
+    private void HabilidadGancho()
+    {
+        Controlador.GetComponent<Scr_ControladorArmas>().DisparaGancho();
+    }
     // Transiciona el Vignette y lo restaura tras una duración
     private IEnumerator ModificarVignette(Vignette vignette, Color colorFinal, float intensidadFinal, float duracion)
     {

@@ -3,7 +3,27 @@ guid: f0d2cb5156d2fb24a8215253ee51b585
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Encendedor Boton
+    second: {fileID: 2100000, guid: eb45f7f127867094b9e5a0a5dba3ad8a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Encendedor Color Base
+    second: {fileID: 2100000, guid: b0f581e645a257a47a9e24434274a538, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Encendedor Metal Oscuro
+    second: {fileID: 2100000, guid: 395e11761e25015408e53b894c6a5b59, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Encendedor metal Brillo
+    second: {fileID: 2100000, guid: 6e3ff54565052c547982ef125bec6d18, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

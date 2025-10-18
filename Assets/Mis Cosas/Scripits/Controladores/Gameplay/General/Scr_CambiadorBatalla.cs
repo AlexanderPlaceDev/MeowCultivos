@@ -37,7 +37,7 @@ public class Scr_CambiadorBatalla : MonoBehaviour
 
     void Update()
     {
-        if (Gata != null && !escenaCargada)
+        if (Gata != null && !escenaCargada && Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar)
         {
             float distanciaAlJugador = Vector3.Distance(transform.position, Gata.position);
 

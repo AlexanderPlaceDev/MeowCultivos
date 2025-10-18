@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12ff4b93ff67613438982eb385a7e4e9, type: 3}
+  m_Name: Uva
+  m_EditorClassIdentifier: 
+  Icono: {fileID: 21300000, guid: 275a93dffc2e5884a82133291d5c43b3, type: 3}
+  Color: {r: 1, g: 0.9512944, b: 0, a: 1}
+  Tipo: Automatica
+  Nombre: Uvalon
+  Descripcion: Dispara Uvas a discrecion
+  Cadencia: 1
+  Capacidad: 100
+  CapacidadTotal: 100
+  Alcance: 0
+  "Da\xF1o": 10
+  PuntosXGolpe: 5
+  Velocidad: 20
+  DolpeConDistancia: 0
+  DobleMano: 0
+  Sonidos:
+  - {fileID: 8300000, guid: 7b7adcee86180a74185de8579df17df9, type: 3}
+  Recarga: {fileID: 8300000, guid: 303e98323e2c0d84f8dfa60b4578866e, type: 3}

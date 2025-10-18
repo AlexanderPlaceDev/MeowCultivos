@@ -24,7 +24,7 @@ public class Scr_JabaAfuera : Scr_EnemigoFuera
 
     void Update()
     {
-        if (Vision != null && Vision.Gata != null)
+        if (Vision != null && Vision.Gata != null && Vision.seguir) 
         {
             StopAllCoroutines();
             GetComponent<NavMeshAgent>().enabled = true;

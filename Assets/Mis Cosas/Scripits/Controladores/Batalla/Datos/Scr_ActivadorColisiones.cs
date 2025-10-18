@@ -22,6 +22,16 @@ public class Scr_ActivadorColisiones : MonoBehaviour
     {
         Controlador.DisparaBala();
     }
+
+    public void Lanza()
+    {
+        Controlador.Lanzar();
+    }
+
+    public void Recoger()
+    {
+        Controlador.Recoger();
+    }
     public void ActivarColision1()
     {
         Colision1.SetActive(true);
