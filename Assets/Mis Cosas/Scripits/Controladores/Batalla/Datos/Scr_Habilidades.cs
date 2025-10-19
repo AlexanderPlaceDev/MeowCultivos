@@ -101,7 +101,7 @@ public class Scr_Habilidades : MonoBehaviour
             case "Aumento de Carga":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, duracionHabilidad));
                     StartCoroutine(HabilidadAumentoCarga(duracionHabilidad));
                 }
                 break;
@@ -109,14 +109,14 @@ public class Scr_Habilidades : MonoBehaviour
             case "Crecimiento Rapido":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 1.5f));
                     StartCoroutine(HabilidadMasArea());
                 }
                 break;
             case "Disparo explosivo":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, duracionHabilidad));
                     StartCoroutine(HabilidadGranada(duracionHabilidad));
                 }
 
@@ -125,7 +125,7 @@ public class Scr_Habilidades : MonoBehaviour
             case "Disparo maciso":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, duracionHabilidad));
                     StartCoroutine(HabilidadMascizo(duracionHabilidad));
                 }
                 break;
@@ -133,7 +133,7 @@ public class Scr_Habilidades : MonoBehaviour
             case "Fuerza Imparable":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, duracionHabilidad));
                     StartCoroutine(HabilidadImparable(duracionHabilidad));
                 }
 
@@ -145,15 +145,22 @@ public class Scr_Habilidades : MonoBehaviour
             case "Pequeña planta":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, duracionHabilidad));
                     StartCoroutine(HabilidadPlantaMini(duracionHabilidad));
+                }
+                break;
+            case "Planta Dispara":
+                if (volumen.profile.TryGet<Vignette>(out _vignette))
+                {
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, duracionHabilidad));
+                    StartCoroutine(HabilidadPlantaDispara(duracionHabilidad));
                 }
                 break;
 
             case "Protección del Coloso":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, duracionHabilidad));
                     StartCoroutine(HabilidadColoso(duracionHabilidad));
                 }
 
@@ -166,7 +173,7 @@ public class Scr_Habilidades : MonoBehaviour
             case "Puño Blindado":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, duracionHabilidad));
                     StartCoroutine(HabilidadBlindado(duracionHabilidad));
                 }
                 break;
@@ -174,7 +181,7 @@ public class Scr_Habilidades : MonoBehaviour
             case "Puño Sangria":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, duracionHabilidad));
                     StartCoroutine(HabilidadSangria(duracionHabilidad));
                 }
                 break;
@@ -182,7 +189,7 @@ public class Scr_Habilidades : MonoBehaviour
             case "Puño volador":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, duracionHabilidad));
                     StartCoroutine(HabilidadVolador(duracionHabilidad));
                 }
                 break;
@@ -190,7 +197,7 @@ public class Scr_Habilidades : MonoBehaviour
             case "Raices Eternas":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.red, 0.5f, 2.4f));
                     StartCoroutine(HabilidadRaizEterna());
                 }
                 break;
@@ -198,7 +205,7 @@ public class Scr_Habilidades : MonoBehaviour
             case "Reflejos Felinos":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, duracionHabilidad));
                     StartCoroutine(HabilidadFelina(duracionHabilidad));
                 }
                 break;
@@ -206,7 +213,7 @@ public class Scr_Habilidades : MonoBehaviour
             case "Rugido de la Tierra":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 3.5f));
                     StartCoroutine(HabilidadRugidoTierra());
                 }
                 break;
@@ -214,7 +221,7 @@ public class Scr_Habilidades : MonoBehaviour
             case "Semilla explosiva":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, duracionHabilidad));
                     StartCoroutine(HabilidadSemillaExplosiva(duracionHabilidad));
                 }
                 break;
@@ -222,7 +229,7 @@ public class Scr_Habilidades : MonoBehaviour
             case "Tiro explosivo":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, duracionHabilidad));
                     StartCoroutine(HabilidadGranada(duracionHabilidad));
                 }
                 break;
@@ -230,14 +237,14 @@ public class Scr_Habilidades : MonoBehaviour
             case "Tiro Imparable":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, duracionHabilidad));
                     StartCoroutine(HabilidadTiroImparable(duracionHabilidad));
                 }
                 break;
             case "Tiro Esparcido":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, duracionHabilidad));
                     StartCoroutine(HabilidadTiroEsparcido(duracionHabilidad));
                 }
                 break;
@@ -245,42 +252,42 @@ public class Scr_Habilidades : MonoBehaviour
             case "Cuidado Automata":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 1.5f));
                     curar(10);
                 }
                 break;
             case "Inyección de potasio":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, duracionHabilidad));
                     StartCoroutine(HabilidadPotasio(duracionHabilidad));
                 }
                 break;
             case "Cuello extensible"://pendiente
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 3.5f));
                     HabilidadGancho();
                 }
                 break;
             case "Ira del berserker":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, duracionHabilidad));
                     StartCoroutine(HabilidadBerserk(duracionHabilidad));
                 }
                 break;
             case "Tiro de gracia":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, duracionHabilidad));
                     StartCoroutine(HabilidadTiroEsparcido(duracionHabilidad));
                 }
                 break;
             case "Disparo tipo subfusil":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
-                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, 5f));
+                    StartCoroutine(ModificarVignette(_vignette, Color.blue, 0.5f, duracionHabilidad));
                     StartCoroutine(HabilidadTiroRapido(duracionHabilidad));
                 }
                 break;
@@ -369,14 +376,22 @@ public class Scr_Habilidades : MonoBehaviour
         yield return new WaitForSeconds(espera);
         Controlador.GetComponent<Scr_ControladorArmas>().havecombo = false;
     }
-   
     IEnumerator HabilidadPlantaMini(float espera)
     {
         //Guardamos La cantidad de perdigones que tenia
         balaAnterior = Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar;
         Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar = Controlador.GetComponent<Scr_ControladorArmas>().GranadaPrefab[2];
+        Controlador.GetComponent<Scr_ControladorArmas>().DisparaBala();
         yield return new WaitForSeconds(espera);
         Controlador.GetComponent<Scr_ControladorArmas>().BalaADisparar = balaAnterior;
+    }
+
+    IEnumerator HabilidadPlantaDispara(float espera)
+    {
+
+        Controlador.GetComponent<Scr_ControladorArmas>().Tipo ="Pistola";
+        yield return new WaitForSeconds(espera);
+        Controlador.GetComponent<Scr_ControladorArmas>().Tipo = "Cuerpo a Cuerpo";
     }
 
     IEnumerator HabilidadColoso(float espera)

@@ -314,7 +314,11 @@ public class Scr_ControladorArmas : MonoBehaviour
     }
     public void DisparaBala()
     {
-        if (TodasLasArmas[ArmaActual].Nombre != "Papa")
+        if(TodasLasArmas[ArmaActual].Nombre == "Planta")
+        {
+            AnimArma.Play("Morder_Planta");
+        }
+        else if (TodasLasArmas[ArmaActual].Nombre != "Papa")
         {
             Anim.Play(checaranimacionDisparo());
         }

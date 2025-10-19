@@ -11,8 +11,11 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class Scr_Taller : MonoBehaviour
 {
+    [Header("Plano")]
     [SerializeField] private GameObject Plano;//ui de Plano
     [SerializeField] private GameObject Menu;//ui de Menu
+
+    [Header("Objetos")]
     [SerializeField] private GameObject[] OjetosSelec; //objetos que puede seleccionar
     [SerializeField] private List<int> Ojetosint;// cantidad de objetos que tiene el jugador
     [SerializeField] private GameObject[] BotonesOBJ; //flechas de objetos que puede seleccionar
@@ -21,7 +24,7 @@ public class Scr_Taller : MonoBehaviour
     [SerializeField] private TextMeshProUGUI Seccion; //que seccion del taller muestra
     [SerializeField] private int lugar;// que seccion del taller esta
 
-
+    [Header("Armas")]
     [SerializeField] private Sprite[] Rango; //Marco para mostar que esta seleccionado
     [SerializeField] private GameObject Slots;// ui de slots de habilidades
     [SerializeField] private GameObject HabilidadesSec;
@@ -43,11 +46,7 @@ public class Scr_Taller : MonoBehaviour
     private string h1;
     private string h2;
     private string hE;
-    [SerializeField] private GameObject Crafteo;//ui de crafteo
-    [SerializeField] private Scr_CreadorObjetos[] ObjetosACraftear;//objetos que se pueden craftear
-    [SerializeField] private GameObject[] CrafteosSelec;
 
-    private List<Scr_CreadorObjetos> ObjetosNessesarios = new List<Scr_CreadorObjetos>();
     private List<int> CantidadObjNessesarios= new List<int>();
 
     [SerializeField] private Color32[] ColoresBotones;
@@ -59,6 +58,18 @@ public class Scr_Taller : MonoBehaviour
     public List<Scr_CreadorHabilidadesBatalla> HabilidadesPermanentes;
     public List<Scr_CreadorHabilidadesBatalla> HabilidadesEspeciales;
 
+    
+
+    [Header("Crafteo")]
+    [SerializeField] public GameObject BotCraftear;
+    [SerializeField] public Color PoscicionadoCraft;
+    [SerializeField] public Color NormalCraft;
+    [SerializeField] private GameObject Crafteo;//ui de crafteo
+    [SerializeField] private Scr_CreadorObjetos[] ObjetosACraftear;//objetos que se pueden craftear
+    [SerializeField] private GameObject[] CrafteosSelec;
+
+
+    public List<Scr_CreadorObjetos> ObjetosNessesarios = new List<Scr_CreadorObjetos>();
     private Transform Gata;
     private Scr_Inventario inventario;
     Animator Anim;
@@ -114,6 +125,14 @@ public class Scr_Taller : MonoBehaviour
     {
         yield return new WaitForSeconds(duracion);
         Menu.SetActive(true);
+    }
+    public void Craftear_ON()
+    {
+        BotCraftear.GetComponent<Image>().color = PoscicionadoCraft;
+    }
+    public void Craftear_Exit()
+    {
+        BotCraftear.GetComponent<Image>().color = NormalCraft;
     }
     public void cerrarPlano()
     {
@@ -416,6 +435,7 @@ public class Scr_Taller : MonoBehaviour
     //mostrar los objetos que necesita para crear el objeto
     public void mostraRecursosOBJ()
     {
+        BotCraftear.SetActive(false);
         htEnEspera = ObjetosACraftear[objetoPrincipalInt].Nombre;
         if (ObjetosNessesarios != null)
         {
@@ -428,16 +448,26 @@ public class Scr_Taller : MonoBehaviour
         Scr_CreadorObjetos objetocraftear = ObjetosACraftear[objetoPrincipalInt];
         for (int i = 0; i < objetocraftear.MaterialesDeProduccion.Length; i++)
         {
+            if (objetocraftear.MaterialesDeProduccion[i] != null)
+            {
+                Scr_CreadorObjetos obj = objetocraftear.MaterialesDeProduccion[i];
+                int cantobjt = objetocraftear.CantidadMaterialesDeProduccion[i];
+                Debug.Log(obj);
+                ObjetosNessesarios.Add(obj);
+                CantidadObjNessesarios.Add(cantobjt);
 
-            Scr_CreadorObjetos obj = objetocraftear.MaterialesDeProduccion[i];
-            int cantobjt = objetocraftear.CantidadMaterialesDeProduccion[i];
-            Debug.Log(obj);
-            ObjetosNessesarios.Add(obj);
-            CantidadObjNessesarios.Add(cantobjt);
+            }
         }
-        for (int i = 0; i < CrafteosSelec.Length; i++)
+        esconderCrafteosSelec();
+        int Selec = CrafteosSelec.Length;
+        int Chec = 0;
+        if (ObjetosNessesarios.Count<= CrafteosSelec.Length)
         {
-            if (ObjetosNessesarios[i] !=null || i < ObjetosNessesarios.Count)
+            Selec=ObjetosNessesarios.Count;
+        }
+        for (int i = 0; i < Selec; i++)
+        {
+            if (ObjetosNessesarios[i] !=null)
             {
                 CrafteosSelec[i].SetActive(true);
                 CrafteosSelec[i].GetComponent<Image>().sprite = ObjetosNessesarios[i].Icono;
@@ -447,17 +477,31 @@ public class Scr_Taller : MonoBehaviour
                         CantidadObjNessesarios[i]
                     );
                 CrafteosSelec[i].transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().color = tieneMateriales ? Color.white : Color.red;
-            }
-            else
-            {
-                CrafteosSelec[i].SetActive(false);
+                if (tieneMateriales)
+                {
+                    Chec++;
+                }
             }
         }
+        if (Chec == Selec)
+        {
+            BotCraftear.SetActive(true);
+        }
     }
-    
+
+    public void esconderCrafteosSelec()
+    {
+        for (int i = 0; i < CrafteosSelec.Length; i++)
+        {
+            CrafteosSelec[i].SetActive(false);
+            
+        }
+    }
+
     //mostrar los objetos que necesita para crear la habilidad
     public void mostraRecursosTemp()
     {
+        BotCraftear.SetActive(false);
         htEnEspera = HabilidadesTemporales[objetoPrincipalInt].Nombre;
         if (ObjetosNessesarios != null)
         {
@@ -472,9 +516,16 @@ public class Scr_Taller : MonoBehaviour
             ObjetosNessesarios.Add(HabilidadesTemporales[objetoPrincipalInt].ItemsRequeridos[i]);
             CantidadObjNessesarios.Add(HabilidadesTemporales[objetoPrincipalInt].CantidadesRequeridas[i]);
         }
-        for (int i = 0; i < CrafteosSelec.Length; i++)
+        esconderCrafteosSelec();
+        int Selec = CrafteosSelec.Length;
+        int Chec = 0;
+        if (ObjetosNessesarios.Count <= CrafteosSelec.Length)
         {
-            if (i < ObjetosNessesarios.Count && ObjetosNessesarios[i] != null )
+            Selec = ObjetosNessesarios.Count;
+        }
+        for (int i = 0; i < Selec; i++)
+        {
+            if (ObjetosNessesarios[i] != null)
             {
                 CrafteosSelec[i].SetActive(true);
                 CrafteosSelec[i].GetComponent<Image>().sprite = ObjetosNessesarios[i].Icono;
@@ -484,11 +535,15 @@ public class Scr_Taller : MonoBehaviour
                         CantidadObjNessesarios[i]
                     );
                 CrafteosSelec[i].transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().color = tieneMateriales ? Color.white : Color.red;
+                if (tieneMateriales)
+                {
+                    Chec++;
+                }
             }
-            else
-            {
-                CrafteosSelec[i].SetActive(false);
-            }
+        }
+        if (Chec == Selec)
+        {
+            BotCraftear.SetActive(true);
         }
     }
     private bool CalcularObjetos(Scr_CreadorObjetos objetosNecesarios, int cantidadesNecesarias)
@@ -509,10 +564,12 @@ public class Scr_Taller : MonoBehaviour
             case 0:
                 quitarobjetos();
                 inventario.AgregarObjeto(1, htEnEspera);
+                mostraRecursosOBJ();
                 break;
             case 1:
                 Datosarmas.AgregarUsosTemporales(htEnEspera);
                 quitarobjetos();
+                mostraRecursosTemp();
                 break;
         }
     }
@@ -738,7 +795,6 @@ public class Scr_Taller : MonoBehaviour
             }
         }
     }
-
     public void NuevaHabilidad(int hab)
     {
         int habS=Habilidadesint[hab];
@@ -762,6 +818,8 @@ public class Scr_Taller : MonoBehaviour
                 guardarArmasHabilidades();
                 break;
         }
+
+        HabilidadesSec.SetActive(false);
         mostrarArmasHabilidades();
     }
 

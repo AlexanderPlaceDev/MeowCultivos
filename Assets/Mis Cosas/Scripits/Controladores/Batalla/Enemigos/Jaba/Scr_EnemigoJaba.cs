@@ -44,13 +44,7 @@ public class Scr_EnemigoJaba : Scr_Enemigo
 
     void Update()
     {
-        if (estaCongelado) return;
-        if (estaStuneado) return;
-        if (!Aparecio) return;
-        if (EstaMuerto) return;
-        {
-
-        }
+        if (estaCongelado || estaStuneado || !Aparecio || EstaMuerto) return;
 
         if (Objetivo != null)
         {

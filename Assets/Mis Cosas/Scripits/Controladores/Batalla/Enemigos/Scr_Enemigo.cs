@@ -513,6 +513,7 @@ public class Scr_Enemigo : MonoBehaviour
     IEnumerator EstadoElectrificado(float duracion, float dañoPorSegundo)
     {
         float tiempoPasado = 0f;
+        Velocidad = Velocidad / 3;
         while (tiempoPasado < duracion)
         {
             // Muestra el efecto
@@ -524,6 +525,7 @@ public class Scr_Enemigo : MonoBehaviour
             tiempoPasado += 1f;
             Destroy(explosion);
         }
+        Velocidad = Velocidad * 3;
         Debug.Log("Efecto eléctrico terminado");
     }
 }
