@@ -5354,8 +5354,6 @@ MonoBehaviour:
   recoger_sonido: []
   talar_sonido: []
   picar_sonido: []
-  Dinero_sonido: []
-  Nivel_sonido: []
 --- !u!82 &8431770067021235754
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5379,7 +5377,7 @@ AudioSource:
   MinDistance: 1
   MaxDistance: 100
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0

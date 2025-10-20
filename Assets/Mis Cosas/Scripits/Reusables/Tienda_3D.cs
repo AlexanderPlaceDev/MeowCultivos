@@ -1,49 +1,106 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+ï»¿using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.Experimental;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Tienda_3D : MonoBehaviour
 {
-    //public GameObject personajePrefab;
-    public GameObject[] Obetoscompra; 
-    //public Transform contentPanel;
+    public GameObject[] Obetoscompra;
     public int objetosVender;
     public int cantidad;
     public int precio;
     public float descuento = 20;
     public TextMeshProUGUI Dinero;
-    private Transform Gata;
-    public   Scr_Inventario inventario;
-
+    public Scr_Inventario inventario;
+    public GameObject FoodTruck;
+    [SerializeField] GameObject Campana;
+    [SerializeField] GameObject Marco;
+    [SerializeField] GameObject CamaraTienda;
+    [SerializeField] GameObject CamaraVenta;
+    [SerializeField] GameObject AreaObjetosCompra; //Vertical Layout Group
 
     public List<int> objetosAvender;
-    //public Button but;
-    // Start is called before the first frame update
+
+    // ðŸ”¹ Variables internas
+    private bool mouseSobreCampana = false;
+    private Material[] materialesCampana;
+    private Material[] materialesMarco;
+
     void Start()
     {
-        //Gata = GameObject.Find("Gata").transform;
-        //inventario = Gata.GetChild(7).GetComponent<Scr_Inventario>();
-        //MostrarObjetos();
-    }
-    void OnEnable()
-    {
-        //Gata = GameObject.Find("Gata").transform;
-        //inventario = Gata.GetChild(7).GetComponent<Scr_Inventario>();
-        MostrarObjetos();
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        Dinero.text = "Dinero:" + PlayerPrefs.GetInt("Dinero", 0);
+        // Asegurar collider
+        if (Campana != null && Campana.GetComponent<Collider>() == null)
+        {
+            Campana.AddComponent<BoxCollider>();
+        }
+
+        // Guardar materiales (si tiene un MeshRenderer o SkinnedMeshRenderer)
+        var renderer = Campana.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            materialesCampana = renderer.materials;
+        }
+        materialesMarco = Marco.GetComponent<Renderer>().materials;
     }
 
-    //se llama cada vez que se quiera reiniciar los objetos a vender
+    void Update()
+    {
+        DetectarCampanaHoverYClick();
+    }
+
+    private void DetectarCampanaHoverYClick()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        bool sobreCampana = false;
+
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            if (hit.collider.gameObject == Campana)
+            {
+                sobreCampana = true;
+
+                // Si hace clic
+                if (Input.GetMouseButtonDown(0))
+                {
+                    CamaraTienda.SetActive(false);
+                    CamaraVenta.SetActive(true);
+                }
+            }
+        }
+
+        // Cambiar materiales solo si el estado de hover cambiÃ³
+        if (sobreCampana && !mouseSobreCampana)
+        {
+            mouseSobreCampana = true;
+            CambiarIntensidadMateriales(5f);
+        }
+        else if (!sobreCampana && mouseSobreCampana)
+        {
+            mouseSobreCampana = false;
+            CambiarIntensidadMateriales(1f);
+        }
+    }
+
+    private void CambiarIntensidadMateriales(float valor)
+    {
+        if (materialesCampana == null || materialesMarco==null) return;
+
+        foreach (var mat in materialesCampana)
+        {
+            if (mat.HasProperty("_Intensidad"))
+            {
+                mat.SetFloat("_Intensidad", valor);
+            }
+        }
+        foreach (var mat in materialesMarco)
+        {
+            if (mat.HasProperty("_Intensidad"))
+            {
+                mat.SetFloat("_Intensidad", valor);
+            }
+        }
+    }
+
     public void nevosObjetos()
     {
         objetosAvender.Clear();
@@ -54,87 +111,10 @@ public class Tienda_3D : MonoBehaviour
         }
     }
 
-
-    //Muestra los objetos
-    void MostrarObjetos()
+    // ðŸ”¹ FunciÃ³n pÃºblica para volver a la cÃ¡mara de tienda
+    public void VolverACamaraTienda()
     {
-
-        List<int> numeros = Enumerable.Range(0, Obetoscompra.Length).ToList();
-        numeros = numeros.OrderBy(x => Random.value).ToList();
-
-        int num1 = numeros[0];
-        int num2 = numeros[1];
-
-        Debug.Log("tiene descuento el lugar " + num1 + " y " + num2);
-        //Debug.Log(objetosAvender.Count + "+++++++"+ Obetoscompra.Length);
-        for (int i = 0; i < objetosAvender.Count; i++)
-        {
-            Scr_CreadorObjetos instance = inventario.Objetos[objetosAvender[i]];
-
-            Image image = Obetoscompra[i].transform.Find("Objeto").GetComponent<Image>();
-            image.sprite = instance.Icono;
-
-            Transform comp = Obetoscompra[i].transform.Find("BComprar");
-
-            TextMeshProUGUI texto = comp.transform.Find("Precio").GetComponent<TextMeshProUGUI>();
-            EventTrigger boton = Obetoscompra[i].transform.Find("BComprar").GetComponent<EventTrigger>();
-
-            texto.text = $"{instance.Nombre} x{cantidad}";
-
-            boton.triggers.Clear();
-
-            int costo = precio;
-            if (i == num1 || i == num2)
-            {
-                float desc = (100 - descuento) / 100f;
-                costo = Mathf.RoundToInt(costo * desc);
-                Debug.Log(costo + " tiene descuento en el índice " + i);
-            }
-
-            boton.GetComponentInChildren<TextMeshProUGUI>().text = $"{costo}";
-
-            // CORRECCIÓN CLAVE AQUÍ:
-            int iCopia = i;
-            int costoCopia = costo;
-
-            EventTrigger.Entry entry = new EventTrigger.Entry();
-            entry.eventID = EventTriggerType.PointerDown;
-            entry.callback.AddListener((eventData) => {
-                comprarobjeto(objetosAvender[iCopia], costoCopia);
-            });
-
-            boton.triggers.Add(entry);
-
-            // Color del texto según si puede comprar o no
-            if (PlayerPrefs.GetInt("Dinero", 0) >= costo)
-            {
-                boton.GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
-            }
-            else
-            {
-                boton.GetComponentInChildren<TextMeshProUGUI>().color = Color.gray;
-            }
-        }
-    }
-
-    void comprarobjeto(int index, int costo)
-    {
-        if (PlayerPrefs.GetInt("Dinero", 0) >= costo)
-        {
-            for (int i = 0; i < inventario.Objetos.Length; i++)
-            {
-                if (inventario.Objetos[i] == inventario.Objetos[index])
-                {
-                    inventario.Cantidades[index] += cantidad;
-                    int newdinero = PlayerPrefs.GetInt("Dinero", 0) - costo;
-                    PlayerPrefs.SetInt("Dinero", newdinero);
-                    break;
-                }
-            }
-        }
-        else
-        {
-            Debug.Log("Jaja no money");
-        }
+        CamaraTienda.SetActive(true);
+        CamaraVenta.SetActive(false);
     }
 }
