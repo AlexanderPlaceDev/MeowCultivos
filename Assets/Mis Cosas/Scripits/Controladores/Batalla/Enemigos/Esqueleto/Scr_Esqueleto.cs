@@ -3,19 +3,13 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-/// <summary>
-/// Versión mejorada de Scr_Esqueleto:
-/// - Usa enum de estados
-/// - Usa distancia directa + margen (histeresis) para evitar oscilaciones
-/// - Controla rotación manual para evitar giros indeseados del NavMeshAgent
-/// - Retrocede con agente.Move para no girar mientras retrocede
-/// </summary>
 public class Scr_Esqueleto : Scr_Enemigo
 {
     [Header("Referencias")]
     [SerializeField] private Animator anim;
     [SerializeField] private NavMeshAgent agente;
     [SerializeField] private Transform jugador; // asignar desde inspector o se busca "Personaje" en Start
+    [SerializeField] private Scr_AreaDeAtaqueEnemiga areaAtaque; // 👈 Nueva referencia al área de ataque
 
     [Header("Parámetros")]
     [Tooltip("Distancia a la que considera atacar (configurable desde inspector).")]
@@ -39,25 +33,14 @@ public class Scr_Esqueleto : Scr_Enemigo
     {
         base.Start();
 
-        // referenciar jugador/agente si no están enlazados en inspector
         if (jugador == null) jugador = GameObject.Find("Personaje")?.transform;
         if (agente == null) agente = GetComponent<NavMeshAgent>();
 
-        // usar la velocidad heredada
         agente.speed = Velocidad;
-
-        // Desactivamos la rotación automática del agente:
-        // así controlamos la rotación manualmente y evitamos giros no deseados al retroceder.
         agente.updateRotation = false;
-
-        // no depender del stoppingDistance para decidir ataque; controlamos desde código
         agente.stoppingDistance = 0f;
-        if (agente.isOnNavMesh)
-        {
-            agente.isStopped = true;
-        }
+        if (agente.isOnNavMesh) agente.isStopped = true;
 
-        // animación de aparición si la tienes
         anim.Play(NombreAnimacionAparecer);
         float dur = anim.GetCurrentAnimatorStateInfo(0).length;
         StartCoroutine(EsperarAparicion(dur));
@@ -78,18 +61,10 @@ public class Scr_Esqueleto : Scr_Enemigo
 
         switch (estado)
         {
-            case Estado.Persiguiendo:
-                UpdatePersiguiendo(distancia);
-                break;
-            case Estado.Atacando:
-                UpdateAtacando(distancia);
-                break;
-            case Estado.Retrocediendo:
-                UpdateRetrocediendo(distancia);
-                break;
-            case Estado.Esperando:
-                UpdateEsperando(distancia);
-                break;
+            case Estado.Persiguiendo: UpdatePersiguiendo(distancia); break;
+            case Estado.Atacando: UpdateAtacando(distancia); break;
+            case Estado.Retrocediendo: UpdateRetrocediendo(distancia); break;
+            case Estado.Esperando: UpdateEsperando(distancia); break;
         }
     }
 
@@ -98,7 +73,6 @@ public class Scr_Esqueleto : Scr_Enemigo
     // -------------------------
     void UpdatePersiguiendo(float distancia)
     {
-        // Si entra dentro del rango de ataque -> atacar
         if (distancia <= rangoAtaque)
         {
             agente.isStopped = true;
@@ -106,13 +80,11 @@ public class Scr_Esqueleto : Scr_Enemigo
             return;
         }
 
-        // Si está fuera del rango + margen, perseguir
         if (!agente.isOnNavMesh) return;
         agente.isStopped = false;
         if (!agente.pathPending)
             agente.SetDestination(jugador.position);
 
-        // Rotación manual hacia el jugador (mantiene al enemigo mirando al jugador)
         Vector3 dir = jugador.position - transform.position;
         dir.y = 0;
         if (dir.sqrMagnitude > 0.001f)
@@ -121,7 +93,6 @@ public class Scr_Esqueleto : Scr_Enemigo
             transform.rotation = Quaternion.Slerp(transform.rotation, objetivo, Time.deltaTime * rotacionSpeed);
         }
 
-        // Activar "Caminando" sólo si realmente hay movimiento (evita que quede en animación caminando si está casi quieto)
         float vel = agente.velocity.magnitude;
         bool moving = vel > 0.12f && !agente.isStopped;
         anim.SetBool("Caminando", moving);
@@ -131,35 +102,26 @@ public class Scr_Esqueleto : Scr_Enemigo
 
     void UpdateAtacando(float distancia)
     {
-        // Mantener anim de ataque
         anim.SetBool("Atacando", true);
         anim.SetBool("Caminando", false);
         anim.SetBool("Retrocediendo", false);
 
         timer += Time.deltaTime;
 
-        // Cuando termine la animación de ataque, aplicar daño (una sola vez) y empezar retroceso
+        // Solo cambia de estado al finalizar el ataque, sin aplicar daño aquí
         if (timer >= duracionAtaque)
         {
-            if (!dañoAplicado)
-            {
-                dañoAplicado = true;
-                Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
-                batalla.VidaActual = Mathf.Max(0, batalla.VidaActual - DañoMelee);
-            }
-
             CambiarEstado(Estado.Retrocediendo);
         }
     }
 
+
     void UpdateRetrocediendo(float distancia)
     {
-        // Animaciones
         anim.SetBool("Retrocediendo", true);
         anim.SetBool("Atacando", false);
         anim.SetBool("Caminando", false);
 
-        // Mantener mirando al jugador (no giramos por el agente)
         Vector3 dir = jugador.position - transform.position;
         dir.y = 0;
         if (dir.sqrMagnitude > 0.001f)
@@ -168,7 +130,6 @@ public class Scr_Esqueleto : Scr_Enemigo
             transform.rotation = Quaternion.Slerp(transform.rotation, objetivo, Time.deltaTime * rotacionSpeed);
         }
 
-        // Retroceder con agente.Move (no altera la rotación)
         Vector3 moverAtras = -transform.forward * Velocidad * velocidadRetrocesoMultiplicador * Time.deltaTime;
         if (agente.isOnNavMesh)
             agente.Move(moverAtras);
@@ -196,20 +157,15 @@ public class Scr_Esqueleto : Scr_Enemigo
         }
     }
 
-    // -------------------------
-    // Cambio de estado centralizado
-    // -------------------------
     private void CambiarEstado(Estado nuevo)
     {
         estado = nuevo;
         timer = 0f;
 
-        // reset anims
         anim.SetBool("Caminando", false);
         anim.SetBool("Atacando", false);
         anim.SetBool("Retrocediendo", false);
 
-        // reseteo de flags
         dañoAplicado = false;
 
         switch (estado)
@@ -223,7 +179,6 @@ public class Scr_Esqueleto : Scr_Enemigo
                 dañoAplicado = false;
                 break;
             case Estado.Retrocediendo:
-                // usaremos Move para retroceder sin que el agente gire el transform
                 if (agente.isOnNavMesh) agente.isStopped = true;
                 anim.SetBool("Retrocediendo", true);
                 break;
@@ -245,4 +200,20 @@ public class Scr_Esqueleto : Scr_Enemigo
     {
         Tween.ShakeCamera(Camera.main, 3);
     }
+
+    public void HacerDaño()
+    {
+        if (EstaMuerto || areaAtaque == null) return;
+
+        // Solo causa daño si el jugador está dentro del área en el momento exacto
+        if (areaAtaque.EstaDentro)
+        {
+            Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
+            batalla.VidaActual = Mathf.Max(0, batalla.VidaActual - DañoMelee);
+
+            // Si tienes sacudida de cámara o efectos, también puedes ponerlos aquí
+            ShakeCamara();
+        }
+    }
+
 }
