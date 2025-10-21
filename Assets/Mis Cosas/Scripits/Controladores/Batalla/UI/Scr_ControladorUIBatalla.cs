@@ -175,8 +175,8 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
 
         if (ht == "Nada")
         {
-            //HabilidadTemporal.sprite = IconoVacio;
-            //usosHabilidadT.SetActive(false);
+            HabilidadTemporal.sprite = IconoVacio;
+            usosHabilidadT.SetActive(false);
         }
         else
         {
@@ -184,9 +184,9 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             HabilidadTemporal.sprite = HabT.Icono;
             BarraHabilidadTemporal.fillAmount = us / HabT.Usos;
         }
-        //Habilidad1.sprite=Hab1.Icono;
-        //Habilidad2.sprite=Hab2.Icono;
-        //HabilidadEspecial.sprite=HabE.Icono;
+        Habilidad1.sprite=Hab1.Icono;
+        Habilidad2.sprite=Hab2.Icono;
+        HabilidadEspecial.sprite=HabE.Icono;
         //Actualizar Datos
         Cadenciatxt.text = DatosArma.Cadencia + " s";
         if (DatosArma.CapacidadTotal == 0)
@@ -396,11 +396,10 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     public void checarUsosHabilidad()
     {
         int resultado = ControladorBatalla.usosHabilidad - 1;
-        if (resultado < 0)
+        PlayerPrefs.SetInt(DatosArma.Nombre + "Usos", resultado);
+        if (resultado <= 0)
         {
-
             PlayerPrefs.SetString(DatosArma.Nombre + "HT", "Nada");
-            PlayerPrefs.SetInt(DatosArma.Nombre + "Usos", 0);
         }
         
     }

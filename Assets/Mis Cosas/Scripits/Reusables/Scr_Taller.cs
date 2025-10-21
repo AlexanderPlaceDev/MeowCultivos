@@ -829,7 +829,8 @@ public class Scr_Taller : MonoBehaviour
         if (PlayerPrefs.GetString(arma + "HT", "Nada")== "Nada")
         {
             ht = htEnEspera;
-            Datosarmas.QuitarUsosTemporales(htEnEspera);
+            Datosarmas.QuitarUsosTemporales(htEnEspera); 
+            guardarArmasHabilidades();
         }
         else
         {
@@ -842,7 +843,8 @@ public class Scr_Taller : MonoBehaviour
         ht = htEnEspera;
         Datosarmas.QuitarUsosTemporales(htEnEspera);
         guardarArmasHabilidades();
-        Escondervertencia();
+        Escondervertencia(); 
+        mostrarArmasHabilidades();
     }
     public void mostraradevertencia()
     {
@@ -860,6 +862,7 @@ public class Scr_Taller : MonoBehaviour
     {
         string arma = Datosarmas.TodasLasArmas[objetoPrincipalInt].Nombre;
         //cantidadht = PlayerPrefs.GetInt(arma + "Usos", 0);
+        Debug.LogWarning(PlayerPrefs.GetString(arma + "HT", "Nada"));
         ht = PlayerPrefs.GetString(arma + "HT", "Nada");
         h1 = PlayerPrefs.GetString(arma + "H1", "Ojo");
         h2 = PlayerPrefs.GetString(arma + "H2", "Rugido");

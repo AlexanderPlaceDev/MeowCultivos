@@ -13,7 +13,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     //=========================
     //=== VARIABLES DE ESTADO ===
     //=========================
-    private bool estaAdentro = false;      // Si la gata está dentro del trigger del NPC
+    public bool estaAdentro = false;      // Si la gata está dentro del trigger del NPC
     private bool canvasActivo = false;     // Si el canvas de diálogo está activo
     private bool Hablando = false;         // Si el jugador está en un diálogo
     private bool Comprando = false;        // Si selecciono comprar
@@ -76,7 +76,10 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         // Si el panel está cerrado, pausamos el sistema de diálogo
         if (sistemaDialogos != null && !panelDialogo.activeSelf)
             sistemaDialogos.EnPausa = true;
-
+        if (panelDialogo.activeSelf)
+        {
+            Girar();
+        }
         if (!autoIniciarDialogo)
         {
             // Iniciar diálogo (E)
@@ -356,7 +359,11 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         PlayerPrefs.Save();
         ActualizarMisionActual();
     }
-
+    private void Girar()
+    {
+        Quaternion objetivo = Quaternion.LookRotation(new Vector3(transform.position.x, Gata.position.y, transform.position.z) - Gata.position);
+        Gata.rotation = Quaternion.RotateTowards(Gata.rotation, objetivo, 200 * Time.deltaTime);
+    }
     private void VerificarMisionPrincipal()
     {
         if (controladorMisiones.MisionPrincipal == null) return;

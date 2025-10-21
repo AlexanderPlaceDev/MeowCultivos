@@ -65,7 +65,7 @@ public class NPC_movimiento : MonoBehaviour
                 Esperando = false;
                 ReiniciarPosiciones();
                 diaAnterior = ContolT.DiaActual;
-                //Debug.Log("aa");
+                Debug.Log("aa"); 
                 MoverAlLugarMasCercano();
             }
 
@@ -88,6 +88,7 @@ public class NPC_movimiento : MonoBehaviour
                     BoxCollider[] colliders = GetComponents<BoxCollider>();
                     colliders[1].enabled = false; // Desactiva el segundo BoxCollider
                     Dialogo.OcultarIconos();
+                    Dialogo.estaAdentro = false;
                 }
                 checarcambio();
 
@@ -132,8 +133,10 @@ public class NPC_movimiento : MonoBehaviour
 
         Destino = pos[posIndex].position;
         agente.isStopped = false;
-        agente.SetDestination(Destino);
         Anim.Caminando = true;
+        agente.SetDestination(Destino);
+        Dialogo.OcultarIconos();
+        Dialogo.estaAdentro = false;
         //Debug.Log("AAA ya me muevo");
     }
 

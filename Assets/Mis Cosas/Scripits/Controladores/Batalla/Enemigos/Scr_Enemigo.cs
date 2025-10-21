@@ -247,7 +247,7 @@ public class Scr_Enemigo : MonoBehaviour
         Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
             GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].PuntosXGolpe;
         RecibirDaño(daño, dañado);
-        checarEfecto(efecto);
+        checarEfecto(efecto,1);
         Scr_ControladorArmas cont = GameObject.Find("Controlador").GetComponent<Scr_ControladorArmas>();
         if (cont.sangria)
         {
@@ -280,37 +280,37 @@ public class Scr_Enemigo : MonoBehaviour
         }
     }
 
-    private void checarEfecto(string efecto)
+    public void checarEfecto(string efecto, float porefecto)
     {
         switch (efecto)
         {
             case "Stunear":
-                StartCoroutine(EstadoStuneado(3f));
+                StartCoroutine(EstadoStuneado(3f, porefecto));
                 break;
 
             case "Quemar":
-                StartCoroutine(EstadoQuemando(5f, 2f)); // duración 5s, 2 de daño por segundo
+                StartCoroutine(EstadoQuemando(5f, 2f, porefecto)); // duración 5s, 2 de daño por segundo
                 break;
 
             case "Veneno":
-                StartCoroutine(EstadoVeneno(5f, 1f)); // duración 5s, 1 de daño por segundo
+                StartCoroutine(EstadoVeneno(5f, 1f, porefecto)); // duración 5s, 1 de daño por segundo
                 break;
 
             case "Congelar":
-                StartCoroutine(EstadoCongelado(4f)); // duración 4s
+                StartCoroutine(EstadoCongelado(4f, porefecto)); // duración 4s
                 break;
 
             case "Empujar":
-                StartCoroutine(EstadoEmpujado(250)); // dirección y fuerza
+                StartCoroutine(EstadoEmpujado(250, porefecto)); // dirección y fuerza
                 break;
 
             case "Electrificar":
-                StartCoroutine(EstadoElectrificado(3f, 3f)); // duración 3s, daño 3 por segundo
+                StartCoroutine(EstadoElectrificado(3f, 3f, porefecto)); // duración 3s, daño 3 por segundo
                 efecto = "Rebotar"; // esto parece un cambio de lógica que puede necesitar explicación
                 break;
 
             case "Explotar":
-                StartCoroutine(EstadoExplotado(20f, 170f, transform.position - Vector3.forward)); // daño, fuerza, origen
+                StartCoroutine(EstadoExplotado(20f, 170f, transform.position - Vector3.forward, porefecto)); // daño, fuerza, origen
                 break;
         }
     }
@@ -434,21 +434,21 @@ public class Scr_Enemigo : MonoBehaviour
             cambiandoColor = false;
         }
     }
-    IEnumerator EstadoStuneado(float duracion)
+    IEnumerator EstadoStuneado(float duracion, float por)
     {
         estaStuneado = true;
         Debug.Log("Enemigo stuneado");
-        yield return new WaitForSeconds(duracion);
+        yield return new WaitForSeconds(duracion * por);
         estaStuneado = false;
         Debug.Log("Enemigo recuperado del stun");
     }
 
-    IEnumerator EstadoQuemando(float duracion, float dañoPorSegundo)
+    IEnumerator EstadoQuemando(float duracion, float dañoPorSegundo, float por)
     {
         // Muestra el efecto
         
         float tiempoPasado = 0f;
-        while (tiempoPasado < duracion)
+        while (tiempoPasado < (duracion * por))
         {
             GameObject explosion = Instantiate(Controlador.GetComponent<Scr_ControladorBatalla>().particulaQuemado, transform.position, transform.rotation);
             explosion.transform.SetParent(transform);
@@ -460,12 +460,12 @@ public class Scr_Enemigo : MonoBehaviour
         Debug.Log("Efecto de quemadura terminado");
     }
 
-    IEnumerator EstadoVeneno(float duracion, float dañoPorSegundo)
+    IEnumerator EstadoVeneno(float duracion, float dañoPorSegundo, float por)
     {
         // Muestra el efecto
         
         float tiempoPasado = 0f;
-        while (tiempoPasado < duracion)
+        while (tiempoPasado < (duracion * por))
         {
             GameObject explosion = Instantiate(Controlador.GetComponent<Scr_ControladorBatalla>().particulaEnvenado, transform.position, transform.rotation);
             explosion.transform.SetParent(transform);
@@ -477,7 +477,7 @@ public class Scr_Enemigo : MonoBehaviour
         Debug.Log("Efecto de veneno terminado");
     }
 
-    IEnumerator EstadoCongelado(float duracion)
+    IEnumerator EstadoCongelado(float duracion, float por)
     {
         // Muestra el efecto
         GameObject explosion = Instantiate(Controlador.GetComponent<Scr_ControladorBatalla>().particulaCongelado, transform.position, transform.rotation);
@@ -485,36 +485,36 @@ public class Scr_Enemigo : MonoBehaviour
         estaCongelado = true;
         Debug.Log("Enemigo congelado");
         StartCoroutine(ChangeMaterial(congelado, .3f));
-        yield return new WaitForSeconds(duracion);
+        yield return new WaitForSeconds(duracion * por);
         estaCongelado = true;
         Debug.Log("Enemigo descongelado");
         Destroy(explosion);
     }
 
-    IEnumerator EstadoEmpujado(float fuerza)
+    IEnumerator EstadoEmpujado(float fuerza, float por)
     {
         Rigidbody rb = GetComponent<Rigidbody>();
         Vector3 direccion = -transform.forward; // dirección hacia atrás del personaje
-        rb.AddForce(direccion * fuerza, ForceMode.Impulse);
+        rb.AddForce(direccion * (fuerza*por), ForceMode.Impulse);
         Debug.Log("Enemigo empujado");
         yield return null;
     }
 
-    IEnumerator EstadoExplotado(float daño, float fuerzaEmpuje, Vector3 origenExplosion)
+    IEnumerator EstadoExplotado(float daño, float fuerzaEmpuje, Vector3 origenExplosion, float por)
     {
-        RecibirDaño(daño,dañado);
+        RecibirDaño((daño*por),dañado);
         //Vector3 direccion = transform.position - origenExplosion;
         Vector3 direccion = -transform.forward; // dirección hacia atrás del personaje
-        GetComponent<Rigidbody>().AddForce(direccion.normalized * fuerzaEmpuje, ForceMode.Impulse);
+        GetComponent<Rigidbody>().AddForce(direccion.normalized * (fuerzaEmpuje *por), ForceMode.Impulse);
         Debug.Log("Enemigo explotado");
         yield return null;
     }
 
-    IEnumerator EstadoElectrificado(float duracion, float dañoPorSegundo)
+    IEnumerator EstadoElectrificado(float duracion, float dañoPorSegundo, float por)
     {
         float tiempoPasado = 0f;
         Velocidad = Velocidad / 3;
-        while (tiempoPasado < duracion)
+        while (tiempoPasado < (duracion*por))
         {
             // Muestra el efecto
             GameObject explosion = Instantiate(Controlador.GetComponent<Scr_ControladorBatalla>().particulaElectrica, transform.position, transform.rotation);
@@ -527,5 +527,21 @@ public class Scr_Enemigo : MonoBehaviour
         }
         Velocidad = Velocidad * 3;
         Debug.Log("Efecto eléctrico terminado");
+    }
+
+    public void compartirefecto(string efecto, float porcentaje)
+    {
+        Vector3 center = transform.position;
+
+        Collider[] colliders = Physics.OverlapSphere(center, 3f);
+
+        foreach (Collider col in colliders)
+        {
+            Scr_Enemigo ene = col.GetComponent<Scr_Enemigo>();
+            if (ene != null)
+            {
+                ene.checarEfecto(efecto, porcentaje);
+            }
+        }
     }
 }
