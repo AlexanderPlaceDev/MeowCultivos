@@ -5,199 +5,215 @@ using UnityEngine.AI;
 
 public class Scr_Esqueleto : Scr_Enemigo
 {
-    [SerializeField] Animator Anim;
+    [Header("Referencias")]
+    [SerializeField] private Animator anim;
+    [SerializeField] private NavMeshAgent agente;
+    [SerializeField] private Transform jugador; // asignar desde inspector o se busca "Personaje" en Start
+    [SerializeField] private Scr_AreaDeAtaqueEnemiga areaAtaque; // 👈 Nueva referencia al área de ataque
 
-    private GameObject Gata;
-    private NavMeshAgent agente;
-    private float temporizadorEspera;
-    private bool esperando = false;
-    private bool Atacando = false;
-    private float ContAtaque = 0;
-    private bool retrocede = false;
-    private float Contretrocede = 0;
-    public float duracionRetroceder = 1;
+    [Header("Parámetros")]
+    [Tooltip("Distancia a la que considera atacar (configurable desde inspector).")]
+    [SerializeField] private float rangoAtaque = 2f;
+    [Tooltip("Margen para evitar que el enemigo oscile justo en el borde del rango.")]
+    [SerializeField] private float margenHisteresis = 0.25f;
+    [SerializeField] private float duracionAtaque = 1.042f;
+    [SerializeField] private float duracionRetroceder = 1.0f;
+    [SerializeField] private float tiempoEsperaPostRetroceso = 1.5f;
+    [SerializeField] private float velocidadRetrocesoMultiplicador = 1.0f;
+    [SerializeField] private float rotacionSpeed = 5f;
 
-    // 🔹 Nueva lógica para esperar después de retroceder
-    public float tiempoEsperaPostRetroceso = 1.5f;
-    private bool esperandoPostRetroceso = false;
-    private float contEsperaPostRetroceso = 0;
+    private enum Estado { Apareciendo, Persiguiendo, Atacando, Retrocediendo, Esperando }
+    private Estado estado = Estado.Apareciendo;
+
+    private float timer = 0f;
+    private bool aparecio = false;
+    private bool dañoAplicado = false;
 
     protected override void Start()
     {
         base.Start();
 
-        Gata = GameObject.Find("Personaje");
-        agente = GetComponent<NavMeshAgent>();
+        if (jugador == null) jugador = GameObject.Find("Personaje")?.transform;
+        if (agente == null) agente = GetComponent<NavMeshAgent>();
+
         agente.speed = Velocidad;
+        agente.updateRotation = false;
+        agente.stoppingDistance = 0f;
+        if (agente.isOnNavMesh) agente.isStopped = true;
 
-        if (agente.isOnNavMesh)
-        {
-            agente.isStopped = true; // 🔹 Detener movimiento inicial
-        }
-
-        // Reproducir animación de aparición y esperar a que termine
-        Anim.Play(NombreAnimacionAparecer);
-        float duracion = Anim.GetCurrentAnimatorStateInfo(0).length;
-        StartCoroutine(EsperarAparicion(duracion));
+        anim.Play(NombreAnimacionAparecer);
+        float dur = anim.GetCurrentAnimatorStateInfo(0).length;
+        StartCoroutine(EsperarAparicion(dur));
     }
 
-    IEnumerator EsperarAparicion(float duracion)
+    IEnumerator EsperarAparicion(float dur)
     {
-        yield return new WaitForSeconds(duracion);
-        Aparecio = true;
-        if (agente.isOnNavMesh)
-        {
-            agente.isStopped = false;
-        }
+        yield return new WaitForSeconds(dur);
+        aparecio = true;
+        CambiarEstado(Estado.Persiguiendo);
     }
 
     void Update()
     {
-        if (!Aparecio) return;
-        if (EstaMuerto) return;
+        if (!aparecio || EstaMuerto || jugador == null) return;
 
-        if (Objetivo != null)
+        float distancia = Vector3.Distance(transform.position, jugador.position);
+
+        switch (estado)
         {
-            float distancia = Vector3.Distance(transform.position, Objetivo.position);
-
-            if (esperando)
-            {
-                Vector3 direccion = Gata.transform.position - transform.position;
-                direccion.y = 0;
-                if (direccion != Vector3.zero)
-                {
-                    Quaternion rotacionDeseada = Quaternion.LookRotation(direccion);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, rotacionDeseada, Time.deltaTime * 5f);
-                }
-                temporizadorEspera -= Time.deltaTime;
-            }
-
-            if (temporizadorEspera <= 0)
-            {
-                esperando = false;
-            }
-
-            // 🔹 Ataque
-            if (distancia <= agente.stoppingDistance + 1f)
-            {
-                if (!esperando && !Atacando && !retrocede && !esperandoPostRetroceso)
-                {
-                    agente.isStopped = true;
-                    esperando = true;
-                    Atacar();
-                }
-            }
-            else
-            {
-                // 🔹 Movimiento o retroceso
-                if (!esperando && !retrocede && !esperandoPostRetroceso)
-                {
-                    Mover();
-                }
-                else if (retrocede && Contretrocede < duracionRetroceder)
-                {
-                    Contretrocede += Time.deltaTime;
-                    PaAtras();
-                }
-                else if (retrocede && !esperandoPostRetroceso)
-                {
-                    // 🔹 Fin de retroceso → empieza espera
-                    Contretrocede = 0;
-                    retrocede = false;
-                    esperandoPostRetroceso = true;
-                    contEsperaPostRetroceso = 0;
-                    agente.isStopped = true;
-                }
-                else if (esperandoPostRetroceso)
-                {
-                    contEsperaPostRetroceso += Time.deltaTime;
-                    if (contEsperaPostRetroceso >= tiempoEsperaPostRetroceso)
-                    {
-                        esperandoPostRetroceso = false;
-                        contEsperaPostRetroceso = 0;
-                        agente.isStopped = false;
-                    }
-                }
-            }
-
-            // 🔹 Ciclo de ataque
-            if (Atacando && ContAtaque < DuracionDeAtaque)
-            {
-                ContAtaque += Time.deltaTime;
-            }
-            else
-            {
-                ContAtaque = 0;
-                Atacando = false;
-            }
+            case Estado.Persiguiendo: UpdatePersiguiendo(distancia); break;
+            case Estado.Atacando: UpdateAtacando(distancia); break;
+            case Estado.Retrocediendo: UpdateRetrocediendo(distancia); break;
+            case Estado.Esperando: UpdateEsperando(distancia); break;
         }
+    }
+
+    // -------------------------
+    // Estados
+    // -------------------------
+    void UpdatePersiguiendo(float distancia)
+    {
+        if (distancia <= rangoAtaque)
+        {
+            agente.isStopped = true;
+            CambiarEstado(Estado.Atacando);
+            return;
+        }
+
+        if (!agente.isOnNavMesh) return;
+        agente.isStopped = false;
+        if (!agente.pathPending)
+            agente.SetDestination(jugador.position);
+
+        Vector3 dir = jugador.position - transform.position;
+        dir.y = 0;
+        if (dir.sqrMagnitude > 0.001f)
+        {
+            Quaternion objetivo = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, objetivo, Time.deltaTime * rotacionSpeed);
+        }
+
+        float vel = agente.velocity.magnitude;
+        bool moving = vel > 0.12f && !agente.isStopped;
+        anim.SetBool("Caminando", moving);
+        anim.SetBool("Atacando", false);
+        anim.SetBool("Retrocediendo", false);
+    }
+
+    void UpdateAtacando(float distancia)
+    {
+        anim.SetBool("Atacando", true);
+        anim.SetBool("Caminando", false);
+        anim.SetBool("Retrocediendo", false);
+
+        timer += Time.deltaTime;
+
+        // Solo cambia de estado al finalizar el ataque, sin aplicar daño aquí
+        if (timer >= duracionAtaque)
+        {
+            CambiarEstado(Estado.Retrocediendo);
+        }
+    }
+
+
+    void UpdateRetrocediendo(float distancia)
+    {
+        anim.SetBool("Retrocediendo", true);
+        anim.SetBool("Atacando", false);
+        anim.SetBool("Caminando", false);
+
+        Vector3 dir = jugador.position - transform.position;
+        dir.y = 0;
+        if (dir.sqrMagnitude > 0.001f)
+        {
+            Quaternion objetivo = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, objetivo, Time.deltaTime * rotacionSpeed);
+        }
+
+        Vector3 moverAtras = -transform.forward * Velocidad * velocidadRetrocesoMultiplicador * Time.deltaTime;
+        if (agente.isOnNavMesh)
+            agente.Move(moverAtras);
         else
+            transform.position += moverAtras;
+
+        timer += Time.deltaTime;
+        if (timer >= duracionRetroceder)
         {
-            if (agente.isOnNavMesh)
-            {
-                Objetivo = Gata.transform;
-                agente.SetDestination(Objetivo.position);
-            }
+            CambiarEstado(Estado.Esperando);
         }
     }
 
-    void Mover()
+    void UpdateEsperando(float distancia)
     {
-        if (agente != null && agente.isActiveAndEnabled && agente.isOnNavMesh)
-        {
-            if (!Anim.GetCurrentAnimatorStateInfo(0).IsName("Mover"))
-            {
-                Anim.Play("Mover");
-            }
-            agente.isStopped = false;
-            Objetivo = Gata.transform;
-            agente.destination = Objetivo.position;
-        }
-    }
-
-    void PaAtras()
-    {
-        Vector3 direccion = Gata.transform.position - transform.position;
-        if (direccion != Vector3.zero)
-        {
-            Quaternion rotacionDeseada = Quaternion.LookRotation(direccion);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotacionDeseada, Time.deltaTime * 5f);
-        }
-
-        if (agente != null && agente.isActiveAndEnabled && agente.isOnNavMesh)
-        {
-            if (!Anim.GetCurrentAnimatorStateInfo(0).IsName("Mover"))
-            {
-                Anim.Play("Mover");
-            }
-            agente.isStopped = false;
-            agente.destination = transform.position - (transform.forward * 20);
-        }
-    }
-
-    void Atacar()
-    {
-        Debug.Log("Comenzo Atacar");
-        Atacando = true;
         agente.isStopped = true;
+        anim.SetBool("Caminando", false);
+        anim.SetBool("Atacando", false);
+        anim.SetBool("Retrocediendo", false);
 
-        if (Random.Range(0, 2) == 1)
+        timer += Time.deltaTime;
+        if (timer >= tiempoEsperaPostRetroceso)
         {
-            Anim.Play("Ataque1");
-            DuracionDeAtaque = 2.917f;
+            CambiarEstado(Estado.Persiguiendo);
         }
-        else
-        {
-            Anim.Play("Ataque2");
-            DuracionDeAtaque = 1.042f;
-        }
-
-        Tween.ShakeCamera(Camera.main, 3);
-
-        Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
-        batalla.VidaActual = Mathf.Max(0, batalla.VidaActual - DañoMelee);
-
-        // 🔹 Comienza retroceso después del ataque
-        retrocede = true;
     }
+
+    private void CambiarEstado(Estado nuevo)
+    {
+        estado = nuevo;
+        timer = 0f;
+
+        anim.SetBool("Caminando", false);
+        anim.SetBool("Atacando", false);
+        anim.SetBool("Retrocediendo", false);
+
+        dañoAplicado = false;
+
+        switch (estado)
+        {
+            case Estado.Persiguiendo:
+                if (agente.isOnNavMesh) agente.isStopped = false;
+                break;
+            case Estado.Atacando:
+                if (agente.isOnNavMesh) agente.isStopped = true;
+                anim.SetBool("Atacando", true);
+                dañoAplicado = false;
+                break;
+            case Estado.Retrocediendo:
+                if (agente.isOnNavMesh) agente.isStopped = true;
+                anim.SetBool("Retrocediendo", true);
+                break;
+            case Estado.Esperando:
+                if (agente.isOnNavMesh) agente.isStopped = true;
+                break;
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, rangoAtaque);
+        Gizmos.color = Color.yellow;
+        if (jugador != null) Gizmos.DrawLine(transform.position, jugador.position);
+    }
+
+    public void ShakeCamara()
+    {
+        Tween.ShakeCamera(Camera.main, 3);
+    }
+
+    public void HacerDaño()
+    {
+        if (EstaMuerto || areaAtaque == null) return;
+
+        // Solo causa daño si el jugador está dentro del área en el momento exacto
+        if (areaAtaque.EstaDentro)
+        {
+            Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
+            batalla.VidaActual = Mathf.Max(0, batalla.VidaActual - DañoMelee);
+
+            // Si tienes sacudida de cámara o efectos, también puedes ponerlos aquí
+            ShakeCamara();
+        }
+    }
+
 }

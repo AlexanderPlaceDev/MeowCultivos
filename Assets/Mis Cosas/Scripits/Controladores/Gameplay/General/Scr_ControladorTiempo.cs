@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class Scr_ControladorTiempo : MonoBehaviour
 {
-    public int DuracionDelDiaPorHora; // Duraci�n en segundos de una hora en el juego
-    public string DiaActual = "LUN"; // D�a inicial del juego
+    public int DuracionDelDiaPorHora; // Duración en segundos de una hora en el juego
+    public string DiaActual = "LUN"; // Día inicial del juego
     public int HoraActual = 10; // Hora inicial, por ejemplo, 6:00 AM
     public float MinutoActual = 0; // Minuto actual, avanza en intervalos de 10 minutos
     [SerializeField] Image ImagenClima;
@@ -16,15 +16,15 @@ public class Scr_ControladorTiempo : MonoBehaviour
     [SerializeField] TextMeshProUGUI TextoFecha; // Texto que muestra la fecha actual
     [SerializeField] TextMeshProUGUI TextoHora; // Texto que muestra la hora actual
     [SerializeField] Light Sol; // Direccional Light que representa el sol
-    [SerializeField] Color[] ColoresDelDia; // Array de colores para cada parte del d�a
+    [SerializeField] Color[] ColoresDelDia; // Array de colores para cada parte del día
 
     // Variables para el Skybox
-    public Material SkyboxDia; // Skybox para el d�a
+    public Material SkyboxDia; // Skybox para el día
     public Material SkyboxNoche; // Skybox para la noche
-    public int HoraInicioDia = 6; // Hora en la que empieza el d�a (6 AM)
+    public int HoraInicioDia = 6; // Hora en la que empieza el día (6 AM)
     public int HoraInicioNoche = 18; // Hora en la que empieza la noche (6 PM)
 
-    private float rotacionSkybox = 0f; // Controlar la rotaci�n del Skybox
+    private float rotacionSkybox = 0f; // Controlar la rotación del Skybox
 
     private float tiempoTranscurrido = 0; // Controla el tiempo que pasa entre frames
     private int[] intervalosMinutos = { 0, 10, 20, 30, 40, 50 }; // Intervalos de 10 minutos
@@ -64,7 +64,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
         // Incrementa el tiempo transcurrido
         tiempoTranscurrido += Time.deltaTime;
 
-        // Si el tiempo transcurrido es mayor a la duraci�n de una "hora" en el juego
+        // Si el tiempo transcurrido es mayor a la duración de una "hora" en el juego
         if (tiempoTranscurrido >= DuracionDelDiaPorHora / 6f) // Cada 1/6 de DuracionDelDiaPorHora es equivalente a 10 minutos
         {
             // Reinicia el contador de tiempo
@@ -84,13 +84,13 @@ public class Scr_ControladorTiempo : MonoBehaviour
             ActualizarIconoClima();
         }
 
-        // Cambia el color del sol dependiendo de la hora del d�a
+        // Cambia el color del sol dependiendo de la hora del día
         ActualizarColorSol();
 
-        // Cambia el skybox dependiendo de si es de d�a o de noche
+        // Cambia el skybox dependiendo de si es de día o de noche
         ActualizarSkybox();
 
-        // Actualizar la rotaci�n del Skybox
+        // Actualizar la rotación del Skybox
         RotarSkybox();
 
         EntregarDineroCajaVenta();
@@ -218,7 +218,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
     {
         if (HorasClima.Length != IconosClima.Length || HorasClima.Length == 0)
         {
-            Debug.LogError("El tama�o de HorasClima y IconosClima no coincide o est�n vac�os.");
+            Debug.LogError("El tamaño de HorasClima y IconosClima no coincide o están vacíos.");
             return;
         }
 
@@ -240,12 +240,12 @@ public class Scr_ControladorTiempo : MonoBehaviour
         ImagenClima.sprite = IconosClima[indiceIcono];
     }
 
-    // Funci�n para cambiar el skybox entre d�a y noche
+    // Función para cambiar el skybox entre día y noche
     void ActualizarSkybox()
     {
         if (HoraActual >= HoraInicioDia && HoraActual < HoraInicioNoche)
         {
-            RenderSettings.skybox = SkyboxDia; // Cambiar al skybox de d�a
+            RenderSettings.skybox = SkyboxDia; // Cambiar al skybox de día
         }
         else
         {
@@ -253,11 +253,11 @@ public class Scr_ControladorTiempo : MonoBehaviour
         }
     }
 
-    // Funci�n para rotar el skybox suavemente
+    // Función para rotar el skybox suavemente
     void RotarSkybox()
     {
         // Rotar el skybox un poco cada frame
-        rotacionSkybox += Time.deltaTime * 1f; // Cambia el valor de 1f para ajustar la velocidad de rotaci�n
+        rotacionSkybox += Time.deltaTime * 1f; // Cambia el valor de 1f para ajustar la velocidad de rotación
         RenderSettings.skybox.SetFloat("_Rotation", rotacionSkybox);
     }
 }

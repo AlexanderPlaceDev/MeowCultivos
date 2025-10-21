@@ -5153,6 +5153,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 5752942388155686675}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ce1986922dd10542b8084a299567b99,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -6833998940308319880}
   m_SourcePrefab: {fileID: 100100000, guid: 6ce1986922dd10542b8084a299567b99, type: 3}
 --- !u!1 &5209966612179744886 stripped
 GameObject:
@@ -5330,6 +5334,8 @@ MonoBehaviour:
   tipoenemigo: 0
   tipocomportamiento: 1
   Controlador: {fileID: 0}
+  estaStuneado: 0
+  estaCongelado: 0
   "CanvasDa\xF1o": {fileID: 8855847776912535175, guid: c2c9e7e03a15dbc42b7d969aee7d9fbc,
     type: 3}
   "PosInicialDa\xF1o": {fileID: 1109766315112578472}
@@ -5358,11 +5364,8 @@ MonoBehaviour:
   recoger_sonido: []
   talar_sonido: []
   picar_sonido: []
-  caminar: 0
-  correr: 0
-  recoger: 0
-  talar: 0
-  picar: 0
+  Dinero_sonido: []
+  Nivel_sonido: []
 --- !u!82 &5752942388155686675
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5459,6 +5462,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-6833998940308319880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8087238990687637167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d5364f17fb28794e90a6af4d8f0bf2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  categoria: 3
 --- !u!4 &8894738658789184533 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6ce1986922dd10542b8084a299567b99,

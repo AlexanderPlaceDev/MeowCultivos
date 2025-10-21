@@ -69,21 +69,21 @@ public class Scr_ControladorMenu : MonoBehaviour
 
 
         //InicializarOpciones
-        if (PlayerPrefs.HasKey("Volumen\""))
+        if (PlayerPrefs.HasKey("Volumen"))
         {
-            SliderVolumen_General.value = PlayerPrefs.GetInt("Volumen", 50);
+            SliderVolumen_General.value = PlayerPrefs.GetInt("Volumen", 100);
         }
-        if (PlayerPrefs.HasKey("Volumen_Musica\""))
+        if (PlayerPrefs.HasKey("Volumen_Musica"))
         {
-            SliderVolumen_Musica.value = PlayerPrefs.GetInt("Volumen_Musica", 20);
+            SliderVolumen_Musica.value = PlayerPrefs.GetInt("Volumen_Musica", 50);
         }
-        if (PlayerPrefs.HasKey("Volumen_Ambiente\""))
+        if (PlayerPrefs.HasKey("Volumen_Ambiente"))
         {
             SliderVolumen_Ambiental.value = PlayerPrefs.GetInt("Volumen_Ambiente", 20);
         }
-        if (PlayerPrefs.HasKey("Volumen_Combate\""))
+        if (PlayerPrefs.HasKey("Volumen_Combate"))
         {
-            SliderVolumen_Combate.value = PlayerPrefs.GetInt("Volumen_Combate", 20);
+            SliderVolumen_Combate.value = PlayerPrefs.GetInt("Volumen_Combate", 50);
         }
         if (PlayerPrefs.HasKey("Brillo"))
         {
@@ -149,7 +149,7 @@ public class Scr_ControladorMenu : MonoBehaviour
             TextoVolumen_Musica.text = "Musica "+(int)SliderVolumen_Musica.value + " %";
             TextoVolumen_Ambiental.text = "Ambiental " + (int)SliderVolumen_Ambiental.value + " %";
             TextoVolumen_Combate.text = "Combate" + (int)SliderVolumen_Combate.value + " %";
-            TextoBrillo.text = "Brillo " + (int)SliderBrillo.value + " %";
+            TextoBrillo.text =(int)SliderBrillo.value + " %";
         }
     }
 

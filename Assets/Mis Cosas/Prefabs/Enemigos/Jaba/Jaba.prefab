@@ -5263,17 +5263,17 @@ PrefabInstance:
     - target: {fileID: 8879528566716807029, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 40
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8879528566716807029, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 40
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8879528566716807029, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 40
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8879528566716807029, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
@@ -5313,10 +5313,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1857684654691750749}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: caa63f37c21c4064b93b00e85427ef29,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 4900658720287335753}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
@@ -5338,6 +5334,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1311006281806059995}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: caa63f37c21c4064b93b00e85427ef29,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -6406268355588470228}
     - targetCorrespondingSourceObject: {fileID: 3690449590506178401, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
       insertIndex: -1
@@ -5376,27 +5376,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!135 &1857684654691750749
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 178227796199041654}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 2.3938036
-  m_Center: {x: -0.043555982, y: 2.38, z: 0.28512073}
 --- !u!54 &4900658720287335753
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5433,14 +5412,14 @@ NavMeshAgent:
   m_GameObject: {fileID: 178227796199041654}
   m_Enabled: 0
   m_AgentTypeID: -1923039037
-  m_Radius: 2
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Radius: 0.3
+  m_Speed: 7
+  m_Acceleration: 500
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 300
   m_StoppingDistance: 2
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 0
@@ -5483,7 +5462,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NombreEnemigo: Jaba
   Vida: 20
-  Velocidad: 5
+  Velocidad: 7
   "Da\xF1oMelee": 1
   "Da\xF1oDistancia": 0
   DistanciaDeAtaque: 1.5
@@ -5547,11 +5526,6 @@ MonoBehaviour:
   recoger_sonido: []
   talar_sonido: []
   picar_sonido: []
-  caminar: 0
-  correr: 0
-  recoger: 0
-  talar: 0
-  picar: 0
 --- !u!82 &1311006281806059995
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5648,6 +5622,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-6406268355588470228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 178227796199041654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d5364f17fb28794e90a6af4d8f0bf2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  categoria: 3
 --- !u!4 &662840104225288396 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: caa63f37c21c4064b93b00e85427ef29,

@@ -46,6 +46,10 @@ public class Scr_EnemigoJaba : Scr_Enemigo
     {
         if (estaCongelado || estaStuneado || !Aparecio || EstaMuerto) return;
 
+        if (!Atacando && !esperando)
+        {
+            Mover();
+        }
         if (Objetivo != null)
         {
             float distancia = Vector3.Distance(transform.position, Objetivo.position);
@@ -115,10 +119,17 @@ public class Scr_EnemigoJaba : Scr_Enemigo
                 Anim.Play("Mover");
             }
             agente.isStopped = false;
+
             Objetivo = Gata.transform;
-            agente.destination = Objetivo.position;
+
+            // 🔹 Aquí el cambio: actualizar destino cada frame
+            if (Objetivo != null)
+            {
+                agente.SetDestination(Objetivo.position);
+            }
         }
     }
+
 
     void Atacar()
     {

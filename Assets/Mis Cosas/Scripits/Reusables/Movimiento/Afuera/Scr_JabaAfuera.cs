@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -15,27 +15,57 @@ public class Scr_JabaAfuera : Scr_EnemigoFuera
     private Animator Anim;
     private bool Esperando = false;
 
+    // ---------------- NUEVO ----------------
+    [Header("Sonidos")]
+    [SerializeField] private List<AudioClip> SonidosPersecucion = new List<AudioClip>();
+    [SerializeField] private List<AudioClip> SonidosIddle = new List<AudioClip>();
+    [SerializeField] private List<AudioClip> SonidosCaminar = new List<AudioClip>();
+
+    [Header("Tiempos de sonidos Iddle")]
+    [SerializeField] private float TiempoSonidoMinIddle = 4f;
+    [SerializeField] private float TiempoSonidoMaxIddle = 7f;
+
+    [Header("Tiempos de sonidos Persecución")]
+    [SerializeField] private float TiempoSonidoMinPersecucion = 1f;
+    [SerializeField] private float TiempoSonidoMaxPersecucion = 3f;
+
+    private bool persiguiendo = false;
+    private Coroutine sonidoCoroutine;
+    private Coroutine esperarCoroutine;
+    private AudioSource audioSource;
+
     void Start()
     {
         agente = GetComponent<NavMeshAgent>();
         agente.speed = Velocidad;
         Anim = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
+
+        // Iniciar la corutina de sonidos una sola vez
+        sonidoCoroutine = StartCoroutine(ControlarSonidos());
     }
 
     void Update()
     {
         if (Vision != null && Vision.Gata != null && Vision.seguir) 
         {
-            StopAllCoroutines();
+            // Está persiguiendo
             GetComponent<NavMeshAgent>().enabled = true;
             Anim.SetBool("Caminando", true);
             Esperando = false;
 
             Destino = Vision.Gata.transform.position;
             Mover();
+
+            // Cambió de estado a persecución
+            if (!persiguiendo)
+            {
+                persiguiendo = true;
+            }
         }
         else
         {
+            // No está persiguiendo
             if (!Esperando)
             {
                 Anim.SetBool("Caminando", true);
@@ -48,7 +78,8 @@ public class Scr_JabaAfuera : Scr_EnemigoFuera
                             break;
                         case 1:
                             Esperando = true;
-                            StartCoroutine(Esperar(7.91f));
+                            if (esperarCoroutine != null) StopCoroutine(esperarCoroutine);
+                            esperarCoroutine = StartCoroutine(Esperar(7.91f));
                             break;
                     }
                 }
@@ -61,15 +92,19 @@ public class Scr_JabaAfuera : Scr_EnemigoFuera
                         MoverANuevaPosicion();
                     }
                 }
-
             }
             else
             {
                 Anim.SetBool("Caminando", false);
             }
+
+            // Cambió de estado a idle
+            if (persiguiendo)
+            {
+                persiguiendo = false;
+            }
         }
     }
-
 
     IEnumerator Esperar(float Tiempo)
     {
@@ -116,4 +151,80 @@ public class Scr_JabaAfuera : Scr_EnemigoFuera
         agente.isStopped = false;
         agente.SetDestination(Destino);
     }
+
+    // ---------------- NUEVO ----------------
+    IEnumerator ControlarSonidos()
+    {
+        bool ultimoEstado = persiguiendo; // para detectar cambios de estado
+
+        while (true)
+        {
+            // Detectar si el estado cambió
+            if (ultimoEstado != persiguiendo)
+            {
+                // Cortar sonido actual al cambiar de estado
+                if (audioSource.isPlaying)
+                    audioSource.Stop();
+
+                ultimoEstado = persiguiendo;
+
+                // Reproducir inmediatamente un clip del nuevo estado
+                List<AudioClip> listaCambio = persiguiendo ? SonidosPersecucion : SonidosIddle;
+                if (listaCambio != null && listaCambio.Count > 0)
+                {
+                    AudioClip clipCambio = listaCambio[Random.Range(0, listaCambio.Count)];
+                    audioSource.clip = clipCambio;
+                    audioSource.Play();
+                }
+            }
+            else
+            {
+                // Seleccionar lista y tiempos según estado actual
+                List<AudioClip> listaActual = persiguiendo ? SonidosPersecucion : SonidosIddle;
+                float tiempoMin = persiguiendo ? TiempoSonidoMinPersecucion : TiempoSonidoMinIddle;
+                float tiempoMax = persiguiendo ? TiempoSonidoMaxPersecucion : TiempoSonidoMaxIddle;
+
+                // Reproducir clip si hay
+                if (listaActual != null && listaActual.Count > 0)
+                {
+                    AudioClip clip = listaActual[Random.Range(0, listaActual.Count)];
+                    audioSource.clip = clip;
+                    audioSource.Play();
+                }
+
+                // Espera aleatoria, pero interrumpible si cambia de estado
+                float tiempoEspera = Random.Range(tiempoMin, tiempoMax);
+                float t = 0f;
+                while (t < tiempoEspera)
+                {
+                    if (ultimoEstado != persiguiendo) // cambio de estado → romper espera
+                        break;
+
+                    t += Time.deltaTime;
+                    yield return null;
+                }
+            }
+
+            yield return null;
+        }
+    }
+
+    public void ReproducirSonidoCaminar()
+    {
+        if (SonidosCaminar != null && SonidosCaminar.Count > 0)
+        {
+            // Elegir un clip aleatorio de la lista
+            AudioClip clip = SonidosCaminar[Random.Range(0, SonidosCaminar.Count)];
+
+            // Usar el AudioSource principal (o el del hijo si quieres mantenerlo)
+            AudioSource source = transform.GetChild(0).GetComponent<AudioSource>();
+
+            if (!source.isPlaying)
+            {
+                source.clip = clip;
+                source.Play();
+            }
+        }
+    }
+
 }

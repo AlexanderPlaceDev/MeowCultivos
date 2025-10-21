@@ -13,19 +13,20 @@ public class Scr_EnemigoLobo : Scr_Enemigo
     private GameObject Gata;
     private NavMeshAgent agente;
     private float temporizadorEspera;
-    private bool esperando = false;
+    private bool enDeambulacion = false;
     private bool Atacando = false;
     private float ContAtaque = 0;
-    private bool YaAtaco = false;
+    private Vector3 ultimaPosicion;
+    private float temporizadorQuietud;
+    private float temporizadorRecalculacion = 0f;
+    public float tiempoRecalculacion = 0.5f;
 
     protected override void Start()
     {
-     
         base.Start();
         Gata = GameObject.Find("Personaje");
         agente = GetComponent<NavMeshAgent>();
         agente.speed = Velocidad;
-        temporizadorEspera = Random.Range(TiempoDeEsperaMin, TiempoDeEsperaMax);
 
         if (agente.isOnNavMesh)
         {
@@ -33,7 +34,7 @@ public class Scr_EnemigoLobo : Scr_Enemigo
             agente.SetDestination(Objetivo.position);
         }
 
-        // Reproducir animación de aparición y esperar a que termine
+        // Animación de aparición
         Anim.Play(NombreAnimacionAparecer);
         float duracion = Anim.GetCurrentAnimatorStateInfo(0).length;
         StartCoroutine(EsperarAparicion(duracion));
@@ -44,76 +45,27 @@ public class Scr_EnemigoLobo : Scr_Enemigo
         yield return new WaitForSeconds(duracion);
         Aparecio = true;
         if (agente.isOnNavMesh)
-        {
             agente.isStopped = false;
-        }
     }
 
     void Update()
     {
-
         if (!Aparecio) return;
         if (EstaMuerto) return;
 
-
-        if (Objetivo != null)
+        if (Objetivo == null)
         {
-            float distancia = Vector3.Distance(transform.position, Objetivo.position);
-            //Debug.Log("Distancia a la gata: " + distancia);
-            // 🔹 Se reduce el temporizador de espera en todo momento
-            if (esperando)
-            {
-                temporizadorEspera -= Time.deltaTime;
-            }
-            // 🔹 Si el temporizador ha terminado, persigue a la gata
-            if (temporizadorEspera <= 0)
-            {
-                esperando = false;
-            }
-            // 🔹 Lógica de ataque
-            if (distancia <= agente.stoppingDistance + 1f)
-            {
-                if (!esperando)
-                {
+            if (agente.isOnNavMesh)
+                Objetivo = Gata.transform;
+            return;
+        }
 
+        float distancia = Vector3.Distance(transform.position, Objetivo.position);
 
-                    if (!Atacando)
-                    {
-                        agente.isStopped = true;
-                        esperando = true;
-                        Atacar();
-                        temporizadorEspera = Random.Range(TiempoDeEsperaMin, TiempoDeEsperaMax);
-                    }
-                }
-                else
-                {
-                    if (!Atacando)
-                    {
-                        Debug.Log("Deambulando");
-                        agente.isStopped = false;
-                        Deambular();
-                    }
-
-                }
-            }
-            else
-            {
-                if (esperando)
-                {
-                    if (!Atacando)
-                    {
-                        Deambular();
-                    }
-                }
-                else
-                {
-                    Mover();
-                }
-            }
-
-
-            //CicloDeAtaque
-            if (Atacando && ContAtaque < DuracionDeAtaque)
+        // 🔹 Si está atacando, maneja el ciclo
+        if (Atacando)
+        {
+            if (ContAtaque < DuracionDeAtaque)
             {
                 ContAtaque += Time.deltaTime;
             }
@@ -121,42 +73,74 @@ public class Scr_EnemigoLobo : Scr_Enemigo
             {
                 ContAtaque = 0;
                 Atacando = false;
-                YaAtaco = false;
+                // 🔹 Después de atacar entra en deambulación
+                IniciarDeambulacion();
             }
+            return;
+        }
+
+        // 🔹 Si está en modo deambulación
+        if (enDeambulacion)
+        {
+            temporizadorEspera -= Time.deltaTime;
+
+            // Si ya llegó al destino y aún queda tiempo de espera → buscar nuevo punto
+            if (!agente.pathPending && agente.remainingDistance <= agente.stoppingDistance)
+            {
+                if (temporizadorEspera > 0)
+                {
+                    MoverANuevaPosicion();
+                }
+            }
+
+            if (temporizadorEspera <= 0)
+            {
+                enDeambulacion = false; // termina deambulación → volverá a perseguir
+            }
+            return;
+        }
+
+
+        // 🔹 Persecución normal
+        if (distancia <= agente.stoppingDistance + 1f)
+        {
+            Atacar();
         }
         else
         {
-            if (agente.isOnNavMesh)
-            {
-                Objetivo = Gata.transform;
-                agente.SetDestination(Objetivo.position);
-            }
+            Mover();
         }
-
-
     }
+
+    private float temporizadorActualizacion = 0f;
 
     void Mover()
     {
         if (agente != null && agente.isActiveAndEnabled && agente.isOnNavMesh)
         {
             if (!Anim.GetCurrentAnimatorStateInfo(0).IsName("Mover"))
-            {
                 Anim.Play("Mover");
-            }
             agente.isStopped = false;
             Objetivo = Gata.transform;
-            agente.destination = Objetivo.position;
+
+            temporizadorRecalculacion += Time.deltaTime;
+            if (temporizadorRecalculacion >= tiempoRecalculacion)
+            {
+                agente.SetDestination(Objetivo.position);
+                temporizadorRecalculacion = 0f;
+            }
         }
     }
 
-    void Deambular()
+    void IniciarDeambulacion()
     {
-        if (agente.isOnNavMesh && !agente.pathPending && agente.remainingDistance <= agente.stoppingDistance + 1f)
-        {
-            MoverANuevaPosicion();
-        }
+        enDeambulacion = true;
+        temporizadorEspera = Random.Range(TiempoDeEsperaMin, TiempoDeEsperaMax);
+        ultimaPosicion = transform.position;
+        temporizadorQuietud = 0f;
+        MoverANuevaPosicion();
     }
+
 
     void MoverANuevaPosicion()
     {
@@ -166,37 +150,35 @@ public class Scr_EnemigoLobo : Scr_Enemigo
             Vector3 randomDirection = Random.insideUnitSphere * RadioDeambulacion;
             randomDirection += transform.position;
             NavMeshHit hit;
-
             if (NavMesh.SamplePosition(randomDirection, out hit, RadioDeambulacion, NavMesh.AllAreas))
             {
-                if (agente.isOnNavMesh)
+                NavMeshPath path = new NavMeshPath();
+                if (agente.CalculatePath(hit.position, path))
                 {
-                    agente.isStopped = false;
-                    agente.SetDestination(hit.position);
-                    return;
+                    if (path.status == NavMeshPathStatus.PathComplete)
+                    {
+                        agente.isStopped = false;
+                        agente.SetPath(path);
+                        if (!Anim.GetCurrentAnimatorStateInfo(0).IsName("Mover"))
+                            Anim.Play("Mover");
+                        return;
+                    }
                 }
             }
             intentos++;
         }
-        Debug.LogWarning("No se encontró un punto válido en el NavMesh después de varios intentos.");
+        Debug.LogWarning("⚠ No se encontró un punto válido en el NavMesh después de varios intentos.");
     }
 
     void Atacar()
     {
-        Debug.Log("Comenzo Atacar");
+        Debug.Log("▶ Comenzó ataque");
         Atacando = true;
-        agente.isStopped = true; // 🔹 Evita que se mueva mientras ataca
+        agente.isStopped = true; // se detiene durante el ataque
         Anim.Play("Mordida");
         Tween.ShakeCamera(Camera.main, 3);
-        Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
 
-        if (batalla.VidaActual >= DañoMelee)
-        {
-            batalla.VidaActual -= DañoMelee;
-        }
-        else
-        {
-            batalla.VidaActual = 0; // 🔹 Evita valores negativos
-        }
+        Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
+        batalla.VidaActual = Mathf.Max(0, batalla.VidaActual - DañoMelee);
     }
 }

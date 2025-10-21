@@ -46,11 +46,6 @@ public class Scr_SistemaDialogos : MonoBehaviour
     private void Start()
     {
         source = GetComponent<AudioSource>();
-        //aplica el volumen 
-        int volumen_general = PlayerPrefs.GetInt("Volumen", 50);
-        int volumen_ambiental = PlayerPrefs.GetInt("Volumen_Ambiente", 20);
-        float volumen = (volumen_general * volumen_ambiental) / 100;
-        source.volume = volumen;
         //TieneMovimiento = GetComponent<NPC_movimiento>() != null;
         // Buscar controlador de misiones dentro de la jerarquía de la gata
         if (GameObject.Find("Gata"))
@@ -188,19 +183,20 @@ public class Scr_SistemaDialogos : MonoBehaviour
     {
         Leyendo = true;
 
-        // Escribir letra por letra la línea actual
         foreach (char letter in DialogoArecibir.Lineas[LineaActual].ToCharArray())
         {
-            int h=Random.Range(0, SonidoHabla.Length - 1);
-            if (letter == ' ')
+            int h = Random.Range(0, SonidoHabla.Length);
+
+            if (letter == ' ' && SonidoHabla.Length > 0) 
             {
                 source.PlayOneShot(SonidoHabla[h]);
             }
+
             Texto.text += letter;
             yield return new WaitForSeconds(letraDelay * Velocidad);
         }
 
-        Leyendo = false; // Terminó de escribir la línea
+        Leyendo = false;
     }
 
     //====================================
