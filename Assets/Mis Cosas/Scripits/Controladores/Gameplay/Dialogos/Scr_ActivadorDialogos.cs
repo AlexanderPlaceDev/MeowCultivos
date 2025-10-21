@@ -163,7 +163,6 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
         Debug.Log("🎬 Estado base restaurado: cámara de la gata activa.");
     }
-
     //=================================
     //=== CONTROL DE DIÁLOGOS ===
     //=================================
@@ -390,7 +389,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     //=================================
     //=== UTILIDADES Y EVENTOS ===
     //=================================
-    private void OcultarIconos()
+    public void OcultarIconos()
     {
         foreach (var icono in iconos)
             if (icono != null) icono.SetActive(false);

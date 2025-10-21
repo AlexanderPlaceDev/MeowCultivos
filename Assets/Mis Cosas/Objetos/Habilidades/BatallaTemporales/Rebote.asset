@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Rebote
   m_EditorClassIdentifier: 
   Nombre: Rebote
-  Icono: {fileID: 21300000, guid: d2f3f751738697949955f361631074d4, type: 3}
+  Icono: {fileID: 21300000, guid: 07d24a631c272a34a96e7aa0fc44fd20, type: 3}
   Tipo: Temporal
   Descripcion: La bala rebota
   RequiereCraftear: 1
@@ -21,4 +21,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d1948edb1dc783b48b1886c7863253be, type: 2}
   CantidadesRequeridas: 0a000000
   Usos: 5
+  duracion: 0
+  Enfriamiento: 0
+  Efecto: {fileID: 0}
   Arma: Platano
