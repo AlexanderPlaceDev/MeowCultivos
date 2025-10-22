@@ -10,6 +10,7 @@ public class Carpas : MonoBehaviour
     [SerializeField] string Letra;
 
 
+    public bool Tiene_Radio;//si puede ver el radio
     public Scr_ControladorTiempo ControlT;
     public GameObject carpaUI;
     public CambioTiempo cam;
@@ -17,12 +18,14 @@ public class Carpas : MonoBehaviour
     public bool openUI = false;
     bool EstaEnRango = false;
     public int HoraDeSiesta=19;
+    GameObject radio;
     // Start is called before the first frame update
     void Start()
     {
         cam = carpaUI.GetComponent<CambioTiempo>();
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
         ControlT = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
+        radio = transform.GetChild(3).gameObject;
     }
 
     // Update is called once per frame
@@ -44,7 +47,28 @@ public class Carpas : MonoBehaviour
             transform.GetChild(1).gameObject.SetActive(true);
             cam.Puede_Ajustar = true;
         }
+        activarRadio();
+    }
 
+    private void activarRadio()
+    {
+        if(PlayerPrefs.GetString("Habilidad:" + "Radio", "No") == "Si")
+        {
+            Tiene_Radio = true;
+        }
+        else
+        {
+            Tiene_Radio = true;
+        }
+        
+        if (Tiene_Radio)
+        {
+            radio.SetActive(true);
+        }
+        else
+        {
+            radio.SetActive(false);
+        }
     }
 
     private void OnTriggerEnter(Collider other)

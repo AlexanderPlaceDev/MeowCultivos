@@ -42,9 +42,36 @@ public class CambioTiempo : MonoBehaviour
         ControlT = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
         cabTiempo();
         cabRadio();
+        activarDespetador();
+    }
+
+    private void activarRadio()
+    {
+        if (PlayerPrefs.GetString("Habilidad:" + "Radio", "No") == "Si")
+        {
+            Tiene_Radio = true;
+        }
+        else
+        {
+            Tiene_Radio = true;
+        }
+
+    }
+    private void activarDespetador()
+    {
+        if (PlayerPrefs.GetString("Habilidad:" + "Radio", "No") == "Si")
+        {
+            Puede_Ajustar = true;
+        }
+        else
+        {
+            Puede_Ajustar = true;
+        }
+
     }
     public void cabRadio()
     {
+        activarRadio();
         ControlT = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
         if (Tiene_Radio)
         {
