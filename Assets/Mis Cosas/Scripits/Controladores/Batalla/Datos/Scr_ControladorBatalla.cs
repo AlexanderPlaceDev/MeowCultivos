@@ -384,7 +384,10 @@ public class Scr_ControladorBatalla : MonoBehaviour
     public void RecibirDaño(float DañoRecibido)
     {
         // Reducir la vida del enemigo
-        DañoRecibido = DañoRecibido * menosDaño;
+        if (menosDaño > 0)
+        {
+            DañoRecibido = DañoRecibido * menosDaño;
+        }
         if (VidaActual >= DañoRecibido)
         {
             VidaActual -= DañoRecibido;
@@ -457,7 +460,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
                     Debug.Log("Efecto Empujar resistido.");
                     return; // Resiste el efecto
                 }
-                StartCoroutine(EstadoEmpujado(250f)); // dirección y fuerza
+                StartCoroutine(EstadoEmpujado(270f)); // dirección y fuerza
                 break;
 
             case "Electrificar":
@@ -563,7 +566,9 @@ public class Scr_ControladorBatalla : MonoBehaviour
     {
         Rigidbody rb = Personaje.GetComponent<Rigidbody>();
         Vector3 direccion = -Personaje.transform.forward; // dirección hacia atrás del personaje
-        rb.AddForce(direccion * fuerza, ForceMode.Impulse);
+        rb.AddForce(direccion * fuerza, ForceMode.Force);
+        Vector3 arriba = Personaje.transform.up; // dirección hacia atrás del personaje
+        rb.AddForce(arriba * (fuerza*.7f), ForceMode.Force);
         yield return null;
     }
 

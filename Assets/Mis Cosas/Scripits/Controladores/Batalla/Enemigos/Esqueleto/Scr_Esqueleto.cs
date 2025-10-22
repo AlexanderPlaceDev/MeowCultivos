@@ -209,7 +209,9 @@ public class Scr_Esqueleto : Scr_Enemigo
         if (areaAtaque.EstaDentro)
         {
             Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
-            batalla.VidaActual = Mathf.Max(0, batalla.VidaActual - DañoMelee);
+            batalla.RecibirDaño(DañoMelee);
+            batalla.RecibirEfecto(base.Efecto.ToString());
+            //batalla.VidaActual = Mathf.Max(0, batalla.VidaActual - DañoMelee);
 
             // Si tienes sacudida de cámara o efectos, también puedes ponerlos aquí
             ShakeCamara();
