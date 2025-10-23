@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,15 +8,20 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
     [SerializeField] private GameObject Enemigo;
     [SerializeField] private int CantidadDeEnemigos;
     [SerializeField] private float TiempoSpawn;
-    
+    [SerializeField] private bool TieneTiempo;
+
+    [SerializeField] private int HoraInicio;
+    [SerializeField] private int HoraFin;
     private List<GameObject> Enemigos = new List<GameObject>();
     private float TiempoRestanteSpawn;
 
     public int haveAcivate;
 
+    public Scr_ControladorTiempo ControlT;
     //public float a;
     void Start()
     {
+        ControlT = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
         // Recuperar el tiempo de respawn guardado
         TiempoRestanteSpawn = PlayerPrefs.GetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoSpawn);
 
@@ -28,14 +33,15 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 
     void FixedUpdate()
     {
-        GuardarEstado();
+        GuardarEstado(); 
+        checartiempoDeNOSpawn();
     }
 
     IEnumerator SpawnEnemies()
     {
         while (true)
         {
-            if (haveAcivate == 1)
+            if (haveAcivate == 1 && checartiempoDeSpawn())
             {
                 if (Enemigos.Count < CantidadDeEnemigos) // Si faltan enemigos
                 {
@@ -57,9 +63,51 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
         }
     }
 
+    public bool checartiempoDeSpawn()
+    {
+        if (!TieneTiempo)return true;
+
+        // Si el rango NO cruza la medianoche
+        if (HoraInicio < HoraFin)
+        {
+            return ControlT.HoraActual >= HoraInicio && ControlT.HoraActual < HoraFin;
+        }
+        else
+        {
+            // Si el rango SÍ cruza la medianoche (ej: 19 -> 5)
+            return ControlT.HoraActual >= HoraInicio || ControlT.HoraActual < HoraFin;
+        }
+    }
+    public void checartiempoDeNOSpawn()
+    {
+        if (!TieneTiempo) return;
+        if (Enemigos.Count <= 0) return;
+
+        bool dentroHorario;
+
+        // Calculamos si estamos dentro del horario
+        if (HoraInicio < HoraFin)
+        {
+            dentroHorario = ControlT.HoraActual >= HoraInicio && ControlT.HoraActual < HoraFin;
+        }
+        else
+        {
+            dentroHorario = ControlT.HoraActual >= HoraInicio || ControlT.HoraActual < HoraFin;
+        }
+
+        // Si NO estamos dentro del horario → destruir enemigos
+        if (!dentroHorario)
+        {
+            foreach (var enem in Enemigos)
+            {
+                Destroy(enem);
+            }
+            Enemigos.Clear();
+        }
+    }
     public void GuardarEstado()
     {
-        if(haveAcivate ==1)
+        if(haveAcivate ==1 && checartiempoDeSpawn())
         {
             int i = 0;
             foreach (var enem in Enemigos)

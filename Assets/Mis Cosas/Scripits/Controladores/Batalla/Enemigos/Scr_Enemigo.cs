@@ -56,7 +56,6 @@ public class Scr_Enemigo : MonoBehaviour
     [SerializeField] private Transform PosInicialDaño; // Posición inicial del CanvasDaño
     [SerializeField] private Transform PosFinalDaño;  // Posición final del CanvasDaño
 
-
     public enum TipoEfecfto { Nada,Stunear, Quemar, Veneno, Congelar, Empujar, Electrificar, Explotar }
     public TipoEfecfto Efecto;
     private Color dañado = new Color(1f, 0f, 0f);      // Rojo
@@ -64,7 +63,13 @@ public class Scr_Enemigo : MonoBehaviour
     private Color congelado = new Color(0.059f, 0.816f, 1f);  // Azul claro
     private Color electrificado = new Color(1f, 0.922f, 0.118f); // Amarillo
     private Color envenenado = new Color(0.835f, 0.286f, 1f);  // Morado
-
+    public float resistenciaStunear = 0.1f;  // 10% de probabilidad de resistir el Stun
+    public float resistenciaQuemar = 0.2f;   // 20% de probabilidad de resistir el Quemar
+    public float resistenciaVeneno = 0.3f;   // 30% de probabilidad de resistir el Veneno
+    public float resistenciaCongelar = 0.15f; // 15% de probabilidad de resistir el Congelar
+    public float resistenciaEmpujar = 0.05f; // 5% de probabilidad de resistir el Empujar
+    public float resistenciaElectrificar = 0.25f; // 25% de probabilidad de resistir el Electrificar
+    public float resistenciaExplotar = 0.4f; // 40% de probabilidad de resistir la Explotación
     protected virtual void Start()
     {
         // Asumiendo que el material está en el segundo hijo
@@ -282,34 +287,71 @@ public class Scr_Enemigo : MonoBehaviour
 
     public void checarEfecto(string efecto, float porefecto)
     {
+        // Variable que determina la probabilidad de que el efecto sea resistido
+        float probabilidadResistencia = Random.Range(0f, 1f);
         switch (efecto)
         {
             case "Stunear":
+                if (probabilidadResistencia <= resistenciaStunear)
+                {
+                    Debug.Log("Efecto Stun resistido.");
+                    return; // Resiste el efecto
+                }
                 StartCoroutine(EstadoStuneado(3f, porefecto));
                 break;
 
             case "Quemar":
+                if (probabilidadResistencia <= resistenciaQuemar)
+                {
+                    Debug.Log("Efecto Quemar resistido.");
+                    return; // Resiste el efecto
+                }
                 StartCoroutine(EstadoQuemando(5f, 2f, porefecto)); // duración 5s, 2 de daño por segundo
                 break;
 
             case "Veneno":
+                if (probabilidadResistencia <= resistenciaVeneno)
+                {
+                    Debug.Log("Efecto Veneno resistido.");
+                    return; // Resiste el efecto
+                }
                 StartCoroutine(EstadoVeneno(5f, 1f, porefecto)); // duración 5s, 1 de daño por segundo
                 break;
 
             case "Congelar":
+                if (probabilidadResistencia <= resistenciaCongelar)
+                {
+                    Debug.Log("Efecto Congelar resistido.");
+                    return; // Resiste el efecto
+                }
                 StartCoroutine(EstadoCongelado(4f, porefecto)); // duración 4s
                 break;
 
             case "Empujar":
+                if (probabilidadResistencia <= resistenciaEmpujar)
+                {
+                    Debug.Log("Efecto Empujar resistido.");
+                    return; // Resiste el efecto
+                }
                 StartCoroutine(EstadoEmpujado(250, porefecto)); // dirección y fuerza
                 break;
 
             case "Electrificar":
+                if (probabilidadResistencia <= resistenciaElectrificar)
+                {
+                    Debug.Log("Efecto Electrificar resistido.");
+                    return; // Resiste el efecto
+                }
                 StartCoroutine(EstadoElectrificado(3f, 3f, porefecto)); // duración 3s, daño 3 por segundo
                 efecto = "Rebotar"; // esto parece un cambio de lógica que puede necesitar explicación
                 break;
 
             case "Explotar":
+                if (probabilidadResistencia <= resistenciaExplotar)
+                {
+                    Debug.Log("Efecto Explotar resistido.");
+                    return; // Resiste el efecto
+                }
                 StartCoroutine(EstadoExplotado(20f, 170f, transform.position - Vector3.forward, porefecto)); // daño, fuerza, origen
                 break;
         }

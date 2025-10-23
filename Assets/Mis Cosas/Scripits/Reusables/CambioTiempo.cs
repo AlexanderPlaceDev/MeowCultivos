@@ -1,3 +1,4 @@
+using PrimeTween;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -40,7 +41,6 @@ public class CambioTiempo : MonoBehaviour
         Hora.text = HoraPredeterminada.ToString();
         Minuto.text = MinutoPredeterminada.ToString();
         ControlT = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
-        cabTiempo();
         cabRadio();
         activarDespetador();
     }
@@ -53,21 +53,21 @@ public class CambioTiempo : MonoBehaviour
         }
         else
         {
-            Tiene_Radio = true;
+            Tiene_Radio = false;
         }
 
     }
     private void activarDespetador()
     {
-        if (PlayerPrefs.GetString("Habilidad:" + "Radio", "No") == "Si")
+        if (PlayerPrefs.GetString("Habilidad:" + "Despertador", "No") == "Si")
         {
             Puede_Ajustar = true;
         }
         else
         {
-            Puede_Ajustar = true;
+            Puede_Ajustar = false;
         }
-
+        cabTiempo();
     }
     public void cabRadio()
     {
@@ -260,10 +260,6 @@ public class CambioTiempo : MonoBehaviour
             ControlT.Descansar(MinutoPredeterminada, HoraPredeterminada);
         }
 
-        if(carpa!=null)
-        {
-            carpa.openUI = false;
-        }
         cerrarUI();
     }
 
@@ -271,6 +267,11 @@ public class CambioTiempo : MonoBehaviour
     {
         IconoEvento.SetActive(false);
         PanelCambio.SetActive(false);
+        if (carpa != null)
+        {
+            carpa.CerrarCarpa();
+        }
+
     }
     public void checarTiempo()
     {

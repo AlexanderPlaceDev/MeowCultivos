@@ -1,8 +1,10 @@
+using PrimeTween;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static Scr_Movimiento;
 public class Carpas : MonoBehaviour
 {
 
@@ -19,6 +21,7 @@ public class Carpas : MonoBehaviour
     bool EstaEnRango = false;
     public int HoraDeSiesta=19;
     GameObject radio;
+    GameObject Canvas;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +29,7 @@ public class Carpas : MonoBehaviour
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
         ControlT = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
         radio = transform.GetChild(3).gameObject;
+        Canvas = GameObject.Find("Canvas");
     }
 
     // Update is called once per frame
@@ -38,7 +42,7 @@ public class Carpas : MonoBehaviour
             cam.carpa = this;
             cam.cabTiempo();
             cam.cabRadio();
-            openUI = true;
+            StartCoroutine(AparecerUI(1.5f));
         }
 
 
@@ -50,6 +54,26 @@ public class Carpas : MonoBehaviour
         activarRadio();
     }
 
+    public void CerrarCarpa()
+    {
+        StartCoroutine(EsconderUI(.5f));
+    }
+    IEnumerator AparecerUI(float dur)
+    {
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), -200, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 230, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(), -810, 1);
+        yield return new WaitForSeconds(dur); 
+        openUI = true;
+    }
+    IEnumerator EsconderUI(float dur)
+    {
+        openUI = false;
+        yield return new WaitForSeconds(dur);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), 0, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 0, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(), -610, 1);
+    }
     private void activarRadio()
     {
         if(PlayerPrefs.GetString("Habilidad:" + "Radio", "No") == "Si")
@@ -58,7 +82,7 @@ public class Carpas : MonoBehaviour
         }
         else
         {
-            Tiene_Radio = true;
+            Tiene_Radio = false;
         }
         
         if (Tiene_Radio)
