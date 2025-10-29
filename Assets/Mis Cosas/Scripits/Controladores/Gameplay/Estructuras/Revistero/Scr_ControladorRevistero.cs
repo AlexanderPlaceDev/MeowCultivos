@@ -15,7 +15,7 @@ public class Scr_ControladorRevistero : MonoBehaviour
 
     void Start()
     {
-
+        ActualizarDineroYPrecio();
     }
 
     void Update()
@@ -61,7 +61,7 @@ public class Scr_ControladorRevistero : MonoBehaviour
     {
         TextoTuDinero.text = "$" + PlayerPrefs.GetInt("Dinero", 0);
 
-        if (PlayerPrefs.GetInt("Dinero", 0) >= PrecioDeRangos[PlayerPrefs.GetInt("Rango Barra Tecnica5", 0)])
+        if (PlayerPrefs.GetInt("Dinero", 0) >= PrecioDeRangos[PlayerPrefs.GetInt("Rango Barra Tecnica5", 0)]-1)
         {
             BotonAceptar.SetActive(true);
         }

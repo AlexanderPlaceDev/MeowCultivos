@@ -84,7 +84,6 @@ public class Scr_GeneradorDeSonidos : MonoBehaviour
             // ⏰ Restricción por hora
             if (UsaHoras && !EstaDentroDelRango(Tiempo.HoraActual))
             {
-                Debug.Log("No se reprodujo sonido (fuera de rango horario). Hora actual: " + Tiempo.HoraActual);
                 continue; // vuelve al siguiente ciclo
             }
 
@@ -94,7 +93,6 @@ public class Scr_GeneradorDeSonidos : MonoBehaviour
                 int dado = Random.Range(0, 100);
                 if (dado >= Probabilidad)
                 {
-                    Debug.Log("No se reprodujo sonido (falló probabilidad).");
                     continue; // vuelve al siguiente ciclo
                 }
             }
@@ -105,7 +103,6 @@ public class Scr_GeneradorDeSonidos : MonoBehaviour
             {
                 source.clip = clip;
                 source.Play();
-                Debug.Log("Reproduciendo: " + clip.name + " a la hora " + Tiempo.HoraActual);
 
                 // Espera a que termine el clip
                 yield return new WaitForSeconds(clip.length);

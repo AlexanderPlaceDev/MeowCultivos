@@ -54,7 +54,7 @@ public class Controlador_FoodTruck : MonoBehaviour
     {
         Play_sonido();
         FoodTruck.SetActive(true);
-        tienda.nevosObjetos();
+        tienda.GenerarObjetos();
     }
 
     void Play_sonido()
