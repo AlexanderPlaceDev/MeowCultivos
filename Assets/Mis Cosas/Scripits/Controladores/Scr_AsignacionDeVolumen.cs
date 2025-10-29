@@ -39,7 +39,6 @@ public class Scr_AsignacionDeVolumen : MonoBehaviour
         float volumenNormalizado = (valor / 100f) * (volumenGeneral / 100f);
         audioSource.volume = volumenNormalizado;
 
-        Debug.Log($"[Scr_AsignacionDeSonidos] Volumen asignado a {gameObject.name}: {volumenNormalizado} (Pref: {nombrePref}, Default: {valorPorDefecto}, General: {volumenGeneral}, Especifico: {valor})");
     }
 
     private int ObtenerValorPorDefecto(CategoriaVolumen categoria)

@@ -120,8 +120,8 @@ public class Scr_ControladorTiempo : MonoBehaviour
     {
         string[] dias = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
         int diaActualIndex = System.Array.IndexOf(dias, DiaActual);
-        // Aquí se asegura de que si es domingo, vuelva a lunes
-        string diaManana = dias[(diaActualIndex + 1) % 7];  // El tamaño del array es 7, pero para el cálculo, utilizamos 7
+        // Aquï¿½ se asegura de que si es domingo, vuelva a lunes
+        string diaManana = dias[(diaActualIndex + 1) % 7];  // El tamaï¿½o del array es 7, pero para el cï¿½lculo, utilizamos 7
         return diaManana;
     }
 

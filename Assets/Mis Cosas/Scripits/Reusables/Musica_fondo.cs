@@ -88,7 +88,6 @@ public class Musica_fondo : MonoBehaviour
             source.clip = primerClip;
             source.Play();
             ultimoClip = primerClip;
-            Debug.Log("Reproduciendo (inicio): " + primerClip.name);
             yield return new WaitForSeconds(primerClip.length);
         }
 
