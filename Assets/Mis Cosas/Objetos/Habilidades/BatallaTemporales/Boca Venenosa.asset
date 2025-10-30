@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Boca Venenosa
   m_EditorClassIdentifier: 
   Nombre: Boca Venenosa
-  Icono: {fileID: 21300000, guid: d2f3f751738697949955f361631074d4, type: 3}
+  Icono: {fileID: 21300000, guid: e52cd54d37d15234d9d4ae84ed4e0505, type: 3}
   Tipo: Temporal
   Descripcion: La mordida envenena al enemigo
   RequiereCraftear: 1
@@ -21,4 +21,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d1948edb1dc783b48b1886c7863253be, type: 2}
   CantidadesRequeridas: 0a000000
   Usos: 5
+  duracion: 0
+  Enfriamiento: 0
+  Efecto: {fileID: 0}
   Arma: Planta

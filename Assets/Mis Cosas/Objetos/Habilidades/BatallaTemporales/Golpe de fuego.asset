@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Golpe de fuego
   m_EditorClassIdentifier: 
   Nombre: Golpe de fuego
-  Icono: {fileID: 21300000, guid: d2f3f751738697949955f361631074d4, type: 3}
+  Icono: {fileID: 21300000, guid: f114f0f892f2d7847a954687bee39b17, type: 3}
   Tipo: Temporal
   Descripcion: El golpe quema el enemigo
   RequiereCraftear: 1
@@ -21,4 +21,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d1948edb1dc783b48b1886c7863253be, type: 2}
   CantidadesRequeridas: 0a000000
   Usos: 5
+  duracion: 0
+  Enfriamiento: 0
+  Efecto: {fileID: 0}
   Arma: Sandia

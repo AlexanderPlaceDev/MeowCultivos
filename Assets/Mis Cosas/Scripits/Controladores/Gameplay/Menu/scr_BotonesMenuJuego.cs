@@ -29,6 +29,39 @@ public class scr_BotonesMenuJuego : MonoBehaviour
         ActualiarNotificacion();
     }
 
+    public void OnEnable()
+    {
+        ChecarMenu();
+    }
+
+    public void ChecarMenu()
+    {
+        switch (GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuActual)
+        {
+            case "Inventario":
+                BotonActual = 0;
+                break;
+            case "Habilidades":
+                BotonActual = 1;
+                break;
+            case "Guia":
+                BotonActual = 2;
+                break;
+            case "Salir":
+                BotonActual = 3;
+                break;
+            case "Opciones":
+                BotonActual = 4;
+                break;
+            case "Armas":
+                BotonActual = 5;
+                break;
+            case "Misiones":
+                BotonActual = 6;
+                break;
+        }
+        ChecarBotones();
+    }
     public void PrenderBoton(string BotonySi)
     {
         //Primer 1 es igual a entra al boton
@@ -102,7 +135,7 @@ public class scr_BotonesMenuJuego : MonoBehaviour
                     Asistente.GetComponent<Animator>().Play("Habilidades");
                     break;
                 case 2:
-                    Asistente.GetComponent<Animator>().Play("Misiones");
+                    Asistente.GetComponent<Animator>().Play("Guia");
                     break;
                 case 3:
                     Asistente.GetComponent<Animator>().Play("Salir");
@@ -114,11 +147,16 @@ public class scr_BotonesMenuJuego : MonoBehaviour
                     Asistente.GetComponent<Animator>().Play("Armas");
                     break;
                 case 6:
-                    Asistente.GetComponent<Animator>().Play("Guia");
+                    Asistente.GetComponent<Animator>().Play("Misiones");
                     break;
             }
-            StartCoroutine(Esperar());
+            ChecarBotones();
         }
+    }
+
+    public void ChecarBotones()
+    {
+        StartCoroutine(Esperar());
     }
 
     public IEnumerator Esperar()
@@ -134,6 +172,8 @@ public class scr_BotonesMenuJuego : MonoBehaviour
             case 0:
                 Asistente.GetComponent<Animator>().Play("Inventario");
                 GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuActual = "Inventario";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuArriba = "Habilidades";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuAbajo = "Opciones";
                 Botones[2].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Inventario";
                 //Boton Arriba
                 Botones[1].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[2];
@@ -145,6 +185,8 @@ public class scr_BotonesMenuJuego : MonoBehaviour
             case 1:
                 Asistente.GetComponent<Animator>().Play("Habilidades");
                 GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuActual = "Habilidades";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuArriba = "Guia";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuAbajo = "Inventario";
                 Botones[2].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Habilidades";
                 //Boton Arriba
                 Botones[1].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[6];
@@ -153,10 +195,14 @@ public class scr_BotonesMenuJuego : MonoBehaviour
                 //Boton Abajo
                 Botones[3].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[0];
                 break;
+
             case 2:
-                Asistente.GetComponent<Animator>().Play("Misiones");
-                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuActual = "Misiones";
-                Botones[2].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Misiones";
+                Asistente.GetComponent<Animator>().Play("Guia");
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuActual = "Guia";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuArriba = "Salir";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuAbajo = "Habilidades";
+                Botones[2].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Guia";
+
                 //Boton Arriba
                 Botones[1].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[3];
                 //Boton Medio
@@ -164,9 +210,12 @@ public class scr_BotonesMenuJuego : MonoBehaviour
                 //Boton Abajo
                 Botones[3].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[2];
                 break;
+
             case 3:
                 Asistente.GetComponent<Animator>().Play("Salir");
                 GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuActual = "Salir";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuArriba = "Opciones";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuAbajo = "Guia";
                 Botones[2].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Salir";
                 //Boton Arriba
                 Botones[1].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[4];
@@ -178,6 +227,8 @@ public class scr_BotonesMenuJuego : MonoBehaviour
             case 4:
                 Asistente.GetComponent<Animator>().Play("Opciones");
                 GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuActual = "Opciones";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuArriba = "Inventario";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuAbajo = "Salir";
                 Botones[2].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Opciones";
                 //Boton Arriba
                 Botones[1].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[0];
@@ -189,6 +240,8 @@ public class scr_BotonesMenuJuego : MonoBehaviour
             case 5:
                 Asistente.GetComponent<Animator>().Play("Armas");
                 GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuActual = "Armas";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuArriba = "Guia";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuAbajo = "Opciones";
                 Botones[2].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Armas";
                 //Boton Arriba
                 Botones[1].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[6];
@@ -198,9 +251,12 @@ public class scr_BotonesMenuJuego : MonoBehaviour
                 Botones[3].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[4];
                 break;
             case 6:
-                Asistente.GetComponent<Animator>().Play("Guia");
-                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuActual = "Guia";
-                Botones[2].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Guia";
+                Asistente.GetComponent<Animator>().Play("Misiones");
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuActual = "Misiones";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuArriba = "Inventario";
+                GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_CambiadorMenus>().MenuAbajo = "Armas";
+                Botones[2].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Misiones";
+
                 //Boton Arriba
                 Botones[1].transform.GetChild(1).GetComponent<Image>().sprite = Iconos[0];
                 //Boton Medio

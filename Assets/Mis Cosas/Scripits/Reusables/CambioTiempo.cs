@@ -16,7 +16,7 @@ public class CambioTiempo : MonoBehaviour
     public Scr_ControladorTiempo ControlT;
     public GameObject camb;
     public GameObject Radio;
-    public Controlador_FoodTruck FoodTruck;
+    public Controlador_EventosGenerales EventosGenerales;
     public TextMeshProUGUI Dia;
     public GameObject IconoEvento;
     public GameObject IconoClima;
@@ -41,6 +41,7 @@ public class CambioTiempo : MonoBehaviour
         Hora.text = HoraPredeterminada.ToString();
         Minuto.text = MinutoPredeterminada.ToString();
         ControlT = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
+        EventosGenerales = GameObject.Find("EventosGenerales").GetComponent<Controlador_EventosGenerales>();
         cabRadio();
         activarDespetador();
     }
@@ -100,9 +101,10 @@ public class CambioTiempo : MonoBehaviour
         string diasemanana = ControlT.checarSiguienteDia();
         bool HayEvento=false;
         MostrarDia(diasemanana);
-        for (int i = 0; i < FoodTruck.DiasActivo.Length; i++) 
+        //Debug.LogWarning(EventosGenerales.eventos[0].diasActivo[0]);
+        for (int i = 0; i < EventosGenerales.eventos[0].diasActivo.Length; i++) 
         {
-            if (diasemanana == FoodTruck.DiasActivo[i])
+            if (diasemanana == EventosGenerales.eventos[0].diasActivo[i])
             {
                 IconoEvento.GetComponent<Image>().sprite = IconosEvento[1];
                 HayEvento = true;
@@ -265,8 +267,8 @@ public class CambioTiempo : MonoBehaviour
 
     public void cerrarUI()
     {
-        IconoEvento.SetActive(false);
-        PanelCambio.SetActive(false);
+        //IconoEvento.SetActive(false);
+        //PanelCambio.SetActive(false);
         if (carpa != null)
         {
             carpa.CerrarCarpa();
