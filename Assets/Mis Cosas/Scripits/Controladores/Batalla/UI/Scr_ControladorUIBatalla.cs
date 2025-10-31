@@ -8,9 +8,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
 {
     [Header("Menus")]
     [SerializeField] Color[] ColoresBotones;
-    [SerializeField] Color[] ColoresMenus;
-    [SerializeField] Image[] BotonesMenus;
-    [SerializeField] GameObject PanelMenus;
     [Header("Datos Armas")]
     public int ArmaActual = 0;
     [SerializeField] GameObject FlechaDerechaArma;
@@ -18,14 +15,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     [SerializeField] TextMeshProUGUI Tipotxt;
     [SerializeField] TextMeshProUGUI Nombretxt;
     [SerializeField] TextMeshProUGUI Descripciontxt;
-    [SerializeField] TextMeshProUGUI Cadenciatxt;
-    [SerializeField] TextMeshProUGUI Capacidadtxt;
-    [SerializeField] TextMeshProUGUI Rangotxt;
-    [SerializeField] Image RangoBarra;
-    [SerializeField] TextMeshProUGUI Dañotxt;
-    [SerializeField] Image DañoBarra;
-    [SerializeField] TextMeshProUGUI Velocidadtxt;
-    [SerializeField] Image VelocidadBarra;
     [SerializeField] GameObject[] Armas;
     [Header("Habilidades")]//para acomodar visaulmente los iconos de las habilidades
     [SerializeField] Sprite IconoVacio;
@@ -73,23 +62,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     void Update()
     {
         BuscarSingleton();
-        ActualizarBotonesMenus();
-        ActualizarAlerta();
         ActualizarArma();
-        ActualizarEspaciosArmas();
-    }
-
-
-
-    private void ActualizarEspaciosArmas()
-    {
-        for (int i = 0; i <= EspaciosArmas.Length; i++)
-        {
-            if (PlayerPrefs.GetString("Espacio Arma" + i, "No") == "Si")
-            {
-                EspaciosArmas[i].SetActive(true);
-            }
-        };
     }
 
     private void BuscarSingleton()
@@ -187,37 +160,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         Habilidad1.sprite=Hab1.Icono;
         Habilidad2.sprite=Hab2.Icono;
         HabilidadEspecial.sprite=HabE.Icono;
-        //Actualizar Datos
-        Cadenciatxt.text = DatosArma.Cadencia + " s";
-        if (DatosArma.CapacidadTotal == 0)
-        {
-            Capacidadtxt.gameObject.GetComponent<TextMeshProUGUI>().enabled = false;
-            Capacidadtxt.gameObject.transform.GetChild(0).gameObject.SetActive(false);
-            Capacidadtxt.gameObject.transform.GetChild(1).gameObject.SetActive(true);
-        }
-        else
-        {
-            Capacidadtxt.gameObject.GetComponent<TextMeshProUGUI>().enabled = true;
-            Capacidadtxt.gameObject.transform.GetChild(0).gameObject.SetActive(true);
-            Capacidadtxt.gameObject.transform.GetChild(1).gameObject.SetActive(false);
-            Capacidadtxt.text = DatosArma.Capacidad + "/" + DatosArma.CapacidadTotal;
-        }
-
-        RangoBarra.fillAmount = (float)DatosArma.Alcance / 100;
-        Rangotxt.text = DatosArma.Alcance + "/100";
-        DañoBarra.fillAmount = (float)DatosArma.Daño / 100;
-        Dañotxt.text = DatosArma.Daño + "/100";
-        VelocidadBarra.fillAmount = (float)DatosArma.Velocidad / 100;
-        Velocidadtxt.text = DatosArma.Velocidad + "/100";
-
-        if (DatosArma.DobleMano)
-        {
-            Alerta.SetActive(true);
-        }
-        else
-        {
-            Alerta.SetActive(false);
-        }
 
         //Actualizar Imagen
         if (!Armas[ArmaActual].activeSelf)
@@ -241,54 +183,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         BotonActual = -1;
     }
 
-    void ActualizarBotonesMenus()
-    {
-        if (BotonActual != -1)
-        {
-            PanelMenus.SetActive(true);
-            BotonesMenus[BotonActual].color = ColoresBotones[1];
-
-            switch (BotonActual)
-            {
-                case 0:
-                    {
-                        PanelMenus.GetComponent<Image>().color = ColoresMenus[0];
-                        PanelMenus.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Habilidades";
-                        break;
-                    }
-
-                case 1:
-                    {
-                        PanelMenus.GetComponent<Image>().color = ColoresMenus[1];
-                        PanelMenus.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Skins";
-                        break;
-                    }
-
-                case 2:
-                    {
-                        PanelMenus.GetComponent<Image>().color = ColoresMenus[2];
-                        PanelMenus.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Controles";
-                        break;
-                    }
-            }
-
-            for (int i = 0; i < BotonesMenus.Length; i++)
-            {
-                if (i != BotonActual)
-                {
-                    BotonesMenus[i].color = ColoresBotones[0];
-                }
-            }
-        }
-        else
-        {
-            PanelMenus.SetActive(false);
-            BotonesMenus[0].color = ColoresBotones[0];
-            BotonesMenus[1].color = ColoresBotones[0];
-            BotonesMenus[2].color = ColoresBotones[0];
-        }
-    }
-
     public void EntraAlerta()
     {
         AlertaAdentro = true;
@@ -297,18 +191,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     public void SaleAlerta()
     {
         AlertaAdentro = false;
-    }
-
-    void ActualizarAlerta()
-    {
-        if (AlertaAdentro)
-        {
-            PanelAlerta.SetActive(true);
-        }
-        else
-        {
-            PanelAlerta.SetActive(false);
-        }
     }
 
     public void BotonArmaDerecha()
@@ -341,25 +223,25 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         {
             case "SiIzquierda":
                 {
-                    FlechaIzquierdaArma.transform.GetChild(0).GetComponent<Image>().color = ColoresBotones[1];
+                    FlechaIzquierdaArma.GetComponent<Image>().color = ColoresBotones[1];
                     break;
                 }
 
             case "NoIzquierda":
                 {
-                    FlechaIzquierdaArma.transform.GetChild(0).GetComponent<Image>().color = ColoresBotones[0];
+                    FlechaIzquierdaArma.GetComponent<Image>().color = ColoresBotones[0];
                     break;
                 }
 
             case "SiDerecha":
                 {
-                    FlechaDerechaArma.transform.GetChild(0).GetComponent<Image>().color = ColoresBotones[1];
+                    FlechaDerechaArma.GetComponent<Image>().color = ColoresBotones[1];
                     break;
                 }
 
             case "NoDerecha":
                 {
-                    FlechaDerechaArma.transform.GetChild(0).GetComponent<Image>().color = ColoresBotones[0];
+                    FlechaDerechaArma.GetComponent<Image>().color = ColoresBotones[0];
                     break;
                 }
         }
