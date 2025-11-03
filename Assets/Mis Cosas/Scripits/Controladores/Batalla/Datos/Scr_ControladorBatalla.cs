@@ -91,6 +91,13 @@ public class Scr_ControladorBatalla : MonoBehaviour
     public float resistenciaElectrificar = 0.25f; // 25% de probabilidad de resistir el Electrificar
     public float resistenciaExplotar = 0.4f; // 40% de probabilidad de resistir la Explotación
 
+    [Header("Cuenta Atras")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip SonidoReloj;
+    [SerializeField] private AudioClip SonidoPelea; // el sonido que suena cuando dice "Pelea"
+    private string ultimoTextoMostrado = "";
+
+
     void Start()
     {
         Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
@@ -165,7 +172,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
         {
             if (Cuenta > 0)
             {
-                Debug.Log("Comenzo la cuenta con un numero mayor a 0");
+                // --- Preparación al inicio ---
                 if (Cuenta == 4)
                 {
                     if (!PrimerSpawn)
@@ -176,12 +183,35 @@ public class Scr_ControladorBatalla : MonoBehaviour
                         PrimerSpawn = true;
                     }
                 }
+
+                // --- Actualizar número visual ---
+                int numeroActual = Mathf.FloorToInt(Cuenta); // floor evita el salto del 1
+                if (numeroActual > 3) numeroActual = 3;      // nunca mostrar 4
+
+                string textoMostrado = numeroActual > 0 ? numeroActual.ToString() : "Pelea";
+                NumeroCuenta.text = textoMostrado;
+
+                // --- Cambiar sonido solo cuando cambia el número o pasa a "Pelea" ---
+                if (textoMostrado != ultimoTextoMostrado)
+                {
+                    if (textoMostrado == "Pelea")
+                    {
+                        audioSource.clip = SonidoPelea; // sonido especial
+                    }
+                    else
+                    {
+                        audioSource.clip = SonidoReloj; // sonido del reloj (3,2,1)
+                    }
+                    audioSource.Play();
+
+                    ultimoTextoMostrado = textoMostrado;
+                }
+
                 Cuenta -= Time.deltaTime;
-                NumeroCuenta.text = Cuenta < 1 ? "Pelea" : ((int)Cuenta).ToString();
             }
             else
             {
-                Debug.Log("Comenzo la cuenta con el numero en 0");
+                // --- Fin de la cuenta atrás ---
                 if (controladorOleadas.enemigosOleada.Count > 0 && ComenzarCuenta)
                 {
                     foreach (GameObject Enemigo in controladorOleadas.enemigosOleada)
@@ -189,6 +219,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
                         Enemigo.GetComponent<NavMeshAgent>().enabled = true;
                     }
                 }
+
                 NumeroCuenta.gameObject.SetActive(false);
                 ComenzarCuenta = false;
                 Cuenta = 4;
@@ -197,6 +228,9 @@ public class Scr_ControladorBatalla : MonoBehaviour
             }
         }
     }
+
+
+
 
     private void Terminar()
     {

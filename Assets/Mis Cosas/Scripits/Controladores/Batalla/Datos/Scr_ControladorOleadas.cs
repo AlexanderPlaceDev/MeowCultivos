@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using TMPro;
 using Unity.AI.Navigation;
 using Unity.VisualScripting;
@@ -21,10 +21,17 @@ public class Scr_ControladorOleadas : MonoBehaviour
     private bool estaPresionandoE = false;
     float ContTiempoEntreOleadas;
     List<GameObject> spawners = new List<GameObject>();
+    public GameObject prefabEnemigo;
+
+    [Header("Cuenta Regresiva")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip SonidoReloj;
+    [SerializeField] private AudioClip SonidoPelea;
+    private string ultimoTextoMostrado = "";
+
 
     private Scr_DatosSingletonBatalla singleton;
 
-    public GameObject prefabEnemigo;
 
     public List<GameObject> enemigosOleada = new List<GameObject>();
     public int OleadaActual = 1;
@@ -100,7 +107,7 @@ public class Scr_ControladorOleadas : MonoBehaviour
             }
             else
             {
-                TextoCantidadEnemigos.text = "•/•";
+                TextoCantidadEnemigos.text = "â€¢/â€¢";
                 var enemigo = prefabEnemigo.GetComponent<Scr_Enemigo>();
                 int oleadaActual = OleadaActual;
                 bool siguienteEsBandera = (oleadaActual + 1 == enemigo.PuntoDeHuida);
@@ -131,7 +138,7 @@ public class Scr_ControladorOleadas : MonoBehaviour
                     }
                     else
                     {
-                        // Si se soltó la tecla antes de completar el tiempo
+                        // Si se soltÃ³ la tecla antes de completar el tiempo
                         if (estaPresionandoE)
                         {
                             tiempoPresionE = 0f;
@@ -145,7 +152,7 @@ public class Scr_ControladorOleadas : MonoBehaviour
         }
         else
         {
-            TextoCantidadEnemigos.text = "•/•";
+            TextoCantidadEnemigos.text = "â€¢/â€¢";
             BotonOleada.SetActive(false);
         }
     }
@@ -159,12 +166,12 @@ public class Scr_ControladorOleadas : MonoBehaviour
             Debug.Log(spawners.Count);
             int pos = Random.Range(0, spawners.Count);
 
-            // Posición con leve variación
+            // PosiciÃ³n con leve variaciÃ³n
             Vector3 spawnPosition = spawners[pos].transform.position;
             Vector3 offset = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
             spawnPosition += offset;
 
-            // Asegurar que esté en NavMesh
+            // Asegurar que estÃ© en NavMesh
             if (NavMesh.SamplePosition(spawnPosition, out NavMeshHit navHit, 2f, NavMesh.AllAreas))
             {
                 spawnPosition = navHit.position;
@@ -178,11 +185,11 @@ public class Scr_ControladorOleadas : MonoBehaviour
             NavMeshAgent agent = enemigo.GetComponent<NavMeshAgent>();
             if (agent != null && agent.isOnNavMesh)
             {
-                agent.enabled = false; // se activará después de la cuenta
+                agent.enabled = false; // se activarÃ¡ despuÃ©s de la cuenta
             }
             else
             {
-                Debug.LogWarning("El enemigo no está en el NavMesh.");
+                Debug.LogWarning("El enemigo no estÃ¡ en el NavMesh.");
             }
         }
     }
@@ -201,12 +208,12 @@ public class Scr_ControladorOleadas : MonoBehaviour
         {
             int pos = Random.Range(0, spawners.Count);
 
-            // Posición con leve variación
+            // PosiciÃ³n con leve variaciÃ³n
             Vector3 spawnPosition = spawners[pos].transform.position;
             Vector3 offset = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
             spawnPosition += offset;
 
-            // Asegurar que esté en NavMesh
+            // Asegurar que estÃ© en NavMesh
             if (NavMesh.SamplePosition(spawnPosition, out NavMeshHit navHit, 2f, NavMesh.AllAreas))
             {
                 spawnPosition = navHit.position;
@@ -220,11 +227,11 @@ public class Scr_ControladorOleadas : MonoBehaviour
             NavMeshAgent agent = enemigo.GetComponent<NavMeshAgent>();
             if (agent != null && agent.isOnNavMesh)
             {
-                agent.enabled = false; // se activará después de la cuenta
+                agent.enabled = false; // se activarÃ¡ despuÃ©s de la cuenta
             }
             else
             {
-                Debug.LogWarning("El enemigo no está en el NavMesh.");
+                Debug.LogWarning("El enemigo no estÃ¡ en el NavMesh.");
             }
         }
     }
@@ -239,7 +246,7 @@ public class Scr_ControladorOleadas : MonoBehaviour
             float tiempoActualEntreOleadas = siguienteEsBandera && enemigo.PuntoDeHuida != enemigo.CantidadDeOleadas + 1 ? TiempoEntreOleadas * 2f : TiempoEntreOleadas;
 
             int totalOleadas = (int)enemigo.CantidadDeOleadas;
-            // Cálculo del valor inicial y objetivo del slider
+            // CÃ¡lculo del valor inicial y objetivo del slider
             float valorInicial = (float)(oleadaActual - 1) / (totalOleadas);
             float objetivo = (float)(oleadaActual + (siguienteEsBandera && enemigo.PuntoDeHuida != enemigo.CantidadDeOleadas + 1 ? 1 : 0)) / totalOleadas;
 
@@ -273,22 +280,39 @@ public class Scr_ControladorOleadas : MonoBehaviour
                 textoTiempo.gameObject.SetActive(false);
                 ControladorBatalla.NumeroCuenta.gameObject.SetActive(true);
 
-                // Mostrar cuenta regresiva exacta con Mathf.FloorToInt para evitar saltos
-                int segundos = (int)tiempoRestante;
+                // Mostrar cuenta regresiva exacta sin saltos
+                int segundos = Mathf.FloorToInt(tiempoRestante);
+                string textoMostrado;
+
                 if (segundos >= 1)
-                    ControladorBatalla.NumeroCuenta.text = segundos.ToString();
+                    textoMostrado = segundos.ToString();
                 else
                 {
                     if (OleadaActual == enemigo.CantidadDeOleadas && enemigo.PuntoDeHuida == enemigo.CantidadDeOleadas + 1)
+                        textoMostrado = "Â¡Adios!";
+                    else
+                        textoMostrado = "Â¡Pelea!";
+                }
+
+                ControladorBatalla.NumeroCuenta.text = textoMostrado;
+
+                // --- ðŸ”Š Reproducir sonido cuando cambia el texto ---
+                if (textoMostrado != ultimoTextoMostrado)
+                {
+                    if (textoMostrado == "Â¡Pelea!" || textoMostrado == "Â¡Adios!")
                     {
-                        ControladorBatalla.NumeroCuenta.text = "¡Adios!";
+                        audioSource.clip = SonidoPelea;
                     }
                     else
                     {
-                        ControladorBatalla.NumeroCuenta.text = "¡Pelea!";
+                        audioSource.clip = SonidoReloj;
                     }
+
+                    audioSource.Play();
+                    ultimoTextoMostrado = textoMostrado;
                 }
             }
+
             else
             {
                 ControladorBatalla.NumeroCuenta.gameObject.SetActive(false);

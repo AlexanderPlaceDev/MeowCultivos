@@ -40,6 +40,8 @@ public class Tienda_3D : MonoBehaviour
     [SerializeField] GameObject AreaObjetosCompra;
     [SerializeField] GameObject PrefabItemCompra;
     [SerializeField] TextMeshProUGUI DineroAPagar;
+    // Guarda las cantidades seleccionadas, por índice del inventario
+    private Dictionary<int, int> cantidadesSeleccionadas = new Dictionary<int, int>();
     private float DineroCompraActual = 0f;
 
     void Start()
@@ -135,6 +137,15 @@ public class Tienda_3D : MonoBehaviour
     public void GenerarObjetos()
     {
         int i = 0;
+        List<int> indicesValidos = new List<int>();
+
+        // 🧹 Limpia descuentos viejos antes de generar
+        for (int j = 0; j < ObjetosAvender.Length; j++)
+        {
+            PlayerPrefs.SetFloat("DescuentoSirilo" + j, 0f);
+        }
+
+        // 🧱 Generar objetos nuevos
         foreach (GameObject Objeto in ObjetosAvender)
         {
             if (Objeto == null)
@@ -148,42 +159,123 @@ public class Tienda_3D : MonoBehaviour
 
             PlayerPrefs.SetString("ObjetosSirilo" + i, ObjetosQueVende[r].Nombre);
             PlayerPrefs.SetInt("CantidadesSirilo" + i, rcant);
-            PlayerPrefs.SetInt("VendidoSirilo" + i, 0); // 🔹 nuevo campo para estado de venta
+            PlayerPrefs.SetInt("VendidoSirilo" + i, 0);
+            // Reiniciamos descuento explícitamente
+            PlayerPrefs.SetFloat("DescuentoSirilo" + i, 0f);
 
             var spriteR = Objeto.GetComponent<SpriteRenderer>();
-            if (spriteR != null && ObjetosQueVende.Length > 0)
+            if (spriteR != null)
                 spriteR.sprite = ObjetosQueVende[r].Icono;
 
-            if (Objeto.transform.GetChild(0).GetChild(0).childCount > 0)
-            {
-                Transform UI = Objeto.transform.GetChild(0).GetChild(0);
-                if (UI.childCount > 0)
-                {
-                    var t = UI.GetChild(0);
-                    if (t != null && t.GetComponent<TextMeshProUGUI>() != null)
-                        t.GetComponent<TextMeshProUGUI>().text = ObjetosQueVende[r].Nombre;
-                }
+            Transform UI = Objeto.transform.GetChild(0).GetChild(0);
 
-                if (UI.childCount > 1)
-                {
-                    var t1 = UI.GetChild(1);
-                    var text1 = t1.GetComponent<TextMeshProUGUI>();
-                    if (text1 != null) text1.text = rcant.ToString();
-                }
+            UI.GetChild(0).GetComponent<TextMeshProUGUI>().text = ObjetosQueVende[r].Nombre;
+            UI.GetChild(1).GetComponent<TextMeshProUGUI>().text = rcant.ToString();
 
-                if (UI.childCount > 3)
-                {
-                    var t3 = UI.GetChild(3);
-                    var text3 = t3.GetComponent<TextMeshProUGUI>();
-                    if (text3 != null)
-                        text3.text = "$" + (ObjetosQueVende[r].ValorVentaIndividual * rcant).ToString();
-                }
-            }
+            float precioTotal = ObjetosQueVende[r].ValorVentaIndividual * rcant;
+            UI.GetChild(3).GetComponent<TextMeshProUGUI>().text = "$" + precioTotal.ToString();
+
+            // Si el precio es razonable, es candidato a descuento
+            if (precioTotal > 1f)
+                indicesValidos.Add(i);
+
+            // 🔒 Ocultar cartel de oferta por defecto
+            Transform oferta = UI.Find("Oferta");
+            if (oferta != null)
+                oferta.gameObject.SetActive(false);
+
             i++;
         }
 
-        PlayerPrefs.Save(); // 🔹 guardar todo
+        // 🎯 Elegir exactamente 2 descuentos distintos
+        if (indicesValidos.Count >= 2)
+        {
+            int idx1 = indicesValidos[Random.Range(0, indicesValidos.Count)];
+            int idx2;
+            do { idx2 = indicesValidos[Random.Range(0, indicesValidos.Count)]; } while (idx2 == idx1);
+
+            AplicarDescuentoAObjeto(idx1);
+            AplicarDescuentoAObjeto(idx2);
+        }
+        else if (indicesValidos.Count == 1)
+        {
+            AplicarDescuentoAObjeto(indicesValidos[0]);
+        }
+
+        PlayerPrefs.Save();
     }
+
+
+    private void AplicarDescuentoAObjeto(int index)
+    {
+        if (index < 0 || index >= ObjetosAvender.Length) return;
+
+        GameObject objeto = ObjetosAvender[index];
+        if (objeto == null) return;
+
+        // UI root: Item -> MarcoVendedor -> UI Cmprar Item1
+        if (objeto.transform.childCount < 1) return;
+        Transform marco = objeto.transform.GetChild(0);
+        if (marco.childCount < 1) return;
+        Transform ui = marco.GetChild(0);
+
+        // leer nombre y cantidad desde la UI
+        if (ui.childCount < 4) return;
+        string nombre = ui.GetChild(0).GetComponent<TextMeshProUGUI>().text;
+        int cantidad = 1;
+        int.TryParse(ui.GetChild(1).GetComponent<TextMeshProUGUI>().text, out cantidad);
+
+        // buscar el Scriptable correspondiente
+        Scr_CreadorObjetos data = null;
+        foreach (var o in ObjetosQueVende)
+        {
+            if (o != null && o.Nombre == nombre)
+            {
+                data = o;
+                break;
+            }
+        }
+        if (data == null) return;
+
+        float precioTotal = data.ValorVentaIndividual * cantidad;
+        if (precioTotal <= 1f) return; // no aplicamos descuentos si no vale la pena
+
+        float descuento = Random.Range(10f, 50f); // porcentaje
+        float factor = 1f - (descuento / 100f);
+        float nuevoPrecio = Mathf.Round(data.ValorVentaIndividual * cantidad * factor);
+
+        // Actualizar texto del precio (UI GetChild(3))
+        ui.GetChild(3).GetComponent<TextMeshProUGUI>().text = "$" + nuevoPrecio.ToString();
+
+        // Guardar descuento en PlayerPrefs (por índice)
+        PlayerPrefs.SetFloat("DescuentoSirilo" + index, descuento);
+
+        // Activar cartel Oferta dentro de la UI: buscar por índice (6) o por nombre "Oferta"
+        Transform ofertaTransform = null;
+        if (ui.childCount > 6)
+            ofertaTransform = ui.GetChild(6);
+        else
+        {
+            // fallback: buscar hijo llamado "Oferta"
+            var t = ui.Find("Oferta");
+            if (t != null) ofertaTransform = t;
+        }
+
+        if (ofertaTransform != null)
+        {
+            ofertaTransform.gameObject.SetActive(true);
+            if (ofertaTransform.childCount > 0)
+            {
+                var tm = ofertaTransform.GetChild(0).GetComponent<TextMeshProUGUI>();
+                if (tm != null) tm.text = "-" + Mathf.RoundToInt(descuento) + "%";
+            }
+        }
+
+        PlayerPrefs.Save();
+    }
+
+
+
 
     // 🔹 NUEVA FUNCIÓN: carga los objetos guardados al iniciar
     private void CargarObjetosGuardados()
@@ -193,12 +285,14 @@ public class Tienda_3D : MonoBehaviour
             string keyNombre = "ObjetosSirilo" + i;
             string keyCant = "CantidadesSirilo" + i;
             string keyVendido = "VendidoSirilo" + i;
+            string keyDescuento = "DescuentoSirilo" + i;
 
             if (PlayerPrefs.HasKey(keyNombre))
             {
                 string nombre = PlayerPrefs.GetString(keyNombre);
                 int cantidad = PlayerPrefs.GetInt(keyCant);
                 int vendido = PlayerPrefs.GetInt(keyVendido, 0);
+                float descuento = PlayerPrefs.GetFloat(keyDescuento, 0f);
 
                 Scr_CreadorObjetos data = null;
                 foreach (var obj in ObjetosQueVende)
@@ -217,13 +311,30 @@ public class Tienda_3D : MonoBehaviour
                     if (spriteR != null)
                         spriteR.sprite = data.Icono;
 
-                    // Actualizar textos UI
                     Transform ui = objeto.transform.GetChild(0).GetChild(0);
                     ui.GetChild(0).GetComponent<TextMeshProUGUI>().text = data.Nombre;
                     ui.GetChild(1).GetComponent<TextMeshProUGUI>().text = cantidad.ToString();
-                    ui.GetChild(3).GetComponent<TextMeshProUGUI>().text = "$" + (data.ValorVentaIndividual * cantidad);
 
-                    // Si ya estaba vendido, desactivar visualmente
+                    float precio = data.ValorVentaIndividual * cantidad;
+                    if (descuento > 0f)
+                        precio = Mathf.Round(precio * (1f - descuento / 100f));
+                    ui.GetChild(3).GetComponent<TextMeshProUGUI>().text = "$" + precio.ToString();
+
+                    Transform ofertaTransform = ui.Find("Oferta");
+                    if (ofertaTransform != null)
+                    {
+                        if (descuento > 0f)
+                        {
+                            ofertaTransform.gameObject.SetActive(true);
+                            ofertaTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                                "-" + Mathf.RoundToInt(descuento) + "%";
+                        }
+                        else
+                        {
+                            ofertaTransform.gameObject.SetActive(false);
+                        }
+                    }
+
                     if (vendido == 1)
                     {
                         spriteR.enabled = false;
@@ -236,6 +347,8 @@ public class Tienda_3D : MonoBehaviour
         }
     }
 
+
+
     private void ActualizarTextoDinero()
     {
         if (Dinero != null)
@@ -245,50 +358,16 @@ public class Tienda_3D : MonoBehaviour
     public void ComprarObjeto(int IDObjeto)
     {
         if (ObjetosAvender == null || IDObjeto < 0 || IDObjeto >= ObjetosAvender.Length)
-        {
-            Debug.LogWarning("IDObjeto fuera de rango o ObjetosAvender no inicializado.");
             return;
-        }
 
         if (ObjetosAvender[IDObjeto].GetComponent<SpriteRenderer>().enabled == false)
-        {
             return;
-        }
 
         GameObject objetoVisual = ObjetosAvender[IDObjeto];
-        if (objetoVisual == null)
-        {
-            Debug.LogWarning("Objeto visual nulo en ObjetosAvender.");
-            return;
-        }
+        Transform uiRoot = objetoVisual.transform.GetChild(0).GetChild(0);
 
-        // 🔹 Extraer datos del objeto (como ya tenías)
-        Transform uiRoot = null;
-        if (objetoVisual.transform.childCount > 0)
-        {
-            uiRoot = objetoVisual.transform.GetChild(0);
-            if (uiRoot.childCount > 0)
-                uiRoot = uiRoot.GetChild(0);
-        }
-
-        string nombre = null;
-        int cantidad = 1;
-        float precioUnitario = -1f;
-
-        if (uiRoot != null)
-        {
-            if (uiRoot.childCount > 0)
-            {
-                var t = uiRoot.GetChild(0).GetComponent<TextMeshProUGUI>();
-                if (t != null) nombre = t.text;
-            }
-
-            if (uiRoot.childCount > 1)
-            {
-                var tq = uiRoot.GetChild(1).GetComponent<TextMeshProUGUI>();
-                if (tq != null) int.TryParse(tq.text, out cantidad);
-            }
-        }
+        string nombre = uiRoot.GetChild(0).GetComponent<TextMeshProUGUI>().text;
+        int cantidad = int.Parse(uiRoot.GetChild(1).GetComponent<TextMeshProUGUI>().text);
 
         Scr_CreadorObjetos objetoScriptable = null;
         foreach (var s in ObjetosQueVende)
@@ -299,16 +378,14 @@ public class Tienda_3D : MonoBehaviour
                 break;
             }
         }
+        if (objetoScriptable == null) return;
 
-        if (objetoScriptable == null)
-        {
-            Debug.LogWarning("No se encontró el objeto en la lista de venta.");
-            return;
-        }
-
+        float descuentoGuardado = PlayerPrefs.GetFloat("DescuentoSirilo" + IDObjeto, 0f);
         float costoTotalFloat = objetoScriptable.ValorVentaIndividual * cantidad;
-        int costoTotal = Mathf.CeilToInt(costoTotalFloat);
+        if (descuentoGuardado > 0f)
+            costoTotalFloat = Mathf.Round(costoTotalFloat * (1f - descuentoGuardado / 100f));
 
+        int costoTotal = Mathf.CeilToInt(costoTotalFloat);
         int dineroActual = PlayerPrefs.GetInt("Dinero", 0);
 
         if (dineroActual < costoTotal)
@@ -321,23 +398,9 @@ public class Tienda_3D : MonoBehaviour
         PlayerPrefs.SetInt("Dinero", dineroActual);
         ActualizarTextoDinero();
 
-        // Agregar al inventario o lista
-        var goOA = GameObject.Find("ObjetosAgregados");
-        if (goOA != null)
-        {
-            Scr_ObjetosAgregados objetosAgregados = goOA.GetComponent<Scr_ObjetosAgregados>();
-            if (objetosAgregados != null)
-            {
-                objetosAgregados.Lista.Add(objetoScriptable);
-                objetosAgregados.Cantidades.Add(cantidad);
-            }
-        }
-
-        // 🔹 Guardar estado vendido
         PlayerPrefs.SetInt("VendidoSirilo" + IDObjeto, 1);
         PlayerPrefs.Save();
 
-        // 🔹 Desactivar visualmente el objeto
         var spr = objetoVisual.GetComponent<SpriteRenderer>();
         if (spr != null)
             spr.enabled = false;
@@ -346,9 +409,6 @@ public class Tienda_3D : MonoBehaviour
 
         objetoVisual.name += "_VENDIDO";
         Debug.Log($"Compraste {cantidad} x {nombre} por ${costoTotal}.");
-
-        VolverACamaraTienda();
-        GenerarListaCompraDesdeInventario();
     }
 
     ////////////////////////////////////
@@ -417,7 +477,10 @@ public class Tienda_3D : MonoBehaviour
 
                 var botones = nuevoItem.GetComponentsInChildren<BotonItemTienda>();
                 foreach (var boton in botones)
+                {
                     boton.AsignarCantidadMaxima(Inventario.Cantidades[i]);
+                    boton.AsignarIndiceInventario(i); // 🔹 Nuevo
+                }
 
                 nuevoItem.SetActive(true);
             }
@@ -622,64 +685,63 @@ public class Tienda_3D : MonoBehaviour
 
     public void RecalcularDineroAPagar()
     {
-        if (DineroAPagar == null) return;
         float total = 0f;
-        for (int i = 0; i < AreaObjetosCompra.transform.childCount; i++)
+        foreach (var kvp in cantidadesSeleccionadas)
         {
-            Transform item = AreaObjetosCompra.transform.GetChild(i);
-            if (!item.gameObject.activeSelf) continue;
-            float valorUnitario = 0f;
-            float.TryParse(item.GetChild(2).GetComponent<TextMeshProUGUI>().text, out valorUnitario);
-            int cantidadSeleccionada = 0;
-            int.TryParse(item.GetChild(3).GetComponent<TextMeshProUGUI>().text, out cantidadSeleccionada);
-            total += valorUnitario * cantidadSeleccionada;
+            var objeto = Inventario.Objetos[kvp.Key];
+            total += objeto.ValorVentaIndividual * kvp.Value;
         }
-        DineroAPagar.text = "$" + total.ToString();
+        DineroAPagar.text = "$" + total.ToString("F0");
     }
+
 
     public void ComprarObjetosSeleccionados()
     {
-        if (Inventario == null || DineroAPagar == null) return;
+        if (Inventario == null) return;
         float TotalCompra = 0f;
 
-        for (int i = 0; i < AreaObjetosCompra.transform.childCount; i++)
+        foreach (var kvp in cantidadesSeleccionadas)
         {
-            Transform item = AreaObjetosCompra.transform.GetChild(i);
-            if (!item.gameObject.activeSelf) continue;
-
-            string nombre = item.GetChild(1).GetComponent<TextMeshProUGUI>().text;
-            float precioUnitario = 0f;
-            float.TryParse(item.GetChild(2).GetComponent<TextMeshProUGUI>().text, out precioUnitario);
-            int cantidadAComprar = 0;
-            int.TryParse(item.GetChild(3).GetComponent<TextMeshProUGUI>().text, out cantidadAComprar);
-
+            int indice = kvp.Key;
+            int cantidadAComprar = kvp.Value;
             if (cantidadAComprar <= 0) continue;
 
-            for (int j = 0; j < Inventario.Objetos.Length; j++)
-            {
-                if (Inventario.Objetos[j].Nombre == nombre)
-                {
-                    Inventario.Cantidades[j] -= cantidadAComprar;
-                    if (Inventario.Cantidades[j] < 0)
-                        Inventario.Cantidades[j] = 0;
-                    TotalCompra += precioUnitario * cantidadAComprar;
-                    break;
-                }
-            }
+            var objeto = Inventario.Objetos[indice];
+            float precioUnitario = objeto.ValorVentaIndividual;
 
-            item.GetChild(3).GetComponent<TextMeshProUGUI>().text = "0";
+            Inventario.Cantidades[indice] -= cantidadAComprar;
+            if (Inventario.Cantidades[indice] < 0)
+                Inventario.Cantidades[indice] = 0;
+
+            TotalCompra += precioUnitario * cantidadAComprar;
         }
 
-        DineroCompraActual += TotalCompra;
-        PlayerPrefs.SetInt("Dinero", PlayerPrefs.GetInt("Dinero", 0) + (int)DineroCompraActual);
+        // Aplicar dinero
+        PlayerPrefs.SetInt("Dinero", PlayerPrefs.GetInt("Dinero", 0) + Mathf.FloorToInt(TotalCompra));
+        PlayerPrefs.Save();
         ActualizarTextoDinero();
-        ActualizarTextoDineroAPagar();
+
+        // Limpiar registro de cantidades seleccionadas
+        cantidadesSeleccionadas.Clear();
+
+        // Refrescar UI
         GenerarListaCompraDesdeInventario();
+        ActualizarTextoDineroAPagar();
     }
+
 
     private void ActualizarTextoDineroAPagar()
     {
         if (DineroAPagar != null)
             DineroAPagar.text = "$0";
+    }
+
+    // 🔹 Registra o actualiza la cantidad seleccionada para un ítem específico del inventario
+    public void ActualizarCantidadSeleccionada(int indiceInventario, int nuevaCantidad)
+    {
+        if (cantidadesSeleccionadas.ContainsKey(indiceInventario))
+            cantidadesSeleccionadas[indiceInventario] = nuevaCantidad;
+        else
+            cantidadesSeleccionadas.Add(indiceInventario, nuevaCantidad);
     }
 }
