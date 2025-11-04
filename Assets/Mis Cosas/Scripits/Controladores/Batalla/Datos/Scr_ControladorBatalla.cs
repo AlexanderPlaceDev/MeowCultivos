@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using Unity.AI.Navigation;
+using Unity.Burst.Intrinsics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -64,6 +65,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     [Header("Otros")]
     [SerializeField] Light OrigenLuz;
     private Scr_DatosSingletonBatalla Singleton;
+    Scr_DatosArmas Datosarmas;
     private GameObject Personaje;
     private Scr_ControladorOleadas controladorOleadas;
     private bool DioRecompensa = false;
@@ -94,6 +96,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     void Start()
     {
         Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
+        Datosarmas = Singleton.GetComponent<Scr_DatosArmas>();
         controladorOleadas = GetComponent<Scr_ControladorOleadas>();
         Personaje = GameObject.Find("Personaje");
 
@@ -102,10 +105,10 @@ public class Scr_ControladorBatalla : MonoBehaviour
         Complemento.text = Singleton.Complemento;
         Item.text = Singleton.Item;
         Item.color = Singleton.ColorItem;
-
+        /*
         Habilidad1 = PlayerPrefs.GetString("Habilidad1", "Ojo");
         Habilidad2 = PlayerPrefs.GetString("Habilidad2", "Rugido");
-        HabilidadEspecial = PlayerPrefs.GetString("HabilidadEspecial", "Garras");
+        HabilidadEspecial = PlayerPrefs.GetString("HabilidadEspecial", "Garras");*/
 
         ColorPrincipal = BarraVidaImage.GetComponent<Image>().color;
 
@@ -137,6 +140,15 @@ public class Scr_ControladorBatalla : MonoBehaviour
         Habilidad1 = PlayerPrefs.GetString(arma + "H1", "Ojo");
         Habilidad2 = PlayerPrefs.GetString(arma + "H2", "Rugido");
         HabilidadEspecial = PlayerPrefs.GetString(arma + "HE", "Garras");
+    }
+    public void GuardarHabilidadesArma(string arma)
+    {
+        PlayerPrefs.SetString(arma + "HT", HabilidadT);
+        PlayerPrefs.SetString(arma + "H1", Habilidad1);
+        PlayerPrefs.SetString(arma + "H2", Habilidad2);
+        PlayerPrefs.SetString(arma + "HE", HabilidadEspecial);
+        PlayerPrefs.SetInt(arma + "Usos", usosHabilidad);
+        Datosarmas.guardarHabilidades();
     }
 
     public void HabilidadEsPasiva()
