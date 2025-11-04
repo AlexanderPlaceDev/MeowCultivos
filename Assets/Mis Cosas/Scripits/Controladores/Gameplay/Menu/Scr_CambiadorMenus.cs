@@ -223,4 +223,9 @@ public class Scr_CambiadorMenus : MonoBehaviour
                 break;
         }
     }
+
+    public void SonidoReloj()
+    {
+        Menu.GetComponent<AudioSource>().Play();
+    }
 }
