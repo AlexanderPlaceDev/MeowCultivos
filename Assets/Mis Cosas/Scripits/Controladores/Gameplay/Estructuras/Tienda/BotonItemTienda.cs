@@ -9,36 +9,32 @@ public class BotonItemTienda : MonoBehaviour
 
     private TextMeshProUGUI textoCantidad;
     private int cantidadMaxima = 0;
+    private int indiceInventario = -1;  // 🔹 Nuevo
     private Tienda_3D Tienda;
 
     private void Start()
     {
-        // Buscar la tienda en los padres del prefab (más seguro que parent.parent.parent...)
+        // Buscar la tienda en los padres del prefab
         Tienda = GetComponentInParent<Tienda_3D>();
 
-        // Buscar el texto de cantidad en el mismo prefab (suponiendo que está en el padre directo)
+        // Buscar el texto de cantidad
         Transform parentItem = transform.parent;
         if (parentItem != null)
         {
-            // Intentamos por nombre "Cantidad" y si no existe, probamos GetChild(3) por compatibilidad
             var t = parentItem.Find("Cantidad");
             if (t != null) textoCantidad = t.GetComponent<TextMeshProUGUI>();
             else
             {
-                // fallback — según tu estructura inicial, child index 3 era la cantidad
                 var candidate = parentItem.GetChild(3);
                 if (candidate != null)
                     textoCantidad = candidate.GetComponent<TextMeshProUGUI>();
             }
         }
-
-        // Nota: cantidadMaxima será asignada desde Tienda_3D al instanciar los prefabs.
     }
 
     public void EjecutarAccion()
     {
         if (textoCantidad == null) return;
-        Debug.Log("Entra");
 
         int cantidadActual = 0;
         int.TryParse(textoCantidad.text, out cantidadActual);
@@ -47,7 +43,6 @@ public class BotonItemTienda : MonoBehaviour
         {
             case TipoBoton.Mas:
                 cantidadActual++;
-                // No superar el máximo disponible
                 if (cantidadMaxima > 0)
                     cantidadActual = Mathf.Min(cantidadActual, cantidadMaxima);
                 break;
@@ -60,7 +55,7 @@ public class BotonItemTienda : MonoBehaviour
                 if (cantidadMaxima > 0)
                     cantidadActual = Mathf.RoundToInt(cantidadMaxima / 2f);
                 else
-                    cantidadActual = Mathf.RoundToInt(cantidadActual / 2f); // fallback si no hay máximo
+                    cantidadActual = Mathf.RoundToInt(cantidadActual / 2f);
                 break;
 
             case TipoBoton.Maximo:
@@ -71,17 +66,24 @@ public class BotonItemTienda : MonoBehaviour
 
         textoCantidad.text = cantidadActual.ToString();
 
-        // 🔹 Recalcular el DineroAPagar de la Tienda
-        if (Tienda != null)
+        // 🔹 Actualizar el registro en la Tienda
+        if (Tienda != null && indiceInventario >= 0)
         {
+            Tienda.ActualizarCantidadSeleccionada(indiceInventario, cantidadActual);
             Tienda.RecalcularDineroAPagar();
         }
     }
 
-    // Método público opcional para definir el máximo desde otro script
+    // 🔹 Método llamado desde Tienda_3D
     public void AsignarCantidadMaxima(int max)
     {
         cantidadMaxima = max;
+    }
+
+    // 🔹 Nuevo método para identificar qué ítem representa este botón
+    public void AsignarIndiceInventario(int indice)
+    {
+        indiceInventario = indice;
     }
 }
 
