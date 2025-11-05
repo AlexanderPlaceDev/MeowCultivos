@@ -1,4 +1,4 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
@@ -6,7 +6,7 @@ using UnityEngine;
 public class Farol_controlador : MonoBehaviour
 {
     public Transform target;         // El objeto al que se le mide la distancia (ej: el jugador)
-    public float maxDistance = 10f;  // Distancia m·xima permitida
+    public float maxDistance = 10f;  // Distancia m√°xima permitida
     public GameObject CTiempo; //checa donde esta el controlador del tiempo
     public Scr_ControladorTiempo ContolT;
     public bool enableEmission = true;
@@ -85,7 +85,7 @@ public class Farol_controlador : MonoBehaviour
             return;
         }
 
-        Material mat = mats[1]; // Segundo material (Ìndice 1)
+        Material mat = mats[1]; // Segundo material (√≠ndice 1)
 
         mat.EnableKeyword("_EMISSION");
 
@@ -108,7 +108,7 @@ public class Farol_controlador : MonoBehaviour
             return;
         }
 
-        Material mat = mats[1]; // Segundo material (Ìndice 1)
+        Material mat = mats[1]; // Segundo material (√≠ndice 1)
 
         mat.DisableKeyword("_EMISSION");
 

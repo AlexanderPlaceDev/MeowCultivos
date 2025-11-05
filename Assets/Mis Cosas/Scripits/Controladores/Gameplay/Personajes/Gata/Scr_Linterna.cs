@@ -1,105 +1,79 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Scr_Linterna : MonoBehaviour
 {
-    [SerializeField] GameObject Gata;                   // Modelo de la gata
-    [SerializeField] Scr_ControladorTiempo Tiempo;      // Referencia al controlador del tiempo
-    [SerializeField] int HoraEncender = 16;             // Hora para encender (por defecto 16)
-    [SerializeField] int HoraApagar = 6;                // Hora para apagar (por defecto 6)
-    [SerializeField] string Habilidad;
+    [SerializeField] private Scr_ControladorTiempo Tiempo;  // Referencia al controlador del tiempo
+    [SerializeField] private GameObject Gata;               // Modelo de la gata (para ajustar materiales)
+    [SerializeField] private int HoraEncender = 20;         // Hora para encender (20:00)
+    [SerializeField] private int HoraApagar = 8;            // Hora para apagar (08:00)
 
-    private Light pointLight;                           // Luz del mismo objeto
-    private Material[] materialesGata;                  // Todos los materiales de la gata
-    private bool linternaEncendida;                     // Estado actual
+    private Light luz;                                      // Luz del objeto
+    private Material[] materialesGata;                      // Materiales del modelo
+    private float temporizador;                             // Control del intervalo
+    private bool linternaEncendida;                         // Estado actual
 
     void Start()
     {
+        // Buscar referencias si no están asignadas
+        if (Tiempo == null)
+            Tiempo = FindObjectOfType<Scr_ControladorTiempo>();
 
-        if (PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si")
+        luz = GetComponent<Light>();
+
+        if (Gata != null)
         {
-            // Buscar la luz del mismo objeto
-            pointLight = GetComponent<Light>();
-
-            // Buscar los materiales de la gata
-            if (Gata != null)
-            {
-                Renderer[] renderers = Gata.GetComponentsInChildren<Renderer>();
-                List<Material> mats = new List<Material>();
-
-                foreach (Renderer rend in renderers)
-                    mats.AddRange(rend.materials);
-
-                materialesGata = mats.ToArray();
-            }
-
-            // 🔥 Forzar una comprobación inicial
-            ActualizarEstadoSegunHora();
+            // Recolecta todos los materiales de la gata
+            var renderers = Gata.GetComponentsInChildren<Renderer>();
+            var mats = new List<Material>();
+            foreach (var r in renderers)
+                mats.AddRange(r.materials);
+            materialesGata = mats.ToArray();
         }
 
-
+        // Sincroniza al inicio
+        VerificarHoraYLuz();
     }
 
-    void LateUpdate()
+    void Update()
     {
-        if (PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si")
+        temporizador += Time.deltaTime;
+
+        if (temporizador >= 5f)
         {
-            if (pointLight == null)
-            {
-                // Buscar la luz del mismo objeto
-                pointLight = GetComponent<Light>();
-
-                if (Gata != null)
-                {
-                    Renderer[] renderers = Gata.GetComponentsInChildren<Renderer>();
-                    List<Material> mats = new List<Material>();
-
-                    foreach (Renderer rend in renderers)
-                        mats.AddRange(rend.materials);
-
-                    materialesGata = mats.ToArray();
-                }
-            }
-            // Verificar cada frame si la hora cambió y actualizar si es necesario
-            ActualizarEstadoSegunHora();
+            temporizador = 0f;
+            VerificarHoraYLuz();
         }
     }
 
-    void ActualizarEstadoSegunHora()
+    void VerificarHoraYLuz()
     {
         if (Tiempo == null) return;
 
         int hora = Tiempo.HoraActual;
-        bool debeEstarEncendida;
+        bool debeEncender = EstaEnRango(hora, HoraEncender, HoraApagar);
 
-        // Determinar si debe estar encendida (soporta paso por medianoche)
-        if (HoraEncender > HoraApagar)
+        if (debeEncender != linternaEncendida)
         {
-            // Ejemplo: encender desde 16 hasta 23, y de 0 a antes de 6
-            debeEstarEncendida = (hora >= HoraEncender || hora < HoraApagar);
-        }
-        else
-        {
-            // Ejemplo: encender desde 6 hasta 20
-            debeEstarEncendida = (hora >= HoraEncender && hora < HoraApagar);
-        }
-
-        // Si el estado cambió o si estamos al inicio
-        if (debeEstarEncendida != linternaEncendida || pointLight.enabled != debeEstarEncendida)
-        {
-            linternaEncendida = debeEstarEncendida;
-            ActualizarEstadoLinterna(linternaEncendida);
+            linternaEncendida = debeEncender;
+            ActualizarEstado(linternaEncendida);
         }
     }
 
-    void ActualizarEstadoLinterna(bool encendida)
+    bool EstaEnRango(int horaActual, int horaInicio, int horaFin)
     {
-        // Encender o apagar la luz
-        if (pointLight != null)
-            pointLight.enabled = encendida;
+        // Si el rango cruza medianoche (ej: 20 → 8)
+        if (horaInicio > horaFin)
+            return (horaActual >= horaInicio || horaActual < horaFin);
+        else
+            return (horaActual >= horaInicio && horaActual < horaFin);
+    }
 
-        // Ajustar materiales
+    void ActualizarEstado(bool encendida)
+    {
+        if (luz != null)
+            luz.enabled = encendida;
+
         if (materialesGata != null)
         {
             foreach (Material mat in materialesGata)

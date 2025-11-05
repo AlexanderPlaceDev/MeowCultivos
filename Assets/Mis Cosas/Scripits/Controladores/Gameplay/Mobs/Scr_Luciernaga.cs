@@ -73,13 +73,18 @@ public class scr_Luciernaga : MonoBehaviour
 
     void Update()
     {
-        if (!esperando && !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        if (agent.isOnNavMesh)
         {
-            StartCoroutine(EsperarYSeguir());
+            if (!esperando && !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+            {
+                StartCoroutine(EsperarYSeguir());
+            }
+
+
+            ActualizarOscilacion();
+            ActualizarTitileo();
         }
 
-        ActualizarOscilacion();
-        ActualizarTitileo();
     }
 
     private void MoverANuevaPosicion()

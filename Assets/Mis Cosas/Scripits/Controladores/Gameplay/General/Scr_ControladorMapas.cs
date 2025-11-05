@@ -71,8 +71,8 @@ public class Scr_ControladorMapas : MonoBehaviour
 
     public void GuardarEstadoMapas()
     {
-        if (EsMapa) return;
-
+        if (!EsMapa) return;
+        Debug.Log("Guardando");
         int childCount = transform.childCount;
 
         for (int i = 0; i < childCount; i++)
