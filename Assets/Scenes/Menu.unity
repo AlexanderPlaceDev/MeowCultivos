@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.20427446, g: 0.037000623, b: 0.11616629, a: 1}
+  m_IndirectSpecularColor: {r: 0.20426169, g: 0.03699863, b: 0.11616154, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4565,6 +4565,11 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 183f3265657b6ee4abb138940e9a271f,
         type: 3}
       propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 183f3265657b6ee4abb138940e9a271f,
+        type: 3}
+      propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 183f3265657b6ee4abb138940e9a271f,
@@ -4576,7 +4581,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: a01961a9856fd66479da204c07c7485d, type: 2}
+      objectReference: {fileID: 2100000, guid: 0a8b78c9d30abff4ba2cb5b5c251206e, type: 2}
     - target: {fileID: 919132149155446097, guid: 183f3265657b6ee4abb138940e9a271f,
         type: 3}
       propertyPath: m_Name
@@ -4585,7 +4590,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 183f3265657b6ee4abb138940e9a271f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1146826625}
   m_SourcePrefab: {fileID: 100100000, guid: 183f3265657b6ee4abb138940e9a271f, type: 3}
 --- !u!4 &1000481662 stripped
 Transform:
@@ -4957,6 +4966,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1054121842}
   m_CullTransparentMesh: 1
+--- !u!1 &1146826622 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 183f3265657b6ee4abb138940e9a271f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1000481661}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1146826625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1146826622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c32a04a7776a4b54581f7ca99aa3ea0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  materialOjoAbierto: {fileID: 2100000, guid: 0a8b78c9d30abff4ba2cb5b5c251206e, type: 2}
+  materialOjoCerrado: {fileID: 2100000, guid: 999b7da59a34d644381b0498ff02f695, type: 2}
+  intervaloMinimo: 2
+  intervaloMaximo: 5
+  duracionCerrado: 0.15
 --- !u!1 &1151363565
 GameObject:
   m_ObjectHideFlags: 0
