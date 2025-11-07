@@ -117,17 +117,14 @@ public class Scr_Arbusto : MonoBehaviour
 
     void ActualizarInventario(int cantidad, Scr_CreadorObjetos objeto)
     {
-        Scr_Inventario inventario = gata.GetChild(7).GetComponent<Scr_Inventario>();
-        inventario.AgregarObjeto(cantidad, objeto.Nombre);
         Scr_ObjetosAgregados controlador = GameObject.Find("Canvas").transform.GetChild(4).GetComponent<Scr_ObjetosAgregados>();
+
         if (controlador.Lista.Contains(objeto))
         {
             int indice = controlador.Lista.IndexOf(objeto);
             controlador.Cantidades[indice] += cantidad;
             if (indice <= 3)
-            {
                 controlador.Tiempo[indice] = 2;
-            }
         }
         else
         {
@@ -135,6 +132,7 @@ public class Scr_Arbusto : MonoBehaviour
             controlador.Cantidades.Add(cantidad);
         }
     }
+
 
     void ActivarUI()
     {
