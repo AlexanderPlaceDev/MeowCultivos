@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class Scr_CambiadorBatalla : MonoBehaviour
 {
     [SerializeField] float DistanciaDeCargadoCerca = 1f;
-    [SerializeField] GameObject PrefabEnemigo;
+    [SerializeField] public GameObject PrefabEnemigo;
     [SerializeField] float CantidadEnemigosMinima;
     [SerializeField] float CantidadEnemigosMaxima;
     [SerializeField] public string Mision;

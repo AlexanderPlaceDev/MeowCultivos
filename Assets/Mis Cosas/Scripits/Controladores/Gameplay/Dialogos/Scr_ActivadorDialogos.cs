@@ -25,6 +25,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     //===============================
     [SerializeField] private bool autoIniciarDialogo = false;  // Si el diálogo se inicia automáticamente al entrar
     [SerializeField] private bool EsTienda;                    // Si este NPC es una tienda
+    [SerializeField] private bool UsaMisionesSecundarias = true;
 
     //=================================
     //=== REFERENCIAS DE LA ESCENA ===
@@ -99,7 +100,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             }
 
             // Ver misiones (F)
-            if (Input.GetKeyDown(KeyCode.F) && !Hablando && !Comprando)
+            if (UsaMisionesSecundarias && Input.GetKeyDown(KeyCode.F) && !Hablando && !Comprando)
             {
                 Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
                 ControladorMisionesSecundariasUI.activadorActual = this;
@@ -404,9 +405,29 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
     public void MostrarIconos()
     {
-        foreach (var icono in iconos)
-            if (icono != null) icono.SetActive(true);
+        if (iconos == null || iconos.Length == 0) return;
+
+        // ✅ Si el NPC usa misiones secundarias, muestra todos los iconos
+        if (UsaMisionesSecundarias)
+        {
+            foreach (var icono in iconos)
+                if (icono != null) icono.SetActive(true);
+        }
+        else
+        {
+            // ✅ Si NO usa misiones, solo muestra los dos primeros (diálogo)
+            for (int i = 0; i < iconos.Length; i++)
+            {
+                if (iconos[i] == null) continue;
+
+                if (i < 2)  // solo los primeros dos
+                    iconos[i].SetActive(true);
+                else
+                    iconos[i].SetActive(false);
+            }
+        }
     }
+
 
     public void GuardarNPC()
     {
@@ -421,13 +442,18 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         estaAdentro = true;
 
         if (!autoIniciarDialogo)
+        {
+            // Mostrar iconos (MostrarIconos() manejará si muestra todos o solo los primeros 2).
             MostrarIconos();
+        }
         else if (!Hablando)
         {
             Hablando = true;
             ManejarDialogoPrincipal();
         }
     }
+
+
 
     private void OnTriggerExit(Collider other)
     {

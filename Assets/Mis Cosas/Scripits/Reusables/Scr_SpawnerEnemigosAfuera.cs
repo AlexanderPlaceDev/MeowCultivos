@@ -12,8 +12,8 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 
     [SerializeField] private int HoraInicio;
     [SerializeField] private int HoraFin;
+    [SerializeField] private float TiempoRestanteSpawn;
     private List<GameObject> Enemigos = new List<GameObject>();
-    private float TiempoRestanteSpawn;
 
     public int haveAcivate;
 
@@ -36,32 +36,36 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
         GuardarEstado(); 
         checartiempoDeNOSpawn();
     }
-
     IEnumerator SpawnEnemies()
     {
         while (true)
         {
             if (haveAcivate == 1 && checartiempoDeSpawn())
             {
-                if (Enemigos.Count < CantidadDeEnemigos) // Si faltan enemigos
+                if (Enemigos.Count < CantidadDeEnemigos)
                 {
-                    yield return new WaitForSeconds(TiempoRestanteSpawn);
+                    // 👇 Nuevo sistema: reduce el tiempo cada frame
+                    while (TiempoRestanteSpawn > 0f)
+                    {
+                        TiempoRestanteSpawn -= Time.deltaTime;
+                        PlayerPrefs.SetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoRestanteSpawn);
+                        yield return null;
+                    }
 
-                    // Spawnear un enemigo
+                    // Spawnear enemigo
                     GameObject nuevoEnemigo = Instantiate(Enemigo, transform.position, Quaternion.identity, transform.parent.parent);
                     Enemigos.Add(nuevoEnemigo);
 
-                    // Reiniciar el tiempo de espera solo si sigue habiendo espacio
-                    if (Enemigos.Count < CantidadDeEnemigos)
-                    {
-                        TiempoRestanteSpawn = TiempoSpawn;
-                        PlayerPrefs.SetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoRestanteSpawn);
-                    }
+                    // Reiniciar el tiempo para el siguiente spawn
+                    TiempoRestanteSpawn = TiempoSpawn;
+                    PlayerPrefs.SetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoRestanteSpawn);
+                    PlayerPrefs.Save();
                 }
             }
             yield return null;
         }
     }
+
 
     public bool checartiempoDeSpawn()
     {

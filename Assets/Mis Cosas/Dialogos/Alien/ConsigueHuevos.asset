@@ -12,13 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfd7b7348ecdf544ab73fad30de2eac3, type: 3}
   m_Name: ConsigueHuevos
   m_EditorClassIdentifier: 
-  NombreDialogo: consiguehuevos
-  NumeroDialogo: 0
   EsUnico: 0
-  EsMision: 1
-  cambia: 0
+  EsMisionPrincipal: 0
   Mision: {fileID: 11400000, guid: a484e7c7dc41c364580d3e6983f31bc7, type: 2}
   Lineas:
-  - Necesito que consigas huevos de gallina
-  - Te recompensare con algo de otro mundo
-  LineasSecundarias: []
+  - ' Necesito que consigas huevos de gallina'
+  - ' Te recompensare con algo de otro mundo'

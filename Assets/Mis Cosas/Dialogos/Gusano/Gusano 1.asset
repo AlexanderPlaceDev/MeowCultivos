@@ -12,17 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfd7b7348ecdf544ab73fad30de2eac3, type: 3}
   m_Name: Gusano 1
   m_EditorClassIdentifier: 
-  NombreDialogo: 
-  NumeroDialogo: 1
   EsUnico: 0
   EsMisionPrincipal: 1
-  EsMisionSecundaria: 0
   Mision: {fileID: 11400000, guid: 08088d704a70fd64dadb4876a21dfa19, type: 2}
   Lineas:
-  - Muy bien!, antes que empieces a explorar quiero darte algo importante
-  - 'es algo que compre con nuestros ahorros,
+  - ' Muy bien!, antes que empieces a explorar quiero darte algo importante'
+  - ' es algo que compre con nuestros ahorros,
 
     espero no te moleste'
-  - Es un reloj con el que podemos estar comunicados por si nos alejamos
-  - Ademas puedes ver informacion importante en el
-  LineasSecundarias: []
+  - ' Es un reloj con el que podemos estar comunicados por si nos alejamos'
+  - ' Ademas puedes ver informacion importante en el'
