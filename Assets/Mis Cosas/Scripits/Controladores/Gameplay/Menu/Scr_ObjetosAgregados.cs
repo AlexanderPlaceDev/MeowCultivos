@@ -20,6 +20,9 @@ public class Scr_ObjetosAgregados : MonoBehaviour
     private Animator DineroAnimator;
     private AudioSource dineroAudioSource;
     private AudioSource xpAudioSource;
+    // Guarda índices de los objetos que ya dieron XP
+    private HashSet<int> xpOtorgada = new HashSet<int>();
+
 
     void Start()
     {
@@ -128,28 +131,14 @@ public class Scr_ObjetosAgregados : MonoBehaviour
             }
 
             // 3️⃣ Agregar los expirados al inventario solo una vez
-            bool inventarioActualizado = false;
-
             foreach (var e in expirados)
             {
                 if (Inventario != null && e.item != null)
                 {
-                    bool agregado = false;
-                    for (int j = 0; j < Inventario.Objetos.Length; j++)
-                    {
-                        if (Inventario.Objetos[j] != null && Inventario.Objetos[j].Nombre == e.item.Nombre)
-                        {
-                            Inventario.Cantidades[j] += e.cantidad;
-                            agregado = true;
-                            inventarioActualizado = true;
-                            break;
-                        }
-                    }
-
-                    if (!agregado)
-                        Debug.LogWarning($"El item '{e.item.Nombre}' no existe en Inventario.");
+                    Inventario.AgregarObjeto(e.cantidad, e.item.Nombre);
                 }
             }
+
         }
     }
 
@@ -199,18 +188,31 @@ public class Scr_ObjetosAgregados : MonoBehaviour
 
     private void MostrarObjetosEnCanvas()
     {
-        // Limpiamos/actualizamos solo hasta la cantidad de iconos (slots visibles)
         for (int k = 0; k < Iconos.Length; k++)
         {
             var image = Iconos[k].GetComponent<Image>();
-            var txt = Iconos[k].transform.childCount > 0 ? Iconos[k].transform.GetChild(0).GetComponent<TextMeshProUGUI>() : null;
+            var txt = Iconos[k].transform.childCount > 0
+                ? Iconos[k].transform.GetChild(0).GetComponent<TextMeshProUGUI>()
+                : null;
+
             if (k < Lista.Count && Lista[k] != null)
             {
-                image.sprite = Lista[k].Icono;
-                if (txt != null) txt.text = "+" + Cantidades[k];
+                var item = Lista[k];
+                int cantidad = Cantidades[k];
+
+                image.sprite = item.Icono;
+                if (txt != null) txt.text = "+" + cantidad;
+
                 float alpha = Mathf.Clamp01(Tiempo[k] / 2f);
                 image.color = new Color(1f, 1f, 1f, alpha);
                 if (txt != null) txt.color = new Color(1f, 1f, 1f, alpha);
+
+                // 🧩 Dar XP solo una vez por ítem visible
+                if (!xpOtorgada.Contains(k) && item.XPRecolecta > 0)
+                {
+                    AgregarExperiencia(item.XPRecolecta * cantidad);
+                    xpOtorgada.Add(k); // Marcar como otorgado
+                }
             }
             else
             {
@@ -218,22 +220,8 @@ public class Scr_ObjetosAgregados : MonoBehaviour
                 if (txt != null) txt.text = "";
             }
         }
-    }
 
-    // Método público para agregar un item a la cola visual (lo usan otras clases)
-    public void AgregarItemVisual(Scr_CreadorObjetos item, int cantidadAgregar)
-    {
-        if (item == null) return;
-
-        Lista.Add(item);
-        Cantidades.Add(cantidadAgregar);
-
-        // Si el nuevo item queda dentro de los slots visibles, asignarle tiempo
-        int nuevoIdx = Lista.Count - 1;
-        if (nuevoIdx >= 0 && Tiempo != null && nuevoIdx < Tiempo.Length)
-        {
-            Tiempo[nuevoIdx] = 2f;
-        }
-        // Si queda fuera de los slots visibles, no le asignamos tiempo visual (estará en cola)
+        // 🔹 Limpiar índices de XP otorgada que ya no están en lista
+        xpOtorgada.RemoveWhere(i => i >= Lista.Count);
     }
 }

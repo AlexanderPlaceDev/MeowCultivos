@@ -32,7 +32,7 @@ public class NPC_movimiento : MonoBehaviour
         diaAnterior = ContolT.DiaActual;
         Anim = GetComponent<Scr_ControladorAnimacionesNPC>();
         Dialogo = GetComponent<Scr_ActivadorDialogos>();
-        SisDialogo=GetComponent<Scr_SistemaDialogos>();
+        SisDialogo = GetComponent<Scr_SistemaDialogos>();
     }
 
     private void OnEnable()
@@ -65,7 +65,7 @@ public class NPC_movimiento : MonoBehaviour
                 Esperando = false;
                 ReiniciarPosiciones();
                 diaAnterior = ContolT.DiaActual;
-                Debug.Log("aa"); 
+                Debug.Log("aa");
                 MoverAlLugarMasCercano();
             }
 
@@ -95,8 +95,8 @@ public class NPC_movimiento : MonoBehaviour
             }
         }
 
-        
-        
+
+
     }
     void checarcambio()
     {
@@ -205,15 +205,19 @@ public class NPC_movimiento : MonoBehaviour
     //Detecta que si llego a su destino
     bool YaLlegoAlDestino()
     {
-        if (!agente.pathPending)
+        if (agente.isOnNavMesh)
         {
-            if (agente.remainingDistance <= agente.stoppingDistance)
+            if (!agente.pathPending)
             {
-                if (!agente.hasPath || agente.velocity.sqrMagnitude == 0f)
+                if (agente.remainingDistance <= agente.stoppingDistance)
                 {
-                    return true;
+                    if (!agente.hasPath || agente.velocity.sqrMagnitude == 0f)
+                    {
+                        return true;
+                    }
                 }
             }
+
         }
         return false;
     }

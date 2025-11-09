@@ -24,6 +24,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
     public bool MisionPCompleta;                // ¿La misión principal está completa?
     public List<bool> MisionesScompletas;       // Estado de todas las misiones secundarias
     private string ultimaDescripcion = "";
+    public bool EstaEnDialogo = false;
 
     // ================================
     // === CONTROL DE OBJETOS ===
@@ -92,13 +93,20 @@ public class Scr_ControladorMisiones : MonoBehaviour
     {
         if (MisionActual != null && MisionActual.Tipo == Tipos.Teclas)
         {
-            ProcesarMisionTeclas();
-            BotonesUI.SetActive(!MisionActualCompleta);
+            if (EstaEnDialogo)
+            {
+                BotonesUI.SetActive(false);
+            }
+            else
+            {
+                ProcesarMisionTeclas();
+                BotonesUI.SetActive(!MisionActualCompleta);
+            }
         }
 
         if (MisionActual != null)
         {
-            RevisarMisionesSecundarias(); // <-- MOVER AQUÍ PRIMERO
+            RevisarMisionesSecundarias();
 
             string nuevaDescripcion = MisionActualCompleta ? MisionActual.DescripcionCompleta : MisionActual.Descripcion;
             if (nuevaDescripcion != ultimaDescripcion)

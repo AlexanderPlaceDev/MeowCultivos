@@ -8,7 +8,7 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
     [SerializeField] private GameObject Enemigo;
     [SerializeField] private int CantidadDeEnemigos;
     [SerializeField] private float TiempoSpawn;
-    [SerializeField] private bool TieneTiempo;
+    [SerializeField] private bool UsaTiempo;
 
     [SerializeField] private int HoraInicio;
     [SerializeField] private int HoraFin;
@@ -69,22 +69,22 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 
     public bool checartiempoDeSpawn()
     {
-        if (!TieneTiempo)return true;
+        if (!UsaTiempo)return true;
 
-        // Si el rango NO cruza la medianoche
+        // Si el rango NO cruza la medianoche (ej: 3 < 8)
         if (HoraInicio < HoraFin)
         {
-            return ControlT.HoraActual >= HoraInicio && ControlT.HoraActual < HoraFin;
+            return (ControlT.HoraActual >= HoraInicio) && (ControlT.HoraActual < HoraFin);
         }
         else
         {
             // Si el rango SÍ cruza la medianoche (ej: 19 -> 5)
-            return ControlT.HoraActual >= HoraInicio || ControlT.HoraActual < HoraFin;
+            return (ControlT.HoraActual >= HoraInicio) || (ControlT.HoraActual < HoraFin);
         }
     }
     public void checartiempoDeNOSpawn()
     {
-        if (!TieneTiempo) return;
+        if (!UsaTiempo) return;
         if (Enemigos.Count <= 0) return;
 
         bool dentroHorario;

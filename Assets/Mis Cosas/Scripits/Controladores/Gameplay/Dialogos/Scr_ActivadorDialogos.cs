@@ -158,6 +158,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         Hablando = false;
         Comprando = false;
         canvasActivo = false;
+        controladorMisiones.EstaEnDialogo = false;
 
         // Permitir movimiento
         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
@@ -180,6 +181,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         else
         {
             canvasActivo = true;
+            controladorMisiones.EstaEnDialogo = true;
             StartCoroutine(EsperarYCambiarCamaraPrincipal());
         }
     }
