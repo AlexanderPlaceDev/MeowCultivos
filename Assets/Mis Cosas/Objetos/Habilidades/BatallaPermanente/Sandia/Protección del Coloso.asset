@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38f2b4ebd0bbe284880532d11712e1b8, type: 3}
+  m_Name: "Protecci\xF3n del Coloso"
+  m_EditorClassIdentifier: 
+  Nombre: "Protecci\xF3n del Coloso"
+  Icono: {fileID: 21300000, guid: b75be8abf4b21dd49a3e1b1945f85a9e, type: 3}
+  Tipo: Normal
+  Descripcion: "Recibe menos da\xF1o y puede estunear o reducir velocidad enemigos"
+  RequiereCraftear: 0
+  ItemsRequeridos: []
+  CantidadesRequeridas: 
+  Usos: 0
+  duracion: 4.5
+  Enfriamiento: 6
+  Efecto: {fileID: 0}
+  Arma: Sandia
+  Color: {r: 0.3718593, g: 1, b: 0, a: 1}

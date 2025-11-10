@@ -4,6 +4,7 @@ using TMPro;
 using Unity.Android.Types;
 using Unity.Burst.Intrinsics;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
+using UnityEditor.Experimental;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -53,11 +54,19 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     Scr_ControladorBatalla ControladorBatalla;
     Scr_CreadorArmas DatosArma;
 
-
+    public Transform contentPanel;
+    public GameObject BotonPocion;
     Scr_CreadorHabilidadesBatalla HabT;
     Scr_CreadorHabilidadesBatalla Hab1;
     Scr_CreadorHabilidadesBatalla Hab2;
     Scr_CreadorHabilidadesBatalla HabE;
+
+
+    [Header("CambioHC")]//para acomodar visaulmente los iconos de las habilidades y comsimibles
+    public int Habmostrar = 0;
+    public GameObject[] HabilidadesUI;
+    public GameObject[] Secciones;
+    public bool PocionSelec=false;
     void Start()
     {
         ControladorBatalla = GetComponent<Scr_ControladorBatalla>();
@@ -301,6 +310,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         {
             IconoHabilidadE.transform.GetChild(1).gameObject.SetActive(false);
         }
+
         ControladorBatalla.IniciarCuentaRegresiva();
         ControladorBatalla.ArmaActual = Armas[ArmaActual];
         GetComponent<Scr_ControladorArmas>().ArmaActual = ArmaActual;
@@ -342,10 +352,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
 
     //Cosigue las habilidades Disponibles Siempre Y cuando este habilitado
 
-    [Header("CambioHC")]//para acomodar visaulmente los iconos de las habilidades y comsimibles
-    public int Habmostrar = 0;
-    public GameObject[] HabilidadesUI;
-    public GameObject[] Secciones;
     public void EsconderFlechasHabilidades()
     {
         for (int i = 0; i < 4; i++)
@@ -561,8 +567,34 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         Secciones[0].SetActive(false);
         Secciones[1].SetActive(true);
         Secciones[2].SetActive(false);
+        ChecarPociones();
     }
 
+    public void ChecarPociones()
+    {
+        PocionSelec = false;
+        ControladorBatalla.Pocion = "";
+        foreach (Transform child in contentPanel)
+            Destroy(child.gameObject);
+        for (int i = 0; i < datos.Pociones.Length; i++)
+        {
+            if (datos.CantidadPociones[i] > 0)
+            {
+                GameObject obj = Instantiate(BotonPocion, contentPanel);
+                obj.GetComponent<Image>().sprite = datos.Pociones[i].Icono;
+                Boton_pocion poc = obj.GetComponent<Boton_pocion>();
+                poc.NombrePocion= datos.Pociones[i].Tipo.ToString();
+                poc.No = i;
+            }
+        }
+    }
+
+    public void MostrarPocion(int No)
+    {
+        MostrarDescipcion();
+        Secciones[2].transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = datos.Pociones[No].Nombre;
+        Secciones[2].transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = datos.Pociones[No].Descripcion;
+    }
     public void MostrarHabilidades()
     {
         Secciones[0].SetActive(true);

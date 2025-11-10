@@ -19,12 +19,23 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
     public GameObject ArmaActual;
 
+    [Header("Habilidades")]
+
     public int usosHabilidad;
     public string HabilidadT;
     public string Habilidad1;
     public string Habilidad2;
     public string HabilidadEspecial;
     public float PuntosActualesHabilidad = 0;
+
+    [Header("Pociones")]
+    public string Pocion;
+    public bool PocionPermanente;
+    public float PocionPuntos;
+    public float PocionDuracion;
+    public float PocionUsos;
+    public string Resistencia;
+    [Header("Cuenta")]
 
     [SerializeField] public TextMeshProUGUI NumeroCuenta;
 
@@ -40,7 +51,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     [SerializeField] GameObject Vidas;
     [SerializeField] GameObject BarraVidaImage;
     [SerializeField] TextMeshProUGUI TextoVidas;
-    [SerializeField] float VidaMaxima;
+    [SerializeField] public float VidaMaxima;
     public float PorcentajeQuitar = 1;
     public float VidaAnterior = 3;
     public float VidaActual = 3;
@@ -67,6 +78,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     private Scr_DatosSingletonBatalla Singleton;
     Scr_DatosArmas Datosarmas;
     private GameObject Personaje;
+    private Scr_GirarCamaraBatalla CamaraBatalla;
     private Scr_ControladorOleadas controladorOleadas;
     private bool DioRecompensa = false;
 
@@ -106,7 +118,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
         Datosarmas = Singleton.GetComponent<Scr_DatosArmas>();
         controladorOleadas = GetComponent<Scr_ControladorOleadas>();
         Personaje = GameObject.Find("Personaje");
-
+        CamaraBatalla = Personaje.transform.GetChild(0).gameObject.GetComponent<Scr_GirarCamaraBatalla>();
         Mision.text = Singleton.Mision;
         Mision.color = Singleton.ColorMision;
         Complemento.text = Singleton.Complemento;
@@ -442,6 +454,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
         {
             VidaActual = 0; // 🔹 Evita valores negativos
         }
+        CamaraBatalla.ResetSuavizado();
     }
     public void Curar(float CuraRecibida)
     {
@@ -531,6 +544,8 @@ public class Scr_ControladorBatalla : MonoBehaviour
             default:
                 break;
         }
+
+        CamaraBatalla.ResetSuavizado();
     }
 
     private IEnumerator ChangeMaterial(Color mat, float time)

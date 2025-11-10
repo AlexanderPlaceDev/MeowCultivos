@@ -16,6 +16,9 @@ public class Scr_DatosArmas : MonoBehaviour
     public Scr_CreadorHabilidadesBatalla[] HabilidadesPermanentes;
     public bool[] HabilidatPDesbloqueadas;
 
+    public SCR_Pociones[] Pociones;
+    public int[] CantidadPociones;
+
     void Start()
     {
         for (int i = 1; i < TodasLasArmas.Length; i++)
@@ -57,6 +60,11 @@ public class Scr_DatosArmas : MonoBehaviour
             {
                 HabilidatPDesbloqueadas[i] = true;
             }
+        }
+
+        for (int i = 0; i < Pociones.Length; i++)
+        {
+            CantidadPociones[i] = PlayerPrefs.GetInt("Pociones" + Pociones[i].Nombre, 1);
         }
     }
 
@@ -109,6 +117,14 @@ public class Scr_DatosArmas : MonoBehaviour
             }
         }
     }
+
+    public void guardarHabilidadesPociones()
+    {
+        for (int i = 0; i < Pociones.Length; i++)
+        {
+            PlayerPrefs.SetInt("Pociones" + Pociones[i].Nombre, CantidadPociones[i]);
+        }
+    }
     public void AgregarUsosTemporales(string Nombre)
     {
 
@@ -129,7 +145,19 @@ public class Scr_DatosArmas : MonoBehaviour
         {
             if (HabilidadesTemporales[i].Nombre == Nombre)
             {
-                UsosHabilidadesT[i]++;
+                UsosHabilidadesT[i]--;
+                break;
+            }
+        }
+    }
+    public void QuitarCanidadPociones(string Nombre)
+    {
+
+        for (int i = 1; i < Pociones.Length; i++)
+        {
+            if (Pociones[i].Nombre == Nombre)
+            {
+                CantidadPociones[i]--;
                 break;
             }
         }

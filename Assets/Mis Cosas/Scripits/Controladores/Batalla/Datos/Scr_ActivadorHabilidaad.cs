@@ -16,6 +16,7 @@ public class Scr_ActivadorHabilidad : MonoBehaviour
     [SerializeField] KeyCode Tecla;
 
     public bool EsPasiva=false;
+    public Color ColorHabilidad;
     // Referencia al script Scr_Habilidades
     private Scr_Habilidades habilidades;
 
@@ -197,6 +198,8 @@ public class Scr_ActivadorHabilidad : MonoBehaviour
                 TiempoMaximo = DatosArmas.HabilidadesPermanentes[i].Enfriamiento;
                 cargaHabilidad = DatosArmas.HabilidadesPermanentes[i].Enfriamiento;
                 habilidades.duracionHabilidad = DatosArmas.HabilidadesPermanentes[i].duracion;
+                ColorHabilidad = DatosArmas.HabilidadesPermanentes[i].Color;
+                habilidades.ColorHabilidad = DatosArmas.HabilidadesPermanentes[i].Color;
                 if (DatosArmas.HabilidadesPermanentes[i].Tipo == "Pasiva")
                 {
                     Transform hijo = transform.GetChild(1);
