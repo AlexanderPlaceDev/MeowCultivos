@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Unity.Burst.Intrinsics;
 using UnityEngine;
 
@@ -152,15 +151,16 @@ public class Scr_DatosArmas : MonoBehaviour
     }
     public void QuitarCanidadPociones(string Nombre)
     {
-
-        for (int i = 1; i < Pociones.Length; i++)
+        for (int i = 0; i < Pociones.Length; i++)
         {
+            Debug.LogError("ey" + Pociones[i].Nombre);
             if (Pociones[i].Nombre == Nombre)
             {
                 CantidadPociones[i]--;
                 break;
             }
         }
+        guardarHabilidadesPociones();
     }
     //encuentra la habilidar por nombre
     public Scr_CreadorHabilidadesBatalla BuscarHabilidadTemporalPorNombre(string nombre)

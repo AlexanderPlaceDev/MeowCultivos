@@ -200,6 +200,8 @@ public class Scr_ActivadorHabilidad : MonoBehaviour
                 habilidades.duracionHabilidad = DatosArmas.HabilidadesPermanentes[i].duracion;
                 ColorHabilidad = DatosArmas.HabilidadesPermanentes[i].Color;
                 habilidades.ColorHabilidad = DatosArmas.HabilidadesPermanentes[i].Color;
+
+
                 if (DatosArmas.HabilidadesPermanentes[i].Tipo == "Pasiva")
                 {
                     Transform hijo = transform.GetChild(1);

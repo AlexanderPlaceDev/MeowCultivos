@@ -7,23 +7,27 @@ public class Scr_ControladorPociones : MonoBehaviour
     Scr_ControladorBatalla ControladorBatalla;
     Scr_ControladorArmas ControladorArmas;
     Scr_Movimiento mov;
+
+    public float PocionPuntos;
+    public float PocionDuracion;
+    public float PocionUsos;
+    public string Resistencia;
+    public bool PocionPermanente;
+    public Color ColorPocion;
     // Start is called before the first frame update
     void Start()
     {
         ControladorBatalla = GameObject.Find("Controlador").GetComponent<Scr_ControladorBatalla>();
         mov = GameObject.Find("Personaje").GetComponent<Scr_Movimiento>();
-        if (ControladorBatalla.PocionPermanente)
-        {
-            Pociones();
-        }
     }
 
-    public void Pociones()
+    public void Pociones(string Pocion)
     {
+        Debug.LogError("Hola"+ Pocion);
         //Curativo, Dano, Velocidad, Resitencia, Vida
-        switch (ControladorBatalla.Pocion) 
+        switch (Pocion) 
         {
-            case "Curativa":
+            case "Curativo":
                 PocionCurativa();
                 break;
             case "Dano":
@@ -45,38 +49,38 @@ public class Scr_ControladorPociones : MonoBehaviour
     
     public void PocionCurativa()
     {
-        ControladorBatalla.Curar(ControladorBatalla.PocionPuntos);
+        ControladorBatalla.Curar(PocionPuntos);
     }
 
     public void PocionDaño()
     {
-        if (ControladorBatalla.PocionPermanente)
+        if (PocionPermanente)
         {
-            ControladorArmas.daño = ControladorArmas.daño + ControladorBatalla.PocionPuntos;
+            ControladorArmas.daño = ControladorArmas.daño + PocionPuntos;
         }
         else
         {
-            StartCoroutine(DañoTemporal(ControladorBatalla.PocionDuracion));
+            StartCoroutine(DañoTemporal(PocionDuracion));
         }
     }
     IEnumerator DañoTemporal(float duracion)
     {
         float dañonormal = ControladorArmas.daño;
-        ControladorArmas.daño = ControladorArmas.daño + ControladorBatalla.PocionPuntos;
+        ControladorArmas.daño = ControladorArmas.daño + PocionPuntos;
         yield return new WaitForSeconds(duracion);
         ControladorArmas.daño = dañonormal;
     }
     public void PocionVelocidad()
     {
-        if (ControladorBatalla.PocionPermanente)
+        if (PocionPermanente)
         {
-            mov.VelAgachado = mov.VelAgachado * ControladorBatalla.PocionPuntos;
-            mov.VelCaminar = mov.VelCaminar * ControladorBatalla.PocionPuntos;
-            mov.VelCorrer = mov.VelCorrer * ControladorBatalla.PocionPuntos;
+            mov.VelAgachado = mov.VelAgachado * PocionPuntos;
+            mov.VelCaminar = mov.VelCaminar * PocionPuntos;
+            mov.VelCorrer = mov.VelCorrer * PocionPuntos;
         }
         else
         {
-            StartCoroutine(VelocidadTemporal(ControladorBatalla.PocionDuracion));
+            StartCoroutine(VelocidadTemporal(PocionDuracion));
         }
     }
     IEnumerator VelocidadTemporal(float duracion)
@@ -84,9 +88,9 @@ public class Scr_ControladorPociones : MonoBehaviour
         float VagachadoAnterior = mov.VelAgachado;
         float VcaminarAnterior = mov.VelCaminar;
         float VcorrerAnterior = mov.VelCorrer;
-        mov.VelAgachado = mov.VelAgachado * ControladorBatalla.PocionPuntos;
-        mov.VelCaminar = mov.VelCaminar * ControladorBatalla.PocionPuntos;
-        mov.VelCorrer = mov.VelCorrer * ControladorBatalla.PocionPuntos;
+        mov.VelAgachado = mov.VelAgachado * PocionPuntos;
+        mov.VelCaminar = mov.VelCaminar * PocionPuntos;
+        mov.VelCorrer = mov.VelCorrer * PocionPuntos;
         yield return new WaitForSeconds(duracion);
         mov.VelAgachado = VagachadoAnterior;
         mov.VelCaminar = VcaminarAnterior;
@@ -95,13 +99,13 @@ public class Scr_ControladorPociones : MonoBehaviour
 
     public void PocionResitencia()
     {
-        if (ControladorBatalla.PocionPermanente)
+        if (PocionPermanente)
         {
             checarResitencia();
         }
         else
         {
-            StartCoroutine(ResitenciaTemporal(ControladorBatalla.PocionDuracion));
+            StartCoroutine(ResitenciaTemporal(PocionDuracion));
         }
     }
     IEnumerator ResitenciaTemporal(float duracion)
@@ -114,93 +118,93 @@ public class Scr_ControladorPociones : MonoBehaviour
     public void checarResitencia()
     {
         // Nada,Stunear, Quemar, Veneno, Congelar, Empujar, Electrificar, Explotar 
-        switch (ControladorBatalla.Resistencia)
+        switch (Resistencia)
         {
             case "Stunear":
-                ControladorBatalla.resistenciaStunear= ControladorBatalla.resistenciaStunear + ControladorBatalla.PocionPuntos;
+                ControladorBatalla.resistenciaStunear= ControladorBatalla.resistenciaStunear + PocionPuntos;
                 break;
             case "Quemar":
-                ControladorBatalla.resistenciaQuemar = ControladorBatalla.resistenciaQuemar + ControladorBatalla.PocionPuntos;
+                ControladorBatalla.resistenciaQuemar = ControladorBatalla.resistenciaQuemar + PocionPuntos;
                 break;
             case "Veneno":
-                ControladorBatalla.resistenciaVeneno = ControladorBatalla.resistenciaVeneno + ControladorBatalla.PocionPuntos;
+                ControladorBatalla.resistenciaVeneno = ControladorBatalla.resistenciaVeneno + PocionPuntos;
                 break;
             case "Congelar":
-                ControladorBatalla.resistenciaCongelar = ControladorBatalla.resistenciaCongelar + ControladorBatalla.PocionPuntos;
+                ControladorBatalla.resistenciaCongelar = ControladorBatalla.resistenciaCongelar + PocionPuntos;
                 break;
             case "Empujar":
-                ControladorBatalla.resistenciaEmpujar = ControladorBatalla.resistenciaEmpujar + ControladorBatalla.PocionPuntos;
+                ControladorBatalla.resistenciaEmpujar = ControladorBatalla.resistenciaEmpujar + PocionPuntos;
                 break;
             case "Electrificar":
-                ControladorBatalla.resistenciaElectrificar = ControladorBatalla.resistenciaElectrificar + ControladorBatalla.PocionPuntos;
+                ControladorBatalla.resistenciaElectrificar = ControladorBatalla.resistenciaElectrificar + PocionPuntos;
                 break;
             case "Explotar":
-                ControladorBatalla.resistenciaExplotar = ControladorBatalla.resistenciaExplotar + ControladorBatalla.PocionPuntos;
+                ControladorBatalla.resistenciaExplotar = ControladorBatalla.resistenciaExplotar + PocionPuntos;
                 break;
             case "Nada":
-                ControladorBatalla.resistenciaStunear = ControladorBatalla.resistenciaStunear + ControladorBatalla.PocionPuntos;
-                ControladorBatalla.resistenciaQuemar = ControladorBatalla.resistenciaQuemar + ControladorBatalla.PocionPuntos;
-                ControladorBatalla.resistenciaVeneno = ControladorBatalla.resistenciaVeneno + ControladorBatalla.PocionPuntos;
-                ControladorBatalla.resistenciaCongelar = ControladorBatalla.resistenciaCongelar + ControladorBatalla.PocionPuntos;
-                ControladorBatalla.resistenciaEmpujar = ControladorBatalla.resistenciaEmpujar + ControladorBatalla.PocionPuntos;
-                ControladorBatalla.resistenciaElectrificar = ControladorBatalla.resistenciaElectrificar + ControladorBatalla.PocionPuntos;
-                ControladorBatalla.resistenciaExplotar = ControladorBatalla.resistenciaExplotar + ControladorBatalla.PocionPuntos;
+                ControladorBatalla.resistenciaStunear = ControladorBatalla.resistenciaStunear + PocionPuntos;
+                ControladorBatalla.resistenciaQuemar = ControladorBatalla.resistenciaQuemar + PocionPuntos;
+                ControladorBatalla.resistenciaVeneno = ControladorBatalla.resistenciaVeneno + PocionPuntos;
+                ControladorBatalla.resistenciaCongelar = ControladorBatalla.resistenciaCongelar + PocionPuntos;
+                ControladorBatalla.resistenciaEmpujar = ControladorBatalla.resistenciaEmpujar + PocionPuntos;
+                ControladorBatalla.resistenciaElectrificar = ControladorBatalla.resistenciaElectrificar + PocionPuntos;
+                ControladorBatalla.resistenciaExplotar = ControladorBatalla.resistenciaExplotar + PocionPuntos;
                 break;
         }
     }
     public void quitarResitencia()
     {
         // Nada,Stunear, Quemar, Veneno, Congelar, Empujar, Electrificar, Explotar 
-        switch (ControladorBatalla.Resistencia)
+        switch (Resistencia)
         {
             case "Stunear":
-                ControladorBatalla.resistenciaStunear = ControladorBatalla.resistenciaStunear - ControladorBatalla.PocionPuntos;
+                ControladorBatalla.resistenciaStunear = ControladorBatalla.resistenciaStunear - PocionPuntos;
                 break;
             case "Quemar":
-                ControladorBatalla.resistenciaQuemar = ControladorBatalla.resistenciaQuemar - ControladorBatalla.PocionPuntos;
+                ControladorBatalla.resistenciaQuemar = ControladorBatalla.resistenciaQuemar - PocionPuntos;
                 break;
             case "Veneno":
-                ControladorBatalla.resistenciaVeneno = ControladorBatalla.resistenciaVeneno - ControladorBatalla.PocionPuntos;
+                ControladorBatalla.resistenciaVeneno = ControladorBatalla.resistenciaVeneno - PocionPuntos;
                 break;
             case "Congelar":
-                ControladorBatalla.resistenciaCongelar = ControladorBatalla.resistenciaCongelar - ControladorBatalla.PocionPuntos;
+                ControladorBatalla.resistenciaCongelar = ControladorBatalla.resistenciaCongelar - PocionPuntos;
                 break;
             case "Empujar":
-                ControladorBatalla.resistenciaEmpujar = ControladorBatalla.resistenciaEmpujar - ControladorBatalla.PocionPuntos;
+                ControladorBatalla.resistenciaEmpujar = ControladorBatalla.resistenciaEmpujar - PocionPuntos;
                 break;
             case "Electrificar":
-                ControladorBatalla.resistenciaElectrificar = ControladorBatalla.resistenciaElectrificar - ControladorBatalla.PocionPuntos;
+                ControladorBatalla.resistenciaElectrificar = ControladorBatalla.resistenciaElectrificar - PocionPuntos;
                 break;
             case "Explotar":
-                ControladorBatalla.resistenciaExplotar = ControladorBatalla.resistenciaExplotar - ControladorBatalla.PocionPuntos;
+                ControladorBatalla.resistenciaExplotar = ControladorBatalla.resistenciaExplotar - PocionPuntos;
                 break;
             case "Nada":
-                ControladorBatalla.resistenciaStunear = ControladorBatalla.resistenciaStunear - ControladorBatalla.PocionPuntos;
-                ControladorBatalla.resistenciaQuemar = ControladorBatalla.resistenciaQuemar - ControladorBatalla.PocionPuntos;
-                ControladorBatalla.resistenciaVeneno = ControladorBatalla.resistenciaVeneno - ControladorBatalla.PocionPuntos;
-                ControladorBatalla.resistenciaCongelar = ControladorBatalla.resistenciaCongelar - ControladorBatalla.PocionPuntos;
-                ControladorBatalla.resistenciaEmpujar = ControladorBatalla.resistenciaEmpujar - ControladorBatalla.PocionPuntos;
-                ControladorBatalla.resistenciaElectrificar = ControladorBatalla.resistenciaElectrificar - ControladorBatalla.PocionPuntos;
-                ControladorBatalla.resistenciaExplotar = ControladorBatalla.resistenciaExplotar - ControladorBatalla.PocionPuntos;
+                ControladorBatalla.resistenciaStunear = ControladorBatalla.resistenciaStunear - PocionPuntos;
+                ControladorBatalla.resistenciaQuemar = ControladorBatalla.resistenciaQuemar - PocionPuntos;
+                ControladorBatalla.resistenciaVeneno = ControladorBatalla.resistenciaVeneno - PocionPuntos;
+                ControladorBatalla.resistenciaCongelar = ControladorBatalla.resistenciaCongelar - PocionPuntos;
+                ControladorBatalla.resistenciaEmpujar = ControladorBatalla.resistenciaEmpujar - PocionPuntos;
+                ControladorBatalla.resistenciaElectrificar = ControladorBatalla.resistenciaElectrificar - PocionPuntos;
+                ControladorBatalla.resistenciaExplotar = ControladorBatalla.resistenciaExplotar - PocionPuntos;
                 break;
         }
     }
 
     public void PocionVida()
     {
-        if (ControladorBatalla.PocionPermanente)
+        if (PocionPermanente)
         {
-            ControladorBatalla.VidaMaxima = ControladorBatalla.VidaMaxima + ControladorBatalla.PocionPuntos;
+            ControladorBatalla.VidaMaxima = ControladorBatalla.VidaMaxima + PocionPuntos;
         }
         else
         {
-            StartCoroutine(VidaTemporal(ControladorBatalla.PocionDuracion));
+            StartCoroutine(VidaTemporal(PocionDuracion));
         }
     }
     IEnumerator VidaTemporal(float duracion)
     {
         float vidaNormal = ControladorBatalla.VidaMaxima;
-        ControladorBatalla.VidaMaxima = ControladorBatalla.VidaMaxima + ControladorBatalla.PocionPuntos;
+        ControladorBatalla.VidaMaxima = ControladorBatalla.VidaMaxima + PocionPuntos;
         yield return new WaitForSeconds(duracion);
         ControladorBatalla.VidaMaxima= vidaNormal;
     }

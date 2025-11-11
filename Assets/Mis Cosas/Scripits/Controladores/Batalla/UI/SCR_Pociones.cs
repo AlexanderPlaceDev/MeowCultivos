@@ -7,7 +7,6 @@ public class SCR_Pociones : ScriptableObject
 {
     public string Nombre;
     public Sprite Icono;
-    public int Nivel;
     public enum TipoPocion { Curativo, Dano, Velocidad, Resitencia, Vida };
     public TipoPocion Tipo;
     public string Descripcion;
@@ -17,6 +16,8 @@ public class SCR_Pociones : ScriptableObject
     public bool Permanente;
     public int Usos;
     public float Puntos;
+    public float Duracion;
+    public int Enfriamiento;
     public Scr_Enemigo.TipoEfecfto efecto;
     public Color Color;
 }

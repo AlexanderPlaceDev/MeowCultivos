@@ -67,6 +67,9 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     public GameObject[] HabilidadesUI;
     public GameObject[] Secciones;
     public bool PocionSelec=false;
+    public GameObject PocionIcono;
+    public Sprite PocionVacio;
+    public int NoPocion=-2;
     void Start()
     {
         ControladorBatalla = GetComponent<Scr_ControladorBatalla>();
@@ -230,6 +233,9 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         MostrarHabilidadGuardada();
 
         EsconderFlechasHabilidades();
+        NoPocion = -2;
+        PocionSelec = false;
+        ChecarPocionActual();
     }
 
     public void BotonArmaIzquierda()
@@ -245,6 +251,9 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         MostrarHabilidadGuardada();
 
         EsconderFlechasHabilidades();
+        NoPocion = -2;
+        PocionSelec = false;
+        ChecarPocionActual();
     }
     public void ActualizarBotonArma(string EntrayOrientacion)
     {
@@ -283,6 +292,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         CanvasSeleccionDeArmas.SetActive(false);
         CanvasGameplay.SetActive(true);
         ObjetosArmas.SetActive(true);
+        ControladorBatalla.Guardar_Pocion();
         ControladorBatalla.GuardarHabilidadesArma(DatosArma.Nombre);
         // Obtener nombres de habilidades desde el controlador
         string ht = ControladorBatalla.HabilidadT;
@@ -310,7 +320,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         {
             IconoHabilidadE.transform.GetChild(1).gameObject.SetActive(false);
         }
-
         ControladorBatalla.IniciarCuentaRegresiva();
         ControladorBatalla.ArmaActual = Armas[ArmaActual];
         GetComponent<Scr_ControladorArmas>().ArmaActual = ArmaActual;
@@ -572,10 +581,11 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
 
     public void ChecarPociones()
     {
-        PocionSelec = false;
+        PocionIcono.GetComponent<Image>().sprite = null;
         ControladorBatalla.Pocion = "";
         foreach (Transform child in contentPanel)
             Destroy(child.gameObject);
+        crearVacio();
         for (int i = 0; i < datos.Pociones.Length; i++)
         {
             if (datos.CantidadPociones[i] > 0)
@@ -583,17 +593,55 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
                 GameObject obj = Instantiate(BotonPocion, contentPanel);
                 obj.GetComponent<Image>().sprite = datos.Pociones[i].Icono;
                 Boton_pocion poc = obj.GetComponent<Boton_pocion>();
-                poc.NombrePocion= datos.Pociones[i].Tipo.ToString();
+                //poc.NombrePocion= datos.Pociones[i].Tipo.ToString();
                 poc.No = i;
             }
         }
     }
-
+    private void crearVacio()
+    {
+        GameObject obj = Instantiate(BotonPocion, contentPanel);
+        obj.GetComponent<Image>().sprite = PocionVacio;
+        Boton_pocion poc = obj.GetComponent<Boton_pocion>();
+        //poc.NombrePocion= datos.Pociones[i].Tipo.ToString();
+        poc.No = -1;
+    }
+    public void ChecarPocionActual()
+    {
+        foreach (Transform child in contentPanel)
+        {
+            child.gameObject.GetComponent<Boton_pocion>().Boton_Exit();
+        }
+    }
     public void MostrarPocion(int No)
     {
         MostrarDescipcion();
-        Secciones[2].transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = datos.Pociones[No].Nombre;
-        Secciones[2].transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = datos.Pociones[No].Descripcion;
+        if (No>=0)
+        {
+            Secciones[2].transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = datos.Pociones[No].Nombre;
+            Secciones[2].transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = datos.Pociones[No].Descripcion;
+        }
+        else
+        {
+            Secciones[2].transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = "Nada";
+            Secciones[2].transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = "Ningina Pocion";
+        }
+    }
+
+    public void IconoConsumible()
+    {
+        if(NoPocion >= 0)
+        {
+            PocionIcono.SetActive(true);
+            PocionIcono.GetComponent<Image>().sprite = datos.Pociones[NoPocion].Icono;
+            ControladorBatalla.Pocion = datos.Pociones[NoPocion].Nombre;
+        }
+        else
+        {
+            PocionIcono.SetActive(false);
+            PocionIcono.GetComponent<Image>().sprite = null;
+            ControladorBatalla.Pocion = "";
+        }
     }
     public void MostrarHabilidades()
     {
@@ -643,6 +691,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     }
     public void ConfirmarConsumible()
     {
+        IconoConsumible();
         MostrarHabilidades();
     }
 }

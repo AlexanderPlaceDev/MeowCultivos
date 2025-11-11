@@ -166,6 +166,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NombrePocion: 
+  No: 0
+  ColorSelec:
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0, g: 1, b: 0.057691574, a: 1}
 --- !u!114 &3587307353331791129
 MonoBehaviour:
   m_ObjectHideFlags: 0

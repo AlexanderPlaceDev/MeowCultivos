@@ -170,6 +170,10 @@ public class Scr_ControladorBatalla : MonoBehaviour
         Datosarmas.guardarHabilidades();
     }
 
+    public void Guardar_Pocion()
+    {
+        Datosarmas.QuitarCanidadPociones(Pocion);
+    }
     public void HabilidadEsPasiva()
     {
 
