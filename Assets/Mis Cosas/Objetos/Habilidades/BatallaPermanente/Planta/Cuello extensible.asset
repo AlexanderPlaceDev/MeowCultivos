@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38f2b4ebd0bbe284880532d11712e1b8, type: 3}
+  m_Name: Cuello extensible
+  m_EditorClassIdentifier: 
+  Nombre: Cuello extensible
+  Icono: {fileID: 21300000, guid: b75be8abf4b21dd49a3e1b1945f85a9e, type: 3}
+  Tipo: Especial
+  Descripcion: "La planta se estira para agarrarse a alg\xFAn elemento del mapa para
+    moverte r\xE1pidamente"
+  RequiereCraftear: 0
+  ItemsRequeridos: []
+  CantidadesRequeridas: 
+  Usos: 0
+  duracion: 3
+  Enfriamiento: 70
+  Efecto: {fileID: 0}
+  Arma: Planta
+  Color: {r: 0, g: 1, b: 0.54429555, a: 1}
