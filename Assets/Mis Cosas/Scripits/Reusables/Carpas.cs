@@ -22,7 +22,7 @@ public class Carpas : MonoBehaviour
     public bool EstaEnRango = false;
     public int HoraDeSiestaInicio = 19;
     public int HoraDeSiestaFin = 5;
-    GameObject radio; 
+    GameObject radio;
     GameObject Reloj;
     GameObject Canvas;
 
@@ -98,7 +98,7 @@ public class Carpas : MonoBehaviour
     }
     private void activarRadio()
     {
-        if(PlayerPrefs.GetString("Habilidad:" + "Radio", "No") == "Si")
+        if (PlayerPrefs.GetString("Habilidad:" + "Radio", "No") == "Si")
         {
             Tiene_Radio = true;
         }
@@ -106,7 +106,7 @@ public class Carpas : MonoBehaviour
         {
             Tiene_Radio = false;
         }
-        
+
         if (Tiene_Radio)
         {
             radio.SetActive(true);
@@ -131,7 +131,10 @@ public class Carpas : MonoBehaviour
         {
             Reloj.SetActive(true);
             TextMeshProUGUI RelojText = GetComponentInChildren<TextMeshProUGUI>();
-            RelojText.text = ControlT.HoraActual + ":" + ControlT.MinutoActual;
+            if (RelojText != null)
+            {
+                RelojText.text = ControlT.HoraActual + ":" + ControlT.MinutoActual;
+            }
         }
         else
         {

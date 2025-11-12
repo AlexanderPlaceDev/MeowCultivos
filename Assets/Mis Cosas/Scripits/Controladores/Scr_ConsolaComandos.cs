@@ -103,20 +103,28 @@ public class Scr_ConsolaComandos : MonoBehaviour
             case "borrar.cinematica=1":
                 {
                     Debug.Log("Cinemagica Borrada");
-                    PlayerPrefs.SetString("Cinematica " + "Bony", "No");
+                    PlayerPrefs.SetString("Cinematica " + "Marvin", "No");
                     GameObject.Find("Gata").transform.GetChild(5).GetComponent<Scr_CargadorGuardado>().Personajes[1].SetActive(false);
-                    break;
-                }
-            case "borrar.cinematica=3":
-                {
-                    Debug.Log("Cinemagica Borrada");
-                    PlayerPrefs.SetString("Cinematica " + "Ovni", "No");
                     break;
                 }
             case "borrar.cinematica=2":
                 {
                     Debug.Log("Cinemagica Borrada");
+                    PlayerPrefs.SetString("Cinematica " + "Bony", "No");
+                    GameObject.Find("Gata").transform.GetChild(5).GetComponent<Scr_CargadorGuardado>().Personajes[1].SetActive(false);
+                    break;
+                }
+            
+            case "borrar.cinematica=3":
+                {
+                    Debug.Log("Cinemagica Borrada");
                     PlayerPrefs.SetString("Cinematica " + "Presentacion Rex", "No");
+                    break;
+                }
+            case "borrar.cinematica=4":
+                {
+                    Debug.Log("Cinemagica Borrada");
+                    PlayerPrefs.SetString("Cinematica " + "Ovni", "No");
                     break;
                 }
             case "borrar.estructura=0":
