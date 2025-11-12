@@ -94,6 +94,10 @@ public class Scr_Inventario : MonoBehaviour
     {
         if (Objetos == null) return;
 
+        // ✅ Obtener límite actualizado según mochilas
+        int limiteActual = ObtenerLimiteActual();
+        Debug.Log("Limite:" + limiteActual);
+
         for (int i = 0; i < Objetos.Length; i++)
         {
             var Objeto = Objetos[i];
@@ -101,22 +105,22 @@ public class Scr_Inventario : MonoBehaviour
 
             if (Objeto.Nombre == nombre)
             {
-                if (Cantidades[i] + cantidad > Limite)
+                // Aplicar límite dinámico
+                if (Cantidades[i] + cantidad > limiteActual)
                 {
-                    Cantidades[i] = Limite;
+                    Cantidades[i] = limiteActual;
                 }
                 else
                 {
                     Cantidades[i] += cantidad;
                 }
 
-                // Agregar XP si aplica (tu lógica original)
+                // Agregar XP si aplica
                 if (Objeto.XPRecolecta > 0 && objetosAgregados != null)
                 {
                     objetosAgregados.AgregarExperiencia(Objeto.XPRecolecta);
                 }
 
-                // marcar para guardar y notificar
                 inventarioModificado = true;
                 OnInventarioActualizado?.Invoke();
                 return;
@@ -125,6 +129,24 @@ public class Scr_Inventario : MonoBehaviour
 
         Debug.LogWarning($"AgregarObjeto: no se encontró '{nombre}' en Inventario.");
     }
+
+
+    private int ObtenerLimiteActual()
+    {
+        // Leer los PlayerPrefs en orden descendente de prioridad
+        string mochila4 = PlayerPrefs.GetString("Habilidad:Mochila IV", "No");
+        string mochila3 = PlayerPrefs.GetString("Habilidad:Mochila III", "No");
+        string mochila2 = PlayerPrefs.GetString("Habilidad:Mochila II", "No");
+        string mochila1 = PlayerPrefs.GetString("Habilidad:Mochila I", "No");
+
+        // Determinar el límite según la mochila activa más alta
+        if (mochila4 == "Si") return 100;
+        if (mochila3 == "Si") return 80;
+        if (mochila2 == "Si") return 60;
+        if (mochila1 == "Si") return 40;
+        return 20;
+    }
+
 
     public void QuitarObjeto(int cantidad, string nombre)
     {

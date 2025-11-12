@@ -133,8 +133,6 @@ public class SpawnerActivo : MonoBehaviour
 
     void AgregarObjetoInventario(int cantidad, Scr_CreadorObjetos objeto)
     {
-        Scr_Inventario inventario = Gata.GetChild(7).GetComponent<Scr_Inventario>();
-        inventario.AgregarObjeto(cantidad, objeto.Nombre);
         Scr_ObjetosAgregados controlador = GameObject.Find("Canvas").transform.GetChild(4).GetComponent<Scr_ObjetosAgregados>();
         if (controlador.Lista.Contains(objeto))
         {

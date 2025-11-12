@@ -1,7 +1,4 @@
-﻿using PrimeTween;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Scr_ControladorMapas : MonoBehaviour
 {
@@ -12,42 +9,63 @@ public class Scr_ControladorMapas : MonoBehaviour
     [SerializeField] Material SkyBoxDia;
     [SerializeField] Material SkyBoxNoche;
 
-    private void Awake()
+    // Flag para evitar guardados mientras se está cargando
+    private bool cargando = false;
+
+    private void Start()
     {
         if (EsMapa)
-        {
-            // 🔥 Sincroniza los mapas con PlayerPrefs al inicio
             CargarEstadoMapas();
-        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.name == "Gata")
+        if (other.name != "Gata") return;
+
+        // Configura datos del singleton (esto es independiente de EsMapa)
+        var singletonObj = GameObject.Find("Singleton");
+        if (singletonObj != null)
         {
-            // Configura datos del singleton
-            var singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
-            singleton.NombreMapa = NombreMapaBatalla;
-            singleton.SkyBoxDia = SkyBoxDia;
-            singleton.SkyBoxNoche = SkyBoxNoche;
-
-            PlayerPrefs.SetString("Mapa Actual", NombreMapaBatalla);
-
-            // Activa los mapas necesarios
-            foreach (GameObject mapa in MapasQueActiva)
+            var singleton = singletonObj.GetComponent<Scr_DatosSingletonBatalla>();
+            if (singleton != null)
             {
-                if (!mapa.activeSelf)
-                    mapa.SetActive(true);
+                singleton.NombreMapa = NombreMapaBatalla;
+                singleton.SkyBoxDia = SkyBoxDia;
+                singleton.SkyBoxNoche = SkyBoxNoche;
             }
+        }
 
-            // Desactiva los mapas que ya no se necesitan
-            foreach (GameObject mapa in MapasQueDesactiva)
+        PlayerPrefs.SetString("Mapa Actual", NombreMapaBatalla);
+
+        // Activar / desactivar según las listas del objeto que recibe el trigger
+        foreach (GameObject mapa in MapasQueActiva)
+        {
+            if (mapa && !mapa.activeSelf) mapa.SetActive(true);
+        }
+
+        foreach (GameObject mapa in MapasQueDesactiva)
+        {
+            if (mapa && mapa.activeSelf) mapa.SetActive(false);
+        }
+
+        // IMPORTANT: Si este script es el trigger (EsMapa == false), debemos pedir
+        // explícitamente al controlador principal (EsMapa == true) que guarde.
+        if (!EsMapa)
+        {
+            Scr_ControladorMapas controladorPrincipal = FindObjectOfType<Scr_ControladorMapas>();
+            if (controladorPrincipal != null && controladorPrincipal.EsMapa)
             {
-                if (mapa.activeSelf)
-                    mapa.SetActive(false);
+                controladorPrincipal.GuardarEstadoMapas();
             }
-
-            // 🔥 Guarda el nuevo estado
+            else
+            {
+                // Fallback: si no encontramos controlador principal, guardamos aquí (menos ideal)
+                GuardarEstadoMapas();
+            }
+        }
+        else
+        {
+            // Si por alguna razón el propio objeto es EsMapa (no trigger), guarda normalmente
             GuardarEstadoMapas();
         }
     }
@@ -56,23 +74,43 @@ public class Scr_ControladorMapas : MonoBehaviour
     {
         if (!EsMapa) return;
 
+        cargando = true;
+
         int childCount = transform.childCount;
         for (int i = 0; i < childCount; i++)
         {
             Transform child = transform.GetChild(i);
             string key = "MapaActivo:" + child.name;
-            string estado = PlayerPrefs.GetString(key, "No");
 
-            bool activo = (estado == "Si");
-            child.gameObject.SetActive(activo);
-
+            if (PlayerPrefs.HasKey(key))
+            {
+                string estado = PlayerPrefs.GetString(key);
+                bool activo = (estado == "Si");
+                child.gameObject.SetActive(activo);
+                Debug.Log($"[CargarEstadoMapas] {child.name} -> {(activo ? "Si" : "No")}");
+            }
+            else
+            {
+                // No hay dato guardado: respetamos el estado por defecto del editor
+                Debug.Log($"[CargarEstadoMapas] {child.name} sin datos guardados, mantiene: {child.gameObject.activeSelf}");
+            }
         }
+
+        cargando = false;
     }
 
     public void GuardarEstadoMapas()
     {
+        // Solo el controlador "Mapa" debe escribir los PlayerPrefs en condiciones normales
         if (!EsMapa) return;
-        Debug.Log("Guardando");
+
+        if (cargando)
+        {
+            Debug.Log("[GuardarEstadoMapas] Cancelado: aún se está cargando.");
+            return;
+        }
+
+        Debug.Log("[GuardarEstadoMapas] Guardando estados de los hijos...");
         int childCount = transform.childCount;
 
         for (int i = 0; i < childCount; i++)
@@ -80,11 +118,17 @@ public class Scr_ControladorMapas : MonoBehaviour
             Transform child = transform.GetChild(i);
             string key = "MapaActivo:" + child.name;
             string valor = child.gameObject.activeSelf ? "Si" : "No";
-
             PlayerPrefs.SetString(key, valor);
+            Debug.Log($"[GuardarEstadoMapas] {child.name} = {valor}");
         }
 
-        PlayerPrefs.Save(); // 🔥 Guarda en disco
+        PlayerPrefs.Save();
         Debug.Log("[GuardarEstadoMapas] PlayerPrefs guardados.");
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (EsMapa)
+            PlayerPrefs.Save();
     }
 }

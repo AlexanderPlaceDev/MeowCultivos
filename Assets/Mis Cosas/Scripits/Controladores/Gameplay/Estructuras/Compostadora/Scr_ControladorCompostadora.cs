@@ -135,12 +135,10 @@ public class Scr_ControladorCompostadora : MonoBehaviour
         if (R > PorcentajePlus)
         {
             ObjetosAgregados.Lista.Add(ObjetosQueProduce[0]);
-            Inventario.AgregarObjeto(1, "Abono");
         }
         else
         {
             ObjetosAgregados.Lista.Add(ObjetosQueProduce[1]);
-            Inventario.AgregarObjeto(1, "Abono+");
         }
 
         ObjetosAgregados.Cantidades.Add(1);

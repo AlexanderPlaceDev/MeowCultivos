@@ -41,8 +41,11 @@ public class Scr_SistemaDialogos : MonoBehaviour
     private Scr_ControladorMisiones ControladorMisiones; // Controlador de misiones de la gata
     private Scr_ActivadorDialogos activadorDialogos; // Referencia al activador de diálogos asociado
 
+    public bool BrincaAudios;
     public AudioClip[] SonidoHabla;
     AudioSource source;
+    private int ultimoIndiceAudio = -1; // -1 = ninguno todavía
+
     private void Start()
     {
         source = GetComponent<AudioSource>();
@@ -56,7 +59,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
         // Obtener referencia al activador de diálogos
         activadorDialogos = GetComponent<Scr_ActivadorDialogos>();
     }
-    
+
     private void Update()
     {
         // Si el diálogo no está en pausa y es una cinemática o activador válido...
@@ -185,19 +188,57 @@ public class Scr_SistemaDialogos : MonoBehaviour
 
         foreach (char letter in DialogoArecibir.Lineas[LineaActual].ToCharArray())
         {
-            int h = Random.Range(0, SonidoHabla.Length);
-
-            if (letter == ' ' && SonidoHabla.Length > 0) 
+            // Reproducir sonido al encontrar un espacio
+            if (letter == ' ' && SonidoHabla.Length > 0)
             {
-                source.PlayOneShot(SonidoHabla[h]);
+                int h = 0;
+
+                // Elegir un índice distinto al anterior si hay >1 clip
+                if (SonidoHabla.Length > 1)
+                {
+                    int intento = 0;
+                    do
+                    {
+                        h = Random.Range(0, SonidoHabla.Length);
+                        intento++;
+                        // por seguridad, si por alguna razón no conseguimos uno distinto, rompa tras 10 intentos
+                        if (intento > 10) break;
+                    } while (h == ultimoIndiceAudio);
+                }
+                else
+                {
+                    h = 0;
+                }
+
+                // Si BrincaAudios = true => reproducir aun si algo suena (solapar).
+                // Si BrincaAudios = false => solo reproducir si el AudioSource está libre.
+                if (BrincaAudios)
+                {
+                    source.PlayOneShot(SonidoHabla[h]);
+                    ultimoIndiceAudio = h; // marcamos el que se reprodujo
+                }
+                else
+                {
+                    if (!source.isPlaying)
+                    {
+                        source.PlayOneShot(SonidoHabla[h]);
+                        ultimoIndiceAudio = h; // marcamos solo si realmente se reprodujo
+                    }
+                    // si está sonando y BrincaAudios == false, NO reproducimos ni actualizamos ultimoIndiceAudio
+                }
             }
 
+            // Escribe la letra en pantalla (independiente del audio)
             Texto.text += letter;
             yield return new WaitForSeconds(letraDelay * Velocidad);
         }
 
         Leyendo = false;
     }
+
+
+
+
 
     //====================================
     //=== Avanzar a la siguiente línea ===

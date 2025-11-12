@@ -6186,6 +6186,7 @@ MonoBehaviour:
   Leido: 0
   EsCinematica: 1
   LineaActual: 0
+  BrincaAudios: 1
   SonidoHabla:
   - {fileID: 8300000, guid: fcd56825eb25e58489f12f94a850c89f, type: 3}
 --- !u!114 &1856795125
@@ -6310,7 +6311,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
-  m_Pitch: 1
+  m_Pitch: 1.3
   Loop: 0
   Mute: 0
   Spatialize: 0

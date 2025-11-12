@@ -48,7 +48,7 @@ public class Scr_Linterna : MonoBehaviour
 
     void VerificarHoraYLuz()
     {
-        if (Tiempo == null) return;
+        if (Tiempo == null || PlayerPrefs.GetString("Habilidad:Linterna", "No") == "No") return;
 
         int hora = Tiempo.HoraActual;
         bool debeEncender = EstaEnRango(hora, HoraEncender, HoraApagar);
