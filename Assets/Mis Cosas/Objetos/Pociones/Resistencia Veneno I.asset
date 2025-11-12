@@ -14,13 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Nombre: Resistencia Veneno
   Icono: {fileID: 21300000, guid: 4ceb0ad724022c9429b5385b39a04c53, type: 3}
-  Nivel: 1
   Tipo: 3
   Descripcion: Resistes a efectos de Veneno
   RequiereCraftear: 0
   ItemsRequeridos: []
   CantidadesRequeridas: 
+  Permanente: 1
   Usos: 2
-  Puntos: 0
+  Puntos: 0.5
+  Duracion: 0
+  Enfriamiento: 0
   efecto: 3
   Color: {r: 0.96474123, g: 0, b: 1, a: 1}

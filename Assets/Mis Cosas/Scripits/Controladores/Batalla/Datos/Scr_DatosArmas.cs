@@ -153,7 +153,6 @@ public class Scr_DatosArmas : MonoBehaviour
     {
         for (int i = 0; i < Pociones.Length; i++)
         {
-            Debug.LogError("ey" + Pociones[i].Nombre);
             if (Pociones[i].Nombre == Nombre)
             {
                 CantidadPociones[i]--;

@@ -14,13 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Nombre: "Da\xF1o"
   Icono: {fileID: 21300000, guid: 4ceb0ad724022c9429b5385b39a04c53, type: 3}
-  Nivel: 1
   Tipo: 1
   Descripcion: "Realizas mas da\xF1o"
   RequiereCraftear: 0
   ItemsRequeridos: []
   CantidadesRequeridas: 
+  Permanente: 0
   Usos: 1
   Puntos: 3
+  Duracion: 30
+  Enfriamiento: 60
   efecto: 0
   Color: {r: 1, g: 0, b: 0, a: 1}

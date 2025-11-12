@@ -105,6 +105,13 @@ public class Scr_ActivadorPociones : MonoBehaviour
                 Debug.LogWarning("No se encontró el script Scr_ControladorPociones");
             }
         }
+        else if (Espermanente)
+        {
+            Pociones.Pociones(PocionChec);
+            TiempoActual = TiempoMaximo;
+            usos--;
+            gameObject.SetActive(false);
+        }
     }
 
 
@@ -118,6 +125,9 @@ public class Scr_ActivadorPociones : MonoBehaviour
             {
                 if (DatosArmas.Pociones[i].Nombre == Pocion)
                 {
+                    Pociones.ControladorBatalla = ControladorBatalla;
+                    Pociones.mov=GameObject.Find("Personaje").GetComponent<Scr_Movimiento>();
+                    Pociones.ControladorArmas = GameObject.Find("Controlador").GetComponent<Scr_ControladorArmas>();
                     usos = DatosArmas.Pociones[i].Usos;
                     TiempoMaximo = DatosArmas.Pociones[i].Duracion;
                     cargaHabilidad = DatosArmas.Pociones[i].Enfriamiento;
@@ -130,6 +140,7 @@ public class Scr_ActivadorPociones : MonoBehaviour
                     ColorHabilidad = DatosArmas.Pociones[i].Color;
                     transform.GetChild(0).GetComponent<Image>().sprite = DatosArmas.Pociones[i].Icono;
                     PocionChec = DatosArmas.Pociones[i].Tipo.ToString();
+                    Pociones.PocionPermanente = DatosArmas.Pociones[i].Permanente;
                     if (DatosArmas.Pociones[i].Permanente)
                     {
                         Transform hijo = transform.GetChild(1);

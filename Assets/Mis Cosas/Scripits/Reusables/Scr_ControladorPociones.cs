@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Scr_ControladorPociones : MonoBehaviour
 {
-    Scr_ControladorBatalla ControladorBatalla;
-    Scr_ControladorArmas ControladorArmas;
-    Scr_Movimiento mov;
+    public Scr_ControladorBatalla ControladorBatalla;
+    public Scr_ControladorArmas ControladorArmas;
+    public Scr_Movimiento mov;
 
     public float PocionPuntos;
     public float PocionDuracion;
@@ -23,7 +23,7 @@ public class Scr_ControladorPociones : MonoBehaviour
 
     public void Pociones(string Pocion)
     {
-        Debug.LogError("Hola"+ Pocion);
+        //Debug.LogError("Hola"+ Pocion);
         //Curativo, Dano, Velocidad, Resitencia, Vida
         switch (Pocion) 
         {
@@ -40,6 +40,7 @@ public class Scr_ControladorPociones : MonoBehaviour
                 PocionResitencia();
                 break;
             case "Vida":
+                PocionVida();
                 break;
             case "":
                 Debug.Log("No hay Pocion");
@@ -192,9 +193,11 @@ public class Scr_ControladorPociones : MonoBehaviour
 
     public void PocionVida()
     {
+        Debug.Log("vida");
         if (PocionPermanente)
         {
             ControladorBatalla.VidaMaxima = ControladorBatalla.VidaMaxima + PocionPuntos;
+            ControladorBatalla.VidaActual = ControladorBatalla.VidaMaxima;
         }
         else
         {
@@ -205,7 +208,12 @@ public class Scr_ControladorPociones : MonoBehaviour
     {
         float vidaNormal = ControladorBatalla.VidaMaxima;
         ControladorBatalla.VidaMaxima = ControladorBatalla.VidaMaxima + PocionPuntos;
+        ControladorBatalla.VidaActual = ControladorBatalla.VidaMaxima;
         yield return new WaitForSeconds(duracion);
         ControladorBatalla.VidaMaxima= vidaNormal;
+        if (ControladorBatalla.VidaActual > vidaNormal)
+        {
+            ControladorBatalla.VidaActual = ControladorBatalla.VidaMaxima;
+        }
     }
 }
