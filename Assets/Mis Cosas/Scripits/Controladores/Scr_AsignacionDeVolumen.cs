@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
 public class Scr_AsignacionDeVolumen : MonoBehaviour
@@ -11,8 +11,8 @@ public class Scr_AsignacionDeVolumen : MonoBehaviour
         Volumen_Combate
     }
 
-    [Header("Categoría de volumen")]
-    [Tooltip("Selecciona qué PlayerPref usar para este audio")]
+    [Header("CategorÃ­a de volumen")]
+    [Tooltip("Selecciona quÃ© PlayerPref usar para este audio")]
     public CategoriaVolumen categoria;
 
     private AudioSource audioSource;
@@ -30,7 +30,7 @@ public class Scr_AsignacionDeVolumen : MonoBehaviour
         string nombrePref = categoria.ToString(); // el nombre del PlayerPref
         int valorPorDefecto = ObtenerValorPorDefecto(categoria);
 
-        int valor = PlayerPrefs.GetInt(nombrePref, valorPorDefecto);   // usa el valor por defecto de esa categoría
+        int valor = PlayerPrefs.GetInt(nombrePref, valorPorDefecto);   // usa el valor por defecto de esa categorÃ­a
         int volumenGeneral = PlayerPrefs.GetInt("Volumen", 100);       // valor general
 
         valor = Mathf.Clamp(valor, 0, 100);
