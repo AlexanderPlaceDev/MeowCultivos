@@ -191,7 +191,7 @@ public class CambioTiempo : MonoBehaviour
         }
         else 
         {
-            hA = Mathf.Clamp(hA - 1, minValueH, maxValueH);
+            hA = Mathf.Clamp(hA - 10, minValueH, maxValueH);
         }
         Hora.text = hA.ToString();
     }
@@ -206,7 +206,7 @@ public class CambioTiempo : MonoBehaviour
         }
         else
         {
-            hM = Mathf.Clamp(hM + 1, minValueM, maxValueM);
+            hM = Mathf.Clamp(hM + 10, minValueM, maxValueM);
         }
         /*
         int ha = ObtenerHoraActual();
