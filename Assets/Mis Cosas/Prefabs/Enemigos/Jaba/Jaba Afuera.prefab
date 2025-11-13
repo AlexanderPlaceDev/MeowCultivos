@@ -99,6 +99,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 5688412746573831132}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: caa63f37c21c4064b93b00e85427ef29,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2217625922868482639}
     - targetCorrespondingSourceObject: {fileID: 3690449590506178401, guid: caa63f37c21c4064b93b00e85427ef29,
         type: 3}
       insertIndex: -1
@@ -231,6 +235,7 @@ MonoBehaviour:
   SonidosIddle:
   - {fileID: 8300000, guid: 6eace2600e41c30409fb6b34ad1c7bc5, type: 3}
   - {fileID: 8300000, guid: 9f899d673e74549439e8f1bf23307c89, type: 3}
+  SonidosCaminar: []
   TiempoSonidoMinIddle: 5
   TiempoSonidoMaxIddle: 30
   TiempoSonidoMinPersecucion: 1
@@ -367,6 +372,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   categoria: 2
+--- !u!135 &2217625922868482639
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3487781784868600075}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!137 &3615095440261854556 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 1048521751221743878, guid: caa63f37c21c4064b93b00e85427ef29,
@@ -526,6 +552,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Gata: {fileID: 0}
+  seguir: 0
 --- !u!4 &5203015362697685260 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4e29b528754e83e4088f4e671aac08de,

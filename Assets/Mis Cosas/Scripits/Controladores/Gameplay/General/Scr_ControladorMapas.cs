@@ -87,12 +87,10 @@ public class Scr_ControladorMapas : MonoBehaviour
                 string estado = PlayerPrefs.GetString(key);
                 bool activo = (estado == "Si");
                 child.gameObject.SetActive(activo);
-                Debug.Log($"[CargarEstadoMapas] {child.name} -> {(activo ? "Si" : "No")}");
             }
             else
             {
                 // No hay dato guardado: respetamos el estado por defecto del editor
-                Debug.Log($"[CargarEstadoMapas] {child.name} sin datos guardados, mantiene: {child.gameObject.activeSelf}");
             }
         }
 

@@ -4,47 +4,54 @@ using UnityEngine;
 
 public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 {
+    [Header("Configuración del Spawner")]
     [SerializeField] private string IDSpawner;
     [SerializeField] private GameObject Enemigo;
-    [SerializeField] private int CantidadDeEnemigos;
-    [SerializeField] private float TiempoSpawn;
-    [SerializeField] private bool UsaTiempo;
+    [SerializeField] private int CantidadDeEnemigos = 1;
+    [SerializeField] private float TiempoSpawn = 5f;
+    [SerializeField] private bool UsaTiempo = false;
 
+    [Header("Configuración de tiempo")]
     [SerializeField] private int HoraInicio;
     [SerializeField] private int HoraFin;
     [SerializeField] private float TiempoRestanteSpawn;
+
+    [Header("Activación del Spawner")]
+    [Tooltip("Si está activado, ignora PlayerPrefs y considera el spawner siempre activo.")]
+    [SerializeField] private bool NoUsaHaveActive = false;
+    [SerializeField] public int haveAcivate = 0;
+
     private List<GameObject> Enemigos = new List<GameObject>();
-
-    public int haveAcivate;
-
     public Scr_ControladorTiempo ControlT;
-    //public float a;
+
     void Start()
     {
         ControlT = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
+
         // Recuperar el tiempo de respawn guardado
         TiempoRestanteSpawn = PlayerPrefs.GetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoSpawn);
 
         RestaurarEnemigos(); // Cargar enemigos en escena
-
-        // Iniciar la rutina de respawn si faltan enemigos
-        StartCoroutine(SpawnEnemies());
+        StartCoroutine(SpawnEnemies()); // Iniciar la rutina
     }
 
     void FixedUpdate()
     {
-        GuardarEstado(); 
+        GuardarEstado();
         checartiempoDeNOSpawn();
     }
+
     IEnumerator SpawnEnemies()
     {
         while (true)
         {
-            if (haveAcivate == 1 && checartiempoDeSpawn())
+            // Si NoUsaHaveActive está activo, tratamos haveAcivate como 1 siempre
+            int estado = NoUsaHaveActive ? 1 : haveAcivate;
+
+            if (estado == 1 && checartiempoDeSpawn())
             {
                 if (Enemigos.Count < CantidadDeEnemigos)
                 {
-                    // 👇 Nuevo sistema: reduce el tiempo cada frame
                     while (TiempoRestanteSpawn > 0f)
                     {
                         TiempoRestanteSpawn -= Time.deltaTime;
@@ -56,7 +63,7 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
                     GameObject nuevoEnemigo = Instantiate(Enemigo, transform.position, Quaternion.identity, transform.parent.parent);
                     Enemigos.Add(nuevoEnemigo);
 
-                    // Reiniciar el tiempo para el siguiente spawn
+                    // Reiniciar tiempo
                     TiempoRestanteSpawn = TiempoSpawn;
                     PlayerPrefs.SetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoRestanteSpawn);
                     PlayerPrefs.Save();
@@ -66,22 +73,20 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
         }
     }
 
-
     public bool checartiempoDeSpawn()
     {
-        if (!UsaTiempo)return true;
+        if (!UsaTiempo) return true;
 
-        // Si el rango NO cruza la medianoche (ej: 3 < 8)
         if (HoraInicio < HoraFin)
         {
             return (ControlT.HoraActual >= HoraInicio) && (ControlT.HoraActual < HoraFin);
         }
         else
         {
-            // Si el rango SÍ cruza la medianoche (ej: 19 -> 5)
             return (ControlT.HoraActual >= HoraInicio) || (ControlT.HoraActual < HoraFin);
         }
     }
+
     public void checartiempoDeNOSpawn()
     {
         if (!UsaTiempo) return;
@@ -89,7 +94,6 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 
         bool dentroHorario;
 
-        // Calculamos si estamos dentro del horario
         if (HoraInicio < HoraFin)
         {
             dentroHorario = ControlT.HoraActual >= HoraInicio && ControlT.HoraActual < HoraFin;
@@ -99,7 +103,6 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
             dentroHorario = ControlT.HoraActual >= HoraInicio || ControlT.HoraActual < HoraFin;
         }
 
-        // Si NO estamos dentro del horario → destruir enemigos
         if (!dentroHorario)
         {
             foreach (var enem in Enemigos)
@@ -109,29 +112,35 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
             Enemigos.Clear();
         }
     }
+
     public void GuardarEstado()
     {
-        if(haveAcivate ==1 && checartiempoDeSpawn())
+        int estado = NoUsaHaveActive ? 1 : haveAcivate;
+
+        if (estado == 1 && checartiempoDeSpawn())
         {
             int i = 0;
             foreach (var enem in Enemigos)
             {
                 Vector3 pos = Enemigos[i].transform.position;
-                if (enem.GetComponent<Scr_CambiadorBatalla>().Cambiando)
+                if (enem.GetComponent<Scr_CambiadorBatalla>())
                 {
-                    Debug.Log("Remueve");
-                    Enemigos.RemoveAt(i);
-                    PlayerPrefs.DeleteKey($"{IDSpawner}_EnemigoX_{i}");
-                    PlayerPrefs.DeleteKey($"{IDSpawner}_EnemigoY_{i}");
-                    PlayerPrefs.DeleteKey($"{IDSpawner}_EnemigoZ_{i}");
-                    break;
+                    if (enem.GetComponent<Scr_CambiadorBatalla>().Cambiando)
+                    {
+                        Debug.Log("Remueve");
+                        Enemigos.RemoveAt(i);
+                        PlayerPrefs.DeleteKey($"{IDSpawner}_EnemigoX_{i}");
+                        PlayerPrefs.DeleteKey($"{IDSpawner}_EnemigoY_{i}");
+                        PlayerPrefs.DeleteKey($"{IDSpawner}_EnemigoZ_{i}");
+                        break;
+                    }
                 }
+
                 i++;
             }
-            // Guardar la cantidad de enemigos vivos
+
             PlayerPrefs.SetInt($"{IDSpawner}_CantidadEnemigosVivos", Enemigos.Count);
 
-            // Guardar posiciones de enemigos vivos
             for (i = 0; i < Enemigos.Count; i++)
             {
                 if (Enemigos[i] != null)
@@ -142,16 +151,21 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
                     PlayerPrefs.SetFloat($"{IDSpawner}_EnemigoZ_{i}", pos.z);
                 }
             }
-
-            //PlayerPrefs.Save();
         }
-        PlayerPrefs.SetInt($"{IDSpawner}_Active", haveAcivate);
+
+        // Guardar estado real
+        PlayerPrefs.SetInt($"{IDSpawner}_Active", estado);
         PlayerPrefs.Save();
     }
 
     void RestaurarEnemigos()
     {
         haveAcivate = PlayerPrefs.GetInt($"{IDSpawner}_Active");
+
+        // Forzar activación si NoUsaHaveActive está en true
+        if (NoUsaHaveActive)
+            haveAcivate = 1;
+
         if (haveAcivate == 1)
         {
             int enemigosVivos = PlayerPrefs.GetInt($"{IDSpawner}_CantidadEnemigosVivos", CantidadDeEnemigos);
