@@ -442,6 +442,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     {
         if (!other.CompareTag("Gata")) return;
         estaAdentro = true;
+        Debug.Log("entra");
 
         if (!autoIniciarDialogo)
         {
@@ -460,6 +461,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (!other.CompareTag("Gata")) return;
+        Debug.Log("Sale");
         estaAdentro = false;
         OcultarIconos();
     }

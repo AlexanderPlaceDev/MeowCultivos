@@ -95,7 +95,10 @@ public class scr_Luciernaga : MonoBehaviour
         NavMeshHit hit;
         if (NavMesh.SamplePosition(puntoAleatorio, out hit, radioMovimiento, NavMesh.AllAreas))
         {
-            agent.SetDestination(hit.position);
+            if (agent.isOnNavMesh)
+            {
+                agent.SetDestination(hit.position);
+            }
         }
     }
 

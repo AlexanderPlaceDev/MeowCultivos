@@ -91,7 +91,6 @@ public class Scr_ControladorMapas : MonoBehaviour
             else
             {
                 // No hay dato guardado: respetamos el estado por defecto del editor
-                Debug.Log($"[CargarEstadoMapas] {child.name} sin datos guardados, mantiene: {child.gameObject.activeSelf}");
             }
         }
 

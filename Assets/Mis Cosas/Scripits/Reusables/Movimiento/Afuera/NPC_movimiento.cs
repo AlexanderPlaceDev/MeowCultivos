@@ -84,11 +84,15 @@ public class NPC_movimiento : MonoBehaviour
                 }
                 else
                 {
-                    //Debug.Log("atttttta");
-                    BoxCollider[] colliders = GetComponents<BoxCollider>();
-                    colliders[1].enabled = false; // Desactiva el segundo BoxCollider
-                    Dialogo.OcultarIconos();
-                    Dialogo.estaAdentro = false;
+                    // Solo ocultar íconos si realmente está en movimiento
+                    if (agente.velocity.magnitude > 0.1f)
+                    {
+                        BoxCollider[] colliders = GetComponents<BoxCollider>();
+                        colliders[1].enabled = false;
+                        Dialogo.OcultarIconos();
+                        Dialogo.estaAdentro = false;
+                        Debug.Log("Iconos ocultos porque el NPC se está moviendo");
+                    }
                 }
                 checarcambio();
 
@@ -130,7 +134,7 @@ public class NPC_movimiento : MonoBehaviour
     void MoverANuevaPosicion(int posIndex)
     {
         if (!agente.isOnNavMesh) return;
-
+        Debug.Log("Intentando mover");
         Destino = pos[posIndex].position;
         agente.isStopped = false;
         Anim.Caminando = true;
