@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,17 +31,21 @@ public class Scr_ControladorTiempo : MonoBehaviour
     private int[] intervalosMinutos = { 0, 10, 20, 30, 40, 50 }; // Intervalos de 10 minutos
 
     public int DineroRecompensa; //Dinero a entregar por la caja de venta
-
     public enum climas
     {
         Soleado,
         Nublado,
         Lluvioso,
-        Vientoso
+        Vientoso,
+        LunaRoja
     }
+    [Header("Climas")]
     public List<climas> ClimaSemanal;
     public List<int> ProbabilidadesClimaSemanal = new List<int>(); // Probabilidad de que ese clima fuera elegido
-
+    public bool EstaActivoClima;
+    public float duracionClima;
+    public int HoraClima;
+    public float MinClima;
     void Awake()
     {
         // Cargar la fecha y hora desde PlayerPrefs si ya existen
@@ -57,6 +62,8 @@ public class Scr_ControladorTiempo : MonoBehaviour
 
         // Actualizar el Skybox inicial
         ActualizarSkybox();
+
+        CargarClimaDeldia();
     }
 
     void Update()
@@ -100,7 +107,55 @@ public class Scr_ControladorTiempo : MonoBehaviour
         ClimaSemanal.Clear();
         ProbabilidadesClimaSemanal.Clear();
     }
-    public void climaSemanal()
+
+    public void GuardarClimaDeldia()
+    {
+        for (int i = 0; i < 7; i++)
+        {
+            PlayerPrefs.SetInt("Clima" + i, ((int)ClimaSemanal[i]));
+            PlayerPrefs.SetString("ClimaProb" + i, ProbabilidadesClimaSemanal[i].ToString());
+            PlayerPrefs.SetFloat("Climadura" + i, duracionClima);
+            if (EstaActivoClima)
+            {
+                PlayerPrefs.SetString("ClimaActivado", "SI");
+            }
+            else
+            {
+                PlayerPrefs.SetString("ClimaActivado", "NO");
+            }
+            PlayerPrefs.Save();
+        }
+    }
+    public void CargarClimaDeldia()
+    {
+        LimpiarClimaSemanal();
+        for (int i = 0; i < 7; i++)
+        {
+            int clima = PlayerPrefs.GetInt("Clima" + i, -1);
+            if (clima == -1)
+            {
+                LimpiarClimaSemanal();
+                NuevoclimaSemanal();
+                break;
+            }
+            else
+            {
+                climas climaguardado = (climas)clima;
+                ClimaSemanal.Add(climaguardado);
+                ProbabilidadesClimaSemanal.Add(PlayerPrefs.GetInt("ClimaProb" + i, 0));
+                duracionClima = PlayerPrefs.GetFloat("Climadura", 0);
+                if (PlayerPrefs.GetString("ClimaActivado", "NO") == "SI")
+                {
+                    EstaActivoClima = true;
+                }
+                else
+                {
+                    EstaActivoClima = true;
+                }
+            }
+        }
+    }
+    public void NuevoclimaSemanal()
     {
         if (ClimaSemanal.Count == 0)
         {
@@ -113,6 +168,46 @@ public class Scr_ControladorTiempo : MonoBehaviour
                 climas climaAleatorio = (climas)climaIndex;
                 ProbabilidadesClimaSemanal.Add(random.Next(0, 100));
                 ClimaSemanal.Add(climaAleatorio);
+            }
+        }
+        GuardarClimaDeldia();
+    }
+
+    public void activarClima()
+    {
+        if (EstaActivoClima)
+        {
+
+            float TiempoIniciado = HoraClima * 60 + MinClima;
+            float TiempoActual = HoraActual * 60 + MinutoActual;
+
+            if((TiempoActual - TiempoIniciado) == duracionClima)
+            {
+                EstaActivoClima = false;
+                Debug.Log("Se acabo El clima" );
+            }
+            GuardarClimaDeldia();
+        }
+        else
+        {
+            if (ClimaSemanal.Count == 7)
+            {
+                string[] dias = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
+                int diaActualIndex = System.Array.IndexOf(dias, DiaActual);
+                float probabilidad = Random.Range(0f, 100f);
+                if (diaActualIndex <= ProbabilidadesClimaSemanal[diaActualIndex])
+                {
+                    EstaActivoClima = true;
+                    duracionClima = Random.Range(60f, 300f);
+                    HoraClima = HoraActual;
+                    MinClima = MinutoActual;
+                    GuardarClimaDeldia();
+                    Debug.Log("Esta " + ClimaSemanal[diaActualIndex]);
+                }
+                else
+                {
+                    Debug.Log("No hay " + ClimaSemanal[diaActualIndex]);
+                }
             }
         }
     }
@@ -152,6 +247,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
         
         GuardarTiempo();
         ActualizarIconoClima();
+        activarClima();
     }
     void ActualizarMinuto()
     {
@@ -175,6 +271,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
             HoraActual = 0;
             ActualizarDia();
         }
+        activarClima();
     }
 
     void ActualizarDia()
@@ -182,6 +279,11 @@ public class Scr_ControladorTiempo : MonoBehaviour
         string[] dias = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
         int diaActualIndex = System.Array.IndexOf(dias, DiaActual);
         DiaActual = dias[(diaActualIndex + 1) % dias.Length];
+        if(DiaActual == "DOM")
+        {
+            LimpiarClimaSemanal();
+            NuevoclimaSemanal();
+        }
     }
 
     void ActualizarTextoFecha()
