@@ -442,7 +442,6 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     {
         if (!other.CompareTag("Gata")) return;
         estaAdentro = true;
-        Debug.Log("entra");
 
         if (!autoIniciarDialogo)
         {

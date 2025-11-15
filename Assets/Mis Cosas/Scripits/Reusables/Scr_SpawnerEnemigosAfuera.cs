@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 {
@@ -187,6 +188,10 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
                 }
 
                 GameObject enemigoRestaurado = Instantiate(Enemigo, pos, Quaternion.identity, transform.parent.parent);
+                if (!enemigoRestaurado.GetComponent<NavMeshAgent>().isOnNavMesh)
+                {
+                    Debug.Log(enemigoRestaurado.name);
+                }
                 Enemigos.Add(enemigoRestaurado);
             }
         }

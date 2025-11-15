@@ -16,7 +16,6 @@ public class Scr_CambiadorMenus : MonoBehaviour
     private float tiempoPasado = 0.0f;
     bool CambiarInventario = false;
     bool CambiarMisiones = false;
-    bool CambiarArmas = false;
     bool CambiarOpciones = false;
     bool CambiarGuia = false;
     bool CambiarHabilidades = false;
@@ -97,7 +96,6 @@ public class Scr_CambiadorMenus : MonoBehaviour
                     Menu.GetComponent<Animator>().Play("Cerrar 2");
                     break;
                 case "Armas":
-                    CambiarArmas = true;
                     MenuActual = "Armas";
                     Menu.GetComponent<Animator>().Play("Cerrar 1");
                     break;
@@ -140,7 +138,6 @@ public class Scr_CambiadorMenus : MonoBehaviour
                     Menu.GetComponent<Animator>().Play("Cerrar 2");
                     break;
                 case "Armas":
-                    CambiarArmas = true;
                     MenuActual = "Armas";
                     Menu.GetComponent<Animator>().Play("Cerrar 1");
                     break;
@@ -183,7 +180,6 @@ public class Scr_CambiadorMenus : MonoBehaviour
                     Menu.GetComponent<Animator>().Play("Cerrar 2");
                     break;
                 case "Armas":
-                    CambiarArmas = true;
                     MenuActual = "Armas";
                     Menu.GetComponent<Animator>().Play("Cerrar 1");
                     break;

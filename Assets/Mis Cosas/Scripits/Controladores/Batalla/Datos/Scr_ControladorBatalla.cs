@@ -86,7 +86,6 @@ public class Scr_ControladorBatalla : MonoBehaviour
     [SerializeField] public GameObject particulaQuemado;
     [SerializeField] public GameObject particulaCongelado;
     [SerializeField] public GameObject particulaEnvenado;
-    [SerializeField] float Aguanta=20;
 
     [Header("Efectos")]
     private Color ColorPrincipal = new Color(0, 0, 0);

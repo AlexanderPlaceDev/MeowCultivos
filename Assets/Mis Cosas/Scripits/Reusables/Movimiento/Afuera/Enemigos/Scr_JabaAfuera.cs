@@ -6,8 +6,6 @@ using UnityEngine.AI;
 public class Scr_JabaAfuera : Scr_EnemigoFuera
 {
     [SerializeField] Scr_VisionEnemigosFuera Vision;
-    [SerializeField] private float offsetZInicio = 0.5f;
-    [SerializeField] private float offsetZFinal = 0.5f;
     [SerializeField] float TiempoLimitePersiguiendo = 0;
     float TiempoPersiguiendo = 0;
     private Vector3 Destino;

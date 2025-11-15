@@ -139,7 +139,6 @@ public class Scr_ControladorTiempo : MonoBehaviour
     public void CargarClimaDeldia()
     {
         LimpiarClimaSemanal();
-        int dia =0;
         for (int i = 0; i < 7; i++)
         {
             int clima = PlayerPrefs.GetInt("Clima" + i, -1);

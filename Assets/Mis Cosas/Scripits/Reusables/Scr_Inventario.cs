@@ -5,7 +5,6 @@ public class Scr_Inventario : MonoBehaviour
 {
     [SerializeField] public Scr_CreadorObjetos[] Objetos;
     [SerializeField] public int[] Cantidades;
-    [SerializeField] int Limite = 999;
 
     public Scr_ControladorMisiones ControladorMisiones;
     public event Action OnInventarioActualizado;

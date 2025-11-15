@@ -35,7 +35,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     [Header("Espacios Armas")]
     [SerializeField] GameObject[] EspaciosArmas;
     public List<Scr_CreadorHabilidadesBatalla> HabilidadesMostrar;
-    bool AlertaAdentro = false;
     [Header("Aceptar")]
     [SerializeField] Image BotonAceptar;
     [SerializeField] Color[] ColoresAceptar;
@@ -208,16 +207,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     public void SaleBotonMenu()
     {
         BotonActual = -1;
-    }
-
-    public void EntraAlerta()
-    {
-        AlertaAdentro = true;
-    }
-
-    public void SaleAlerta()
-    {
-        AlertaAdentro = false;
     }
 
     public void BotonArmaDerecha()
