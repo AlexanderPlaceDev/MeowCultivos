@@ -62,9 +62,12 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
 
     IEnumerator EjecutarIdle(string animacion, float duracion)
     {
-        agente.isStopped = true;
-        agente.ResetPath();
-        agente.velocity = Vector3.zero;
+        if (GetComponent<NavMeshAgent>().isOnNavMesh)
+        {
+            agente.isStopped = true;
+            agente.ResetPath();
+            agente.velocity = Vector3.zero;
+        }
 
         CambiarAnimacion(animacion);
         yield return new WaitForSeconds(duracion);
