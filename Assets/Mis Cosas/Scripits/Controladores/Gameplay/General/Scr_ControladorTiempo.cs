@@ -195,26 +195,32 @@ public class Scr_ControladorTiempo : MonoBehaviour
         Debug.Log("Se acabo El clima");
         GuardarClimaDeldia();
     }
+    private int ConseguirDia()
+    {
+        string[] dias = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
+        int diaActualIndex = System.Array.IndexOf(dias, DiaActual);
+        return diaActualIndex;
+    }
     public void activarClima()
     {
         if (EstaActivoClima)
         {
             if (tiempoClima >= duracionClima)
             {
-                desactivarClima();
+                desactivarClima(); 
+
             }
         }
         else
         {
             if (ClimaSemanal.Count == 7)
             {
-                string[] dias = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
-                int diaActualIndex = System.Array.IndexOf(dias, DiaActual);
+                int diaActualIndex = ConseguirDia();
                 float probabilidad = Random.Range(0f, 100f);
                 if (diaActualIndex <= ProbabilidadesClimaSemanal[diaActualIndex])
                 {
                     EstaActivoClima = true;
-                    duracionClima = Random.Range(300f, 1200f);
+                    duracionClima = Random.Range(300f, 480f);
                     ClimaSemanal.Add(ClimaSemanal[diaActualIndex]);
                     Clima.Activar_Clima(ClimaSemanal[diaActualIndex].ToString());
                     GuardarClimaDeldia();
