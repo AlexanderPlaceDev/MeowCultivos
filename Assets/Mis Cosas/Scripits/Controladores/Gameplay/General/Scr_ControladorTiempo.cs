@@ -31,6 +31,8 @@ public class Scr_ControladorTiempo : MonoBehaviour
     private int[] intervalosMinutos = { 0, 10, 20, 30, 40, 50 }; // Intervalos de 10 minutos
 
     public int DineroRecompensa; //Dinero a entregar por la caja de venta
+
+    Scr_controladorClima Clima;
     public enum climas
     {
         Soleado,
@@ -53,7 +55,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
         HoraActual = PlayerPrefs.GetInt("HoraActual", 11);
         MinutoActual = PlayerPrefs.GetFloat("MinutoActual", 0);
         DineroRecompensa = PlayerPrefs.GetInt("DineroCajaVenta", 0);
-
+        Clima = GameObject.Find("Clima").GetComponent<Scr_controladorClima>();
         ActualizarTextoFecha();
         ActualizarTextoHora();
 
@@ -104,6 +106,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
     }
     public void LimpiarClimaSemanal()
     {
+        Clima.ApagarClimas();
         ClimaSemanal.Clear();
         ProbabilidadesClimaSemanal.Clear();
     }
@@ -113,15 +116,21 @@ public class Scr_ControladorTiempo : MonoBehaviour
         for (int i = 0; i < 7; i++)
         {
             PlayerPrefs.SetInt("Clima" + i, ((int)ClimaSemanal[i]));
-            PlayerPrefs.SetString("ClimaProb" + i, ProbabilidadesClimaSemanal[i].ToString());
+            PlayerPrefs.SetInt("ClimaProb" + i, ((int)ProbabilidadesClimaSemanal[i]));
             PlayerPrefs.SetFloat("Climadura" + i, duracionClima);
             if (EstaActivoClima)
             {
-                PlayerPrefs.SetString("ClimaActivado", "SI");
+                PlayerPrefs.SetString("ClimaActivadoEsta", "SI");
+                PlayerPrefs.SetString("ClimaActivado", ClimaSemanal[i].ToString());
+                PlayerPrefs.SetInt("HoraClima", HoraClima);
+                PlayerPrefs.SetFloat("MinClima", MinClima);
             }
             else
             {
-                PlayerPrefs.SetString("ClimaActivado", "NO");
+                PlayerPrefs.SetString("ClimaActivadoEsta", "NO");
+                PlayerPrefs.SetString("ClimaActivado", "Soleado");
+                PlayerPrefs.SetInt("HoraClima", 0);
+                PlayerPrefs.SetFloat("MinClima", 0);
             }
             PlayerPrefs.Save();
         }
@@ -129,6 +138,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
     public void CargarClimaDeldia()
     {
         LimpiarClimaSemanal();
+        int dia =0;
         for (int i = 0; i < 7; i++)
         {
             int clima = PlayerPrefs.GetInt("Clima" + i, -1);
@@ -144,15 +154,18 @@ public class Scr_ControladorTiempo : MonoBehaviour
                 ClimaSemanal.Add(climaguardado);
                 ProbabilidadesClimaSemanal.Add(PlayerPrefs.GetInt("ClimaProb" + i, 0));
                 duracionClima = PlayerPrefs.GetFloat("Climadura", 0);
-                if (PlayerPrefs.GetString("ClimaActivado", "NO") == "SI")
-                {
-                    EstaActivoClima = true;
-                }
-                else
-                {
-                    EstaActivoClima = true;
-                }
+                HoraClima= PlayerPrefs.GetInt("HoraClima", 0);
+                MinClima = PlayerPrefs.GetFloat("MinClima", 0);
             }
+        }
+        if (PlayerPrefs.GetString("ClimaActivadoEsta", "NO") == "SI")
+        {
+            EstaActivoClima = true;
+            Clima.Activar_Clima(PlayerPrefs.GetString("ClimaActivado", "Soleado"));
+        }
+        else
+        {
+            EstaActivoClima = false;
         }
     }
     public void NuevoclimaSemanal()
@@ -166,13 +179,19 @@ public class Scr_ControladorTiempo : MonoBehaviour
                 // Elegir un valor aleatorio del enum
                 int climaIndex = random.Next(0, System.Enum.GetValues(typeof(climas)).Length);
                 climas climaAleatorio = (climas)climaIndex;
-                ProbabilidadesClimaSemanal.Add(random.Next(0, 100));
+                ProbabilidadesClimaSemanal.Add(random.Next(30, 100));
                 ClimaSemanal.Add(climaAleatorio);
             }
         }
         GuardarClimaDeldia();
     }
-
+    public void desactivarClima()
+    {
+        EstaActivoClima = false;
+        Debug.Log("Se acabo El clima");
+        Clima.ApagarClimas();
+        GuardarClimaDeldia();
+    }
     public void activarClima()
     {
         if (EstaActivoClima)
@@ -186,6 +205,8 @@ public class Scr_ControladorTiempo : MonoBehaviour
                 EstaActivoClima = false;
                 Debug.Log("Se acabo El clima" );
             }
+
+            Clima.ApagarClimas();
             GuardarClimaDeldia();
         }
         else
@@ -198,9 +219,11 @@ public class Scr_ControladorTiempo : MonoBehaviour
                 if (diaActualIndex <= ProbabilidadesClimaSemanal[diaActualIndex])
                 {
                     EstaActivoClima = true;
-                    duracionClima = Random.Range(60f, 300f);
+                    duracionClima = Random.Range(300f, 1200f);
                     HoraClima = HoraActual;
                     MinClima = MinutoActual;
+                    ClimaSemanal.Add(ClimaSemanal[diaActualIndex]);
+                    Clima.Activar_Clima(ClimaSemanal[diaActualIndex].ToString());
                     GuardarClimaDeldia();
                     Debug.Log("Esta " + ClimaSemanal[diaActualIndex]);
                 }
@@ -247,7 +270,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
         
         GuardarTiempo();
         ActualizarIconoClima();
-        activarClima();
+        desactivarClima();
     }
     void ActualizarMinuto()
     {
