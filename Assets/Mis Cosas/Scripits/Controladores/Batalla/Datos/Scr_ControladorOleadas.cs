@@ -68,7 +68,7 @@ public class Scr_ControladorOleadas : MonoBehaviour
             {
                 if (child.name == singleton.NombreMapa)
                 {
-                    foreach (Transform objeto in child.GetChild(2))
+                    foreach (Transform objeto in child.GetChild(1))
                     {
                         if (objeto.name.Contains("Spawner Dentro") && enemigo.SpawnDentro)
                         {
