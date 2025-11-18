@@ -15,10 +15,14 @@ public class Scr_Sonidos : MonoBehaviour
     public AudioClip[] picar_sonido;
 
     private AudioSource source;
-
+    Scr_ControladorAnimacionesGata Anim;
     void Start()
     {
         source = GetComponent<AudioSource>();
+        if (gameObject.name == "Gata")
+        {
+            Anim = GetComponent<Scr_ControladorAnimacionesGata>();
+        }
     }
 
     // ---------------- FUNCIONES ----------------
@@ -55,6 +59,19 @@ public class Scr_Sonidos : MonoBehaviour
         if (talar_sonido.Length == 0) return;
         AudioClip clip = talar_sonido[Random.Range(0, talar_sonido.Length)];
         source.PlayOneShot(clip);
+    }
+
+    public void herramienta()
+    {
+        if (Anim == null) return;
+        if(Anim.HabilidadUsando== "Hacha Madera")
+        {
+            Play_talar();
+        }
+        else if (Anim.HabilidadUsando == "Pico Madera")
+        {
+            Play_picar();
+        }
     }
 
     public void Play_picar()

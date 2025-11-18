@@ -17,7 +17,6 @@ public class Scr_EnemigoLobo : Scr_Enemigo
     private bool Atacando = false;
     private float ContAtaque = 0;
     private Vector3 ultimaPosicion;
-    private float temporizadorQuietud;
     private float temporizadorRecalculacion = 0f;
     public float tiempoRecalculacion = 0.5f;
 
@@ -112,8 +111,6 @@ public class Scr_EnemigoLobo : Scr_Enemigo
         }
     }
 
-    private float temporizadorActualizacion = 0f;
-
     void Mover()
     {
         if (agente != null && agente.isActiveAndEnabled && agente.isOnNavMesh)
@@ -137,7 +134,6 @@ public class Scr_EnemigoLobo : Scr_Enemigo
         enDeambulacion = true;
         temporizadorEspera = Random.Range(TiempoDeEsperaMin, TiempoDeEsperaMax);
         ultimaPosicion = transform.position;
-        temporizadorQuietud = 0f;
         MoverANuevaPosicion();
     }
 

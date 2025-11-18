@@ -24,7 +24,7 @@ public class Scr_EnemigoComun : Scr_Enemigo
     private bool esperando = false; // Indica si el enemigo está esperando
     private bool Atacando = false; // Indica si el enemigo está Atacando
 
-    void Start()
+    protected override void Start()
     {
         agente = GetComponent<NavMeshAgent>();
         // Verifica si el agente está sobre el NavMesh antes de asignarle un destino

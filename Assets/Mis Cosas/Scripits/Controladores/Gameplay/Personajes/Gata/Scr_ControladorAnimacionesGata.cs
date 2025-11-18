@@ -26,6 +26,7 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
     public bool EstaEnCinematica = false;
 
 
+    public string HabilidadUsando;
     void Start()
     {
         Anim = GetComponent<Animator>();

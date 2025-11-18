@@ -42,7 +42,6 @@ public class Tienda_3D : MonoBehaviour
     [SerializeField] TextMeshProUGUI DineroAPagar;
     // Guarda las cantidades seleccionadas, por índice del inventario
     private Dictionary<int, int> cantidadesSeleccionadas = new Dictionary<int, int>();
-    private float DineroCompraActual = 0f;
 
     void Start()
     {

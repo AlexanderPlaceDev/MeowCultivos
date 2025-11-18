@@ -123,12 +123,14 @@ public class SpawnerActivo : MonoBehaviour
         Gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = TeclaIcono;
         Gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = Icono;
         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeTalar = true;
+        Gata.GetComponent<Scr_ControladorAnimacionesGata>().HabilidadUsando= HabilidadRequerida;
     }
 
     void DesactivarUI()
     {
         Gata.GetChild(3).gameObject.SetActive(false);
         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeTalar = false;
+        Gata.GetComponent<Scr_ControladorAnimacionesGata>().HabilidadUsando = "";
     }
 
     void AgregarObjetoInventario(int cantidad, Scr_CreadorObjetos objeto)

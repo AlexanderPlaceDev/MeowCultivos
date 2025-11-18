@@ -15,7 +15,6 @@ public class Scr_Esqueleto : Scr_Enemigo
     [Tooltip("Distancia a la que considera atacar (configurable desde inspector).")]
     [SerializeField] private float rangoAtaque = 2f;
     [Tooltip("Margen para evitar que el enemigo oscile justo en el borde del rango.")]
-    [SerializeField] private float margenHisteresis = 0.25f;
     [SerializeField] private float duracionAtaque = 1.042f;
     [SerializeField] private float duracionRetroceder = 1.0f;
     [SerializeField] private float tiempoEsperaPostRetroceso = 1.5f;
@@ -27,7 +26,6 @@ public class Scr_Esqueleto : Scr_Enemigo
 
     private float timer = 0f;
     private bool aparecio = false;
-    private bool dañoAplicado = false;
 
     protected override void Start()
     {
@@ -166,8 +164,6 @@ public class Scr_Esqueleto : Scr_Enemigo
         anim.SetBool("Atacando", false);
         anim.SetBool("Retrocediendo", false);
 
-        dañoAplicado = false;
-
         switch (estado)
         {
             case Estado.Persiguiendo:
@@ -176,7 +172,6 @@ public class Scr_Esqueleto : Scr_Enemigo
             case Estado.Atacando:
                 if (agente.isOnNavMesh) agente.isStopped = true;
                 anim.SetBool("Atacando", true);
-                dañoAplicado = false;
                 break;
             case Estado.Retrocediendo:
                 if (agente.isOnNavMesh) agente.isStopped = true;

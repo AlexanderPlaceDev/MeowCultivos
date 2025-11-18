@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static Scr_ControladorTiempo;
 
 public class Scr_ControladorTiempo : MonoBehaviour
 {
@@ -21,6 +23,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
     // Variables para el Skybox
     public Material SkyboxDia; // Skybox para el día
     public Material SkyboxNoche; // Skybox para la noche
+    public Material SkyboxLunaRoja; // Skybox para la noche
     public int HoraInicioDia = 6; // Hora en la que empieza el día (6 AM)
     public int HoraInicioNoche = 18; // Hora en la que empieza la noche (6 PM)
 
@@ -31,16 +34,24 @@ public class Scr_ControladorTiempo : MonoBehaviour
 
     public int DineroRecompensa; //Dinero a entregar por la caja de venta
 
+    Scr_controladorClima Clima;
     public enum climas
     {
         Soleado,
         Nublado,
         Lluvioso,
-        Vientoso
+        Vientoso,
+        LunaRoja
     }
+    [Header("Climas")]
     public List<climas> ClimaSemanal;
     public List<int> ProbabilidadesClimaSemanal = new List<int>(); // Probabilidad de que ese clima fuera elegido
+    public bool EstaActivoClima;
+    public float duracionClima;
+    public float tiempoClima = 0; // Controla el tiempo que pasa entre frames
 
+    public ProbabilidadesClima probabilidades = new ProbabilidadesClima();
+    //private static Random rng = new Random();
     void Awake()
     {
         // Cargar la fecha y hora desde PlayerPrefs si ya existen
@@ -48,7 +59,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
         HoraActual = PlayerPrefs.GetInt("HoraActual", 11);
         MinutoActual = PlayerPrefs.GetFloat("MinutoActual", 0);
         DineroRecompensa = PlayerPrefs.GetInt("DineroCajaVenta", 0);
-
+        Clima = GameObject.Find("Clima").GetComponent<Scr_controladorClima>();
         ActualizarTextoFecha();
         ActualizarTextoHora();
 
@@ -57,6 +68,8 @@ public class Scr_ControladorTiempo : MonoBehaviour
 
         // Actualizar el Skybox inicial
         ActualizarSkybox();
+
+        CargarClimaDeldia();
     }
 
     void Update()
@@ -83,7 +96,10 @@ public class Scr_ControladorTiempo : MonoBehaviour
             // Actualizar el icono del clima
             ActualizarIconoClima();
         }
-
+        if (EstaActivoClima)
+        {
+            tiempoClima += Time.deltaTime;
+        }
         // Cambia el color del sol dependiendo de la hora del día
         ActualizarColorSol();
 
@@ -97,10 +113,65 @@ public class Scr_ControladorTiempo : MonoBehaviour
     }
     public void LimpiarClimaSemanal()
     {
+        Clima.ApagarClimas();
         ClimaSemanal.Clear();
         ProbabilidadesClimaSemanal.Clear();
     }
-    public void climaSemanal()
+
+    public void GuardarClimaDeldia()
+    {
+        for (int i = 0; i < 7; i++)
+        {
+            PlayerPrefs.SetInt("Clima" + i, (int)ClimaSemanal[i]);
+            PlayerPrefs.SetInt("ClimaProb" + i, ((int)ProbabilidadesClimaSemanal[i]));
+            PlayerPrefs.SetFloat("Climadura" + i, duracionClima);
+            if (EstaActivoClima)
+            {
+                PlayerPrefs.SetString("ClimaActivadoEsta", "SI");
+                //PlayerPrefs.SetString("ClimaActivado", ClimaSemanal[i].ToString());
+            }
+            else
+            {
+                PlayerPrefs.SetString("ClimaActivadoEsta", "NO");
+                PlayerPrefs.SetInt("HoraClima", 0);
+                PlayerPrefs.SetFloat("MinClima", 0);
+            }
+            PlayerPrefs.Save();
+        }
+    }
+    public void CargarClimaDeldia()
+    {
+        LimpiarClimaSemanal();
+        for (int i = 0; i < 7; i++)
+        {
+            int clima = PlayerPrefs.GetInt("Clima" + i, -1);
+            if (clima == -1)
+            {
+                LimpiarClimaSemanal();
+                NuevoclimaSemanal();
+                return;
+            }
+            else
+            {
+                climas climaguardado = (climas)clima;
+                ClimaSemanal.Add(climaguardado);
+                ProbabilidadesClimaSemanal.Add(PlayerPrefs.GetInt("ClimaProb" + i, 0));
+            }
+        }
+        duracionClima = PlayerPrefs.GetFloat("Climadura", 0);
+        tiempoClima = PlayerPrefs.GetFloat("TiempoClima", 0);
+        if (PlayerPrefs.GetString("ClimaActivadoEsta", "NO") == "SI")
+        {
+            EstaActivoClima = true;
+            Clima.Activar_Clima(ClimaSemanal[ConseguirDia()].ToString());
+        }
+        else
+        {
+            EstaActivoClima = false;
+            Clima.Activar_Clima("Soleado");
+        }
+    }
+    public void NuevoclimaSemanal()
     {
         if (ClimaSemanal.Count == 0)
         {
@@ -110,9 +181,87 @@ public class Scr_ControladorTiempo : MonoBehaviour
             {
                 // Elegir un valor aleatorio del enum
                 int climaIndex = random.Next(0, System.Enum.GetValues(typeof(climas)).Length);
-                climas climaAleatorio = (climas)climaIndex;
-                ProbabilidadesClimaSemanal.Add(random.Next(0, 100));
-                ClimaSemanal.Add(climaAleatorio);
+                ProbabilidadesClimaSemanal.Add(random.Next(30, 100));
+                ClimaSemanal.Add(ObtenerClima());
+            }
+        }
+        GuardarClimaDeldia();
+    }
+    public climas ObtenerClima()
+    {
+        System.Random rng = new System.Random();
+        var pesos = probabilidades.ToDictionary();
+        int sumaTotal = pesos.Values.Sum();
+        int valor = rng.Next(0, sumaTotal);
+
+        int acumulado = 0;
+
+        foreach (var par in pesos)
+        {
+            acumulado += par.Value;
+            if (valor < acumulado)
+                return par.Key;
+        }
+
+        return climas.Soleado; // fallback
+    }
+    public void desactivarClima()
+    {
+
+        EstaActivoClima = false;
+        duracionClima = 0;
+        tiempoClima = 0;
+        Clima.ApagarClimas();
+        Debug.Log("Se acabo El clima");
+        GuardarClimaDeldia();
+    }
+    public int ConseguirDia()
+    {
+        string[] dias = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
+        int diaActualIndex = System.Array.IndexOf(dias, DiaActual);
+        return diaActualIndex;
+    }
+    public void activarClima()
+    {
+        if (EstaActivoClima)
+        {
+            if (tiempoClima >= duracionClima)
+            {
+                desactivarClima(); 
+
+            }
+        }
+        else
+        {
+            if (ClimaSemanal.Count == 7)
+            {
+                int diaActualIndex = ConseguirDia();
+                float probabilidad = Random.Range(0f, 100f);
+                if (ClimaSemanal[diaActualIndex].ToString() == "LunaRoja" && HoraActual >= HoraInicioNoche-2 || HoraActual <= HoraInicioDia)
+                {
+                    EstaActivoClima = true;
+                    duracionClima = Random.Range(400f, 500f);
+                    //ClimaSemanal.Add(ClimaSemanal[diaActualIndex]);
+                    Clima.Activar_Clima(ClimaSemanal[diaActualIndex].ToString());
+                    ProbabilidadesClimaSemanal[diaActualIndex] = ProbabilidadesClimaSemanal[diaActualIndex] / 3;
+                    GuardarClimaDeldia();
+                    Debug.Log("Esta " + ClimaSemanal[diaActualIndex]);
+                }
+                else if (diaActualIndex <= ProbabilidadesClimaSemanal[diaActualIndex] && ClimaSemanal[diaActualIndex].ToString() != "LunaRoja")
+                {
+                    EstaActivoClima = true;
+                    duracionClima = Random.Range(300f, 480f);
+                    //ClimaSemanal.Add(ClimaSemanal[diaActualIndex]);
+                    Clima.Activar_Clima(ClimaSemanal[diaActualIndex].ToString());
+                    ProbabilidadesClimaSemanal[diaActualIndex] = ProbabilidadesClimaSemanal[diaActualIndex] / 3;
+                    GuardarClimaDeldia();
+                    Debug.Log("Esta " + ClimaSemanal[diaActualIndex]);
+
+                }
+                else
+                {
+                    Debug.Log("No hay " + ClimaSemanal[diaActualIndex]);
+                }
             }
         }
     }
@@ -152,6 +301,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
         
         GuardarTiempo();
         ActualizarIconoClima();
+        desactivarClima();
     }
     void ActualizarMinuto()
     {
@@ -175,6 +325,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
             HoraActual = 0;
             ActualizarDia();
         }
+        activarClima();
     }
 
     void ActualizarDia()
@@ -182,6 +333,11 @@ public class Scr_ControladorTiempo : MonoBehaviour
         string[] dias = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
         int diaActualIndex = System.Array.IndexOf(dias, DiaActual);
         DiaActual = dias[(diaActualIndex + 1) % dias.Length];
+        if(DiaActual == "DOM")
+        {
+            LimpiarClimaSemanal();
+            NuevoclimaSemanal();
+        }
     }
 
     void ActualizarTextoFecha()
@@ -243,7 +399,11 @@ public class Scr_ControladorTiempo : MonoBehaviour
     // Función para cambiar el skybox entre día y noche
     void ActualizarSkybox()
     {
-        if (HoraActual >= HoraInicioDia && HoraActual < HoraInicioNoche)
+        if (ClimaSemanal.Count > 0 && ClimaSemanal[ConseguirDia()].ToString() == "LunaRoja" && EstaActivoClima)
+        {
+            RenderSettings.skybox = SkyboxLunaRoja; // Cambiar al skybox de LunaRoja
+        }
+        else if (HoraActual >= HoraInicioDia && HoraActual < HoraInicioNoche)
         {
             RenderSettings.skybox = SkyboxDia; // Cambiar al skybox de día
         }
@@ -259,5 +419,26 @@ public class Scr_ControladorTiempo : MonoBehaviour
         // Rotar el skybox un poco cada frame
         rotacionSkybox += Time.deltaTime * 1f; // Cambia el valor de 1f para ajustar la velocidad de rotación
         RenderSettings.skybox.SetFloat("_Rotation", rotacionSkybox);
+    }
+}
+[System.Serializable]
+public class ProbabilidadesClima
+{
+    public int Soleado = 40;
+    public int Nublado = 25;
+    public int Lluvioso = 20;
+    public int Vientoso = 10;
+    public int LunaRoja = 5;
+
+    public Dictionary<climas, int> ToDictionary()
+    {
+        return new Dictionary<climas, int>()
+        {
+            { climas.Soleado, Soleado },
+            { climas.Nublado, Nublado },
+            { climas.Lluvioso, Lluvioso },
+            { climas.Vientoso, Vientoso },
+            { climas.LunaRoja, LunaRoja }
+        };
     }
 }

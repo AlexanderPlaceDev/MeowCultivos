@@ -20,10 +20,13 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
 
     void Start()
     {
-        agente = GetComponent<NavMeshAgent>();
+        if (GetComponent<NavMeshAgent>().isOnNavMesh)
+        {
+            agente = GetComponent<NavMeshAgent>();
+            agente.speed = Velocidad;
+            agente.isStopped = true;
+        }
         if (anim == null) anim = GetComponent<Animator>();
-        agente.speed = Velocidad;
-        agente.isStopped = true;
         LanzarNuevoEstado();
     }
 
@@ -62,9 +65,12 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
 
     IEnumerator EjecutarIdle(string animacion, float duracion)
     {
-        agente.isStopped = true;
-        agente.ResetPath();
-        agente.velocity = Vector3.zero;
+        if (GetComponent<NavMeshAgent>().isOnNavMesh)
+        {
+            agente.isStopped = true;
+            agente.ResetPath();
+            agente.velocity = Vector3.zero;
+        }
 
         CambiarAnimacion(animacion);
         yield return new WaitForSeconds(duracion);
@@ -77,12 +83,14 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
     {
         CambiarAnimacion("Caminar");
 
-        agente.isStopped = false;
-        agente.speed = Velocidad;
-        destino = ObtenerDestinoAleatorio();
-        agente.SetDestination(destino);
-
-        float tiempo = 0f;
+        if (GetComponent<NavMeshAgent>().isOnNavMesh)
+        {
+            agente.isStopped = false;
+            agente.speed = Velocidad;
+            destino = ObtenerDestinoAleatorio();
+            agente.SetDestination(destino);
+            
+            float tiempo = 0f;
 
         // Espera a que el agente tenga un camino válido antes de verificar distancia
         while (agente.pathPending)
@@ -103,6 +111,9 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
 
         ejecutando = false;
         LanzarNuevoEstado();
+        }
+
+        
     }
 
     // ================================

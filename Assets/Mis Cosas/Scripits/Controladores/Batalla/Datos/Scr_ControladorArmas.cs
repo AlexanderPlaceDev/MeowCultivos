@@ -26,7 +26,7 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     public GameObject BalaADisparar; //que va a disparar
     public Transform puntoDisparo; //lugar donde sale la bala
-    public Camera camera;
+    public Camera camara;
     public float fuerzaDisparo = 70f;
     public int ArmaActual = 0;
     public GameObject[] contador;//es para mostar las balas o si es infinito
@@ -340,7 +340,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         Vector3 direccionDisparo;
 
         // Lanzamos un raycast desde el centro de la cámara hacia adelante
-        Ray ray = camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        Ray ray = camara.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         if (Physics.Raycast(ray, out RaycastHit hit, 100f))
         {
             // Si choca algo, disparamos hacia ese punto
@@ -394,7 +394,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             bala.GetComponent<Balas>().daño = daño + masdaño;
             bala.GetComponent<Balas>().penetracion = 2 + Maspenetracion;
             // Direccion base
-            Vector3 direccionBase = camera.transform.forward;
+            Vector3 direccionBase = camara.transform.forward;
 
             // Añadir dispersión aleatoria
             Vector3 direccionConDispersion = DireccionConDispersion(direccionBase, Random.Range(0, dispersion));
@@ -427,7 +427,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         float radius = TodasLasArmas[ArmaActual].Alcance * 10;
 
         // Definir la dirección del láser (hacia donde apunta el arma)
-        Vector3 direction = camera.transform.forward;
+        Vector3 direction = camara.transform.forward;
 
         // Calcular el punto final de la cápsula (centro + rango en la dirección del frente)
         Vector3 capsuleEnd = center + direction * radius;
@@ -723,7 +723,7 @@ public class Scr_ControladorArmas : MonoBehaviour
 
         // Posición del raycast ajustando altura
         Vector3 origen = Gata.transform.position + new Vector3(0, origenRaycast.y, 0);
-        Vector3 direccion = camera.transform.forward;
+        Vector3 direccion = camara.transform.forward;
 
         Ray rayo = new Ray(origen, direccion);
         RaycastHit hit;

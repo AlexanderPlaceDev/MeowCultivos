@@ -142,11 +142,23 @@ public class Carpas : MonoBehaviour
         }
     }
 
+    public bool ChecarLunaRoja()
+    {
+        if(ControlT.ClimaSemanal.Count > 0 && ControlT.ClimaSemanal[ControlT.ConseguirDia()].ToString() == "LunaRoja" && ControlT.EstaActivoClima)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.name == "Gata" || other.name == "Gato Mesh")
         {
-            if (dentroHorario)
+            if (dentroHorario && !ChecarLunaRoja())
             {
                 //Debug.LogError(ContolT.HoraActual > HoraDeSiesta);
                 EstaEnRango = true;
