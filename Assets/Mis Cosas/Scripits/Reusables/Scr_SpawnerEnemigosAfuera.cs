@@ -9,6 +9,7 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
     [SerializeField] private string IDSpawner;
     [SerializeField] private GameObject Enemigo;
     [SerializeField] private int CantidadDeEnemigos = 1;
+    [SerializeField] private int Enemigos_normales = 1;
     [SerializeField] private float TiempoSpawn = 5f;
     [SerializeField] private bool UsaTiempo = false;
 
@@ -24,14 +25,12 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 
     private List<GameObject> Enemigos = new List<GameObject>();
     public Scr_ControladorTiempo ControlT;
-
     void Start()
     {
         ControlT = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
 
         // Recuperar el tiempo de respawn guardado
         TiempoRestanteSpawn = PlayerPrefs.GetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoSpawn);
-
         RestaurarEnemigos(); // Cargar enemigos en escena
         StartCoroutine(SpawnEnemies()); // Iniciar la rutina
     }
@@ -40,6 +39,7 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
     {
         GuardarEstado();
         checartiempoDeNOSpawn();
+        ActivarLunaRoja();
     }
 
     IEnumerator SpawnEnemies()
@@ -69,11 +69,42 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
                     PlayerPrefs.SetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoRestanteSpawn);
                     PlayerPrefs.Save();
                 }
+                else
+                {
+                    foreach (var enem in Enemigos)
+                    {
+                        Destroy(enem);
+                    }
+                    Enemigos.Clear();
+                }
             }
             yield return null;
         }
     }
+    public bool ChecarLunaRoja()
+    {
+       
+        if (ControlT.ClimaSemanal.Count>0 && ControlT.ClimaSemanal[ControlT.ConseguirDia()].ToString() == "LunaRoja" && ControlT.EstaActivoClima)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
+    public void ActivarLunaRoja()
+    {
+        if(ChecarLunaRoja())
+        {
+            CantidadDeEnemigos = Enemigos_normales * 2;
+        }
+        else
+        {
+            CantidadDeEnemigos = Enemigos_normales;
+        }
+    }
     public bool checartiempoDeSpawn()
     {
         if (!UsaTiempo) return true;
@@ -87,7 +118,7 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
             return (ControlT.HoraActual >= HoraInicio) || (ControlT.HoraActual < HoraFin);
         }
     }
-
+    
     public void checartiempoDeNOSpawn()
     {
         if (!UsaTiempo) return;

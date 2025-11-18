@@ -7,6 +7,7 @@ public class Scr_controladorClima : MonoBehaviour
     public GameObject[] Viento;
     public GameObject[] Lluvia;
     public GameObject[] Neblina;
+    public GameObject[] NeblinaRoja;
     // Start is called before the first frame update
     void Start()
     {
@@ -45,6 +46,9 @@ public class Scr_controladorClima : MonoBehaviour
                 Debug.Log("ffff");
                 Prender_Viento();
                 break;
+            case "LunaRoja":
+                Prender_NeblinaRoja();
+                break;
         }
     }
     public void ApagarClimas()
@@ -58,7 +62,7 @@ public class Scr_controladorClima : MonoBehaviour
         for (int i = 0; i < Viento.Length; i++)
         {
             Viento[i].SetActive(true);
-            Debug.LogError(Viento[i].activeSelf);
+            //Debug.LogError(Viento[i].activeSelf);
         }
     }
     public void Apagar_Viento()
@@ -73,7 +77,7 @@ public class Scr_controladorClima : MonoBehaviour
         for (int i = 0; i < Neblina.Length; i++)
         {
             Neblina[i].SetActive(true);
-            Debug.LogError(Neblina[i].activeSelf);
+            //Debug.LogError(Neblina[i].activeSelf);
         }
     }
     public void Apagar_Neblina()
@@ -88,7 +92,7 @@ public class Scr_controladorClima : MonoBehaviour
         for (int i = 0; i < Lluvia.Length; i++)
         {
             Lluvia[i].SetActive(true);
-            Debug.LogError(Lluvia[i].activeSelf);
+            //Debug.LogError(Lluvia[i].activeSelf);
         }
     }
     public void Apagar_Luvia()
@@ -96,6 +100,22 @@ public class Scr_controladorClima : MonoBehaviour
         for (int i = 0; i < Lluvia.Length; i++)
         {
             Lluvia[i].SetActive(false);
+        }
+    }
+
+    public void Prender_NeblinaRoja()
+    {
+        for (int i = 0; i < NeblinaRoja.Length; i++)
+        {
+            NeblinaRoja[i].SetActive(true);
+            //Debug.LogError(NeblinaRoja[i].activeSelf);
+        }
+    }
+    public void Apagar_NeblinaRoja()
+    {
+        for (int i = 0; i < NeblinaRoja.Length; i++)
+        {
+            NeblinaRoja[i].SetActive(false);
         }
     }
 }
