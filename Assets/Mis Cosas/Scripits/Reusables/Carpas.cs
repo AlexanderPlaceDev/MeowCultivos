@@ -22,8 +22,8 @@ public class Carpas : MonoBehaviour
     public bool EstaEnRango = false;
     public int HoraDeSiestaInicio = 19;
     public int HoraDeSiestaFin = 5;
-    GameObject radio;
-    GameObject Reloj;
+    public GameObject radio;
+    public GameObject Reloj;
     GameObject Canvas;
 
     public bool dentroHorario;
