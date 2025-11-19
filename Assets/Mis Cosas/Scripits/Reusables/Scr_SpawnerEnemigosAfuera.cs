@@ -69,7 +69,7 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
                     PlayerPrefs.SetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoRestanteSpawn);
                     PlayerPrefs.Save();
                 }
-                else
+                else if(Enemigos.Count > CantidadDeEnemigos)
                 {
                     foreach (var enem in Enemigos)
                     {
