@@ -17,6 +17,7 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
     [SerializeField] Ease TipoTransicionBotonesOut;
     [SerializeField] float moveSpeed;
     [SerializeField] GameObject ObjetoHabilidadSeleccionada;
+    [SerializeField] GameObject Medallas;
     public GameObject BotonActual;
     public string HabilidadActual;
     GameObject BotonSeleccionado;
@@ -236,6 +237,75 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
                         ObjetoHabilidadSeleccionada.transform.GetChild(4).gameObject.SetActive(false);
                     }
 
+                    if (Habilidad.RequiereMedallas)
+                    {
+                        Medallas.SetActive(true);
+                        switch (PlayerPrefs.GetInt("Rango " + Habilidad.NombreBoton, 0))
+                        {
+                            case 0:
+                                {
+                                    Medallas.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(2).GetChild(0).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(3).GetChild(0).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
+                                    Medallas.transform.GetChild(1).GetChild(1).gameObject.SetActive(true);
+                                    Medallas.transform.GetChild(2).GetChild(1).gameObject.SetActive(true);
+                                    Medallas.transform.GetChild(3).GetChild(1).gameObject.SetActive(true);
+                                    break;
+                                }
+                            case 1:
+                                {
+                                    Medallas.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+                                    Medallas.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(2).GetChild(0).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(3).GetChild(0).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(1).GetChild(1).gameObject.SetActive(true);
+                                    Medallas.transform.GetChild(2).GetChild(1).gameObject.SetActive(true);
+                                    Medallas.transform.GetChild(3).GetChild(1).gameObject.SetActive(true);
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    Medallas.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+                                    Medallas.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
+                                    Medallas.transform.GetChild(2).GetChild(0).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(3).GetChild(0).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(1).GetChild(1).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(2).GetChild(1).gameObject.SetActive(true);
+                                    Medallas.transform.GetChild(3).GetChild(1).gameObject.SetActive(true);
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    Medallas.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+                                    Medallas.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
+                                    Medallas.transform.GetChild(2).GetChild(0).gameObject.SetActive(true);
+                                    Medallas.transform.GetChild(3).GetChild(0).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(1).GetChild(1).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(2).GetChild(1).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(3).GetChild(1).gameObject.SetActive(true);
+                                    break;
+                                }
+                            case 4:
+                                {
+                                    Medallas.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+                                    Medallas.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
+                                    Medallas.transform.GetChild(2).GetChild(0).gameObject.SetActive(true);
+                                    Medallas.transform.GetChild(3).GetChild(0).gameObject.SetActive(true);
+                                    Medallas.transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(1).GetChild(1).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(2).GetChild(1).gameObject.SetActive(false);
+                                    Medallas.transform.GetChild(3).GetChild(1).gameObject.SetActive(false);
+                                    break;
+                                }
+                        }
+                    }
+
+
                     //Activa o desactiva el boton Aceptar
                     if (PlayerPrefs.GetInt("PuntosDeHabilidad", 0) >= Habilidad.Costo && PlayerPrefs.GetString("Habilidad:" + HabilidadActual, "No") == "No")
                     {
@@ -375,24 +445,6 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
         ObjetoHabilidadSeleccionada.SetActive(false);
 
     }
-    private void ActualizarHabilidad()
-    {
-        if (BotonActual != null)
-        {
-            ObjetoHabilidadSeleccionada.transform.GetChild(0).GetComponent<Image>().sprite = BotonActual.GetComponent<Image>().sprite;
-            ObjetoHabilidadSeleccionada.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = BotonActual.transform.GetChild(0).GetComponent<Image>().sprite;
-            foreach (Scr_CreadorHabilidades Habilidad in Habilidades)
-            {
-                if (Habilidad.NombreBoton == BotonActual.name)
-                {
-                    ObjetoHabilidadSeleccionada.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = Habilidad.Nombre;
-                    ObjetoHabilidadSeleccionada.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = Habilidad.Descripcion;
-                    ObjetoHabilidadSeleccionada.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = "Costo: " + Habilidad.Costo;
-
-                }
-            }
-        }
-    }
     public void EntraHabilidad(GameObject boton)
     {
         if (YaSelecciono) return;
@@ -450,10 +502,23 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
         foreach (GameObject Barra in Barras)
         {
             int rango = PlayerPrefs.GetInt("Rango " + Barra.name, 0);
-            int CantBotones = int.Parse(Barra.name[Barra.name.Length - 1].ToString());
-            int totalBotones = CantBotones * rango;
-
             int hijosTotales = Barra.transform.GetChild(0).childCount;
+
+            int totalBotones = 0;
+
+            // EXCEPCIÓN: Arsenal3 tiene una habilidad gratis al inicio
+            if (Barra.name == "Barra Arsenal3")
+            {
+                // Primer botón siempre desbloqueado
+                totalBotones = 1 + (rango * 3);
+                // Ajusta el 3 si cada rango desbloquea otra cantidad
+            }
+            else
+            {
+                // Método normal para las demás ramas
+                int CantBotones = int.Parse(Barra.name[Barra.name.Length - 1].ToString());
+                totalBotones = CantBotones * rango;
+            }
 
             for (int i = 0; i < hijosTotales; i++)
             {
@@ -465,24 +530,22 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
                     bool estaComprada = PlayerPrefs.GetString("Habilidad:" + nombreHabilidad, "No") == "Si";
 
                     if (estaComprada)
-                    {
                         boton.color = Color.white;
-                    }
                     else
                     {
-                        Color color = Color.white;
-                        color.a = 100f / 255f;
-                        boton.color = color;
+                        Color c = Color.white;
+                        c.a = 100f / 255f;
+                        boton.color = c;
                     }
                 }
                 else
                 {
-                    // Botón fuera del rango → negro
                     boton.color = Color.black;
                 }
             }
         }
     }
+
     public void InputPruebas()
     {
         //Prueba de rango

@@ -26,24 +26,19 @@ public class Scr_controladorClima : MonoBehaviour
         */
     public void Activar_Clima(string Clima)
     {
-        Debug.Log("aaa");
         ApagarClimas();
         switch (Clima)
         {
             case "Soleado":
-                Debug.Log("aaaaaa");
                 ApagarClimas();
                 break;
             case "Nublado":
-                Debug.Log("ojo");
                 Prender_Neblina();
                 break;
             case "Lluvioso":
-                Debug.Log("sssss");
                 Prender_Luvia();
                 break;
             case "Vientoso":
-                Debug.Log("ffff");
                 Prender_Viento();
                 break;
             case "LunaRoja":

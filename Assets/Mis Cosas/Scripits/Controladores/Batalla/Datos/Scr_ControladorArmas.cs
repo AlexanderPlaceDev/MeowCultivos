@@ -84,7 +84,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         int volumen_general = PlayerPrefs.GetInt("Volumen", 50);
         int volumen_ambiental = PlayerPrefs.GetInt("Volumen_Combate", 20);
         float volumen = (volumen_general * volumen_ambiental) / 100;
-
+        camara = Camera.main;
         //Debug.LogError(PlayerPrefs.GetInt("Volumen", 50) + "//" + PlayerPrefs.GetInt("Volumen_Combate", 20) );
         //Debug.LogError(volumen + "//"+ volumen_general +"//" + volumen_ambiental);
         source.volume = volumen;

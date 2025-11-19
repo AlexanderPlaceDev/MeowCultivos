@@ -12,5 +12,6 @@ public class Scr_CreadorHabilidades : ScriptableObject
     public int Costo;
     public bool RequiereItems;
     public Scr_CreadorObjetos[] ItemsRequeridos;
+    public bool RequiereMedallas;
     public int[] CantidadesRequeridas;
 }
