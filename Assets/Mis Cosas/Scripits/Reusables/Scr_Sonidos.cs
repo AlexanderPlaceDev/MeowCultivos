@@ -64,7 +64,7 @@ public class Scr_Sonidos : MonoBehaviour
     public void herramienta()
     {
         if (Anim == null) return;
-        if(Anim.HabilidadUsando== "Hacha Madera")
+        if(Anim.HabilidadUsando== "Hacha Madera")//contains
         {
             Play_talar();
         }

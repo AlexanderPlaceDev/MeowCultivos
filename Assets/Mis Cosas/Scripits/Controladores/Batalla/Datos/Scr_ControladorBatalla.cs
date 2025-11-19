@@ -418,12 +418,23 @@ public class Scr_ControladorBatalla : MonoBehaviour
     {
         // Activar mapa y posicionar jugador
         var mapa = GameObject.Find("Mapa").transform;
-
         foreach (Transform child in mapa)
         {
             if (child.name == Singleton.NombreMapa)
             {
                 child.gameObject.SetActive(true);
+                if (PlayerPrefs.GetString("ClimaActivadoEsta", "NO") == "SI")
+                {
+                    Transform Clim = child.transform.Find("Climas");
+                    string[] dias = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
+                    int diaActualIndex = System.Array.IndexOf(dias, PlayerPrefs.GetString("DiaActual", "LUN"));
+                    int diaclim = PlayerPrefs.GetInt("Clima" + diaActualIndex, 0);
+                    if (Clim != null && diaclim>0)
+                    {
+                        //Clim.gameObject.SetActive(true);
+                        Clim.GetChild(diaclim).gameObject.SetActive(true);
+                    }
+                }
                 foreach (Transform objeto in child)
                 {
 
