@@ -18,3 +18,15 @@ MonoBehaviour:
   Descripcion: "Menos da\xF1o mas distancia"
   Costo: 3
   RequiereItems: 0
+  ItemsRequeridos:
+  - {fileID: 11400000, guid: 0552100584a2d7247a7aa3c213bb1738, type: 2}
+  - {fileID: 11400000, guid: fd511ba7bb9a8a049a80cdaf6e681908, type: 2}
+  - {fileID: 11400000, guid: 4234780254483ba41b1178454232e292, type: 2}
+  - {fileID: 11400000, guid: ca737b9097d1b4046be8dcd86ab4529b, type: 2}
+  CantidadesRequeridas: 01000000010000000100000001000000
+  RequiereMedallas: 1
+  DescripcionesMejorasPermanentes:
+  - "+15% Da\xF1o"
+  - +Capacidad
+  - +Vel. Recarga
+  - 'Habilidad: DPotaSio'
