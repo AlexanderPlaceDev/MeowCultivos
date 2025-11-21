@@ -58,8 +58,12 @@ public class Scr_controladorClima : MonoBehaviour
         for (int i = 0; i < Viento.Length; i++)
         {
             Viento[i].SetActive(true);
+            
             Viento vient = Viento[i].GetComponent<Viento>();
-            vient.Intensidad(fuerza);
+            if (vient != null)
+            {
+                vient.Intensidad(fuerza);
+            }
         }
     }
     public void Apagar_Viento()
@@ -92,7 +96,10 @@ public class Scr_controladorClima : MonoBehaviour
         {
             Lluvia[i].SetActive(true);
             Lluvia luv = Lluvia[i].GetComponent<Lluvia>();
-            luv.Intensidad(Fuerza, friccion);
+            if (luv != null)
+            {
+                luv.Intensidad(Fuerza, friccion);
+            }
             //Debug.LogError(Lluvia[i].activeSelf);
         }
     }

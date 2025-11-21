@@ -29,8 +29,7 @@ public class Musica_fondo : MonoBehaviour
             Debug.LogError("No se encontró un AudioSource en este objeto.");
             return;
         }
-
-
+        //Problema es esta condicion ya que siempre es de dia tal vez o tambien que cuando sea de dia
         if (Tiempo.HoraActual >= HoraInicioDia && Tiempo.HoraActual < HoraInicioNoche)
         {
             IniciaLoopAtealorio(Musica_Dia);

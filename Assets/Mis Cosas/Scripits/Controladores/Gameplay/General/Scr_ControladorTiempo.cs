@@ -124,20 +124,21 @@ public class Scr_ControladorTiempo : MonoBehaviour
         {
             PlayerPrefs.SetInt("Clima" + i, (int)ClimaSemanal[i]);
             PlayerPrefs.SetInt("ClimaProb" + i, ((int)ProbabilidadesClimaSemanal[i]));
-            PlayerPrefs.SetFloat("Climadura" + i, duracionClima);
-            if (EstaActivoClima)
-            {
-                PlayerPrefs.SetString("ClimaActivadoEsta", "SI");
-                //PlayerPrefs.SetString("ClimaActivado", ClimaSemanal[i].ToString());
-            }
-            else
-            {
-                PlayerPrefs.SetString("ClimaActivadoEsta", "NO");
-                PlayerPrefs.SetInt("HoraClima", 0);
-                PlayerPrefs.SetFloat("MinClima", 0);
-            }
-            PlayerPrefs.Save();
         }
+        if (EstaActivoClima)
+        {
+            PlayerPrefs.SetString("ClimaActivadoEsta", "SI");
+            PlayerPrefs.SetFloat("Climadura", duracionClima);
+            PlayerPrefs.SetFloat("TiempoClima", tiempoClima);
+            //PlayerPrefs.SetString("ClimaActivado", ClimaSemanal[i].ToString());
+        }
+        else
+        {
+            PlayerPrefs.SetString("ClimaActivadoEsta", "NO");
+            PlayerPrefs.SetFloat("Climadura", duracionClima);
+            PlayerPrefs.SetFloat("TiempoClima", 0);
+        }
+        PlayerPrefs.Save();
     }
     public void CargarClimaDeldia()
     {
