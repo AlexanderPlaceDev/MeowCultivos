@@ -54,10 +54,12 @@ public class Scr_controladorClima : MonoBehaviour
     }
     public void Prender_Viento()
     {
+        float fuerza= Random.Range(100, 300);
         for (int i = 0; i < Viento.Length; i++)
         {
             Viento[i].SetActive(true);
-            //Debug.LogError(Viento[i].activeSelf);
+            Viento vient = Viento[i].GetComponent<Viento>();
+            vient.Intensidad(fuerza);
         }
     }
     public void Apagar_Viento()
@@ -84,9 +86,13 @@ public class Scr_controladorClima : MonoBehaviour
     }
     public void Prender_Luvia()
     {
+        float Fuerza = Random.Range(100f, 300f);
+        float friccion = CalcularFriccion(Fuerza);
         for (int i = 0; i < Lluvia.Length; i++)
         {
             Lluvia[i].SetActive(true);
+            Lluvia luv = Lluvia[i].GetComponent<Lluvia>();
+            luv.Intensidad(Fuerza, friccion);
             //Debug.LogError(Lluvia[i].activeSelf);
         }
     }
@@ -97,7 +103,14 @@ public class Scr_controladorClima : MonoBehaviour
             Lluvia[i].SetActive(false);
         }
     }
+    float CalcularFriccion(float fuerza)
+    {
+        // Normalizamos la fuerza entre 100 y 300
+        float t = Mathf.InverseLerp(100f, 300f, fuerza);
 
+        // Fricción entre 0.1 y 0.5 según t
+        return Mathf.Lerp(0.1f, 0.5f, t);
+    }
     public void Prender_NeblinaRoja()
     {
         for (int i = 0; i < NeblinaRoja.Length; i++)

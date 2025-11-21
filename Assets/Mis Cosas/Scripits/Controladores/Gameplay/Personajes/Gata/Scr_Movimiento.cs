@@ -76,6 +76,11 @@ public class Scr_Movimiento : MonoBehaviour
 
     public GameObject Controlador;
     Scr_ControladorBatalla batalla;
+
+    [Header("Clima")]
+    public bool EstaLloviendo = false;
+    public float MultiplicadorResbalado = 0.3f; // 0.5 = el piso tiene la mitad de fricción
+    public float FuerzaDeslizamiento = 4f; // fuerza para resbalar en rampas
     private void Start()
     {
         if (Controlador != null)
@@ -312,6 +317,11 @@ public class Scr_Movimiento : MonoBehaviour
             Vector3 direccionRampa = DireccionRampa();
             RB.velocity += direccionRampa * Velocidad * Time.deltaTime;
         }
+        if (EstaLloviendo && Subiendo())
+        {
+            Vector3 deslizar = Vector3.ProjectOnPlane(Vector3.down, RampaRayo.normal);
+            RB.AddForce(deslizar.normalized * FuerzaDeslizamiento, ForceMode.Acceleration);
+        }
     }
 
     private void ControlarVelocidad()
@@ -398,13 +408,24 @@ public class Scr_Movimiento : MonoBehaviour
 
     private void AplicarArrastre()
     {
+
         if (EstaEnElSuelo)
         {
-            RB.drag = Arrastre;
+            float arrastreActual = Arrastre;
+
+            // Si llueve, reduce el arrastre (fricción)
+            if (EstaLloviendo)
+            {
+                arrastreActual *= MultiplicadorResbalado;
+            }
+
+            RB.drag = arrastreActual;
         }
         else
         {
             RB.drag = 0;
         }
     }
+
+
 }
