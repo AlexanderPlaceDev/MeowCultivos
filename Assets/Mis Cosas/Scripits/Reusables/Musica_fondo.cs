@@ -19,79 +19,89 @@ public class Musica_fondo : MonoBehaviour
     private AudioClip ultimoClip;
 
     private Scr_ControladorTiempo Tiempo;
+    // Guarda si actualmente es día o noche
+    private bool esDiaActual;
 
     void Start()
     {
         source = GetComponent<AudioSource>();
         Tiempo = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
+
         if (source == null)
         {
-            Debug.LogError("No se encontró un AudioSource en este objeto.");
+            Debug.LogError("No se encontró un AudioSource.");
             return;
         }
 
+        // Detectar si inicia de día o noche
+        esDiaActual = EsDia();
 
-        if (Tiempo.HoraActual >= HoraInicioDia && Tiempo.HoraActual < HoraInicioNoche)
-        {
-            IniciaLoopAtealorio(Musica_Dia);
+        // Iniciar playlist correcta
+        IniciarMusicaSegunTiempo();
+    }
 
-        }
-        else
+    void Update()
+    {
+        // Detectar cambio de día ↔ noche
+        bool ahoraEsDia = EsDia();
+
+        if (ahoraEsDia != esDiaActual)
         {
-            IniciaLoopAtealorio(Musica_Noche);
+            esDiaActual = ahoraEsDia;
+            IniciarMusicaSegunTiempo();
         }
     }
 
-    // Iniciar loop aleatorio
+    // Detener loop aleatorio
+    public void DetenerLoopAleatorio() 
+    { 
+        if (soundLoopCoroutine != null) 
+        { 
+            StopCoroutine(soundLoopCoroutine); 
+            soundLoopCoroutine = null; 
+        } 
+        if (source.isPlaying) source.Stop(); 
+    }
+
+    bool EsDia()
+    {
+        return Tiempo.HoraActual >= HoraInicioDia && Tiempo.HoraActual < HoraInicioNoche;
+    }
+
+    void IniciarMusicaSegunTiempo()
+    {
+        if (esDiaActual)
+            IniciaLoopAtealorio(Musica_Dia);
+        else
+            IniciaLoopAtealorio(Musica_Noche);
+    }
+
     public void IniciaLoopAtealorio(AudioClip[] sonidos)
     {
         if (sonidos == null || sonidos.Length == 0) return;
 
-        bool hasValidClip = false;
-        foreach (var clip in sonidos)
-        {
-            if (clip != null)
-            {
-                hasValidClip = true;
-                break;
-            }
-        }
-
-        if (!hasValidClip) return;
-
+        // Detener lo anterior
         if (soundLoopCoroutine != null)
             StopCoroutine(soundLoopCoroutine);
 
+        // Iniciar nueva playlist
         soundLoopCoroutine = StartCoroutine(LoopAleatorioSonido(sonidos));
     }
 
-    // Detener loop aleatorio
-    public void DetenerLoopAleatorio()
-    {
-        if (soundLoopCoroutine != null)
-        {
-            StopCoroutine(soundLoopCoroutine);
-            soundLoopCoroutine = null;
-        }
-
-        if (source.isPlaying)
-            source.Stop();
-    }
-
-    // Corutina que reproduce sonidos en loop
     IEnumerator LoopAleatorioSonido(AudioClip[] clips)
     {
-        // 🔹 Primera canción inmediatamente al iniciar
+        // Primera canción inmediata
         AudioClip primerClip = clips[Random.Range(0, clips.Length)];
         if (primerClip != null)
         {
             source.clip = primerClip;
             source.Play();
             ultimoClip = primerClip;
+
             yield return new WaitForSeconds(primerClip.length);
         }
 
-        // 🔹 Ahora sí empieza el bucle con esperas aleatorias
+        // LOOP infinito con pausa aleatoria
         while (true)
         {
             float delay = Random.Range(MintiempoEspera, MaxtiempoEspera);
@@ -101,15 +111,15 @@ public class Musica_fondo : MonoBehaviour
             do
             {
                 clip = clips[Random.Range(0, clips.Length)];
-            } while (clip == ultimoClip && clips.Length > 1);
+            }
+            while (clip == ultimoClip && clips.Length > 1);
 
-            if (clip != null && !source.isPlaying)
+            if (clip != null)
             {
                 source.clip = clip;
                 source.Play();
-                Debug.Log("Reproduciendo: " + clip.name);
-
                 ultimoClip = clip;
+
                 yield return new WaitForSeconds(clip.length);
             }
         }

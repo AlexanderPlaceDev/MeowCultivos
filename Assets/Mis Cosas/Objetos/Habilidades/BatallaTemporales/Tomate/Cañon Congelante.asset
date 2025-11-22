@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "Ca\xF1on Congelante"
   m_EditorClassIdentifier: 
   Nombre: "Ca\xF1on Congelante"
-  Icono: {fileID: 21300000, guid: d2f3f751738697949955f361631074d4, type: 3}
+  Icono: {fileID: 21300000, guid: 658d7f0dc73268b4695691686c9de240, type: 3}
   Tipo: Temporal
   Descripcion: Los perdigones congela al enemigo
   RequiereCraftear: 1
@@ -25,3 +25,4 @@ MonoBehaviour:
   Enfriamiento: 0
   Efecto: {fileID: 0}
   Arma: Tomate
+  Color: {r: 0, g: 0, b: 0, a: 0}
