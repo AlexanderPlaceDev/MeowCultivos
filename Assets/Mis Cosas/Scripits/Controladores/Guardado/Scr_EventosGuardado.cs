@@ -31,10 +31,8 @@ public class Scr_EventosGuardado : MonoBehaviour
         {
             case "Miguel":
                 {
-                    Debug.Log("Evento:" + Personaje + " " + UltimoDialogo + " guardado");
                     if (UltimoDialogo == 0)
                     {
-                        Debug.Log("Entra1");
                         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
                     }
                     if (UltimoDialogo == 1)

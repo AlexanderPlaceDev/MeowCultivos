@@ -2,22 +2,23 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class Scr_MenuTablero : MonoBehaviour
 {
     [Header("Estructuras")]
     [SerializeField] private Scr_CreadorEstructuras[] Estructuras;
-    [SerializeField] private GameObject[] ObjEstructuras;
+
+    // 🔥 ESTA ES LA LISTA QUE SÍ USARÁS
+    [SerializeField] private Estructura[] Objetos;
 
     private List<Scr_CreadorEstructuras> estructurasFiltradas = new List<Scr_CreadorEstructuras>();
-    private List<GameObject> objEstructurasFiltradas = new List<GameObject>();
-    private List<int> indicesOriginales = new List<int>(); // NUEVO: guarda los índices reales
+    private List<int> indicesOriginales = new List<int>();
 
     private float TransicionDuracion = 3f;
     [SerializeField] private GameObject camara_tablero;
     [SerializeField] private GameObject camaraGata;
+
     [Header("Menú")]
     [SerializeField] private TextMeshProUGUI Nombre;
     [SerializeField] private TextMeshProUGUI Descripcion;
@@ -39,13 +40,28 @@ public class Scr_MenuTablero : MonoBehaviour
     private Scr_ActivadorMenuEstructuraFijo Tablero => GetComponent<Scr_ActivadorMenuEstructuraFijo>();
     private Scr_EventosGuardado EventosGuardado => GetComponent<Scr_EventosGuardado>();
 
+    [System.Serializable]
+    public class Estructura
+    {
+        [SerializeField] public GameObject[] ObjetosEstructura;
+    }
+
     private void Start()
     {
         ActualizarEstructurasFiltradas();
-        for (int i = 0; i < ObjEstructuras.Length; i++)
+
+        // 🔥 Activación inicial desde PlayerPrefs usando ObjetosEstructura[]
+        for (int i = 0; i < Objetos.Length; i++)
         {
-            ObjEstructuras[i].SetActive(PlayerPrefs.GetInt("Estructura" + i, 0) == 1);
+            bool activo = PlayerPrefs.GetInt("Estructura" + i, 0) == 1;
+
+            foreach (var obj in Objetos[i].ObjetosEstructura)
+            {
+                if (obj != null)
+                    obj.SetActive(activo);
+            }
         }
+
         EstructuraActual = PlayerPrefs.GetInt("EstructuraTablero", 0);
     }
 
@@ -61,7 +77,6 @@ public class Scr_MenuTablero : MonoBehaviour
     private void ActualizarEstructurasFiltradas()
     {
         estructurasFiltradas.Clear();
-        objEstructurasFiltradas.Clear();
         indicesOriginales.Clear();
 
         for (int i = 0; i < Estructuras.Length; i++)
@@ -69,17 +84,23 @@ public class Scr_MenuTablero : MonoBehaviour
             if (Estructuras[i].PlanoRequerido == "" || VerificarEstructura(Estructuras[i].PlanoRequerido))
             {
                 estructurasFiltradas.Add(Estructuras[i]);
-                objEstructurasFiltradas.Add(ObjEstructuras[i]);
-                indicesOriginales.Add(i); // guardamos el índice original
+                indicesOriginales.Add(i);
             }
         }
     }
 
     private void ActivarEstructuras()
     {
-        for (int i = 0; i < ObjEstructuras.Length; i++)
+        // 🔥 Activación general desde PlayerPrefs
+        for (int i = 0; i < Objetos.Length; i++)
         {
-            ObjEstructuras[i].SetActive(PlayerPrefs.GetInt("Estructura" + i, 0) == 1);
+            bool activo = PlayerPrefs.GetInt("Estructura" + i, 0) == 1;
+
+            foreach (var obj in Objetos[i].ObjetosEstructura)
+            {
+                if (obj != null)
+                    obj.SetActive(activo);
+            }
         }
     }
 
@@ -91,7 +112,20 @@ public class Scr_MenuTablero : MonoBehaviour
     private IEnumerator EsperarCamara()
     {
         yield return new WaitForSeconds(TransicionDuracion);
-        ObjEstructuras[indicesOriginales[EstructuraActual]].transform.GetChild(0).gameObject.SetActive(false);
+        int cam = 0;
+        // 🔥 Oculta el "hijo 0" de cada objeto de esta estructura
+        foreach (var obj in Objetos[indicesOriginales[EstructuraActual]].ObjetosEstructura)
+        {
+            if (obj != null && obj.transform.childCount > 0)
+            {
+                if (cam == 0)
+                {
+                    obj.transform.GetChild(0).gameObject.SetActive(false);
+                }
+                cam++;
+            }
+        }
+
         camara_tablero.SetActive(true);
     }
 
@@ -106,17 +140,17 @@ public class Scr_MenuTablero : MonoBehaviour
         }
 
         if (EstructuraActual >= estructurasFiltradas.Count)
-        {
             EstructuraActual = 0;
-        }
 
-        int indiceReal = indicesOriginales[EstructuraActual]; // índice real en los arrays originales
+        int indiceReal = indicesOriginales[EstructuraActual];
 
         bool estaComprada = PlayerPrefs.GetInt("Estructura" + indiceReal, 0) == 1;
+
         Botones[3].SetActive(!estaComprada);
         ImagenConstruido.SetActive(estaComprada);
 
         Scr_CreadorEstructuras estructura = estructurasFiltradas[EstructuraActual];
+
         Nombre.text = estructura.Nombre;
         Descripcion.text = estructura.Descripcion;
         Imagen.sprite = estructura.Imagen;
@@ -124,10 +158,9 @@ public class Scr_MenuTablero : MonoBehaviour
         if (estructura.AumentaRango)
         {
             Notificacion.gameObject.SetActive(true);
+
             if (!NotificacionParpadeando)
-            {
                 StartCoroutine(ParpadearNotificacion());
-            }
         }
         else
         {
@@ -169,9 +202,7 @@ public class Scr_MenuTablero : MonoBehaviour
         foreach (var Objeto in Inventario.Objetos)
         {
             if (Objeto.name.Contains(nombreMaterial))
-            {
                 return Objeto.Icono;
-            }
         }
         return null;
     }
@@ -179,17 +210,13 @@ public class Scr_MenuTablero : MonoBehaviour
     public void EntraColorBoton(int ID)
     {
         if (Tablero.EstaDentro)
-        {
             CambiarColorBoton(ID, Color.white, Color.green, Color.red);
-        }
     }
 
     public void SaleColorBoton(int ID)
     {
         if (Tablero.EstaDentro)
-        {
             CambiarColorBoton(ID, ColoresBotones[0], Color.white, ColoresBotones[1]);
-        }
     }
 
     private void CambiarColorBoton(int ID, Color colorBoton, Color colorVerde, Color colorRojo)
@@ -206,9 +233,7 @@ public class Scr_MenuTablero : MonoBehaviour
             );
             Color colorTexto = tieneMateriales ? colorVerde : colorRojo;
             if (colorRojo == ColoresBotones[1])
-            {
                 Botones[ID].transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
-            }
             else
             {
                 Botones[ID].GetComponent<Image>().color = colorTexto;
@@ -217,17 +242,13 @@ public class Scr_MenuTablero : MonoBehaviour
         }
 
         if (ID == 0)
-        {
             Botones[ID].transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = ColoresBotones[1];
-        }
 
         if (Botones[ID].transform.childCount > 2)
         {
             TextMeshProUGUI texto = Botones[ID].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
             if (texto != null)
-            {
                 texto.color = colorBoton == Color.white ? colorRojo : colorVerde;
-            }
         }
     }
 
@@ -239,17 +260,31 @@ public class Scr_MenuTablero : MonoBehaviour
 
             PlayerPrefs.SetInt("Estructura" + indiceReal, 1);
 
-            if (estructurasFiltradas[EstructuraActual].AumentaRango)
+            Scr_CreadorEstructuras estructura = estructurasFiltradas[EstructuraActual];
+
+            if (estructura.AumentaRango)
             {
                 PlayerPrefs.SetInt("Rango Barra Naturaleza3", PlayerPrefs.GetInt("Rango Barra Naturaleza3", 0) + 1);
                 PlayerPrefs.SetInt("Rango Barra Planos4", PlayerPrefs.GetInt("Rango Barra Planos4", 0) + 1);
                 GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_ControladorMenuHabilidades>().ActualizarBarrasPorRango();
             }
 
-            QuitarObjetos(estructurasFiltradas[EstructuraActual].Materiales, estructurasFiltradas[EstructuraActual].Cantidades);
+            QuitarObjetos(estructura.Materiales, estructura.Cantidades);
 
             camara_tablero.SetActive(false);
-            ObjEstructuras[indiceReal].transform.GetChild(0).gameObject.SetActive(true);
+
+            // 🔥 ACTIVAR TODOS LOS OBJETOS DE LA ESTRUCTURA
+            foreach (var obj in Objetos[indiceReal].ObjetosEstructura)
+            {
+                if (obj != null)
+                {
+                    obj.SetActive(true);
+
+                    if (obj.transform.childCount > 0)
+                        obj.transform.GetChild(0).gameObject.SetActive(true);
+                }
+            }
+
             StartCoroutine(EsperarCamara());
             ActualizarEstructura();
             ActivarEstructuras();
@@ -263,17 +298,14 @@ public class Scr_MenuTablero : MonoBehaviour
         if (Aumenta)
         {
             if (EstructuraActual < estructurasFiltradas.Count - 1)
-            {
                 EstructuraActual++;
-            }
         }
         else
         {
             if (EstructuraActual > 0)
-            {
                 EstructuraActual--;
-            }
         }
+
         ActualizarEstructura();
     }
 
@@ -312,7 +344,8 @@ public class Scr_MenuTablero : MonoBehaviour
 
     private bool VerificarEstructura(string Habilidad)
     {
-        return PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si" || string.IsNullOrEmpty(Habilidad);
+        return PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si" ||
+               string.IsNullOrEmpty(Habilidad);
     }
 
     private IEnumerator ParpadearNotificacion()

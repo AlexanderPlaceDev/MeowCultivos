@@ -140,7 +140,6 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     /// </summary>
     public void RegresarACamaraBase()
     {
-        Debug.Log("pico");
         // Apagar cámaras de diálogo y tienda
         camaraDialogo?.SetActive(false);
         if (camaraTienda != null)
@@ -166,7 +165,6 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         // Mostrar iconos
         MostrarIconos();
 
-        Debug.Log("🎬 Estado base restaurado: cámara de la gata activa.");
     }
     //=================================
     //=== CONTROL DE DIÁLOGOS ===
