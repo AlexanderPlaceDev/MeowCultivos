@@ -71,10 +71,6 @@ public class Scr_SpawnerEnemigosAfueraVariable : MonoBehaviour
             {
                 StartCoroutine(EsperarYSpawnear());
             }
-            else
-            {
-                Debug.LogWarning($"⚠️ No se pudo iniciar la corrutina porque {gameObject.name} está inactivo.");
-            }
         };
     }
 
