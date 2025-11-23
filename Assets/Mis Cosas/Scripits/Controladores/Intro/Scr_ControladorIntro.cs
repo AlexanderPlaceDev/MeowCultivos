@@ -135,7 +135,7 @@ public class Scr_ControladorIntro : MonoBehaviour
                 if (!Dialogo.Leyendo)
                 {
                     
-                        Dialogo.IniciarDialogo(true, false);
+                        Dialogo.IniciarDialogo(true);
                         cont1 = -1;
                     
 
@@ -163,7 +163,7 @@ public class Scr_ControladorIntro : MonoBehaviour
             {
                 if (!Dialogo.Leyendo)
                 {
-                        Dialogo.IniciarDialogo(true,false);
+                        Dialogo.IniciarDialogo(true);
                         cont3 = -1;
                 }
             }
@@ -184,7 +184,7 @@ public class Scr_ControladorIntro : MonoBehaviour
             {
                 if (!Dialogo.Leyendo)
                 {
-                        Dialogo.IniciarDialogo(true, false);
+                        Dialogo.IniciarDialogo(true);
                         cont5 = -1;
                 }
             }
@@ -206,7 +206,7 @@ public class Scr_ControladorIntro : MonoBehaviour
             {
                 if (!Dialogo.Leyendo)
                 {
-                        Dialogo.IniciarDialogo(true, false);
+                        Dialogo.IniciarDialogo(true);
                         cont7 = -1;
                 }
             }
@@ -228,7 +228,7 @@ public class Scr_ControladorIntro : MonoBehaviour
                 if (!Dialogo.Leyendo)
                 {
                     
-                        Dialogo.IniciarDialogo(true, false);
+                        Dialogo.IniciarDialogo(true);
                         cont10 = -1;
                 }
             }

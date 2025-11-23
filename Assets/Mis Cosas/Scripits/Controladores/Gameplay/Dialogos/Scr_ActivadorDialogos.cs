@@ -190,7 +190,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         yield return new WaitForSeconds(transicionDuracion);
         VerificarMisionPrincipal();
         ActivarDialogo(true);
-        if(camaraTienda != null)
+        if (camaraTienda != null)
         {
             PlayerPrefs.SetString("DialogoSirilo", "Si");
         }
@@ -211,7 +211,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             if (sistemaDialogos.Leyendo)
                 sistemaDialogos.SaltarDialogo();
             else
-                sistemaDialogos.IniciarDialogo(Principal, false);
+                sistemaDialogos.IniciarDialogo(Principal);
         }
     }
 
@@ -462,6 +462,4 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         estaAdentro = false;
         OcultarIconos();
     }
-
-
 }

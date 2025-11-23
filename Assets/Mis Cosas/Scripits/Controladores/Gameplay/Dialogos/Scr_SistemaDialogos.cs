@@ -37,13 +37,16 @@ public class Scr_SistemaDialogos : MonoBehaviour
 
     private Scr_ControladorMisiones ControladorMisiones;
     private Scr_ActivadorDialogos activadorDialogos;
-    private Tutorial_peleas Tutopeleas;
 
     public bool BrincaAudios;
     public AudioClip[] SonidoHabla;
     AudioSource source;
 
     private int ultimoIndiceAudio = -1;
+
+
+    //Tutoria Pelea
+    private Tutorial_peleas Tutopeleas;
 
     private void Start()
     {
@@ -72,7 +75,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
                     SiguienteLinea();
             }
         }
-        else if(!EnPausa && Tutopeleas != null)
+        else if (!EnPausa && Tutopeleas != null)
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
@@ -87,7 +90,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
     //==========================
     //=== Iniciar un diálogo ===
     //==========================
-    public void IniciarDialogo(bool Principal, bool Pelea)
+    public void IniciarDialogo(bool Principal)
     {
         EnPausa = false;
         Texto.transform.parent.gameObject.SetActive(true);
@@ -101,18 +104,15 @@ public class Scr_SistemaDialogos : MonoBehaviour
         }
 
         LineaActual = 0;
-        if (!Pelea)
-        {
 
-            GameObject.Find("Canvas").transform.GetChild(0).GetChild(0).GetChild(2).GetChild(1)
-                .GetComponent<TextMeshProUGUI>().text = NombreNPC;
+        GameObject.Find("Canvas").transform.GetChild(0).GetChild(0).GetChild(2).GetChild(1)
+            .GetComponent<TextMeshProUGUI>().text = NombreNPC;
 
-            GameObject.Find("Canvas").transform.GetChild(0).GetChild(0).GetChild(2)
-                .GetComponent<Image>().color = ColorNPC;
+        GameObject.Find("Canvas").transform.GetChild(0).GetChild(0).GetChild(2)
+            .GetComponent<Image>().color = ColorNPC;
 
-            GameObject.Find("Canvas").transform.GetChild(0).GetChild(0).GetChild(2).GetChild(0)
-                .GetComponent<Image>().color = ContrasteNPC;
-        }
+        GameObject.Find("Canvas").transform.GetChild(0).GetChild(0).GetChild(2).GetChild(0)
+            .GetComponent<Image>().color = ContrasteNPC;
 
         if (Principal)
         {
@@ -173,7 +173,29 @@ public class Scr_SistemaDialogos : MonoBehaviour
 
         currentCoroutine = StartCoroutine(ReadDialogue());
     }
+    public void IniciarDialogoTuto()
+    {
+        EnPausa = false;
+        Texto.transform.parent.gameObject.SetActive(true);
+        Texto.text = "";
 
+        // Bloquea movimiento
+        if (GameObject.Find("Gata") != null)
+        {
+            var movimiento = GameObject.Find("Gata").GetComponent<Scr_Movimiento>();
+            if (movimiento != null) movimiento.enabled = false;
+        }
+
+        LineaActual = 0;
+
+        if (DialogoActual >= Dialogos.Length)
+            DialogoActual = Dialogos.Length - 1;
+
+        DialogoArecibir = Dialogos[DialogoActual];
+
+
+        currentCoroutine = StartCoroutine(ReadDialogue());
+    }
     IEnumerator ReadDialogue()
     {
         Leyendo = true;
@@ -287,7 +309,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
                             DialogoActual++;
                     }
 
-                    
+
                     if (Tutopeleas == null)
                     {
                         Texto.transform.parent.gameObject.SetActive(false);
@@ -297,7 +319,6 @@ public class Scr_SistemaDialogos : MonoBehaviour
                         DialogoActual++;
                         Tutopeleas.IniciarDialogo();
                     }
-                    DialogoActual = Mathf.Clamp(DialogoActual, 0, Dialogos.Length - 1);
                 }
             }
             else

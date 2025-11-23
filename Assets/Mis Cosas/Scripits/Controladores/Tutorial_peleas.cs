@@ -79,7 +79,7 @@ public class Tutorial_peleas : MonoBehaviour
         if (sistemaDialogos.Leyendo)
             sistemaDialogos.SaltarDialogo();
         else
-            sistemaDialogos.IniciarDialogo(true, true);
+            sistemaDialogos.IniciarDialogoTuto();
     }
 
     public void ComenzarPelea()
