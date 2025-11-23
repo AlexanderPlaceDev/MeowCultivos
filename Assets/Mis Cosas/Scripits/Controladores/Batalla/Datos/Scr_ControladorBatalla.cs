@@ -187,10 +187,15 @@ public class Scr_ControladorBatalla : MonoBehaviour
         }
     }
 
-    public void IniciarCuentaRegresiva()
+    public void IniciarCuentaRegresiva(bool Checar)
     {
-        NumeroCuenta.gameObject.SetActive(true);
-        ComenzarCuenta = true;
+        if (PlayerPrefs.GetString("TutorialPeleas", "NO") == "SI" || Checar)
+        {
+            NumeroCuenta.gameObject.SetActive(true);
+            ComenzarCuenta = true;
+        }
+
+        PrepararBatalla();
     }
 
     private void Comienzo()
@@ -243,7 +248,19 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 {
                     foreach (GameObject Enemigo in controladorOleadas.enemigosOleada)
                     {
-                        Enemigo.GetComponent<NavMeshAgent>().enabled = true;
+                        NavMeshAgent enenav = Enemigo.GetComponent<NavMeshAgent>();
+                        if (enenav != null)
+                        {
+                            NavMeshHit hit;
+                            bool enNavMesh = NavMesh.SamplePosition(Enemigo.transform.position, out hit, 1.5f, NavMesh.AllAreas);
+
+                            Debug.Log($"¿Está {Enemigo.name} sobre NavMesh? {enNavMesh}");
+                            enenav.enabled = true;
+                        }
+                        else
+                        {
+                            Debug.Log("No tiene el NavMeshAgent");
+                        }
                     }
                 }
 
@@ -283,6 +300,8 @@ public class Scr_ControladorBatalla : MonoBehaviour
             DioRecompensa = true;
             DarRecompensa();
         }
+
+        PlayerPrefs.SetString("TutorialPeleas", "SI");
 
         if (PlayerPrefs.GetInt("XPActual", 0) >= PlayerPrefs.GetInt("XPSiguiente", 10))
         {
@@ -449,6 +468,8 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
         // Reconstruir NavMesh
         GameObject.Find("NavMesh Surface").GetComponent<NavMeshSurface>().BuildNavMesh();
+
+        //GameObject.Find("NavMesh Surface").GetComponent<NavMeshSurface>().BuildNavMesh();
     }
 
 

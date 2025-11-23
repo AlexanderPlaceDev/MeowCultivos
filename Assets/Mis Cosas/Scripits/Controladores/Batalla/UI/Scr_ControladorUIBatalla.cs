@@ -69,10 +69,17 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     public GameObject PocionIcono;
     public Sprite PocionVacio;
     public int NoPocion=-2;
+
+    private Tutorial_peleas Tutopeleas;
     void Start()
     {
         ControladorBatalla = GetComponent<Scr_ControladorBatalla>();
         BuscarSingleton();
+        GameObject tu = GameObject.Find("Tutorial");
+        if (tu != null)
+        {
+            Tutopeleas = tu.GetComponent<Tutorial_peleas>();
+        }
     }
 
     void Update()
@@ -309,7 +316,11 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         {
             IconoHabilidadE.transform.GetChild(1).gameObject.SetActive(false);
         }
-        ControladorBatalla.IniciarCuentaRegresiva();
+        if (Tutopeleas != null && Tutopeleas.isActiveAndEnabled)
+        {
+            Tutopeleas.ComenzarPelea();
+        }
+        ControladorBatalla.IniciarCuentaRegresiva(false);
         ControladorBatalla.ArmaActual = Armas[ArmaActual];
         GetComponent<Scr_ControladorArmas>().ArmaActual = ArmaActual;
         Cursor.visible = false;

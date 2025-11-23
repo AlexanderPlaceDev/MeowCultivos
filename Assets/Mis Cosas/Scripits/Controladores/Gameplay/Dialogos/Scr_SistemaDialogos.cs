@@ -37,6 +37,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
 
     private Scr_ControladorMisiones ControladorMisiones;
     private Scr_ActivadorDialogos activadorDialogos;
+    private Tutorial_peleas Tutopeleas;
 
     public bool BrincaAudios;
     public AudioClip[] SonidoHabla;
@@ -56,6 +57,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
         }
 
         activadorDialogos = GetComponent<Scr_ActivadorDialogos>();
+        Tutopeleas = GetComponent<Tutorial_peleas>();
     }
 
     private void Update()
@@ -70,12 +72,22 @@ public class Scr_SistemaDialogos : MonoBehaviour
                     SiguienteLinea();
             }
         }
+        else if(!EnPausa && Tutopeleas != null)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (Leyendo)
+                    SaltarDialogo();
+                else
+                    SiguienteLinea();
+            }
+        }
     }
 
     //==========================
     //=== Iniciar un diálogo ===
     //==========================
-    public void IniciarDialogo(bool Principal)
+    public void IniciarDialogo(bool Principal, bool Pelea)
     {
         EnPausa = false;
         Texto.transform.parent.gameObject.SetActive(true);
@@ -89,15 +101,18 @@ public class Scr_SistemaDialogos : MonoBehaviour
         }
 
         LineaActual = 0;
+        if (!Pelea)
+        {
 
-        GameObject.Find("Canvas").transform.GetChild(0).GetChild(0).GetChild(2).GetChild(1)
-            .GetComponent<TextMeshProUGUI>().text = NombreNPC;
+            GameObject.Find("Canvas").transform.GetChild(0).GetChild(0).GetChild(2).GetChild(1)
+                .GetComponent<TextMeshProUGUI>().text = NombreNPC;
 
-        GameObject.Find("Canvas").transform.GetChild(0).GetChild(0).GetChild(2)
-            .GetComponent<Image>().color = ColorNPC;
+            GameObject.Find("Canvas").transform.GetChild(0).GetChild(0).GetChild(2)
+                .GetComponent<Image>().color = ColorNPC;
 
-        GameObject.Find("Canvas").transform.GetChild(0).GetChild(0).GetChild(2).GetChild(0)
-            .GetComponent<Image>().color = ContrasteNPC;
+            GameObject.Find("Canvas").transform.GetChild(0).GetChild(0).GetChild(2).GetChild(0)
+                .GetComponent<Image>().color = ContrasteNPC;
+        }
 
         if (Principal)
         {
@@ -272,8 +287,17 @@ public class Scr_SistemaDialogos : MonoBehaviour
                             DialogoActual++;
                     }
 
+                    
+                    if (Tutopeleas == null)
+                    {
+                        Texto.transform.parent.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        DialogoActual++;
+                        Tutopeleas.IniciarDialogo();
+                    }
                     DialogoActual = Mathf.Clamp(DialogoActual, 0, Dialogos.Length - 1);
-                    Texto.transform.parent.gameObject.SetActive(false);
                 }
             }
             else

@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfd7b7348ecdf544ab73fad30de2eac3, type: 3}
+  m_Name: Tutorial 3
+  m_EditorClassIdentifier: 
+  EsUnico: 1
+  EsMisionPrincipal: 0
+  Mision: {fileID: 0}
+  Lineas:
+  - Ok en tu lado Izquierdo
+  - Tienes tu Tipo de Arma que elegiste y cuanta municion tienes
+  - 'Tambien tu barra de Vida si se acaba la pelea se termina '
+  - ' y puedes perder objetos'
+  - En la parte de la derecha tienes tus habilidades y consumibles
+  - Arriba del icono aparecera que boton precionar para accionarlo
+  - Tambien tienen un tiempo de recarga asi que piensa bien cuando lo activaras
+  - 'Recuerda que la Ulti se tiene que cargar '
+  - Puede haber mas de una oleada la cual puedes ver en la parte de arriba
+  - Y al terminar una puedes salirte de la batalla al presionar el boton que Indique
+  - Tambien muestra el Objetivo de la pelea
+  - La cantidad que llevas y la que falta
+  - 'Bueno eso es todo por ahora '
+  - PELEA!!!!!!

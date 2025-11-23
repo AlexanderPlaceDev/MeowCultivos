@@ -213,7 +213,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             if (sistemaDialogos.Leyendo)
                 sistemaDialogos.SaltarDialogo();
             else
-                sistemaDialogos.IniciarDialogo(Principal);
+                sistemaDialogos.IniciarDialogo(Principal, false);
         }
     }
 
