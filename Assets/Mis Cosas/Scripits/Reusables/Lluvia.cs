@@ -11,22 +11,25 @@ public class Lluvia : MonoBehaviour
     {
         Fuerza = fuerza;
         Friccion = ficcion;
-        ParticleSystem part = GetComponent<ParticleSystem>();
-        part.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-
-        var main = part.main;
-
         // Normalizamos la fuerza entre 100 y 300 → produce un valor 0–1
         float t = Mathf.InverseLerp(100, 300, Fuerza);
 
         // t=0 → 3000 partículas
         // t=1 → 200 partículas
         float maxParticulas = Mathf.Lerp(3000f, 200f, t);
-
-        main.maxParticles = Mathf.RoundToInt(maxParticulas);
-
-        // Reiniciar el sistema para aplicar cambios
-        part.Play();
+        foreach (Transform child in transform)
+        {
+            ParticleSystem part = child.gameObject.GetComponent<ParticleSystem>();
+            if (part != null)
+            {
+                part.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                var main = part.main;
+                main.maxParticles = Mathf.RoundToInt(maxParticulas);
+                // Reiniciar el sistema para aplicar cambios
+                part.Play();
+            }
+        }
+        
     }
     private void OnTriggerStay(Collider other)
     {
