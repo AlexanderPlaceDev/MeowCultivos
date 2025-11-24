@@ -5411,7 +5411,7 @@ NavMeshAgent:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 178227796199041654}
   m_Enabled: 0
-  m_AgentTypeID: -1923039037
+  m_AgentTypeID: 0
   m_Radius: 0.3
   m_Speed: 7
   m_Acceleration: 500
@@ -5505,6 +5505,13 @@ MonoBehaviour:
   "PosInicialDa\xF1o": {fileID: 3494351243285941114}
   "PosFinalDa\xF1o": {fileID: 221946623249957700}
   Efecto: 5
+  resistenciaStunear: 0.1
+  resistenciaQuemar: 0.2
+  resistenciaVeneno: 0.3
+  resistenciaCongelar: 0.15
+  resistenciaEmpujar: 0.05
+  resistenciaElectrificar: 0.25
+  resistenciaExplotar: 0.4
   Anim: {fileID: 2930522013648248140}
 --- !u!114 &5192303565149150699
 MonoBehaviour:

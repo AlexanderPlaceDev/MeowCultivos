@@ -11,6 +11,7 @@ public class Scr_CosaAfuera : Scr_EnemigoFuera
     [SerializeField] GameObject PrefabBala;
     [SerializeField] Transform PosicionBala;
     [SerializeField] float VelocidadBala;
+    [SerializeField] AudioClip[] SonidosArbusto;
     bool Disparando = false;
     bool Desaparecido = false;
     float Contador = 0;
@@ -85,6 +86,8 @@ public class Scr_CosaAfuera : Scr_EnemigoFuera
 
     IEnumerator Morir()
     {
+        GetComponent<AudioSource>().clip = SonidosArbusto[Random.Range(0, SonidosArbusto.Length)];
+        GetComponent<AudioSource>().Play();
         yield return new WaitForSeconds(3);
         Destroy(gameObject);
     }

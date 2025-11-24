@@ -19959,6 +19959,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4134716618170541393}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0971a354750a6d04488c5cc5f8226ffc,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4183160993099053729}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0971a354750a6d04488c5cc5f8226ffc,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2805916256794592164}
   m_SourcePrefab: {fileID: 100100000, guid: 0971a354750a6d04488c5cc5f8226ffc, type: 3}
 --- !u!4 &8532533192722237561 stripped
 Transform:
@@ -20066,6 +20074,10 @@ MonoBehaviour:
     type: 3}
   PosicionBala: {fileID: 6459839568532246963}
   VelocidadBala: 1000
+  SonidosArbusto:
+  - {fileID: 8300000, guid: 8087e49b6afa53c4e9f2a86a99d5b3fc, type: 3}
+  - {fileID: 8300000, guid: 10eb5bcd95164734cbb12110bd35e69f, type: 3}
+  - {fileID: 8300000, guid: f78325ee75c1f1d4985a01dec7b79638, type: 3}
 --- !u!135 &4134716618170541393
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -20087,3 +20099,120 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 3
   m_Center: {x: 0, y: 1.5, z: 0}
+--- !u!82 &4183160993099053729
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9016898149230318275}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 30
+  Pan2D: 0
+  rolloffMode: 2
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &2805916256794592164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9016898149230318275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b42132e2543310740b92c355691d0a5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sonidoespecial: {fileID: 8300000, guid: cb1d1c5c980dedb4d901e7d6f33e49df, type: 3}
+  caminar_sonido:
+  - {fileID: 8300000, guid: 8087e49b6afa53c4e9f2a86a99d5b3fc, type: 3}
+  - {fileID: 8300000, guid: 10eb5bcd95164734cbb12110bd35e69f, type: 3}
+  - {fileID: 8300000, guid: f78325ee75c1f1d4985a01dec7b79638, type: 3}
+  correr_sonido: []
+  recoger_sonido: []
+  talar_sonido: []
+  picar_sonido: []
