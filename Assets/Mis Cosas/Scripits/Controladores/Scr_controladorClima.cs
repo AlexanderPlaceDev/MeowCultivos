@@ -54,7 +54,7 @@ public class Scr_controladorClima : MonoBehaviour
     }
     public void Prender_Viento()
     {
-        float fuerza= Random.Range(100, 300);
+        float fuerza= Random.Range(10, 200);
         for (int i = 0; i < Viento.Length; i++)
         {
             Viento[i].SetActive(true);
@@ -90,7 +90,7 @@ public class Scr_controladorClima : MonoBehaviour
     }
     public void Prender_Luvia()
     {
-        float Fuerza = Random.Range(100f, 300f);
+        float Fuerza = Random.Range(30f, 150f);
         float friccion = CalcularFriccion(Fuerza);
         for (int i = 0; i < Lluvia.Length; i++)
         {
