@@ -6,6 +6,7 @@ public class Scr_CosaAfuera : Scr_EnemigoFuera
 {
     [SerializeField] float DistanciaNervisoso;
     [SerializeField] float DistanciaDisparo;
+    [SerializeField] Vector3 OffsetDisparo = Vector3.zero;
     [SerializeField] float TiempoEntreDisparos;
     [SerializeField] ParticleSystem Particulas;
     [SerializeField] GameObject PrefabBala;
@@ -43,7 +44,7 @@ public class Scr_CosaAfuera : Scr_EnemigoFuera
                 Debug.Log("Entra 2");
 
                 // **Rotar hacia la Gata**
-                transform.LookAt(Gata.transform);
+                transform.LookAt(Gata.transform.position + OffsetDisparo);
 
                 Anim.Play("CosaDisparar");
                 Disparando = true;

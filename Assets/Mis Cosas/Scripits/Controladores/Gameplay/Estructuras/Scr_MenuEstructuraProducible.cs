@@ -41,6 +41,7 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
     void Start()
     {
         Carga = Barra.transform.GetChild(1).GetComponent<Image>();
+        Cargar();   // <-- CARGAR DATOS AL INICIAR
     }
 
     void Update()
@@ -78,6 +79,8 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
                 cantidadAProducir--;
                 TiempoProduciendo = 0;
                 Carga.fillAmount = 0;
+
+                Guardar(); // <-- GUARDAR PROGRESO
             }
         }
         else
@@ -117,7 +120,6 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
             TextoSegundos.text = $"{objetoActual.TiempoDeProduccion}s";
         }
         ObjetosInfo.transform.GetChild(ObjetoActual).GetComponent<Image>().color = Color.white;
-
 
         for (int i = 0; i < CasillasMateriales.Length; i++)
         {
@@ -178,6 +180,8 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
                     }
                     i++;
                 }
+
+                Guardar();
             }
         }
         else
@@ -194,6 +198,8 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
                     }
                     i++;
                 }
+
+                Guardar();
             }
         }
     }
@@ -239,6 +245,8 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
             }
             ObjetosInfo.GetComponent<Image>().color = Color.white;
             ObjetoActual = Numero;
+
+            Guardar();
         }
 
     }
@@ -249,11 +257,12 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
         GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>().Lista.Add(ObjetosQueProduce[ObjetoActual]);
         GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>().Cantidades.Add(cantidadProducida);
         cantidadProducida = 0;
+
+        Guardar();
     }
 
     public void BotonMitad()
     {
-
         if (cantidadAProducir == 0)
         {
             CambiarDialogos();
@@ -288,6 +297,7 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
             }
         }
 
+        Guardar();
     }
 
     public void BotonMax()
@@ -307,17 +317,19 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
             cantidadAProducir = Mathf.Min(cantidadAProducir, 99 - cantidadProducida);
         }
 
-        int i = 0;
+        int j = 0;
         foreach (Scr_CreadorObjetos Objeto in ObjetosQueProduce[ObjetoActual].MaterialesDeProduccion)
         {
             if (Objeto != null)
             {
-                int cantidadNecesaria = ObjetosQueProduce[ObjetoActual].CantidadMaterialesDeProduccion[i] * cantidadAProducir;
-                int cantidadActual = ObjetosQueProduce[ObjetoActual].CantidadMaterialesDeProduccion[i] * (cantidadAProducir - nuevaCantidadAProducir);
+                int cantidadNecesaria = ObjetosQueProduce[ObjetoActual].CantidadMaterialesDeProduccion[j] * cantidadAProducir;
+                int cantidadActual = ObjetosQueProduce[ObjetoActual].CantidadMaterialesDeProduccion[j] * (cantidadAProducir - nuevaCantidadAProducir);
                 QuitarObjeto(Objeto, cantidadNecesaria - cantidadActual);
             }
-            i++;
+            j++;
         }
+
+        Guardar();
     }
 
     public void BotonBorrar()
@@ -333,6 +345,7 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
         }
         cantidadAProducir = 0;
 
+        Guardar();
     }
 
     private int ObtenerCantidadMinima()
@@ -356,5 +369,38 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
         var inventario = GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>();
         int index = Array.IndexOf(inventario.Objetos, Objeto);
         if (index >= 0) inventario.Cantidades[index] += cantidad;
+    }
+
+    // ============================================================
+    // ===================== SISTEMA DE GUARDADO ====================
+    // ============================================================
+
+    public void Guardar()
+    {
+        PlayerPrefs.SetInt(gameObject.name + "_ObjetoActual", ObjetoActual);
+        PlayerPrefs.SetInt(gameObject.name + "_CantidadAProducir", cantidadAProducir);
+        PlayerPrefs.SetInt(gameObject.name + "_CantidadProducida", cantidadProducida);
+        PlayerPrefs.SetFloat(gameObject.name + "_TiempoProduciendo", TiempoProduciendo);
+        PlayerPrefs.SetFloat(gameObject.name + "_BarraProgreso", Carga.fillAmount);
+        PlayerPrefs.SetInt(gameObject.name + "_Produciendo", Produciendo ? 1 : 0);
+
+        PlayerPrefs.Save();
+    }
+
+    public void Cargar()
+    {
+        ObjetoActual = PlayerPrefs.GetInt(gameObject.name + "_ObjetoActual", 0);
+        cantidadAProducir = PlayerPrefs.GetInt(gameObject.name + "_CantidadAProducir", 0);
+        cantidadProducida = PlayerPrefs.GetInt(gameObject.name + "_CantidadProducida", 0);
+        TiempoProduciendo = PlayerPrefs.GetFloat(gameObject.name + "_TiempoProduciendo", 0);
+        Carga.fillAmount = PlayerPrefs.GetFloat(gameObject.name + "_BarraProgreso", 0);
+        Produciendo = PlayerPrefs.GetInt(gameObject.name + "_Produciendo", 0) == 1;
+
+        if (cantidadProducida > 0)
+        {
+            ObjetoCreado.SetActive(true);
+            ObjetoCreado.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = cantidadProducida.ToString();
+            ObjetoCreado.transform.GetChild(0).GetComponent<Image>().sprite = ObjetosQueProduce[ObjetoActual].Icono;
+        }
     }
 }

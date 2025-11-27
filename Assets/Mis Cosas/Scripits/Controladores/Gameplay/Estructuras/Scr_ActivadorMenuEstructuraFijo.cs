@@ -125,7 +125,6 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
 
     public void CerrarTablero()
     {
-        Tiempo += 1;
         EstaDentro = false;
         Camara360.SetActive(true);
         Gata.GetChild(2).gameObject.SetActive(true);

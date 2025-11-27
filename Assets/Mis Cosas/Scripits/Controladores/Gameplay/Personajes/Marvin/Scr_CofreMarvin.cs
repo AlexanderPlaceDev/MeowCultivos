@@ -1,6 +1,7 @@
-using TMPro;
+Ôªøusing TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class Scr_CofreMarvin : MonoBehaviour
 {
@@ -10,13 +11,13 @@ public class Scr_CofreMarvin : MonoBehaviour
     [SerializeField] private bool BorrarInfo;
     Scr_Inventario Inventario;
 
-    // --- ROTACI”N ---
-    [Header("RotaciÛn del child(3)")]
-    [Tooltip("Eje de rotaciÛn (vector). Por ejemplo (0,1,0) para Y.")]
+    // --- ROTACI√ìN ---
+    [Header("Rotaci√≥n del child(3)")]
+    [Tooltip("Eje de rotaci√≥n (vector). Por ejemplo (0,1,0) para Y.")]
     [SerializeField] Vector3 EjeRotacion = Vector3.up;
-    [Tooltip("Puedes arrastrar aquÌ el child que debe rotar (si no, usa transform.GetChild(3)).")]
+    [Tooltip("Puedes arrastrar aqu√≠ el child que debe rotar (si no, usa transform.GetChild(3)).")]
     [SerializeField] Transform ChildToRotate;
-    [Tooltip("Panel/Canvas que activa el UI (si no se asigna intentar· usar transform.GetChild(1)).")]
+    [Tooltip("Panel/Canvas que activa el UI (si no se asigna intentar√° usar transform.GetChild(1)).")]
     [SerializeField] GameObject CanvasUI;
     [SerializeField] bool MostrarLogs = false;
 
@@ -29,14 +30,16 @@ public class Scr_CofreMarvin : MonoBehaviour
         if (BorrarInfo)
         {
             for (int i = 0; i < ObjetosNecesarios.Length; i++)
-            {
                 PlayerPrefs.SetInt(KeyDonado(i), 0);
-            }
+
+            PlayerPrefs.SetInt("Rango Barra Industrial5", 0);   // ‚Üê FALTABA ESTO
+            PlayerPrefs.Save();
         }
 
-        // Si ya se completÛ antes, no mostrar m·s el cofre
+        // Si ya se complet√≥ antes, no mostrar m√°s el cofre
         if (PlayerPrefs.GetInt("Rango Barra Industrial5", 0) == 1)
         {
+            Debug.Log("Desactiva start");
             gameObject.SetActive(false);
             return;
         }
@@ -76,10 +79,10 @@ public class Scr_CofreMarvin : MonoBehaviour
             if (axis == Vector3.zero) axis = Vector3.up; // evita vectores nulos
             axis = axis.normalized;
 
-            // RotaciÛn objetivo = rotaciÛn original + 90∞ alrededor del eje local
+            // Rotaci√≥n objetivo = rotaci√≥n original + 90¬∞ alrededor del eje local
             rotacionObjetivo = rotacionOriginal * Quaternion.AngleAxis(90f, axis);
 
-            // Estado inicial seg˙n el canvas
+            // Estado inicial seg√∫n el canvas
             estabaActivo = CanvasUI != null ? CanvasUI.activeInHierarchy : gameObject.activeInHierarchy;
 
             // Aplicar estado inicial
@@ -87,7 +90,7 @@ public class Scr_CofreMarvin : MonoBehaviour
         }
         else
         {
-            if (MostrarLogs) Debug.LogWarning("Scr_CofreMarvin: no se encontrÛ child a rotar (ChildToRotate == null).");
+            if (MostrarLogs) Debug.LogWarning("Scr_CofreMarvin: no se encontr√≥ child a rotar (ChildToRotate == null).");
         }
     }
 
@@ -100,7 +103,7 @@ public class Scr_CofreMarvin : MonoBehaviour
 
         RevisarCompletado();
 
-        // Manejo de rotaciÛn al cambiar estado del canvas
+        // Manejo de rotaci√≥n al cambiar estado del canvas
         if (ChildToRotate != null)
         {
             bool activo = CanvasUI != null ? CanvasUI.activeInHierarchy : gameObject.activeInHierarchy;
@@ -108,15 +111,15 @@ public class Scr_CofreMarvin : MonoBehaviour
             {
                 if (activo)
                 {
-                    // activar -> ir a rotaciÛn objetivo
+                    // activar -> ir a rotaci√≥n objetivo
                     ChildToRotate.localRotation = rotacionObjetivo;
-                    if (MostrarLogs) Debug.Log("Scr_CofreMarvin: rotÈ hacia objetivo (activo).");
+                    if (MostrarLogs) Debug.Log("Scr_CofreMarvin: rot√© hacia objetivo (activo).");
                 }
                 else
                 {
-                    // desactivar -> restaurar rotaciÛn original
+                    // desactivar -> restaurar rotaci√≥n original
                     ChildToRotate.localRotation = rotacionOriginal;
-                    if (MostrarLogs) Debug.Log("Scr_CofreMarvin: restaurÈ rotaciÛn original (desactivado).");
+                    if (MostrarLogs) Debug.Log("Scr_CofreMarvin: restaur√© rotaci√≥n original (desactivado).");
                 }
                 estabaActivo = activo;
             }
@@ -177,7 +180,7 @@ public class Scr_CofreMarvin : MonoBehaviour
         if (!agregado)
         {
             if (MostrarLogs) Debug.LogWarning("Scr_CofreMarvin: el objeto no existe en Inventario.Objetos, no se pudo agregar directamente.");
-            // opcional: aquÌ podrÌas manejar agregar un nuevo slot si tu inventario lo permite
+            // opcional: aqu√≠ podr√≠as manejar agregar un nuevo slot si tu inventario lo permite
         }
 
         donado--;
@@ -261,14 +264,28 @@ public class Scr_CofreMarvin : MonoBehaviour
         {
             int donado = PlayerPrefs.GetInt(KeyDonado(i), 0);
             if (donado < CantidadesNecesarias[i])
-                return; // a˙n falta algo
+                return; // a√∫n falta algo
         }
 
         // Todo completo
         PlayerPrefs.SetInt("Rango Barra Industrial5", 1);
         PlayerPrefs.Save();
 
-        GetComponent<Scr_ActivadorMenuEstructuraFijo>().CerrarTablero();
+        if (transform.GetChild(2).gameObject.activeSelf)
+        {
+            transform.GetChild(0).gameObject.SetActive(false);
+            transform.GetChild(1).gameObject.SetActive(false);
+            transform.GetChild(2).gameObject.SetActive(false);
+            transform.GetChild(3).gameObject.SetActive(false);
+            GetComponent<Scr_ActivadorMenuEstructuraFijo>().CerrarTablero();
+            GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_ControladorMenuHabilidades>().ActualizarBarrasPorRango();
+            StartCoroutine(Esperar());
+        }
+    }
+
+    IEnumerator Esperar()
+    {
+        yield return new WaitForSeconds(2);
         gameObject.SetActive(false);
     }
 
@@ -276,7 +293,7 @@ public class Scr_CofreMarvin : MonoBehaviour
     {
         Debug.Log("Entra");
         GetComponent<Scr_ActivadorMenuEstructuraFijo>().CerrarTablero();
-        // aquÌ asumes que el panel est· en child(1)
+        // aqu√≠ asumes que el panel est√° en child(1)
         if (transform.childCount > 1)
             transform.GetChild(1).gameObject.SetActive(false);
     }
