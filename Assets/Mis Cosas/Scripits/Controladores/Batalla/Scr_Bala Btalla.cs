@@ -8,7 +8,7 @@ public class Scr_BalaBtalla : MonoBehaviour
 
     public float Daño;
     GameObject Controlador;
-
+    public string Efecto;
     private void OnEnable()
     {
         Controlador = GameObject.Find("Controlador");
@@ -21,14 +21,8 @@ public class Scr_BalaBtalla : MonoBehaviour
             Tween.ShakeCamera(Camera.main, 3);
             Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
 
-            if (batalla.VidaActual >= Daño)
-            {
-                batalla.VidaActual -= Daño;
-            }
-            else
-            {
-                batalla.VidaActual = 0; // 🔹 Evita valores negativos
-            }
+            batalla.RecibirDaño(Daño);
+            batalla.RecibirEfecto(Efecto);
         }
         Destroy(gameObject);
     }

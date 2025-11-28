@@ -17,6 +17,7 @@ public class Scr_CreadorArmas : ScriptableObject
     public int Velocidad;
     public bool DolpeConDistancia;
     public bool DobleMano;
+    public GameObject particula;
     public AudioClip[] Sonidos;
     public AudioClip Recarga;
 }

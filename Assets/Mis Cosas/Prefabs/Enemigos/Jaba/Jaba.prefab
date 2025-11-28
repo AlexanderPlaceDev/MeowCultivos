@@ -5413,7 +5413,7 @@ NavMeshAgent:
   m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.3
-  m_Speed: 7
+  m_Speed: 5
   m_Acceleration: 500
   avoidancePriority: 50
   m_AngularSpeed: 300
@@ -5506,6 +5506,7 @@ MonoBehaviour:
     type: 3}
   "PosInicialDa\xF1o": {fileID: 3494351243285941114}
   "PosFinalDa\xF1o": {fileID: 221946623249957700}
+  FueBloqueado: 0
   Efecto: 5
   resistenciaStunear: 0.1
   resistenciaQuemar: 0.2
@@ -5515,6 +5516,7 @@ MonoBehaviour:
   resistenciaElectrificar: 0.25
   resistenciaExplotar: 0.4
   Anim: {fileID: 2930522013648248140}
+  TiempoEntreAtaques: 2
 --- !u!114 &5192303565149150699
 MonoBehaviour:
   m_ObjectHideFlags: 0

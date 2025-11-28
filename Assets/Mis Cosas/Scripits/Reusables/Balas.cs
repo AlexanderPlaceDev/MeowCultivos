@@ -46,6 +46,10 @@ public class Balas : MonoBehaviour
         //Debug.Log("Daño");
         //if (!other.CompareTag("Gata")) return;
         Debug.Log("Daño");
+        if (other.CompareTag("Escudo"))
+        {
+            Destroy(gameObject);
+        }
         if (other.CompareTag("Enemigo") && !Explosivo && !Planta)
         {
             Debug.Log("Daño");

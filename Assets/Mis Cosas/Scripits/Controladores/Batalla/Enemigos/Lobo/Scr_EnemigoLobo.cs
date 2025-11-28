@@ -175,6 +175,8 @@ public class Scr_EnemigoLobo : Scr_Enemigo
         Tween.ShakeCamera(Camera.main, 3);
 
         Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
-        batalla.VidaActual = Mathf.Max(0, batalla.VidaActual - DañoMelee);
+
+        batalla.RecibirDaño(DañoMelee);
+        batalla.RecibirEfecto(base.Efecto.ToString());
     }
 }

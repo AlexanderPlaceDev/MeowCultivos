@@ -16,6 +16,7 @@ public class Boton_pocion : MonoBehaviour
         ControladorBatalla = GameObject.Find("Controlador").GetComponent<Scr_ControladorBatalla>();
         ControladorUIBatalla = GameObject.Find("Controlador").GetComponent<Scr_ControladorUIBatalla>();
         transform.GetChild(0).gameObject.SetActive(false);
+        Debug.Log(gameObject.name);
         Boton_Exit();
     }
 

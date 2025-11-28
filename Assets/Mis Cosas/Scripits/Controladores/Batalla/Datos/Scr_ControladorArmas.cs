@@ -48,15 +48,15 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     public Animator AnimArma;
 
-    public bool havecombo=false;
+    public bool havecombo = false;
     private float tiempoDesdeUltimoGolpe = 0f;
     private int numGolpe = 1;
 
-    public bool empuje=false;
-    public bool sangria=false;
+    public bool empuje = false;
+    public bool sangria = false;
     public bool sangriaEspera = false;
 
-    public int Maspenetracion=0;
+    public int Maspenetracion = 0;
 
     public float daño = 0;
 
@@ -64,7 +64,7 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     public float MenosCadencia = 1;
 
-    public bool minLimit=false;
+    public bool minLimit = false;
 
     public string efecto = "";
 
@@ -103,7 +103,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         }
         checarIdle();
         ChecarTemporal();
-        if (efecto == "" && TodasLasArmas[ArmaActual].Nombre== "Chilenon")
+        if (efecto == "" && TodasLasArmas[ArmaActual].Nombre == "Chilenon")
         {
             efecto = "Quemar";
         }
@@ -147,7 +147,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             contador[1].SetActive(false);
         }
         daño = TodasLasArmas[ArmaActual].Daño;
-        Tipo = TodasLasArmas[ArmaActual].Tipo; 
+        Tipo = TodasLasArmas[ArmaActual].Tipo;
     }
 
 
@@ -159,7 +159,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         }
         if (Tipo != "Cuerpo a Cuerpo")
         {
-            contadorbalas.text = CantBalasActual+""; //+ "/" + balascargador;
+            contadorbalas.text = CantBalasActual + ""; //+ "/" + balascargador;
         }
         //Debug.Log(temporizadorDisparo+ "?"+cadencia+ " +++++++++++++++" + (temporizadorDisparo >= cadencia));
         if (cadencia > 0)
@@ -194,7 +194,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             }
             if (Input.GetKeyUp(KeyCode.Mouse0))
             {
-                Manteniendo=false;
+                Manteniendo = false;
             }
             if (Manteniendo)
             {
@@ -233,21 +233,30 @@ public class Scr_ControladorArmas : MonoBehaviour
         }
         else if (Tipo == "Escopeta")
         {
-
+            StartCoroutine(GolpePaticula(puntoDisparo));
             source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[0]);
             DispararEscopeta();
         }
         else if (Tipo == "Lanzallamas")
         {
-
             source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[0]);
             Lazer();
         }
         else
         {
+            StartCoroutine(GolpePaticula(puntoDisparo));
             source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[0]);
             DisparaBala();
         }
+    }
+    IEnumerator GolpePaticula(Transform trans)
+    {
+        // Muestra el efecto
+        GameObject explosion = Instantiate(TodasLasArmas[ArmaActual].particula, trans.position, trans.rotation);
+        explosion.transform.SetParent(transform);
+        Debug.Log("Descarga eléctrica!");
+        yield return new WaitForSeconds(1f);
+        Destroy(explosion);
     }
     //cuando sea cuerpo a cuerto
     void EjecutarAtaque(Animator Anim)
@@ -265,7 +274,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         // Obtiene la duración del golpe y espera antes de permitir otro ataque
         float duracion = GetAnimationClipDuration(Anim, animacion);
         StartCoroutine(EsperarAtaque(duracion));
-        StartCoroutine(EsperarHit(duracion*.48f));
+        StartCoroutine(EsperarHit(duracion * .48f));
         // Avanza en la secuencia de golpes
         numGolpe = (numGolpe % 3) + 1;
 
@@ -297,7 +306,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     {
         // rango es currentWeapon.range, attackOrigin es el punto del jugador (ej. frente)
         Vector3 center = PuntodeArma != null ? PuntodeArma.position : transform.position;
-        float radius = TodasLasArmas[ArmaActual].Alcance*10;
+        float radius = TodasLasArmas[ArmaActual].Alcance * 10;
         Collider[] colliders = Physics.OverlapSphere(center, radius);
 
         foreach (Collider col in colliders)
@@ -306,7 +315,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             if (ene != null)
             {
                 ene.RecibirDaño(daño, Color.red);
-                ene.realizardaño((daño) *.1f, efecto);
+                ene.realizardaño((daño) * .1f, efecto);
             }
         }
         // Debug
@@ -314,7 +323,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     }
     public void DisparaBala()
     {
-        if(TodasLasArmas[ArmaActual].Nombre == "Planta")
+        if (TodasLasArmas[ArmaActual].Nombre == "Planta")
         {
             AnimArma.Play("Morder_Planta");
         }
@@ -379,19 +388,20 @@ public class Scr_ControladorArmas : MonoBehaviour
         }
         temporizadorDisparo = 0;
         Atacando = true;
+        float dañopoerdigon = daño / cantidadPerdigones;
         for (int i = 0; i < cantidadPerdigones; i++)
         {
             GameObject bala = Instantiate(BalaADisparar, puntoDisparo.position, puntoDisparo.rotation);
             float masdaño = 0;
             if (minLimit && CantBalasActual < 2)
             {
-                masdaño = daño + 2;
+                masdaño = dañopoerdigon + 2;
             }
             if (efecto == "Rebotar")
             {
                 bala.GetComponent<Balas>().Rebota = true;
             }
-            bala.GetComponent<Balas>().daño = daño + masdaño;
+            bala.GetComponent<Balas>().daño = dañopoerdigon + masdaño;
             bala.GetComponent<Balas>().penetracion = 2 + Maspenetracion;
             // Direccion base
             Vector3 direccionBase = camara.transform.forward;
@@ -531,7 +541,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     {
         ObjetoArmas_reales[ArmaActual].SetActive(true);
     }
-    
+
 
     //Rota la Uva
     public void rotarUva()
@@ -706,7 +716,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         Quaternion rot = Quaternion.Euler(angleX, angleY, 0);
         return rot * direccion;
     }
-    
+
     float GetAnimationClipDuration(Animator animator, string clipName)
     {
         if (animator == null) return 0f;

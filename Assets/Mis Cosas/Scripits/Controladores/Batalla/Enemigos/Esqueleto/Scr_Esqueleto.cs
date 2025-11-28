@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using static Unity.VisualScripting.Member;
 
 public class Scr_Esqueleto : Scr_Enemigo
 {
@@ -9,7 +10,7 @@ public class Scr_Esqueleto : Scr_Enemigo
     [SerializeField] private Animator anim;
     [SerializeField] private NavMeshAgent agente;
     [SerializeField] private Transform jugador; // asignar desde inspector o se busca "Personaje" en Start
-    [SerializeField] private Scr_AreaDeAtaqueEnemiga areaAtaque; // 👈 Nueva referencia al área de ataque
+    [SerializeField] private GameObject areaAtaque; // 👈 Nueva referencia al área de ataque
 
     [Header("Parámetros")]
     [Tooltip("Distancia a la que considera atacar (configurable desde inspector).")]
@@ -21,6 +22,9 @@ public class Scr_Esqueleto : Scr_Enemigo
     [SerializeField] private float velocidadRetrocesoMultiplicador = 1.0f;
     [SerializeField] private float rotacionSpeed = 5f;
 
+    [SerializeField] AudioSource source;
+    [SerializeField] AudioClip Golpe;
+    
     private enum Estado { Apareciendo, Persiguiendo, Atacando, Retrocediendo, Esperando }
     private Estado estado = Estado.Apareciendo;
 
@@ -29,8 +33,13 @@ public class Scr_Esqueleto : Scr_Enemigo
 
     protected override void Start()
     {
-        base.Start();
-
+        base.Start(); 
+        int volumen_general = PlayerPrefs.GetInt("Volumen", 50);
+        int volumen_ambiental = PlayerPrefs.GetInt("Volumen_Combate", 20);
+        float volumen = (volumen_general * volumen_ambiental) / 100;
+        //Debug.LogError(PlayerPrefs.GetInt("Volumen", 50) + "//" + PlayerPrefs.GetInt("Volumen_Combate", 20) );
+        //Debug.LogError(volumen + "//"+ volumen_general +"//" + volumen_ambiental);
+        source.volume = volumen;
         if (jugador == null) jugador = GameObject.Find("Personaje")?.transform;
         if (agente == null) agente = GetComponent<NavMeshAgent>();
 
@@ -196,13 +205,23 @@ public class Scr_Esqueleto : Scr_Enemigo
         Tween.ShakeCamera(Camera.main, 3);
     }
 
+    public void activar_areaAtaque()
+    {
+        areaAtaque.SetActive(true);
+    }
+    public void desaactivar_areaAtaque()
+    {
+        areaAtaque.SetActive(false);
+    }
     public void HacerDaño()
     {
-        if (EstaMuerto || areaAtaque == null) return;
+        Scr_AreaDeAtaqueEnemiga area = areaAtaque.GetComponent<Scr_AreaDeAtaqueEnemiga>();
+        if (EstaMuerto || area == null) return;
 
         // Solo causa daño si el jugador está dentro del área en el momento exacto
-        if (areaAtaque.EstaDentro)
+        if (area.EstaDentro)
         {
+            source.PlayOneShot(Golpe);
             Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
             batalla.RecibirDaño(DañoMelee);
             batalla.RecibirEfecto(base.Efecto.ToString());

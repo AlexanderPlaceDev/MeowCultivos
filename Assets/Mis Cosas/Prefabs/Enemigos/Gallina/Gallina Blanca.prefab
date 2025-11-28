@@ -5247,7 +5247,7 @@ NavMeshAgent:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8087238990687637167}
   m_Enabled: 0
-  m_AgentTypeID: -1923039037
+  m_AgentTypeID: 0
   m_Radius: 0.23
   m_Speed: 5
   m_Acceleration: 30
@@ -5340,6 +5340,14 @@ MonoBehaviour:
     type: 3}
   "PosInicialDa\xF1o": {fileID: 1109766315112578472}
   "PosFinalDa\xF1o": {fileID: 5364119962153704884}
+  Efecto: 0
+  resistenciaStunear: 0.1
+  resistenciaQuemar: 0.2
+  resistenciaVeneno: 0.3
+  resistenciaCongelar: 0.15
+  resistenciaEmpujar: 0.05
+  resistenciaElectrificar: 0.25
+  resistenciaExplotar: 0.4
   RadioDeambulacion: 30
   capasPermitidas:
     serializedVersion: 2
@@ -5364,8 +5372,6 @@ MonoBehaviour:
   recoger_sonido: []
   talar_sonido: []
   picar_sonido: []
-  Dinero_sonido: []
-  Nivel_sonido: []
 --- !u!82 &5752942388155686675
 AudioSource:
   m_ObjectHideFlags: 0

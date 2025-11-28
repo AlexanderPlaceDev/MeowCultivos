@@ -86,6 +86,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     [SerializeField] public GameObject particulaQuemado;
     [SerializeField] public GameObject particulaCongelado;
     [SerializeField] public GameObject particulaEnvenado;
+    [SerializeField] public GameObject ParticulaGolpe;
 
     [Header("Efectos")]
     private Color ColorPrincipal = new Color(0, 0, 0);
@@ -665,6 +666,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
         rb.AddForce(direccion * fuerza, ForceMode.Force);
         Vector3 arriba = Personaje.transform.up; // dirección hacia atrás del personaje
         rb.AddForce(arriba * (fuerza*.7f), ForceMode.Force);
+        Debug.Log("Empujado");
         yield return null;
     }
 

@@ -62,6 +62,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 494820017717424672}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6966003105525229133
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8080100884681697930}
+  m_Layer: 10
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8080100884681697930
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6966003105525229133}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 494820017717424672}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7446709919481934711
 GameObject:
   m_ObjectHideFlags: 0
@@ -5185,6 +5216,10 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 61a1e30d5ee4d6b43b3b1cde3ed981d8,
         type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 8080100884681697930}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 61a1e30d5ee4d6b43b3b1cde3ed981d8,
+        type: 3}
       insertIndex: -1
       addedObject: {fileID: 1027343825881669061}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 61a1e30d5ee4d6b43b3b1cde3ed981d8,
@@ -5289,7 +5324,7 @@ NavMeshAgent:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 979010116969621658}
   m_Enabled: 0
-  m_AgentTypeID: -1923039037
+  m_AgentTypeID: 0
   m_Radius: 0.85
   m_Speed: 10
   m_Acceleration: 300
@@ -5315,7 +5350,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42cbde6c6374c884ba225361c9f27e54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NombreEnemigo: 
+  NombreEnemigo: Lobo
   Vida: 10
   Velocidad: 10
   "Da\xF1oMelee": 1
@@ -5357,10 +5392,20 @@ MonoBehaviour:
     type: 3}
   "PosInicialDa\xF1o": {fileID: 1027343825881669061}
   "PosFinalDa\xF1o": {fileID: 5957227913955204252}
+  FueBloqueado: 0
+  Efecto: 4
+  resistenciaStunear: 0.8
+  resistenciaQuemar: 0.6
+  resistenciaVeneno: 0.5
+  resistenciaCongelar: 0.4
+  resistenciaEmpujar: 0.05
+  resistenciaElectrificar: 0.1
+  resistenciaExplotar: 0.9
   RadioDeambulacion: 60
   TiempoDeEsperaMin: 5
   TiempoDeEsperaMax: 15
   Anim: {fileID: 2755858084408016972}
+  tiempoRecalculacion: 0.5
 --- !u!136 &1836544712270226349
 CapsuleCollider:
   m_ObjectHideFlags: 0

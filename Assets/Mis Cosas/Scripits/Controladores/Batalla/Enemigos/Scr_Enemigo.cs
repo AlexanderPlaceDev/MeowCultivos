@@ -56,6 +56,8 @@ public class Scr_Enemigo : MonoBehaviour
     [SerializeField] private Transform PosInicialDaño; // Posición inicial del CanvasDaño
     [SerializeField] private Transform PosFinalDaño;  // Posición final del CanvasDaño
 
+
+    public bool FueBloqueado =false;
     public enum TipoEfecfto { Nada,Stunear, Quemar, Veneno, Congelar, Empujar, Electrificar, Explotar }
     public TipoEfecfto Efecto;
     private Color dañado = new Color(1f, 0f, 0f);      // Rojo
@@ -166,10 +168,20 @@ public class Scr_Enemigo : MonoBehaviour
     {
         tipocomportamiento = NuevoComportamiento;
     }
+    public void BloquearGolpe()
+    {
+        Debug.Log("El escudo bloqueó el daño");
+        CancelInvoke(nameof(ResetBloqueo));   // evita duplicados
+        Invoke(nameof(ResetBloqueo), 0.2f);
+    }
+
+    private void ResetBloqueo()
+    {
+        FueBloqueado = false;
+    }
     protected virtual void OnTriggerEnter(Collider other)
     {
         Scr_ControladorArmas arma= GameObject.Find("Controlador").GetComponent<Scr_ControladorArmas>();
-        
         if (other.gameObject.tag == "Golpe")
         {
             arma.hizoHit = true;
@@ -193,8 +205,10 @@ public class Scr_Enemigo : MonoBehaviour
                 StartCoroutine(MoverCanvas(canvasInstanciado, PosInicialDaño.position, PosFinalDaño.position, 1f));
             }*/
             // Instanciar el CanvasDaño en la posición inicial
+            //Debug.LogError(FueBloqueado);
+            if (FueBloqueado) return;
             int Daño = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño;
-            
+
             // Desactivar el golpe para evitar múltiples activaciones
             if (other.gameObject.name != "Impulso")
             {
@@ -207,6 +221,7 @@ public class Scr_Enemigo : MonoBehaviour
 
 
             realizardaño(Daño, arma.efecto);
+            StartCoroutine(GolpePaticula(other.transform));
             // Lógica de daño
             /*Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
                 GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].PuntosXGolpe;
@@ -215,7 +230,7 @@ public class Scr_Enemigo : MonoBehaviour
         }
         else if (other.gameObject.tag == "Bala")
         {
-            
+            if (FueBloqueado) return;
             // Instanciar el CanvasDaño en la posición inicial
             int Daño = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño;
             /*
@@ -238,6 +253,7 @@ public class Scr_Enemigo : MonoBehaviour
             }*/
             // Lógica de daño
             realizardaño(Daño, arma.efecto);
+            StartCoroutine(GolpePaticula(other.transform));
             /*Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
                 GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].PuntosXGolpe;
 
@@ -245,6 +261,15 @@ public class Scr_Enemigo : MonoBehaviour
             checarEfecto(arma.efecto);*/
         }
 
+    }
+
+    IEnumerator GolpePaticula(Transform trans)
+    {
+        // Muestra el efecto
+        GameObject explosion = Instantiate(Controlador.GetComponent<Scr_ControladorBatalla>().ParticulaGolpe, trans.position, trans.rotation);
+        explosion.transform.SetParent(transform);
+        yield return new WaitForSeconds(1f);
+        Destroy(explosion);
     }
     public void realizardaño(float daño, string efecto) 
     {
@@ -333,7 +358,7 @@ public class Scr_Enemigo : MonoBehaviour
                     Debug.Log("Efecto Empujar resistido.");
                     return; // Resiste el efecto
                 }
-                StartCoroutine(EstadoEmpujado(250, porefecto)); // dirección y fuerza
+                StartCoroutine(EstadoEmpujado(600, porefecto)); // dirección y fuerza
                 break;
 
             case "Electrificar":
@@ -437,7 +462,6 @@ public class Scr_Enemigo : MonoBehaviour
         {
             // Obtener los materiales actuales
             Material[] materiales = renderer.materials;
-
             // Guardar una copia de los materiales originales
             Material[] materialesOriginales = new Material[materiales.Length];
             for (int i = 0; i < materiales.Length; i++)
@@ -537,7 +561,7 @@ public class Scr_Enemigo : MonoBehaviour
     {
         Rigidbody rb = GetComponent<Rigidbody>();
         Vector3 direccion = -transform.forward; // dirección hacia atrás del personaje
-        rb.AddForce(direccion * (fuerza*por), ForceMode.Impulse);
+        rb.AddForce(direccion * (fuerza*por), ForceMode.Force);
         Debug.Log("Enemigo empujado");
         yield return null;
     }
@@ -547,7 +571,7 @@ public class Scr_Enemigo : MonoBehaviour
         RecibirDaño((daño*por),dañado);
         //Vector3 direccion = transform.position - origenExplosion;
         Vector3 direccion = -transform.forward; // dirección hacia atrás del personaje
-        GetComponent<Rigidbody>().AddForce(direccion.normalized * (fuerzaEmpuje *por), ForceMode.Impulse);
+        GetComponent<Rigidbody>().AddForce(direccion.normalized * (fuerzaEmpuje *por), ForceMode.Force);
         Debug.Log("Enemigo explotado");
         yield return null;
     }

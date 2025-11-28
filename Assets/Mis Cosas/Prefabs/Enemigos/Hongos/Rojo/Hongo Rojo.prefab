@@ -5476,7 +5476,7 @@ NavMeshAgent:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4237290099586911853}
   m_Enabled: 0
-  m_AgentTypeID: -1923039037
+  m_AgentTypeID: 0
   m_Radius: 0.1
   m_Speed: 0.5
   m_Acceleration: 30
@@ -5525,6 +5525,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cec5f89194b62b44ea90a458ddaa18b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NombreEnemigo: 
   Vida: 10
   Velocidad: 1
   "Da\xF1oMelee": 0
@@ -5560,10 +5561,20 @@ MonoBehaviour:
   tipoenemigo: 0
   tipocomportamiento: 1
   Controlador: {fileID: 0}
+  estaStuneado: 0
+  estaCongelado: 0
   "CanvasDa\xF1o": {fileID: 8855847776912535175, guid: c2c9e7e03a15dbc42b7d969aee7d9fbc,
     type: 3}
   "PosInicialDa\xF1o": {fileID: 2304735858794152294}
   "PosFinalDa\xF1o": {fileID: 1913322627222147596}
+  Efecto: 0
+  resistenciaStunear: 0.1
+  resistenciaQuemar: 0.2
+  resistenciaVeneno: 0.3
+  resistenciaCongelar: 0.15
+  resistenciaEmpujar: 0.05
+  resistenciaElectrificar: 0.25
+  resistenciaExplotar: 0.4
   RadioDeambulacion: 30
   capasPermitidas:
     serializedVersion: 2

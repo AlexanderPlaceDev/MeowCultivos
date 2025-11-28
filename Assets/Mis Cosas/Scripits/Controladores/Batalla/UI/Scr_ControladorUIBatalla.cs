@@ -610,7 +610,12 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     {
         foreach (Transform child in contentPanel)
         {
-            child.gameObject.GetComponent<Boton_pocion>().Boton_Exit();
+            Boton_pocion bot = child.gameObject.GetComponent<Boton_pocion>();
+            if (bot != null)
+            {
+                bot.Boton_Exit();
+            }
+            
         }
     }
     public void MostrarPocion(int No)

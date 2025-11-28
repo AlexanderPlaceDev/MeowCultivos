@@ -77,7 +77,7 @@ public class Scr_Cosa : Scr_Enemigo
         // Instancia la bala con la misma rotación que el enemigo
         GameObject Bala = Instantiate(PrefabBala, SpawnBala.position, transform.rotation);
         Bala.GetComponent<Scr_BalaBtalla>().Daño = DañoDistancia;
-
+        Bala.GetComponent<Scr_BalaBtalla>().Efecto=base.Efecto.ToString();
         // Agrega fuerza en la dirección correcta
         Bala.GetComponent<Rigidbody>().AddForce(transform.forward * VelocidadBala);
     }
