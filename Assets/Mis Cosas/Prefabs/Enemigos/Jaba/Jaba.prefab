@@ -5506,6 +5506,8 @@ MonoBehaviour:
     type: 3}
   "PosInicialDa\xF1o": {fileID: 3494351243285941114}
   "PosFinalDa\xF1o": {fileID: 221946623249957700}
+  source: {fileID: 0}
+  Golpe: {fileID: 8300000, guid: 499c94a95478ccf4aae20934d71b5a1a, type: 3}
   FueBloqueado: 0
   Efecto: 5
   resistenciaStunear: 0.1
@@ -5516,7 +5518,6 @@ MonoBehaviour:
   resistenciaElectrificar: 0.25
   resistenciaExplotar: 0.4
   Anim: {fileID: 2930522013648248140}
-  TiempoEntreAtaques: 2
 --- !u!114 &5192303565149150699
 MonoBehaviour:
   m_ObjectHideFlags: 0

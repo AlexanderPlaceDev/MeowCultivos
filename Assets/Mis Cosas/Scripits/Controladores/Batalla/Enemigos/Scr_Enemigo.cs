@@ -56,7 +56,8 @@ public class Scr_Enemigo : MonoBehaviour
     [SerializeField] private Transform PosInicialDaño; // Posición inicial del CanvasDaño
     [SerializeField] private Transform PosFinalDaño;  // Posición final del CanvasDaño
 
-
+    [SerializeField] public AudioSource source;
+    [SerializeField] public AudioClip Golpe;
     public bool FueBloqueado =false;
     public enum TipoEfecfto { Nada,Stunear, Quemar, Veneno, Congelar, Empujar, Electrificar, Explotar }
     public TipoEfecfto Efecto;
@@ -80,7 +81,9 @@ public class Scr_Enemigo : MonoBehaviour
         {
             materialesOriginales = renderer.materials;
         }
-
+        source=GetComponent<AudioSource>();
+        //Debug.LogError(PlayerPrefs.GetInt("Volumen", 50) + "//" + PlayerPrefs.GetInt("Volumen_Combate", 20) );
+        //Debug.LogError(volumen + "//"+ volumen_general +"//" + volumen_ambiental);
     }
 
     private void OnEnable()

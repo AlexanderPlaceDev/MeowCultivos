@@ -111,7 +111,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     [SerializeField] private AudioClip SonidoPelea; // el sonido que suena cuando dice "Pelea"
     private string ultimoTextoMostrado = "";
 
-
+    Musica_pelea Musica;
     void Start()
     {
         Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
@@ -140,6 +140,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
         {
             RenderSettings.skybox = Singleton.SkyBoxNoche;
         }
+        Musica= GameObject.Find("Musica").GetComponent<Musica_pelea>();
     }
 
     void Update()
@@ -149,6 +150,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
         Comienzo();
         ActualizarVida();
         Terminar();
+        checarmusica();
     }
 
     //obtiene las habilidades que tiene la arma
@@ -491,6 +493,21 @@ public class Scr_ControladorBatalla : MonoBehaviour
             VidaActual = 0; // 🔹 Evita valores negativos
         }
         CamaraBatalla.ResetSuavizado();
+    }
+
+    public void checarmusica()
+    {
+        float cehcarcantidad = (VidaActual * 100) / VidaMaxima;
+        if (cehcarcantidad < 50)
+        {
+            Musica.activarBajos(true);
+            Musica.activarEfectos(false);
+        }
+        else
+        {
+            Musica.activarBajos(false);
+            Musica.activarEfectos(true);
+        }
     }
     public void Curar(float CuraRecibida)
     {

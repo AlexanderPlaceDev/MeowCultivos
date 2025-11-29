@@ -20043,6 +20043,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: -1786776461214147361}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0971a354750a6d04488c5cc5f8226ffc,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3701233954107250068}
     - targetCorrespondingSourceObject: {fileID: 3743993344710040121, guid: 0971a354750a6d04488c5cc5f8226ffc,
         type: 3}
       insertIndex: -1
@@ -20166,6 +20170,8 @@ MonoBehaviour:
     type: 3}
   "PosInicialDa\xF1o": {fileID: 3291653688874047590}
   "PosFinalDa\xF1o": {fileID: 8406637442461958774}
+  source: {fileID: 0}
+  Golpe: {fileID: 0}
   FueBloqueado: 0
   Efecto: 3
   resistenciaStunear: 0.1
@@ -20340,3 +20346,16 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3701233954107250068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7649158396241794918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d5364f17fb28794e90a6af4d8f0bf2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  categoria: 3

@@ -96,6 +96,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4008690560185866732}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 61a1e30d5ee4d6b43b3b1cde3ed981d8,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7510827686704008280}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 61a1e30d5ee4d6b43b3b1cde3ed981d8,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4156426233955017778}
     - targetCorrespondingSourceObject: {fileID: -2909969703269092573, guid: 61a1e30d5ee4d6b43b3b1cde3ed981d8,
         type: 3}
       insertIndex: -1
@@ -220,6 +228,121 @@ MonoBehaviour:
   Item: Lobos dientes de sable
   ColorItem: {r: 0, g: 0.39607844, b: 1, a: 1}
   Cambiando: 0
+--- !u!82 &7510827686704008280
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693741142263627357}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 0.2
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 100
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &4156426233955017778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693741142263627357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b42132e2543310740b92c355691d0a5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sonidoespecial: {fileID: 0}
+  caminar_sonido:
+  - {fileID: 8300000, guid: ff9b3229d47060547a7dee6d0886807d, type: 3}
+  correr_sonido: []
+  recoger_sonido: []
+  talar_sonido: []
+  picar_sonido: []
 --- !u!4 &2074664319175763175 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 61a1e30d5ee4d6b43b3b1cde3ed981d8,
@@ -244,11 +367,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 160474298ff4e9a4a85ebe6246d4eed0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  materialParpadeo: {fileID: 2100000, guid: 9e922c0f5e96fc8499c44837243f5ddf, type: 2}
-  tiempoMin: 1
-  tiempoMax: 10
-  duracionParpadeo: 0.1
-  mallaGato: {fileID: 0}
+  rendererMalla: {fileID: 0}
+  nombreMaterialOjo: Ojo
+  intervaloMin: 2
+  intervaloMax: 5
+  duracionCierre: 0.07
+  duracionApertura: 0.1
 --- !u!1001 &7805182580908817245
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -391,6 +515,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Gata: {fileID: 0}
+  seguir: 0
 --- !u!4 &7771855375000640694 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4e29b528754e83e4088f4e671aac08de,
