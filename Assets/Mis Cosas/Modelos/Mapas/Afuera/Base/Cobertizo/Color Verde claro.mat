@@ -89,7 +89,7 @@ Material:
     - _Alpha: 1
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _Ambient_Light_Strength: 0
+    - _Ambient_Light_Strength: 0.3
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
@@ -129,12 +129,12 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0, g: 0.6560975, b: 0.16014293, a: 1}
-    - _Base_Color: {r: 0.4943396, g: 0.31501848, b: 0.11845493, a: 1}
+    - _Base_Color: {r: 0.3132075, g: 0.106941946, b: 0.018319668, a: 1}
     - _Color: {r: 0, g: 0.6560975, b: 0.1601429, a: 1}
     - _Cutoff_Thresholds: {r: -0.22, g: 0.8, b: 0, a: 0}
     - _Direccion_Del_Viento: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
-    - _Escala_Ruido: {r: 0.05, g: 0.05, b: 0, a: 0}
+    - _Escala_Ruido: {r: -0.85, g: 0.05, b: 0, a: 0}
     - _Offset_Ruido: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []

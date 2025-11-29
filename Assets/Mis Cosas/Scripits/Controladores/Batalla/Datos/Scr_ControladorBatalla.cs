@@ -498,16 +498,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     public void checarmusica()
     {
         float cehcarcantidad = (VidaActual * 100) / VidaMaxima;
-        if (cehcarcantidad < 50)
-        {
-            Musica.activarBajos(true);
-            Musica.activarEfectos(false);
-        }
-        else
-        {
-            Musica.activarBajos(false);
-            Musica.activarEfectos(true);
-        }
+        Musica.ConseguirPorcentajeVida(cehcarcantidad);
     }
     public void Curar(float CuraRecibida)
     {

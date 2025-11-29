@@ -323,7 +323,6 @@ public class Scr_ControladorOleadas : MonoBehaviour
 
                 if (OleadaActual <= enemigo.CantidadDeOleadas + 1)
                 {
-                    List<GameObject> spawners = new List<GameObject>();
                     var mapa = GameObject.Find("Mapa").transform;
                     foreach (Transform child in mapa)
                     {
