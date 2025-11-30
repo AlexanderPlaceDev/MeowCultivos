@@ -65,8 +65,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     public float MenosCadencia = 1;
 
     public bool minLimit = false;
-
-    public string efecto = "";
+    
 
 
     public string Tipo = "";
@@ -77,7 +76,10 @@ public class Scr_ControladorArmas : MonoBehaviour
     private bool isGrappling = false;
     private Vector3 grapplePoint;
     private float currentDistance;
-    public LineRenderer lineRenderer;
+    public LineRenderer lineRenderer; 
+    [Header("Efectos")]
+    public string EfectoTemp = "";
+    public string EfectoHab = "";
     void Start()
     {
         //aplica el volumen 
@@ -103,9 +105,9 @@ public class Scr_ControladorArmas : MonoBehaviour
         }
         checarIdle();
         ChecarTemporal();
-        if (efecto == "" && TodasLasArmas[ArmaActual].Nombre == "Chilenon")
+        if (EfectoTemp == "" && TodasLasArmas[ArmaActual].Nombre == "Chilenon")
         {
-            efecto = "Quemar";
+            EfectoTemp = "Quemar";
         }
         Tipo = TodasLasArmas[ArmaActual].Tipo;
         Gata = GameObject.Find("Personaje");
@@ -148,6 +150,8 @@ public class Scr_ControladorArmas : MonoBehaviour
         }
         daño = TodasLasArmas[ArmaActual].Daño;
         Tipo = TodasLasArmas[ArmaActual].Tipo;
+        checarIdle();
+        ChecarTemporal();
     }
 
 
@@ -296,7 +300,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             if (ene != null)
             {
                 ene.RecibirDaño(daño, Color.red);
-                ene.realizardaño(daño, efecto);
+                ene.realizardaño(daño, EfectoTemp,EfectoHab);
             }
         }
         // Debug
@@ -315,7 +319,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             if (ene != null)
             {
                 ene.RecibirDaño(daño, Color.red);
-                ene.realizardaño((daño) * .1f, efecto);
+                ene.realizardaño(daño, EfectoTemp, EfectoHab);
             }
         }
         // Debug
@@ -339,7 +343,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         {
             masdaño = daño + 2;
         }
-        if (efecto == "Rebotar")
+        if (EfectoTemp == "Rebotar")
         {
             bala.GetComponent<Balas>().Rebota = true;
         }
@@ -364,7 +368,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         // Aplicamos fuerza a la bala
         Rigidbody rb = bala.GetComponent<Rigidbody>();
         rb.AddForce(direccionDisparo * fuerzaDisparo, ForceMode.Impulse);
-        if (efecto == "Fantasma")
+        if (EfectoTemp == "Fantasma")
         {
             int checar = Random.Range(0, 100);
             if (checar < 60)
@@ -397,7 +401,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             {
                 masdaño = dañopoerdigon + 2;
             }
-            if (efecto == "Rebotar")
+            if (EfectoTemp == "Rebotar")
             {
                 bala.GetComponent<Balas>().Rebota = true;
             }
@@ -413,7 +417,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             Rigidbody rb = bala.GetComponent<Rigidbody>();
             rb.AddForce(direccionConDispersion * fuerzaDisparo, ForceMode.Impulse);
         }
-        if (efecto == "Fantasma")
+        if (EfectoTemp == "Fantasma")
         {
             int checar = Random.Range(0, 100);
             if (checar < 60)
@@ -454,10 +458,10 @@ public class Scr_ControladorArmas : MonoBehaviour
                 ene.RecibirDaño(daño, Color.red);
 
                 // Aplicar efecto secundario (daño escalado)
-                ene.realizardaño(daño * 0.1f, efecto);
+                ene.realizardaño(daño, EfectoTemp, EfectoHab);
             }
         }
-        if (efecto == "Fantasma")
+        if (EfectoTemp == "Fantasma")
         {
             int checar = Random.Range(0, 100);
             if (checar < 60)
@@ -763,31 +767,31 @@ public class Scr_ControladorArmas : MonoBehaviour
         switch (GetComponent<Scr_ControladorBatalla>().HabilidadT)
         {
             case "Nada":
-                efecto = "";
+                EfectoTemp = "";
                 break;
 
             case "Aturdimiento":
-                efecto = "Stunear";
+                EfectoTemp = "Stunear";
                 break;
 
             case "Bala Incendiaria":
-                efecto = "Quemar";
+                EfectoTemp = "Quemar";
                 break;
 
             case "Boca Venenosa":
-                efecto = "Veneno";
+                EfectoTemp = "Veneno";
                 break;
 
             case "Cañon Congelante":
-                efecto = "Congelar";
+                EfectoTemp = "Congelar";
                 break;
 
             case "Disparo rebote":
-                efecto = "Rebotar";
+                EfectoTemp = "Rebotar";
                 break;
 
             case "Empuje":
-                efecto = "Empujar";
+                EfectoTemp = "Empujar";
                 break;
 
             case "Golpe con mas area":
@@ -795,35 +799,35 @@ public class Scr_ControladorArmas : MonoBehaviour
                 break;
 
             case "Golpe de fuego":
-                efecto = "Quemar";
+                EfectoTemp = "Quemar";
                 break;
 
             case "Puño Relampago":
-                efecto = "Electrificar";
+                EfectoTemp = "Electrificar";
                 break;
 
             case "Puño Veneno":
-                efecto = "Veneno";
+                EfectoTemp = "Veneno";
                 break;
 
             case "Raiz Atadora":
-                efecto = "Stunear";
+                EfectoTemp = "Stunear";
                 break;
 
             case "Rebote":
-                efecto = "Rebotar";
+                EfectoTemp = "Rebotar";
                 break;
 
             case "Tiro Explosivo":
-                efecto = "Explotar";
+                EfectoTemp = "Explotar";
                 break;
 
             case "Tiro fantasma":
-                efecto = "Fantasma";
+                EfectoTemp = "Fantasma";
                 break;
 
             case "Tiro Paralizante":
-                efecto = "Electrificar";
+                EfectoTemp = "Electrificar";
                 break;
 
             case "Velocidad mordida":

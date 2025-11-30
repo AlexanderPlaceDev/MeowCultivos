@@ -6,12 +6,14 @@ using UnityEngine.AI;
 public class Scr_EnemigoJaba : Scr_Enemigo
 {
     [SerializeField] Animator Anim;
-    private GameObject Gata;
-    private NavMeshAgent agente;
-    private float temporizadorEspera;
-    private bool esperando = false;
-    private bool Atacando = false;
-    private float ContAtaque = 0;
+
+    private GameObject Gata;          // objetivo del enemigo
+    private NavMeshAgent agente;      // componente de navegación
+
+    private float temporizadorEspera; // cooldown entre ataques
+    private bool esperando = false;   // si espera entre ataques
+    private bool Atacando = false;    // si está en animación de ataque
+    private float ContAtaque = 0;     // timer de ataque actual
 
     protected override void Start()
     {
@@ -21,77 +23,74 @@ public class Scr_EnemigoJaba : Scr_Enemigo
         agente = GetComponent<NavMeshAgent>();
         agente.speed = Velocidad;
 
+        // detener movimiento mientras aparece
         if (agente.isOnNavMesh)
-        {
-            agente.isStopped = true; // 🔹 Detener movimiento inicial
-        }
+            agente.isStopped = true;
 
-        // Reproducir animación de aparición y esperar a que termine
+        // animación de aparición
         Anim.Play(NombreAnimacionAparecer);
         float duracion = Anim.GetCurrentAnimatorStateInfo(0).length;
         StartCoroutine(EsperarAparicion(duracion));
     }
 
+    // espera hasta terminar animación de spawn
     IEnumerator EsperarAparicion(float duracion)
     {
         yield return new WaitForSeconds(duracion);
         Aparecio = true;
         if (agente.isOnNavMesh)
-        {
             agente.isStopped = false;
-        }
     }
 
     void Update()
     {
-        if (estaCongelado || estaStuneado || !Aparecio || EstaMuerto) return;
+        if (!Aparecio || EstaMuerto) return;
+        if (agente == null) return;
 
-        if (!Atacando && !esperando)
+        // Si está stuneado, congelado o empujado: NO MOVERSE
+        if (estaStuneado || estaCongelado || estaEmpujado)
         {
-            Mover();
+            if (agente.isOnNavMesh)
+                agente.isStopped = true;
+
+            Anim.Play("Idle");
+            return;
         }
+
+        // Movimiento normal si no ataca o espera
+        if (!Atacando && !esperando)
+            Mover();
+
+        // Si tiene objetivo
         if (Objetivo != null)
         {
             float distancia = Vector3.Distance(transform.position, Objetivo.position);
-            //Debug.Log("Distancia a la gata: " + distancia);
-            // 🔹 Se reduce el temporizador de espera en todo momento
+
+            // Si está en cooldown entre ataques
             if (esperando)
-            {
                 temporizadorEspera -= Time.deltaTime;
-            }
-            // 🔹 Si el temporizador ha terminado, persigue a la gata
+
             if (temporizadorEspera <= 0)
-            {
                 esperando = false;
-            }
-            // 🔹 Lógica de ataque
+
             if (distancia <= agente.stoppingDistance + 1f)
             {
-                if (!esperando)
+                if (!esperando && !Atacando)
                 {
-                    if (!Atacando)
-                    {
-                        agente.isStopped = true;
-                        esperando = true;
-                        Atacar();
-                    }
+                    agente.isStopped = true;
+                    esperando = true;
+                    Atacar();
                 }
             }
             else
             {
                 if (!esperando)
-                {
                     Mover();
-
-                }
             }
 
-
-            //CicloDeAtaque
+            // Ciclo de ataque
             if (Atacando && ContAtaque < DuracionDeAtaque)
-            {
                 ContAtaque += Time.deltaTime;
-            }
             else
             {
                 ContAtaque = 0;
@@ -100,42 +99,56 @@ public class Scr_EnemigoJaba : Scr_Enemigo
         }
         else
         {
+            // si pierde objetivo, reasignarlo
             if (agente.isOnNavMesh)
             {
                 Objetivo = Gata.transform;
                 agente.SetDestination(Objetivo.position);
             }
         }
-
-
     }
 
     void Mover()
     {
-        if (agente != null && agente.isActiveAndEnabled && agente.isOnNavMesh)
+        if (!agente.isActiveAndEnabled || !agente.isOnNavMesh) return;
+        if (estaEmpujado) return; // evita que el empujón se anule
+
+        if (!Anim.GetCurrentAnimatorStateInfo(0).IsName("Mover"))
+            Anim.Play("Mover");
+
+        agente.isStopped = false;
+
+        Objetivo = Gata.transform;
+
+        // rotación suave hacia el jugador
+        Vector3 dir = (Objetivo.position - transform.position).normalized;
+        dir.y = 0;
+        if (dir != Vector3.zero)
         {
-            if (!Anim.GetCurrentAnimatorStateInfo(0).IsName("Mover"))
-            {
-                Anim.Play("Mover");
-            }
-            agente.isStopped = false;
-
-            Objetivo = Gata.transform;
-
-            // 🔹 Aquí el cambio: actualizar destino cada frame
-            if (Objetivo != null)
-            {
-                agente.SetDestination(Objetivo.position);
-            }
+            Quaternion rot = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rot, 10f * Time.deltaTime);
         }
-    }
 
+        // seguir al jugador
+        agente.SetDestination(Objetivo.position);
+    }
 
     void Atacar()
     {
         Debug.Log("Comenzo Atacar");
+
         Atacando = true;
-        agente.isStopped = true; // 🔹 Evita que se mueva mientras ataca
+
+        // detener movimiento durante ataque
+        if (agente.isOnNavMesh)
+            agente.isStopped = true;
+
+        // 👉 Girar instantáneo hacia el jugador ANTES de atacar
+        Vector3 dir = (Objetivo.position - transform.position).normalized;
+        dir.y = 0;
+        transform.rotation = Quaternion.LookRotation(dir);
+
+        // animación aleatoria
         if (Random.Range(0, 2) == 1)
         {
             Anim.Play("Ataque1");
@@ -146,18 +159,14 @@ public class Scr_EnemigoJaba : Scr_Enemigo
             Anim.Play("Ataque2");
             DuracionDeAtaque = 1.042f;
         }
+
+        // efectos del ataque
         Tween.ShakeCamera(Camera.main, 3);
+
         Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
+
         base.source.PlayOneShot(base.Golpe);
         batalla.RecibirDaño(DañoMelee);
         batalla.RecibirEfecto(base.Efecto.ToString());
-        /*if (batalla.VidaActual >= DañoMelee)
-        {
-            batalla.VidaActual -= DañoMelee;
-        }
-        else
-        {
-            batalla.VidaActual = 0; // 🔹 Evita valores negativos
-        }*/
     }
 }

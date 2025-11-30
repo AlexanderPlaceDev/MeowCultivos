@@ -164,11 +164,20 @@ public class Scr_ControladorBatalla : MonoBehaviour
     }
     public void GuardarHabilidadesArma(string arma)
     {
-        PlayerPrefs.SetString(arma + "HT", HabilidadT);
         PlayerPrefs.SetString(arma + "H1", Habilidad1);
         PlayerPrefs.SetString(arma + "H2", Habilidad2);
         PlayerPrefs.SetString(arma + "HE", HabilidadEspecial);
-        PlayerPrefs.SetInt(arma + "Usos", usosHabilidad);
+        if (usosHabilidad > 0)
+        {
+            PlayerPrefs.SetString(arma + "HT", HabilidadT);
+            PlayerPrefs.SetInt(arma + "Usos", usosHabilidad);
+        }
+        else
+        {
+            PlayerPrefs.SetString(arma + "HT", "Nada");
+            PlayerPrefs.SetInt(arma + "Usos", 0);
+        }
+        PlayerPrefs.Save();
         Datosarmas.guardarHabilidades();
     }
 
@@ -560,7 +569,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
             case "Empujar":
                 if (probabilidadResistencia <= resistenciaEmpujar)
                 {
-                    Debug.Log("Efecto Empujar resistido.");
+                    //Debug.Log("Efecto Empujar resistido.");
                     return; // Resiste el efecto
                 }
                 StartCoroutine(EstadoEmpujado(270f)); // dirección y fuerza

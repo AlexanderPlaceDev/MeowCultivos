@@ -49,8 +49,18 @@ public class Scr_EnemigoLobo : Scr_Enemigo
 
     void Update()
     {
-        if (!Aparecio) return;
-        if (EstaMuerto) return;
+        if (!Aparecio || EstaMuerto) return;
+        if (agente == null) return;
+
+        // Si está stuneado, congelado o empujado: NO MOVERSE
+        if (estaStuneado || estaCongelado || estaEmpujado)
+        {
+            if (agente.isOnNavMesh)
+                agente.isStopped = true;
+
+            Anim.Play("Idle");
+            return;
+        }
 
         if (Objetivo == null)
         {

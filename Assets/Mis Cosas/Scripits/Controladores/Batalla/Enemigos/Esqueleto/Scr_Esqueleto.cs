@@ -56,7 +56,15 @@ public class Scr_Esqueleto : Scr_Enemigo
     void Update()
     {
         if (!aparecio || EstaMuerto || jugador == null) return;
+        if (agente == null) return;
 
+        // Si está stuneado, congelado o empujado: NO MOVERSE
+        if (estaStuneado || estaCongelado || estaEmpujado)
+        {
+            if (agente.isOnNavMesh)
+                agente.isStopped = true;
+            return;
+        }
         float distancia = Vector3.Distance(transform.position, jugador.position);
 
         switch (estado)

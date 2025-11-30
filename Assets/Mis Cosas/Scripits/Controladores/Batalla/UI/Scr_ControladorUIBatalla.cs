@@ -28,6 +28,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     [SerializeField] GameObject Habilidad2;
     [SerializeField] GameObject HabilidadEspecial;
     [SerializeField] TextMeshProUGUI BarraHabilidadTemporal;
+    public bool newTem=false;
     public bool PuedeSeleccionarH = false;
     [Header("Alerta")]
     [SerializeField] GameObject Alerta;
@@ -320,6 +321,10 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         {
             Tutopeleas.ComenzarPelea();
         }
+        if (newTem)
+        {
+            datos.UsosHabilidadesT[datos.BuscarUSoHabilidadTemporalPorNombre(ht)] -= 1;
+        }
         ControladorBatalla.IniciarCuentaRegresiva(false);
         ControladorBatalla.ArmaActual = Armas[ArmaActual];
         GetComponent<Scr_ControladorArmas>().ArmaActual = ArmaActual;
@@ -329,16 +334,18 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
 
     public void checarUsosHabilidad()
     {
-        int resultado = ControladorBatalla.usosHabilidad - 1;
-        if (resultado <= 0)
+        Debug.LogError(ControladorBatalla.usosHabilidad);
+        int resultado = ControladorBatalla.usosHabilidad - 1; 
+        ControladorBatalla.usosHabilidad = resultado;
+        /*if (resultado <= 0)
         {
             ControladorBatalla.HabilidadT = "Nada";
             ControladorBatalla.usosHabilidad = 0;
         }
         else
         {
-            ControladorBatalla.usosHabilidad = resultado;
-        }
+            
+        }*/
     }
     public void CambiarColorBotonAceptar(bool Entra)
     {
@@ -472,7 +479,15 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         int habActual = 0;
         for (int i = 0; i < datos.HabilidadesTemporales.Length; i++)
         {
-            if (datos.HabilidatTDesbloqueadas[i])
+            if (i == 0)
+            {
+                HabilidadesMostrar.Add(datos.HabilidadesTemporales[i]); 
+                if (datos.HabilidadesTemporales[i] == HabilidadTemporal)
+                {
+                    habActual = HabilidadesMostrar.Count - 1;
+                }
+            }
+            else if (datos.HabilidatTDesbloqueadas[i] && datos.UsosHabilidadesT.Length>0)
             {
                 if (datos.HabilidadesTemporales[i].Arma == DatosArma.Nombre || datos.HabilidadesTemporales[i].Arma == "Todos")
                 {
@@ -550,6 +565,8 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
                 BarraHabilidadTemporal.text = $"< {HabilidadesMostrar[Habmostrar].Usos} / {HabilidadesMostrar[Habmostrar].Usos}";
                 HabT = HabilidadesMostrar[Habmostrar];
                 ControladorBatalla.HabilidadT = HabilidadesMostrar[Habmostrar].Nombre;
+                ControladorBatalla.usosHabilidad = HabilidadesMostrar[Habmostrar].Usos;
+                newTem = true;
                 break;
         }
         MostrarHabilidadSeleccionada(Seccion);
