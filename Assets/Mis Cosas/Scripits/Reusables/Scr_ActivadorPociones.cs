@@ -1,4 +1,4 @@
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +17,7 @@ public class Scr_ActivadorPociones : MonoBehaviour
     public int usos;
     public bool Espermanente = false;
     public Color ColorHabilidad;
+    private bool usando = false;
     // Referencia al script Scr_Habilidades
     private Scr_ControladorPociones Pociones;
 
@@ -32,22 +33,24 @@ public class Scr_ActivadorPociones : MonoBehaviour
     {
         ControladorBatalla = GameObject.Find("Controlador").GetComponent<Scr_ControladorBatalla>();
         DatosArmas = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>();
-        // Buscar el script Scr_Habilidades en el mismo objeto o en otro espec�fico
+        // Buscar el script Scr_Habilidades en el mismo objeto o en otro específico
         Pociones = GetComponent<Scr_ControladorPociones>();
     }
     private void OnEnable()
     {
         ControladorBatalla = GameObject.Find("Controlador").GetComponent<Scr_ControladorBatalla>();
         DatosArmas = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>();
-        // Buscar el script Scr_Habilidades en el mismo objeto o en otro espec�fico
+        // Buscar el script Scr_Habilidades en el mismo objeto o en otro específico
         Pociones = GetComponent<Scr_ControladorPociones>();
         ObtenerPocion();
     }
     void Update()
     {
         if (Espermanente) return;
+
         ActivarHabilidad();
-        if (TiempoActual > 0)
+
+        if (TiempoActual > 0 && usando)
         {
             TiempoActual -= Time.deltaTime;
 
@@ -56,28 +59,36 @@ public class Scr_ActivadorPociones : MonoBehaviour
 
             TextoTiempo.GetComponent<TextMeshProUGUI>().text = ((int)TiempoActual + 1).ToString();
 
-            float porcentajeTiempo = TiempoActual / TiempoMaximo;
+            Bloqueo.GetComponent<Image>().sprite = IconosBloqueo[1];
+            TextoTiempo.GetComponent<TextMeshProUGUI>().color = Colores[1];
 
-            if (porcentajeTiempo > 0.66f)
+            // Cuando el tiempo de efecto acaba → cambiar a cooldown
+            if (TiempoActual <= 0)
             {
-                Bloqueo.GetComponent<Image>().sprite = IconosBloqueo[0];
-                TextoTiempo.GetComponent<TextMeshProUGUI>().color = Colores[0];
+                usando = false;              // ← CAMBIO AL SEGUNDO IF
+                TiempoActual = cargaHabilidad; // ← Ajusta el tiempo de enfriamiento
             }
-            else if (porcentajeTiempo > 0.33f)
-            {
-                Bloqueo.GetComponent<Image>().sprite = IconosBloqueo[1];
-                TextoTiempo.GetComponent<TextMeshProUGUI>().color = Colores[1];
-            }
-            else
-            {
-                Bloqueo.GetComponent<Image>().sprite = IconosBloqueo[2];
-                TextoTiempo.GetComponent<TextMeshProUGUI>().color = Colores[2];
-            }
+
+            return;
         }
-        else
+
+        if (TiempoActual > 0 && !usando)
+        {
+            TiempoActual -= Time.deltaTime;
+
+            Bloqueo.SetActive(true);
+            TextoTiempo.SetActive(true);
+
+            TextoTiempo.GetComponent<TextMeshProUGUI>().text = ((int)TiempoActual + 1).ToString();
+            Bloqueo.GetComponent<Image>().sprite = IconosBloqueo[0];
+            TextoTiempo.GetComponent<TextMeshProUGUI>().color = Colores[0];
+
+            return;
+        }
+
+        if (TiempoActual <= 0)
         {
             TiempoActual = 0;
-
             Bloqueo.SetActive(false);
             TextoTiempo.SetActive(false);
         }
@@ -94,6 +105,7 @@ public class Scr_ActivadorPociones : MonoBehaviour
                     Pociones.Pociones(PocionChec);
                     TiempoActual = TiempoMaximo;
                     usos--;
+                    usando = true;
                 }
                 else
                 {
@@ -102,7 +114,7 @@ public class Scr_ActivadorPociones : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("No se encontr� el script Scr_ControladorPociones");
+                Debug.LogWarning("No se encontró el script Scr_ControladorPociones");
             }
         }
         else if (Espermanente)
