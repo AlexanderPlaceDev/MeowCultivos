@@ -1,9 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Musica_pelea : MonoBehaviour
 {
+    [Header("Audios")]
+    [SerializeField] AudioClip[] BaseAudio;
+    [SerializeField] AudioClip[] BajoAudio;
+    [SerializeField] AudioClip[] EfectosAudio;
+
+
     [Header("Pistas")]
     public AudioSource Base;   // Siempre suena
     public AudioSource Bajo;    // Capa baja
@@ -16,14 +23,18 @@ public class Musica_pelea : MonoBehaviour
     [Range(0, 100)] public int CuandoDetenerBajo = 50;
     [Range(0, 100)] public int CuandoEmpezarEfectos = 50;
 
+
+    private Scr_DatosSingletonBatalla Singleton;
+
     private float PorcentajeVida;
 
     void Start()
     {
+        Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
         Base.loop = true;
         Bajo.loop = true;
         Efectos.loop = true;
-
+        AcomodarPista(Singleton.Pista);
         Base.Play();
         Bajo.Play();
         Efectos.Play();
@@ -76,6 +87,13 @@ public class Musica_pelea : MonoBehaviour
         }
 
         Efectos.volume = Mathf.MoveTowards(Efectos.volume, targetEfectosVolume, fadeSpeed * Time.deltaTime);
+    }
+
+    public void AcomodarPista(int pist)
+    {
+        Base.clip = BaseAudio[pist];
+        Efectos.clip = EfectosAudio[pist];
+        Bajo.clip = BajoAudio[pist];
     }
 
     // Se llama desde afuera

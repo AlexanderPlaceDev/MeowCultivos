@@ -249,7 +249,7 @@ public class Scr_Taller : MonoBehaviour
                 ObjetoPrincipal.SetActive(true);
                 ObjetoPrincipal.transform.GetChild(0).gameObject.SetActive(true);
                 ObjetoPrincipal.transform.GetChild(1).gameObject.SetActive(true);
-                int e = PlayerPrefs.GetInt("Rango " + Datosarmas.TodasLasArmas[objShow].Nombre, 1);
+                int e = PlayerPrefs.GetInt("Rango " + Datosarmas.TodasLasArmas[objShow].Nombre, 1)-1;
                 Debug.Log(e);
                 ObjetoPrincipal.transform.GetChild(0).GetComponent<Image>().sprite = Datosarmas.TodasLasArmas[objShow].Icono;
                 ObjetoPrincipal.transform.GetChild(1).GetComponent<Image>().sprite = Rango[e];

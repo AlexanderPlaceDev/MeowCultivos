@@ -107,14 +107,15 @@ public class Scr_ControladorArmas : MonoBehaviour
         ChecarTemporal();
         if (EfectoTemp == "" && TodasLasArmas[ArmaActual].Nombre == "Chilenon")
         {
-            EfectoTemp = "Quemar";
+            EfectoHab = "Quemar";
         }
         Tipo = TodasLasArmas[ArmaActual].Tipo;
         Gata = GameObject.Find("Personaje");
         CantBalasActual = TodasLasArmas[ArmaActual].Capacidad;
         balascargador = TodasLasArmas[ArmaActual].CapacidadTotal;
         Physics.IgnoreLayerCollision(7, 8);
-
+        //"Rango" + Nombre del arma
+        //PlayerPrefs.GetInt("Rango " + Datosarmas.TodasLasArmas[objShow].Nombre, 1)-1
     }
     //activa el arma pero si es cuerpo a cuerpo no la toma en cuenta
     void OnEnable()

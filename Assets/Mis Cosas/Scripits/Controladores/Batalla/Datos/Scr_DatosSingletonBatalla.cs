@@ -18,7 +18,7 @@ public class Scr_DatosSingletonBatalla : MonoBehaviour
     public int HoraActual;
     public Material SkyBoxDia;
     public Material SkyBoxNoche;
-
+    public int Pista;
     [Header("Recompensa")]
     public List<Scr_CreadorObjetos> ObjetosRecompensa = new List<Scr_CreadorObjetos>();
     public List<int> CantidadesRecompensa= new List<int>();
