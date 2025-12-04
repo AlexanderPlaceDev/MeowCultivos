@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6571587575937097591}
   - component: {fileID: 8018444704786153461}
   - component: {fileID: 805248987780407467}
+  - component: {fileID: 7289372588504640849}
   m_Layer: 0
   m_Name: CamposVision
   m_TagString: Untagged
@@ -121,6 +122,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Gata: {fileID: 0}
+  seguir: 0
+--- !u!54 &7289372588504640849
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4558459899582950716}
+  serializedVersion: 4
+  m_Mass: 0.0000001
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &3459955246206149927
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -259,6 +288,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 567201526235924262}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ce1986922dd10542b8084a299567b99,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4606551141689026352}
   m_SourcePrefab: {fileID: 100100000, guid: 6ce1986922dd10542b8084a299567b99, type: 3}
 --- !u!4 &4003281753990005452 stripped
 Transform:
@@ -354,7 +387,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5be3fbe55668cb74d8a905ea881511af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DistanciaDeCargadoCerca: 3
   PrefabEnemigo: {fileID: 8087238990687637167, guid: 7753c54fedebba2449c1d58e0fbc31a1,
     type: 3}
   CantidadEnemigosMinima: 1
@@ -403,8 +435,6 @@ MonoBehaviour:
   recoger_sonido: []
   talar_sonido: []
   picar_sonido: []
-  Dinero_sonido: []
-  Nivel_sonido: []
 --- !u!82 &1640599212656413223
 AudioSource:
   m_ObjectHideFlags: 0
@@ -514,3 +544,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   categoria: 2
+--- !u!135 &4606551141689026352
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4378997640072845430}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.69
+  m_Center: {x: 0, y: 0.56, z: 0.05}

@@ -18,6 +18,7 @@ public class Scr_BalaAfuera : MonoBehaviour
         {
             if (!Choco)
             {
+                Debug.Log(other.name);
                 Destroy(gameObject);
             }
         }
