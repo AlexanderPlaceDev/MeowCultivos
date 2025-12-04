@@ -181,7 +181,7 @@ public class Scr_TorretaAliada : MonoBehaviour
             if (ene != null)
             {
                 ene.RecibirDaño(Daño, Color.red);  // Aplica daño
-                ene.realizardaño(Daño * .1f, "Veneno");  // Aplica daño extra o debuff si es necesario
+                ene.realizardaño(Daño * .1f, "Veneno", "Nada");  // Aplica daño extra o debuff si es necesario
             }
         }
     }

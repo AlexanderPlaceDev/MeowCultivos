@@ -404,11 +404,11 @@ public class Scr_Habilidades : MonoBehaviour
 
     IEnumerator HabilidadColoso(float espera)
     {
-        Controlador.GetComponent<Scr_ControladorArmas>().empuje = true;
+        Controlador.GetComponent<Scr_ControladorArmas>().EfectoHab = "Empujar";
         Controlador.GetComponent<Scr_ControladorBatalla>().PorcentajeQuitar = .7f;
         yield return new WaitForSeconds(espera);
         Controlador.GetComponent<Scr_ControladorBatalla>().PorcentajeQuitar = 1f;
-        Controlador.GetComponent<Scr_ControladorArmas>().empuje = false;
+        Controlador.GetComponent<Scr_ControladorArmas>().EfectoHab = "";
     }
 
     IEnumerator HabilidadBlindado(float espera)
@@ -427,9 +427,9 @@ public class Scr_Habilidades : MonoBehaviour
 
     IEnumerator HabilidadVolador(float espera)
     {
-        Controlador.GetComponent<Scr_ControladorArmas>().empuje = true;
+        Controlador.GetComponent<Scr_ControladorArmas>().EfectoHab = "Empujar";
         yield return new WaitForSeconds(espera);
-        Controlador.GetComponent<Scr_ControladorArmas>().empuje = false;
+        Controlador.GetComponent<Scr_ControladorArmas>().EfectoHab = "";
     }
 
     IEnumerator HabilidadRaizEterna()
@@ -562,7 +562,8 @@ public class Scr_Habilidades : MonoBehaviour
     }
     private void Habilidadempuje()
     {
-        Controlador.GetComponent<Scr_ControladorArmas>().empuje = true;
+        StartCoroutine(HabilidadVolador(3));
+        Controlador.GetComponent<Scr_ControladorArmas>().GolpeAdelante();
     }
     private void HabilidadMinima()
     {

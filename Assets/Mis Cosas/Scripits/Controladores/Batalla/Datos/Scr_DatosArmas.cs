@@ -35,7 +35,11 @@ public class Scr_DatosArmas : MonoBehaviour
 
         for (int i = 0; i < HabilidadesTemporales.Length; i++)
         {
-            if (PlayerPrefs.GetString("Habilidad" + HabilidadesTemporales[i].Nombre, "No") == "Si")
+            if (i == 0)
+            {
+                HabilidatPDesbloqueadas[i] = true;
+            }
+            else if (PlayerPrefs.GetString("Habilidad" + HabilidadesTemporales[i].Nombre, "No") == "Si")
             {
                 HabilidatTDesbloqueadas[i] = true;
 
@@ -175,7 +179,18 @@ public class Scr_DatosArmas : MonoBehaviour
         return null; // No se encontró
     }
 
+    public int BuscarUSoHabilidadTemporalPorNombre(string nombre)
+    {
+        for(int i = 0; i<HabilidadesTemporales.Length; i++)
+        {
+            if (HabilidadesTemporales[i].Nombre == nombre) // Asegúrate de que sea 'Nombre' o 'nombre' según el campo real
+            {
+                return i;
+            }
+        }
 
+        return 0; // No se encontró
+    }
     //encuentra la habilidar por nombre
     public Scr_CreadorHabilidadesBatalla BuscarHabilidadPermanentePorNombre(string nombre)
     {
