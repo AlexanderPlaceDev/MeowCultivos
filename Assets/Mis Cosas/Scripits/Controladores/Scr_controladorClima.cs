@@ -54,7 +54,17 @@ public class Scr_controladorClima : MonoBehaviour
     }
     public void Prender_Viento()
     {
-        float fuerza= Random.Range(10, 200);
+        float Fuerza = 0;
+        if (PlayerPrefs.GetString("ClimaActivadoEsta", "NO") == "SI")
+        {
+            Fuerza = PlayerPrefs.GetFloat("FuerzaClima", 100);
+        }
+        else
+        {
+            Fuerza = Random.Range(10, 200);
+            PlayerPrefs.SetFloat("FuerzaClima", Fuerza);
+            PlayerPrefs.Save();
+        }
         for (int i = 0; i < Viento.Length; i++)
         {
             Viento[i].SetActive(true);
@@ -62,7 +72,7 @@ public class Scr_controladorClima : MonoBehaviour
             Viento vient = Viento[i].GetComponent<Viento>();
             if (vient != null)
             {
-                vient.Intensidad(fuerza);
+                vient.Intensidad(Fuerza);
             }
         }
     }
@@ -90,7 +100,17 @@ public class Scr_controladorClima : MonoBehaviour
     }
     public void Prender_Luvia()
     {
-        float Fuerza = Random.Range(30f, 150f);
+        float Fuerza = 0;
+        if (PlayerPrefs.GetString("ClimaActivadoEsta", "NO") == "SI")
+        {
+            Fuerza = PlayerPrefs.GetFloat("FuerzaClima",100);
+        }
+        else
+        {
+            Fuerza = Random.Range(30f, 150f);
+            PlayerPrefs.SetFloat("FuerzaClima", Fuerza);
+            PlayerPrefs.Save();
+        }
         float friccion = CalcularFriccion(Fuerza);
         for (int i = 0; i < Lluvia.Length; i++)
         {

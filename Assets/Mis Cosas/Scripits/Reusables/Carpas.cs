@@ -98,7 +98,9 @@ public class Carpas : MonoBehaviour
     }
     private void activarRadio()
     {
-        if (PlayerPrefs.GetString("Habilidad:" + "Radio", "No") == "Si")
+        //PlayerPrefs.GetString("Habilidad:" + "Radio", "No") == "Si"
+        //PlayerPrefs.GetInt("Estructura" + indiceReal, 0) == 1;
+        if (PlayerPrefs.GetInt("Estructura" + 9, 0) == 1)
         {
             Tiene_Radio = true;
         }
@@ -118,7 +120,9 @@ public class Carpas : MonoBehaviour
     }
     private void activarDespertador()
     {
-        if (PlayerPrefs.GetString("Habilidad:" + "Despertador", "No") == "Si")
+        //PlayerPrefs.GetString("Habilidad:" + "Despertador", "No") == "Si"
+        //PlayerPrefs.GetInt("Estructura" + 9, 0) == 1
+        if (PlayerPrefs.GetInt("Estructura" + 8, 0) == 1)
         {
             Tiene_Reloj = true;
         }

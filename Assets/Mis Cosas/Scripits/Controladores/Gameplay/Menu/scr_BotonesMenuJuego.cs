@@ -12,6 +12,7 @@ public class scr_BotonesMenuJuego : MonoBehaviour
     [SerializeField] Sprite[] Iconos;
     [SerializeField] Animator Asistente;
 
+
     public int BotonActual = 0;
     bool Esperando = false;
 

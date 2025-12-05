@@ -23,6 +23,10 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
     float TiempoDeEspera = 0;
     GameObject Gata;
     private Animator animator;
+
+
+    [SerializeField] AudioClip[] Sonidos;
+    [SerializeField] AudioSource Audio;
     void Start()
     {
         // Busca y guarda una referencia al objeto de la gata
@@ -129,5 +133,11 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
         Nivel.text = "Lv." + PlayerPrefs.GetInt("Nivel", 0);
         XP.text = PlayerPrefs.GetInt("XPActual", 0) + " / " + PlayerPrefs.GetInt("XPSiguiente", 10) + " :XP";
         Dinero.text = "$" + PlayerPrefs.GetInt("Dinero", 0);
+    }
+
+
+    public void ReproducirSonidoBoton(int Sonido)
+    {
+        Audio.PlayOneShot(Sonidos[Sonido]);
     }
 }
