@@ -23,8 +23,14 @@ public class Scr_BloqueAgua : MonoBehaviour
     void Awake()
     {
         gata = GameObject.Find("Gata").GetComponent<Transform>();
+
+
+
         Herramienta = gata.GetChild(0).GetChild(0).GetChild(0).GetChild(1)
-            .GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(2).gameObject;
+                                .GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(2).gameObject;
+
+
+
     }
 
     void Update()
@@ -33,7 +39,7 @@ public class Scr_BloqueAgua : MonoBehaviour
         if (!recolectando)
         {
             // Si se acerca, se encienden los iconos
-            if (EstaDentro && PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si" && !string.IsNullOrEmpty(Habilidad))
+            if (EstaDentro && ((PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si" && !string.IsNullOrEmpty(Habilidad)) || PlayerPrefs.GetString("Habilidad:Cubeta", "No") == "Si"))
             {
                 estaLejos = false;
                 ActivarUI();
@@ -77,7 +83,19 @@ public class Scr_BloqueAgua : MonoBehaviour
 
     void DarObjeto()
     {
-        PlayerPrefs.SetInt("CantidadAgua", PlayerPrefs.GetInt("CantidadAguaMaxima", 10));
+        if (PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si")
+        {
+            PlayerPrefs.SetInt("CantidadAgua", 50);
+        }
+        else
+        {
+            if (PlayerPrefs.GetString("Habilidad:Cubeta", "No") == "Si")
+            {
+                PlayerPrefs.SetInt("CantidadAgua", 25);
+            }
+        }
+
+
     }
 
 
@@ -99,7 +117,7 @@ public class Scr_BloqueAgua : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
 
-        if (other.tag == "Gata" && PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si")
+        if (other.tag == "Gata" && (PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si" || PlayerPrefs.GetString("Habilidad:Cubeta", "No") == "Si"))
         {
             EstaDentro = true;
             SpawnearHerramienta();
@@ -119,6 +137,17 @@ public class Scr_BloqueAgua : MonoBehaviour
     void SpawnearHerramienta()
     {
         Herramienta.SetActive(true);
-        Herramienta.transform.GetChild(2).gameObject.SetActive(true);
+
+        if (PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si")
+        {
+            Herramienta.transform.GetChild(3).gameObject.SetActive(true);
+        }
+        else
+        {
+            if (PlayerPrefs.GetString("Habilidad:Cubeta", "No") == "Si")
+            {
+                Herramienta.transform.GetChild(2).gameObject.SetActive(true);
+            }
+        }
     }
 }

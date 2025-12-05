@@ -37,15 +37,19 @@ public class Scr_JabaAfuera : Scr_EnemigoFuera
         agente = GetComponent<NavMeshAgent>();
         agente.speed = Velocidad;
         Anim = GetComponent<Animator>();
-        audioSource = GetComponent<AudioSource>();
+        audioSource = transform.GetChild(0).GetComponent<AudioSource>();
 
         // Iniciar la corutina de sonidos una sola vez
-        sonidoCoroutine = StartCoroutine(ControlarSonidos());
+        if (audioSource != null)
+        {
+            sonidoCoroutine = StartCoroutine(ControlarSonidos());
+
+        }
     }
 
     void Update()
     {
-        if (Vision != null && Vision.Gata != null && Vision.seguir) 
+        if (Vision != null && Vision.Gata != null && Vision.seguir)
         {
             // Está persiguiendo
             GetComponent<NavMeshAgent>().enabled = true;
@@ -206,23 +210,4 @@ public class Scr_JabaAfuera : Scr_EnemigoFuera
             yield return null;
         }
     }
-
-    public void ReproducirSonidoCaminar()
-    {
-        if (SonidosCaminar != null && SonidosCaminar.Count > 0)
-        {
-            // Elegir un clip aleatorio de la lista
-            AudioClip clip = SonidosCaminar[Random.Range(0, SonidosCaminar.Count)];
-
-            // Usar el AudioSource principal (o el del hijo si quieres mantenerlo)
-            AudioSource source = transform.GetChild(0).GetComponent<AudioSource>();
-
-            if (!source.isPlaying)
-            {
-                source.clip = clip;
-                source.Play();
-            }
-        }
-    }
-
 }
