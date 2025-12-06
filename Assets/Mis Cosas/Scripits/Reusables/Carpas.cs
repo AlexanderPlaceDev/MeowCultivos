@@ -33,8 +33,8 @@ public class Carpas : MonoBehaviour
         cam = carpaUI.GetComponent<CambioTiempo>();
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
         ControlT = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
-        radio = transform.GetChild(2).gameObject;
-        Reloj = transform.GetChild(1).gameObject;
+        //radio = transform.GetChild(3).gameObject;
+        //Reloj = transform.GetChild(1).gameObject;
         Canvas = GameObject.Find("Canvas");
     }
 
@@ -100,29 +100,23 @@ public class Carpas : MonoBehaviour
     {
         //PlayerPrefs.GetString("Habilidad:" + "Radio", "No") == "Si"
         //PlayerPrefs.GetInt("Estructura" + indiceReal, 0) == 1;
-        if (PlayerPrefs.GetInt("Estructura" + 9, 0) == 1)
+        if (PlayerPrefs.GetInt("Estructura" + 8, 0) == 1)
         {
-            Tiene_Radio = true;
-        }
-        else
-        {
-            Tiene_Radio = false;
-        }
-
-        if (Tiene_Radio)
-        {
+            Tiene_Radio = true; 
             radio.SetActive(true);
         }
         else
         {
+            Tiene_Radio = false;
             radio.SetActive(false);
         }
+
     }
     private void activarDespertador()
     {
         //PlayerPrefs.GetString("Habilidad:" + "Despertador", "No") == "Si"
         //PlayerPrefs.GetInt("Estructura" + 9, 0) == 1
-        if (PlayerPrefs.GetInt("Estructura" + 8, 0) == 1)
+        if (PlayerPrefs.GetString("Habilidad:" + "Despertador", "No") == "Si")
         {
             Tiene_Reloj = true;
         }
