@@ -101,7 +101,12 @@ public class CambioTiempo : MonoBehaviour
         string diasemanana = ControlT.checarSiguienteDia();
         bool HayEvento=false;
         MostrarDia(diasemanana);
-        //Debug.LogWarning(EventosGenerales.eventos[0].diasActivo[0]);
+        if (EventosGenerales == null)
+        {
+            EventosGenerales = GameObject.Find("EventosGenerales").GetComponent<Controlador_EventosGenerales>();
+        }
+        HayEvento = EventosGenerales.ChecarEvento(diasemanana);
+        /*Debug.LogWarning(EventosGenerales.eventos.Length);
         for (int i = 0; i < EventosGenerales.eventos[0].diasActivo.Length; i++) 
         {
             if (diasemanana == EventosGenerales.eventos[0].diasActivo[i])
@@ -110,8 +115,12 @@ public class CambioTiempo : MonoBehaviour
                 HayEvento = true;
                 break;
             }
+        }*/
+        if (HayEvento)
+        {
+            IconoEvento.GetComponent<Image>().sprite = IconosEvento[1];
         }
-        if (!HayEvento)
+        else
         {
             IconoEvento.GetComponent<Image>().sprite = IconosEvento[0];
         }

@@ -80,6 +80,17 @@ public class Controlador_EventosGenerales : MonoBehaviour
         }
     }
 
+    public bool ChecarEvento(string diasemanana)
+    {
+        for (int i = 0; i < eventos[0].diasActivo.Length; i++)
+        {
+            if (diasemanana == eventos[0].diasActivo[i])
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     bool DiaValido(string[] dias, string diaActual)
     {
         foreach (string d in dias)
