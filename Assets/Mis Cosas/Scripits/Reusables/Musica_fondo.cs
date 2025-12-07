@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using static Scr_ControladorTiempo;
 
 public class Musica_fondo : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class Musica_fondo : MonoBehaviour
     private AudioSource source;
     private Coroutine soundLoopCoroutine;
     private AudioClip ultimoClip;
-
+    public AudioClip[] clips;
     private Scr_ControladorTiempo Tiempo;
     // Guarda si actualmente es día o noche
     private bool esDiaActual;
@@ -32,16 +33,16 @@ public class Musica_fondo : MonoBehaviour
             Debug.LogError("No se encontró un AudioSource.");
             return;
         }
-
+        StartCoroutine(LoopAleatorioSonido());
         // Detectar si inicia de día o noche
-        esDiaActual = EsDia();
+        //esDiaActual = EsDia();
 
         // Iniciar playlist correcta
-        IniciarMusicaSegunTiempo();
+        //IniciarMusicaSegunTiempo();
     }
 
     void Update()
-    {
+    {/*
         // Detectar cambio de día ↔ noche
         bool ahoraEsDia = EsDia();
 
@@ -49,7 +50,7 @@ public class Musica_fondo : MonoBehaviour
         {
             esDiaActual = ahoraEsDia;
             IniciarMusicaSegunTiempo();
-        }
+        }*/
     }
 
     // Detener loop aleatorio
@@ -70,10 +71,12 @@ public class Musica_fondo : MonoBehaviour
 
     void IniciarMusicaSegunTiempo()
     {
+        /*
         if (esDiaActual)
             IniciaLoopAtealorio(Musica_Dia);
         else
             IniciaLoopAtealorio(Musica_Noche);
+        */
     }
 
     public void IniciaLoopAtealorio(AudioClip[] sonidos)
@@ -85,11 +88,24 @@ public class Musica_fondo : MonoBehaviour
             StopCoroutine(soundLoopCoroutine);
 
         // Iniciar nueva playlist
-        soundLoopCoroutine = StartCoroutine(LoopAleatorioSonido(sonidos));
+        //soundLoopCoroutine = StartCoroutine(LoopAleatorioSonido(sonidos));
+    }
+    public AudioClip[] AcomodarAudio()
+    {
+        if (EsDia())
+        {
+            return  Musica_Dia;
+        }
+        else
+        {
+            return Musica_Noche;
+        }
     }
 
-    IEnumerator LoopAleatorioSonido(AudioClip[] clips)
+    IEnumerator LoopAleatorioSonido()
     {
+        clips= AcomodarAudio();
+        
         // Primera canción inmediata
         AudioClip primerClip = clips[Random.Range(0, clips.Length)];
         if (primerClip != null)
@@ -104,9 +120,11 @@ public class Musica_fondo : MonoBehaviour
         // LOOP infinito con pausa aleatoria
         while (true)
         {
-            float delay = Random.Range(MintiempoEspera, MaxtiempoEspera);
+            //float delay = Random.Range(MintiempoEspera, MaxtiempoEspera);
+            float delay = 2f;
             yield return new WaitForSeconds(delay);
 
+            clips = AcomodarAudio();
             AudioClip clip;
             do
             {

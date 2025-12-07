@@ -48,7 +48,9 @@ public class CambioTiempo : MonoBehaviour
 
     private void activarRadio()
     {
-        if (PlayerPrefs.GetString("Habilidad:" + "Radio", "No") == "Si")
+        //PlayerPrefs.GetString("Habilidad:" + "Radio", "No") == "Si"
+        //PlayerPrefs.GetInt("Estructura" + 8, 0) == 1
+        if (PlayerPrefs.GetInt("Estructura" + 8, 0) == 1)
         {
             Tiene_Radio = true;
         }
