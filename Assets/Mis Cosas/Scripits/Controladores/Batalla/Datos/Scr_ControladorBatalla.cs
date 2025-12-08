@@ -711,4 +711,51 @@ public class Scr_ControladorBatalla : MonoBehaviour
         }
         //Destroy(explosion);
     }
+
+
+    public void ChecarRango(string arma, int Rango)
+    {
+        if (Rango == 0) return;
+        //"Rango" + Nombre del arma
+        //PlayerPrefs.GetInt("Rango " + Datosarmas.TodasLasArmas[objShow].Nombre, 1)-1
+
+        switch (arma)
+        {
+            case "Brazos":
+                break;
+            case "Chile":
+                break;
+            case "Coco":
+                break;
+            case "Mango":
+                break;
+            case "Papa":
+                break;
+            case "Planta":
+                break;
+            case "Platano":
+                break;
+            case "Sandia":
+                break;
+            case "Tomate":
+                break;
+            case "Uva":
+                break;
+        }
+    }
+
+    public void Checar_Rango_Brazos(int Rango)
+    {
+        switch (Rango)
+        {
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+        }
+    }
 }

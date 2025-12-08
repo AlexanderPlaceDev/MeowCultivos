@@ -69,6 +69,9 @@ public class Scr_ControladorArmas : MonoBehaviour
 
 
     public string Tipo = "";
+    public float alcance;
+    public float area;
+    public float TamaProyectil;
 
     public bool ModoAutomático = false;
     GameObject Gata;
@@ -113,6 +116,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         Gata = GameObject.Find("Personaje");
         CantBalasActual = TodasLasArmas[ArmaActual].Capacidad;
         balascargador = TodasLasArmas[ArmaActual].CapacidadTotal;
+        alcance = TodasLasArmas[ArmaActual].Alcance;
         Physics.IgnoreLayerCollision(7, 8);
         //"Rango" + Nombre del arma
         //PlayerPrefs.GetInt("Rango " + Datosarmas.TodasLasArmas[objShow].Nombre, 1)-1
@@ -154,7 +158,6 @@ public class Scr_ControladorArmas : MonoBehaviour
         checarIdle();
         ChecarTemporal();
     }
-
 
     void Update()
     {
@@ -607,7 +610,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     {
         switch (TodasLasArmas[ArmaActual].Nombre)
         {
-            case "Puños":
+            case "Brazos":
                 return "Golpe " + numGolpe;
 
             case "Sandia":
@@ -836,4 +839,5 @@ public class Scr_ControladorArmas : MonoBehaviour
                 break;
         }
     }
+
 }

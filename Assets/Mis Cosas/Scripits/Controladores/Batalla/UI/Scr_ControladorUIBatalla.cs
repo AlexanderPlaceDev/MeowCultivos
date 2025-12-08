@@ -21,6 +21,8 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     [SerializeField] TextMeshProUGUI Descripciontxt;
     [SerializeField] GameObject Arma;
     [SerializeField] GameObject[] Armas;
+    [SerializeField] Image Rango;
+    [SerializeField] Sprite[] Rangos;
     [Header("Habilidades")]//para acomodar visaulmente los iconos de las habilidades
     [SerializeField] Sprite IconoVacio;
     [SerializeField] GameObject HabilidadTemporal;
@@ -168,6 +170,12 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
 
     }
 
+    public void MostrarRango()
+    {
+        int e = PlayerPrefs.GetInt("Rango " + DatosArma.Nombre, 1) - 1;
+        Debug.Log(e);
+        Rango.sprite = Rangos[e];
+    }
     public void MostrarHabilidadGuardada()
     {
 
@@ -228,7 +236,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             }
         }
         MostrarHabilidadGuardada();
-
+        MostrarRango();
         EsconderFlechasHabilidades();
         NoPocion = -2;
         PocionSelec = false;
@@ -246,7 +254,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             }
         }
         MostrarHabilidadGuardada();
-
+        MostrarRango();
         EsconderFlechasHabilidades();
         NoPocion = -2;
         PocionSelec = false;
