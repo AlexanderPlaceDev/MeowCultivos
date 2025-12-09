@@ -342,7 +342,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
 
     public void checarUsosHabilidad()
     {
-        Debug.LogError(ControladorBatalla.usosHabilidad);
+        //Debug.LogError(ControladorBatalla.usosHabilidad);
         int resultado = ControladorBatalla.usosHabilidad - 1; 
         ControladorBatalla.usosHabilidad = resultado;
         /*if (resultado <= 0)

@@ -66,8 +66,6 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     public bool minLimit = false;
     
-
-
     public string Tipo = "";
     public float alcance;
     public float area;
@@ -157,6 +155,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         Tipo = TodasLasArmas[ArmaActual].Tipo;
         checarIdle();
         ChecarTemporal();
+        GetComponent<Scr_ControladorBatalla>().ChecarRango(TodasLasArmas[ArmaActual].Nombre);
     }
 
     void Update()
@@ -294,7 +293,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     {
         // rango es currentWeapon.range, attackOrigin es el punto del jugador (ej. frente)
         Vector3 center = PuntodeArma != null ? PuntodeArma.position : transform.position;
-        float radius = TodasLasArmas[ArmaActual].Alcance;
+        float radius = alcance;
 
         Collider[] colliders = Physics.OverlapSphere(center, radius);
 
@@ -314,7 +313,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     {
         // rango es currentWeapon.range, attackOrigin es el punto del jugador (ej. frente)
         Vector3 center = PuntodeArma != null ? PuntodeArma.position : transform.position;
-        float radius = TodasLasArmas[ArmaActual].Alcance * 10;
+        float radius = alcance * 10;
         Collider[] colliders = Physics.OverlapSphere(center, radius);
 
         foreach (Collider col in colliders)
@@ -342,6 +341,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         temporizadorDisparo = 0;
         Atacando = true;
         GameObject bala = Instantiate(BalaADisparar, puntoDisparo.position, puntoDisparo.rotation);
+        bala.transform.localScale = bala.transform.localScale * TamaProyectil;
         float masdaño = 0;
         if (minLimit && CantBalasActual < 2)
         {
@@ -385,7 +385,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             CantBalasActual--;
         }
         //Anim.SetBool("EstaDisparando", false);
-        StartCoroutine(EsperarAtaque(TodasLasArmas[ArmaActual].Cadencia));
+        StartCoroutine(EsperarAtaque(cadencia));
     }
 
     public void DispararEscopeta()
@@ -400,6 +400,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         for (int i = 0; i < cantidadPerdigones; i++)
         {
             GameObject bala = Instantiate(BalaADisparar, puntoDisparo.position, puntoDisparo.rotation);
+            bala.transform.localScale = bala.transform.localScale * TamaProyectil;
             float masdaño = 0;
             if (minLimit && CantBalasActual < 2)
             {
@@ -433,7 +434,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         {
             CantBalasActual--;
         }
-        StartCoroutine(EsperarAtaque(TodasLasArmas[ArmaActual].Cadencia));
+        StartCoroutine(EsperarAtaque(cadencia));
     }
     public void Lazer()
     {
@@ -442,7 +443,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         Vector3 center = PuntodeArma != null ? PuntodeArma.position : transform.position;
 
         // Calcular el radio del láser (rango del arma escalado)
-        float radius = TodasLasArmas[ArmaActual].Alcance * 10;
+        float radius = alcance * 10;
 
         // Definir la dirección del láser (hacia donde apunta el arma)
         Vector3 direction = camara.transform.forward;
@@ -484,7 +485,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     {
         // rango es currentWeapon.range, attackOrigin es el punto del jugador (ej. frente)
         Vector3 center = PuntodeArma != null ? PuntodeArma.position : transform.position;
-        float radius = TodasLasArmas[ArmaActual].Alcance * 10;
+        float radius = alcance * 10;
         GameObject part = Instantiate(EfectoHabilidad, PuntodeArma.transform.position, EfectoHabilidad.transform.rotation);
         Destroy(part, espera);
     }
@@ -839,5 +840,37 @@ public class Scr_ControladorArmas : MonoBehaviour
                 break;
         }
     }
+    public void AumentarDaño(float plus)
+    {
+        daño = daño + (daño * plus);
+    }
+    public void AumentarAlcance(float plus)
+    {
+        alcance = alcance + (alcance * plus);
+    }
+    public void AumentarCadencia(float plus)
+    {
+        cadencia = cadencia - (cadencia * plus);
+    }
+    public void AumentarArea(float plus)
+    {
+        area = area + (area * plus);
+    }
+    public void AumentarCargador(int plus)
+    {
+        balascargador = balascargador + plus;
+    }
 
+    public void AumentarVelProyectil(float plus)
+    {
+        fuerzaDisparo = fuerzaDisparo + (fuerzaDisparo * plus);
+    }
+    public void AumentarProyectil(float plus)
+    {
+        TamaProyectil = TamaProyectil + (TamaProyectil * plus);
+    }
+    public void DisminuirDispersion(float plus)
+    {
+        dispersion = dispersion - (dispersion * plus);
+    }
 }

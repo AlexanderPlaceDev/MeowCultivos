@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using Unity.AI.Navigation;
-using Unity.Burst.Intrinsics;
-using Unity.VisualScripting;
+
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
@@ -81,13 +80,14 @@ public class Scr_ControladorBatalla : MonoBehaviour
     private Scr_GirarCamaraBatalla CamaraBatalla;
     private Scr_ControladorOleadas controladorOleadas;
     private bool DioRecompensa = false;
-
+    int Bonus=0;
     [SerializeField] public GameObject particulaElectrica;
     [SerializeField] public GameObject particulaQuemado;
     [SerializeField] public GameObject particulaCongelado;
     [SerializeField] public GameObject particulaEnvenado;
     [SerializeField] public GameObject ParticulaGolpe;
 
+    Scr_ControladorArmas armas;
     [Header("Efectos")]
     private Color ColorPrincipal = new Color(0, 0, 0);
 
@@ -116,6 +116,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     {
         Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
         Datosarmas = Singleton.GetComponent<Scr_DatosArmas>();
+        armas= GetComponent<Scr_ControladorArmas>();
         controladorOleadas = GetComponent<Scr_ControladorOleadas>();
         Personaje = GameObject.Find("Personaje");
         CamaraBatalla = Personaje.transform.GetChild(0).gameObject.GetComponent<Scr_GirarCamaraBatalla>();
@@ -713,9 +714,11 @@ public class Scr_ControladorBatalla : MonoBehaviour
     }
 
 
-    public void ChecarRango(string arma, int Rango)
+    public void ChecarRango(string arma)
     {
-        if (Rango == 0) return;
+        int Rango = PlayerPrefs.GetInt("Rango " + arma, 1) - 1;
+        Debug.Log(Rango);
+        if (Rango <= 0) return;
         //"Rango" + Nombre del arma
         //PlayerPrefs.GetInt("Rango " + Datosarmas.TodasLasArmas[objShow].Nombre, 1)-1
 
@@ -744,7 +747,107 @@ public class Scr_ControladorBatalla : MonoBehaviour
         }
     }
 
+    public void AumentarVelocidad(float plus)
+    {
+        Scr_Movimiento mov=Personaje.GetComponent<Scr_Movimiento>();
+        mov.VelAgachado = mov.VelAgachado + (mov.VelAgachado * plus);
+        mov.VelCaminar = mov.VelCaminar + (mov.VelCaminar * plus);
+        mov.VelCorrer = mov.VelCorrer + (mov.VelCorrer * plus);
+    }
     public void Checar_Rango_Brazos(int Rango)
+    {
+        switch (Rango)
+        {
+            case 1:
+                armas.AumentarDaño(.2f);
+                break;
+            case 2:
+                armas.AumentarDaño(.2f);
+                armas.AumentarCadencia(1);
+
+                break;
+            case 3:
+                armas.AumentarDaño(.2f);
+                armas.AumentarCadencia(1);
+                armas.AumentarAlcance(1f);
+                break;
+            case 4:
+                armas.AumentarDaño(.2f);
+                armas.AumentarCadencia(1);
+                armas.AumentarAlcance(1f);
+                break;
+        }
+    }
+    public void Checar_Rango_Chile(int Rango)
+    {
+        switch (Rango)
+        {
+            case 1:
+                armas.AumentarDaño(1);
+                break;
+            case 2:
+                armas.AumentarDaño(1);
+                armas.AumentarAlcance(1f);
+                break;
+            case 3:
+                armas.AumentarDaño(1);
+                armas.AumentarAlcance(1f);
+                armas.AumentarCargador(50);
+                break;
+            case 4:
+                armas.AumentarDaño(1);
+                armas.AumentarAlcance(1f);
+                armas.AumentarCargador(50);
+                break;
+        }
+    }
+    public void Checar_Rango_Coco(int Rango)
+    {
+        switch (Rango)
+        {
+            case 1:
+                menosDaño = .5f;
+                break;
+            case 2:
+                menosDaño = .5f;
+                AumentarVelocidad(.4f);
+                break;
+            case 3:
+                menosDaño = .5f;
+                AumentarVelocidad(.4f);
+                Bonus = 10;
+                break;
+            case 4:
+                menosDaño = .5f;
+                AumentarVelocidad(.4f);
+                Bonus = 10;
+                break;
+        }
+    }
+    public void Checar_Rango_Mango(int Rango)
+    {
+        switch (Rango)
+        {
+            case 1:
+                AumentarVelocidad(.4f);
+                break;
+            case 2:
+                AumentarVelocidad(.4f);
+                armas.AumentarDaño(2);
+                break;
+            case 3:
+                AumentarVelocidad(.4f);
+                armas.AumentarDaño(2);
+                armas.AumentarDaño(4);
+                break;
+            case 4:
+                AumentarVelocidad(.4f);
+                armas.AumentarDaño(2);
+                armas.AumentarDaño(4);
+                break;
+        }
+    }
+    public void Checar_Rango_Papa(int Rango)
     {
         switch (Rango)
         {
@@ -755,6 +858,121 @@ public class Scr_ControladorBatalla : MonoBehaviour
             case 3:
                 break;
             case 4:
+                break;
+        }
+    }
+    public void Checar_Rango_Planta(int Rango)
+    {
+        switch (Rango)
+        {
+            case 1:
+                armas.AumentarArea(7);
+                break;
+            case 2:
+                armas.AumentarArea(7);
+                armas.AumentarAlcance(.8f);
+                break;
+            case 3:
+                armas.AumentarArea(7);
+                armas.AumentarAlcance(.8f);
+                AumentarVelocidad(.4f);
+                break;
+            case 4:
+                armas.AumentarArea(7);
+                armas.AumentarAlcance(.8f);
+                AumentarVelocidad(.4f);
+                break;
+        }
+    }
+    public void Checar_Rango_Platano(int Rango)
+    {
+        switch (Rango)
+        {
+            case 1:
+                armas.AumentarDaño(.15f);
+                break;
+            case 2:
+                armas.AumentarDaño(.15f);
+                armas.AumentarCargador(5);
+                break;
+            case 3:
+                armas.AumentarDaño(.15f);
+                armas.AumentarCargador(5);
+                armas.AumentarCadencia(1);
+                break;
+            case 4:
+                armas.AumentarDaño(.15f);
+                armas.AumentarCargador(5);
+                armas.AumentarCadencia(1);
+                break;
+        }
+    }
+    public void Checar_Rango_Sandia(int Rango)
+    {
+        switch (Rango)
+        {
+            case 1:
+                armas.AumentarDaño(.3f);
+                break;
+            case 2:
+                armas.AumentarDaño(.3f);
+                AumentarVelocidad(.3f);
+                break;
+            case 3:
+                armas.AumentarDaño(.3f);
+                AumentarVelocidad(.3f);
+                armas.AumentarAlcance(.5f);
+                break;
+            case 4:
+                armas.AumentarDaño(.3f);
+                AumentarVelocidad(.3f);
+                armas.AumentarAlcance(.5f);
+                break;
+        }
+    }
+    public void Checar_Rango_Tomate(int Rango)
+    {
+        switch (Rango)
+        {
+            case 1:
+                armas.AumentarVelProyectil(.5f);
+                break;
+            case 2:
+                armas.AumentarVelProyectil(.5f);
+                armas.DisminuirDispersion(.5f);
+                break;
+            case 3:
+                armas.AumentarVelProyectil(.5f);
+                armas.DisminuirDispersion(.5f);
+                armas.AumentarProyectil(.5f);
+                break;
+            case 4:
+                armas.AumentarVelProyectil(.5f);
+                armas.DisminuirDispersion(.5f);
+                armas.AumentarProyectil(.5f);
+                break;
+        }
+    }
+    public void Checar_Rango_Uva(int Rango)
+    {
+        switch (Rango)
+        {
+            case 1:
+                armas.AumentarDaño(.15f);
+                break;
+            case 2:
+                armas.AumentarDaño(.15f);
+                armas.AumentarProyectil(.5f);
+                break;
+            case 3:
+                armas.AumentarDaño(.15f);
+                armas.AumentarProyectil(.5f);
+                armas.AumentarCargador(5);
+                break;
+            case 4:
+                armas.AumentarDaño(.15f);
+                armas.AumentarProyectil(.5f);
+                armas.AumentarCargador(5);
                 break;
         }
     }
