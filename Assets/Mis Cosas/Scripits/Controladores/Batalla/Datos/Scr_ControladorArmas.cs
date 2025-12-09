@@ -69,7 +69,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     public string Tipo = "";
     public float alcance;
     public float area;
-    public float TamaProyectil;
+    public float TamaProyectil=1;
 
     public bool ModoAutomático = false;
     GameObject Gata;
@@ -293,7 +293,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     {
         // rango es currentWeapon.range, attackOrigin es el punto del jugador (ej. frente)
         Vector3 center = PuntodeArma != null ? PuntodeArma.position : transform.position;
-        float radius = alcance;
+        float radius = alcance + MasDistancia;
 
         Collider[] colliders = Physics.OverlapSphere(center, radius);
 
@@ -353,6 +353,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         }
         bala.GetComponent<Balas>().daño = daño + masdaño;
         bala.GetComponent<Balas>().penetracion += Maspenetracion;
+        bala.GetComponent<Balas>().MasArea += MasDistancia;
         // Calcular dirección del disparo
         Vector3 direccionDisparo;
 
@@ -412,6 +413,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             }
             bala.GetComponent<Balas>().daño = dañopoerdigon + masdaño;
             bala.GetComponent<Balas>().penetracion = 2 + Maspenetracion;
+            bala.GetComponent<Balas>().MasArea += MasDistancia;
             // Direccion base
             Vector3 direccionBase = camara.transform.forward;
 
@@ -854,7 +856,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     }
     public void AumentarArea(float plus)
     {
-        area = area + (area * plus);
+        MasDistancia = MasDistancia + plus;
     }
     public void AumentarCargador(int plus)
     {

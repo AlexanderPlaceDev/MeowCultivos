@@ -11,6 +11,7 @@ public class Balas : MonoBehaviour
     public GameObject Controlador;
     public bool Rebota = false;
 
+    public float MasArea = 0;
     private Rigidbody rb;
 
 
@@ -98,7 +99,7 @@ public class Balas : MonoBehaviour
         Destroy(explosion, 2f); // 2f es el tiempo en segundos; ajusta según la duración del efecto
 
         // Obtén todos los colliders en el radio de explosión
-        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius + MasArea);
 
         foreach (Collider col in colliders)
         {
