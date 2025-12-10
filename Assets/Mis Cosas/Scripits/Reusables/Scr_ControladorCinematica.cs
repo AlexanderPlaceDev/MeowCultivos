@@ -35,13 +35,11 @@ public class Scr_ControladorCinematica : MonoBehaviour
             var brain = Camera.main.GetComponent<CinemachineBrain>();
             if (Easy[Escena])
             {
-                Debug.Log("Ajusta Tiempo ease");
                 brain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.EaseInOut;
                 brain.m_DefaultBlend.m_Time = Tiempos[Escena];
             }
             else
             {
-                Debug.Log("Entra Cut");
                 brain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.Cut;
             }
 
@@ -166,6 +164,19 @@ public class Scr_ControladorCinematica : MonoBehaviour
     {
         Debug.Log("Escena Guardada");
         PlayerPrefs.SetString("Cinematica " + Cinematica, "Si");
+
+        Scr_ControladorTiempo Tiempo = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
+
+        PlayerPrefs.SetString("DiaCinematica:" + gameObject.transform.parent.parent.name, Tiempo.DiaActual);
+        PlayerPrefs.SetInt("HoraCinematica:" + gameObject.transform.parent.parent.name, Tiempo.HoraActual);
+        Debug.Log("Guarda desde: " + gameObject.name);
+        if (transform.parent.parent.GetComponent<Scr_ActivadorElementos>().CinematicaSiguiente == null && transform.parent.parent.GetComponent<Scr_ActivadorElementos>().UsaEventoGeneral)
+        {
+            Debug.Log("Desactiva evento");
+            GameObject.Find("EventosGenerales").GetComponent<Controlador_EventosGenerales>().DesactivarEvento(transform.parent.parent.GetComponent<Scr_ActivadorElementos>().NombreEventoGeneral);
+        }
+        PlayerPrefs.Save();
+
     }
 
     public void GuardarPosicion(Transform Trans)

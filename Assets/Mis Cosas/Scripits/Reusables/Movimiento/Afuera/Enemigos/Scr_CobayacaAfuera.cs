@@ -18,8 +18,29 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
     private bool ejecutando = false; // para evitar solapamientos de corutinas
     private Vector3 destino;
 
+    // ======= SONIDOS =======
+    private Scr_Sonidos sonidos;
+    private AudioSource audioSource;
+
+    private Coroutine rutinaSonidos;
+    private float pitchOriginal;
+    private float velocidadOriginal;
+    private bool reproduciendoSonidos = false;
+
+
     void Start()
     {
+
+        sonidos = GetComponent<Scr_Sonidos>();
+        audioSource = GetComponent<AudioSource>();
+
+        pitchOriginal = audioSource.pitch;
+        velocidadOriginal = anim.speed; // por si usas velocidad de animación
+
+        rutinaSonidos = StartCoroutine(RutinaSonidosCaminar());
+        reproduciendoSonidos = true;
+
+
         if (GetComponent<NavMeshAgent>().isOnNavMesh)
         {
             agente = GetComponent<NavMeshAgent>();
@@ -40,11 +61,58 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
             if (Vector3.Distance(transform.position, destino) < agente.stoppingDistance)
             {
                 // Genera nuevo punto de huida cada poco tiempo
-                destino = ObtenerDestinoAleatorio();
+                destino = ObtenerDestinoAleatorioSeguro();
                 agente.SetDestination(destino);
             }
         }
     }
+
+    IEnumerator RutinaSonidosCaminar()
+    {
+        while (!corriendo)
+        {
+            if (sonidos.caminar_sonido.Length > 0)
+            {
+                AudioClip clip = sonidos.caminar_sonido[Random.Range(0, sonidos.caminar_sonido.Length)];
+                audioSource.pitch = pitchOriginal;
+                audioSource.PlayOneShot(clip);
+            }
+
+            float espera = Random.Range(5f, 20f);
+
+            float t = 0f;
+            while (t < espera && !corriendo)
+            {
+                t += Time.deltaTime;
+                yield return null;
+            }
+        }
+    }
+
+    IEnumerator RutinaSonidosCorrer()
+    {
+        while (corriendo)
+        {
+            if (sonidos.correr_sonido.Length > 0)
+            {
+                AudioClip clip = sonidos.correr_sonido[Random.Range(0, sonidos.correr_sonido.Length)];
+                audioSource.pitch = pitchOriginal + 0.1f;
+                audioSource.PlayOneShot(clip);
+            }
+
+            // Espera entre 1 y 3 segundos
+            float espera = Random.Range(1f, 3f);
+
+            float t = 0f;
+            while (t < espera && corriendo)
+            {
+                t += Time.deltaTime;
+                yield return null;
+            }
+        }
+    }
+
+
 
     // ================================
     // RUTINA PRINCIPAL DE COMPORTAMIENTO
@@ -55,9 +123,9 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
         ejecutando = true;
 
         int rnd = Random.Range(0, 100);
-        if (rnd < 60)
+        if (rnd < 40)
             StartCoroutine(EjecutarIdle("Iddle1", duracionIdle1));
-        else if (rnd < 80)
+        else if (rnd < 60)
             StartCoroutine(EjecutarIdle("Iddle2", duracionIdle2));
         else
             StartCoroutine(EjecutarCaminar());
@@ -87,7 +155,7 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
         {
             agente.isStopped = false;
             agente.speed = Velocidad;
-            destino = ObtenerDestinoAleatorio();
+            destino = ObtenerDestinoAleatorioSeguro();
             agente.SetDestination(destino);
             
             float tiempo = 0f;
@@ -126,15 +194,24 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
             Debug.Log("Mantiene");
             jaba = other.gameObject;
             corriendo = true;
+
+            // Parar rutinas anteriores
             StopAllCoroutines();
+
+            // Cambios de sonido
+            audioSource.pitch = pitchOriginal + 0.1f;
+            anim.speed = velocidadOriginal * 1.3f;
+            rutinaSonidos = StartCoroutine(RutinaSonidosCorrer());
+
             ejecutando = false;
             CambiarAnimacion("Corriendo");
 
             agente.isStopped = false;
             agente.speed = velocidadCorrer;
-            destino = ObtenerDestinoAleatorio();
+            destino = ObtenerDestinoAleatorioSeguro();
             agente.SetDestination(destino);
         }
+
     }
 
     private void OnTriggerExit(Collider other)
@@ -143,6 +220,14 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
         {
             jaba = null;
             corriendo = false;
+
+            // Restaurar sonido
+            audioSource.pitch = pitchOriginal;
+            anim.speed = velocidadOriginal;
+
+            // Reanudar sonidos normales
+            rutinaSonidos = StartCoroutine(RutinaSonidosCaminar());
+
             agente.isStopped = true;
             agente.ResetPath();
             agente.velocity = Vector3.zero;
@@ -151,24 +236,38 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
             ejecutando = false;
             LanzarNuevoEstado();
         }
+
     }
 
     // ================================
     // UTILIDADES
     // ================================
-    Vector3 ObtenerDestinoAleatorio()
+    Vector3 ObtenerDestinoAleatorioSeguro()
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 20; i++)
         {
             Vector3 randomDirection = Random.insideUnitSphere * RadioDeDeambulacion;
             randomDirection.y = 0;
             randomDirection += transform.position;
+
             if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, RadioDeDeambulacion, NavMesh.AllAreas))
-                if (Vector3.Distance(transform.position, hit.position) > agente.stoppingDistance * 2)
+            {
+                NavMeshPath path = new NavMeshPath();
+                agente.CalculatePath(hit.position, path);
+
+                // Solo aceptar destinos con camino COMPLETO
+                if (path.status == NavMeshPathStatus.PathComplete)
                     return hit.position;
+            }
         }
-        return transform.position;
+
+        // Si todos fallan, busca en pequeño radio
+        Vector3 fallback = transform.position + (Random.insideUnitSphere * 2f);
+        fallback.y = transform.position.y;
+
+        return fallback;
     }
+
 
     void CambiarAnimacion(string nueva)
     {

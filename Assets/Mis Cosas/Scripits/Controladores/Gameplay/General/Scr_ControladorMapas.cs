@@ -104,11 +104,9 @@ public class Scr_ControladorMapas : MonoBehaviour
 
         if (cargando)
         {
-            Debug.Log("[GuardarEstadoMapas] Cancelado: aún se está cargando.");
             return;
         }
 
-        Debug.Log("[GuardarEstadoMapas] Guardando estados de los hijos...");
         int childCount = transform.childCount;
 
         for (int i = 0; i < childCount; i++)
@@ -117,11 +115,9 @@ public class Scr_ControladorMapas : MonoBehaviour
             string key = "MapaActivo:" + child.name;
             string valor = child.gameObject.activeSelf ? "Si" : "No";
             PlayerPrefs.SetString(key, valor);
-            Debug.Log($"[GuardarEstadoMapas] {child.name} = {valor}");
         }
 
         PlayerPrefs.Save();
-        Debug.Log("[GuardarEstadoMapas] PlayerPrefs guardados.");
     }
 
     private void OnApplicationQuit()
