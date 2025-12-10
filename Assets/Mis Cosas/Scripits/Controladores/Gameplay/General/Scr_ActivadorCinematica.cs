@@ -19,7 +19,7 @@ public class Scr_ActivadorCinematica : MonoBehaviour
             gameObject.GetComponent<Collider>().enabled = false;
         }
 
-        if(PlayerPrefs.GetString("Cinematica " + CinematicaAnterior, "No") == "Si")
+        if (PlayerPrefs.GetString("Cinematica " + CinematicaAnterior, "No") == "Si")
         {
             gameObject.GetComponent<Collider>().enabled = true;
         }
@@ -70,7 +70,23 @@ public class Scr_ActivadorCinematica : MonoBehaviour
         // ✅ Guardar la cinemática como completada
         PlayerPrefs.SetString("Cinematica " + Cinematica, "Si");
 
-        // ✅ Activar activador siguiente cinematica
+        Scr_ControladorTiempo Tiempo = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
+        PlayerPrefs.SetString("DiaCinematica:" + gameObject.transform.parent.parent.name, Tiempo.DiaActual);
+        PlayerPrefs.SetInt("HoraCinematica:" + gameObject.transform.parent.parent.name, Tiempo.HoraActual);
+        Debug.Log("Guarda desde: " + gameObject.name);
+
+        Scr_ActivadorElementos ActivadorPadre = transform.parent.GetComponent<Scr_ActivadorElementos>();
+
+        if (ActivadorPadre != null)
+        {
+            if (string.IsNullOrEmpty(ActivadorPadre.CinematicaSiguiente) && ActivadorPadre.UsaEventoGeneral)
+            {
+                Debug.Log("Desactiva evento");
+                GameObject.Find("EventosGenerales").GetComponent<Controlador_EventosGenerales>().DesactivarEvento(transform.parent.GetComponent<Scr_ActivadorElementos>().NombreEventoGeneral);
+            }
+        }
+
+        PlayerPrefs.Save();
 
 
         // ✅ Reactivar movimiento y cámara

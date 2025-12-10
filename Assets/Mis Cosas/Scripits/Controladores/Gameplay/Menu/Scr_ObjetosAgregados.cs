@@ -22,10 +22,14 @@ public class Scr_ObjetosAgregados : MonoBehaviour
     private AudioSource xpAudioSource;
     // Guarda índices de los objetos que ya dieron XP
     private HashSet<int> xpOtorgada = new HashSet<int>();
+    Scr_DatosSingletonBatalla Singleton;
 
 
     void Start()
     {
+        Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
+
+
         // Asegurar que Tiempo tenga el tamaño correcto
         if (Iconos != null)
         {
@@ -60,6 +64,9 @@ public class Scr_ObjetosAgregados : MonoBehaviour
 
     void Update()
     {
+
+        if (Singleton != null)
+            ProcesarRecompensasSingleton();
         MostrarObjetosEnCanvas();
 
         if (Iconos == null || Iconos.Length == 0) return;
@@ -142,6 +149,44 @@ public class Scr_ObjetosAgregados : MonoBehaviour
         }
     }
 
+    private void ProcesarRecompensasSingleton()
+    {
+        if (Singleton == null) return;
+
+        var listaObjs = Singleton.ObjetosRecompensa;
+        var listaCants = Singleton.CantidadesRecompensa;
+
+        if (listaObjs == null || listaCants == null) return;
+        if (listaObjs.Count == 0 || listaCants.Count == 0) return;
+
+        // Asegurarse que tienen el mismo tamaño
+        int cantidad = Mathf.Min(listaObjs.Count, listaCants.Count);
+        if (cantidad == 0) return;
+
+        for (int i = 0; i < cantidad; i++)
+        {
+            var obj = listaObjs[i];
+            int cant = listaCants[i];
+
+            if (obj == null || cant <= 0)
+                continue;
+
+            // 1️⃣ Agregar al inventario real
+            Inventario?.AgregarObjeto(cant, obj.Nombre);
+
+            // 2️⃣ Añadir al canvas (tu sistema actual)
+            Lista.Add(obj);
+            Cantidades.Add(cant);
+
+            // Asignar un timer al nuevo ítem visual
+            if (Tiempo != null && Lista.Count - 1 < Tiempo.Length)
+                Tiempo[Lista.Count - 1] = 2f;
+        }
+
+        // 3️⃣ Limpiar completamente las listas del Singleton
+        listaObjs.Clear();
+        listaCants.Clear();
+    }
 
 
     public void AgregarExperiencia(int cantidadXP)
