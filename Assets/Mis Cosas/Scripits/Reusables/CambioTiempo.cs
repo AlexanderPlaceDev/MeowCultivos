@@ -30,7 +30,7 @@ public class CambioTiempo : MonoBehaviour
     public int HoraPredeterminada = 8;
     public int MinutoPredeterminada = 0;
 
-    private int minValueH = 0;
+    private int minValueH = 1;
     private int maxValueH = 24;
 
     private int minValueM = 0;
@@ -202,7 +202,7 @@ public class CambioTiempo : MonoBehaviour
         }
         else 
         {
-            hA = Mathf.Clamp(hA - 10, minValueH, maxValueH);
+            hA = Mathf.Clamp(hA - 1, minValueH, maxValueH);
         }
         Hora.text = hA.ToString();
     }
@@ -237,7 +237,7 @@ public class CambioTiempo : MonoBehaviour
         }
         else
         {
-            hM = Mathf.Clamp(hM - 1, minValueM, maxValueM);
+            hM = Mathf.Clamp(hM - 10, minValueM, maxValueM);
         }
         /*
         int ha = ObtenerHoraActual();

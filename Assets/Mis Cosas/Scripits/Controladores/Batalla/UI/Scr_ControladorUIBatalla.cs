@@ -83,6 +83,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         {
             Tutopeleas = tu.GetComponent<Tutorial_peleas>();
         }
+        MostrarRango();
     }
 
     void Update()
