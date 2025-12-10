@@ -289,7 +289,6 @@ public class scr_BotonesMenuJuego : MonoBehaviour
 
     void ActualiarNotificacion()
     {
-        Debug.Log(BotonActual + "BotonA");
         if (PlayerPrefs.GetInt("PuntosDeHabilidad", 0) > 0)
         {
             Botones[1].transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetInt("PuntosDeHabilidad", 0).ToString();
@@ -299,27 +298,23 @@ public class scr_BotonesMenuJuego : MonoBehaviour
             {
                 //Inventario
                 case 0:
-                    Debug.Log("Entra0Puntos");
                     SuaveActivarNotificacion(Botones[1].transform.GetChild(2).gameObject);
                     SuaveDesactivarNotificacion(Botones[2].transform.GetChild(3).gameObject);
                     SuaveDesactivarNotificacion(Botones[3].transform.GetChild(2).gameObject);
                     break;
                     //Habilidades
                 case 1:
-                    Debug.Log("Entra1Puntos");
                     SuaveDesactivarNotificacion(Botones[1].transform.GetChild(2).gameObject);
                     SuaveActivarNotificacion(Botones[2].transform.GetChild(3).gameObject);
                     SuaveDesactivarNotificacion(Botones[3].transform.GetChild(2).gameObject);
                     break;
                     //Misiones
                 case 2:
-                    Debug.Log("Entra2Puntos");
                     SuaveDesactivarNotificacion(Botones[1].transform.GetChild(2).gameObject);
                     SuaveDesactivarNotificacion(Botones[2].transform.GetChild(3).gameObject);
                     SuaveActivarNotificacion(Botones[3].transform.GetChild(2).gameObject);
                     break;
                 default:
-                    Debug.Log("EntraDefaultPuntos");
                     SuaveDesactivarNotificacion(Botones[1].transform.GetChild(2).gameObject);
                     SuaveDesactivarNotificacion(Botones[2].transform.GetChild(3).gameObject);
                     SuaveDesactivarNotificacion(Botones[3].transform.GetChild(2).gameObject);

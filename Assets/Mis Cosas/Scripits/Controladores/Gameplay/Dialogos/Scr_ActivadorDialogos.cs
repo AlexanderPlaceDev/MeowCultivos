@@ -458,7 +458,6 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (!other.CompareTag("Gata")) return;
-        Debug.Log("Sale");
         estaAdentro = false;
         OcultarIconos();
     }

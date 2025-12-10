@@ -1,122 +1,277 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Scr_ActivadorElementos : MonoBehaviour
 {
-    [SerializeField] private bool EsEvento;
-    [SerializeField] private string NombreEvento;
+    [SerializeField] private bool EsCinematica;
+    [SerializeField] public string NombreCinematica;
+    [SerializeField] private string CinematicaPrevia;
+    [SerializeField] public string CinematicaSiguiente;
+    [SerializeField] public bool UsaEventoGeneral;
+    [SerializeField] public string NombreEventoGeneral;
     [SerializeField] private string HabilidadNecesaria;
+
+    // AHORA SOLO HORAS
+    [SerializeField] private bool UsaHorarioFijo = true; // si false → activo todo el día
+
     [SerializeField] private int HoraMinima;
-    [SerializeField] private int MinutosMinimos;
     [SerializeField] private int HoraMaxima;
-    [SerializeField] private int MinutosMaximos;
 
     [Header("Condiciones extra")]
-    [SerializeField] private string[] DiasValidos;        // Ej: LUN, MAR, MIE
+    [SerializeField] private string[] DiasValidos;
     [Range(0f, 1f)]
-    [SerializeField] private float ProbabilidadDia = 1f;  // 1 = 100%, 0.5 = 50%, etc.
+    [SerializeField] private float ProbabilidadDia = 1f;
 
     [SerializeField] private GameObject[] ElementosAActivar;
 
-    private Scr_ControladorTiempo Tiempo;
+    [Header("Control de reactivación")]
+    public int HorasParaReactivar = 24;
 
-    // Control interno
+    private Scr_ControladorTiempo Tiempo;
+    private Controlador_EventosGenerales Eventos;
+
     private string diaUltimaRevision = "";
     private bool diaPermitido = true;
-    private bool rangoActivoContinuado = false; // para permitir seguir tras medianoche
+    private bool prevActivado = false;
 
     void Start()
     {
         Tiempo = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
+        Eventos = GameObject.Find("EventosGenerales").GetComponent<Controlador_EventosGenerales>();
     }
 
     void Update()
     {
-        // Habilidad
+        // HABILIDAD
         string keyHabilidad = "Habilidad:" + HabilidadNecesaria;
-        bool tieneHabilidad = PlayerPrefs.GetString(keyHabilidad, "No") == "Si";
 
-        // Hora actual en minutos totales (00:00 = 0, 23:59 = 1439)
-        float horaActual = Tiempo.HoraActual;
-        float minutoActual = Tiempo.MinutoActual;
-        float actualEnMinutos = horaActual * 60f + minutoActual;
-
-        // Rango configurado convertido a minutos totales
-        float rangoMin = HoraMinima * 60f + MinutosMinimos;
-        float rangoMax = HoraMaxima * 60f + MinutosMaximos;
-
-        bool dentroDeRango;
-        if (rangoMin <= rangoMax)
+        bool tieneHabilidad = false;
+        if (string.IsNullOrEmpty(HabilidadNecesaria))
         {
-            // Caso normal: dentro del mismo día
-            dentroDeRango = actualEnMinutos >= rangoMin && actualEnMinutos <= rangoMax;
+            tieneHabilidad = true;
         }
         else
         {
-            // Caso que cruza medianoche: ej. 22:00 a 02:00
-            dentroDeRango = (actualEnMinutos >= rangoMin && actualEnMinutos <= 1439f) ||
-                            (actualEnMinutos >= 0f && actualEnMinutos <= rangoMax);
+            tieneHabilidad = PlayerPrefs.GetString(keyHabilidad, "No") == "Si";
         }
 
-        // Evento
-        bool eventoValido = true;
-        if (EsEvento)
-        {
-            string key = "Cinematica " + NombreEvento;
-            eventoValido = PlayerPrefs.GetString(key, "No") != "Si";
-        }
+        int horaActual = Tiempo.HoraActual;
 
-        // Día actual
-        string diaActual = Tiempo.DiaActual;
+        float rangoMin, rangoMax;
 
-        // Si no estamos en rango, reseteamos el "modo continuado"
-        if (!dentroDeRango)
+        // -------------------------------
+        // ✔ SI USA EVENTO GENERAL
+        // -------------------------------
+        if (UsaEventoGeneral)
         {
-            rangoActivoContinuado = false;
-        }
-
-        // ✅ Verificar días válidos con probabilidad
-        bool diaCorrecto = true;
-        if (DiasValidos != null && DiasValidos.Length > 0)
-        {
-            // Si el rango apenas empieza, hacemos el sorteo
-            if (!rangoActivoContinuado && dentroDeRango)
+            var evento = Eventos.ObtenerEventoPorNombre(NombreEventoGeneral);
+            if (evento == null)
             {
-                // Nuevo rango = nuevo chequeo
-                if (diaUltimaRevision != diaActual)
-                {
-                    diaUltimaRevision = diaActual;
-                    diaPermitido = Random.value <= ProbabilidadDia;
-                }
-
-                // Validamos día + probabilidad
-                diaCorrecto = System.Array.Exists(DiasValidos, d => d == diaActual) && diaPermitido;
-
-                // Si entra, mantenemos el "modo continuado"
-                if (diaCorrecto) rangoActivoContinuado = true;
+                prevActivado = false;
+                return;
             }
-            else if (rangoActivoContinuado)
+
+            // Día válido
+            bool esDia = Array.Exists(evento.diasActivo, d => d == Tiempo.DiaActual);
+
+            // Mapa activo
+            bool mapaActivo = (evento.mapaAsociado == null) || evento.mapaAsociado.activeInHierarchy;
+
+            if (!(esDia && mapaActivo))
             {
-                // Si ya estaba activo antes de la medianoche, seguimos hasta que termine rango
-                diaCorrecto = true;
+                prevActivado = false;
+                return;
+            }
+
+            // SOLO HORAS
+            rangoMin = evento.horaInicio;
+            rangoMax = evento.horaFin;
+        }
+        else
+        {
+            // Si NO usa evento general, decidimos si usa horario o todo el día
+            if (UsaHorarioFijo)
+            {
+                rangoMin = HoraMinima;
+                rangoMax = HoraMaxima;
             }
             else
             {
-                diaCorrecto = false;
+                // Activo TODO EL DÍA
+                rangoMin = 0;
+                rangoMax = 24;
             }
         }
 
-        // ✅ Condiciones finales
-        bool condicionesCumplidas = tieneHabilidad && dentroDeRango && eventoValido && diaCorrecto;
 
-        foreach (var elemento in ElementosAActivar)
+        // Rango horario (soporta cruce de medianoche)
+
+        bool dentroDeRango = false;
+        if (rangoMin <= rangoMax)
         {
-            if (elemento != null)
+            // Rango normal (ej. 8:00 a 17:00)
+            if (horaActual >= rangoMin && horaActual <= rangoMax)
             {
-                elemento.SetActive(condicionesCumplidas);
+                dentroDeRango = true;
+            }
+        }
+        else
+        {
+            // Rango invertido (ej. 22:00 a 3:00)
+            if (horaActual >= rangoMin || horaActual <= rangoMax)
+            {
+                dentroDeRango = true;
             }
         }
 
+        // CINE PREVIA
+        bool vioCinematicaPrevia = false;
+
+        if (string.IsNullOrEmpty(CinematicaPrevia))
+        {
+            Debug.Log(5 + " " + gameObject.name);
+            vioCinematicaPrevia = true;
+        }
+        else
+        {
+            Debug.Log(PlayerPrefs.GetString("Cinematica " + CinematicaPrevia, "No") + " cinematica " + CinematicaPrevia);
+            if (PlayerPrefs.GetString("Cinematica " + CinematicaPrevia, "No") == "Si")
+            {
+                Debug.Log(7);
+                vioCinematicaPrevia = true;
+            }
+        }
+
+        // NO haber visto esta
+        bool noHaVistoEsta = true;
+
+        if (UsaEventoGeneral)
+        {
+            if (PlayerPrefs.GetString("Cinematica " + NombreCinematica, "No") == "No")
+            {
+                noHaVistoEsta = true;
+            }
+            else
+            {
+                noHaVistoEsta = false;
+                if (CinematicaSiguiente == null)
+                {
+                    Eventos.DesactivarEvento(NombreEventoGeneral);
+                }
+
+            }
+        }
+        if (!EsCinematica)
+        {
+            noHaVistoEsta = true;
+        }
+
+        // --- CONTROL DE TIEMPO SOLO POR DÍA ---
+        bool bloqueadoPorTiempo = true;
+        if (string.IsNullOrEmpty(CinematicaPrevia))
+        {
+            bloqueadoPorTiempo = false;
+        }
+        else
+        {
+            string ultimoDia = PlayerPrefs.GetString("DiaCinematica:" + CinematicaPrevia, "");
+            int ultimaHora = PlayerPrefs.GetInt("HoraCinematica:" + CinematicaPrevia, -1);
+            if (!string.IsNullOrEmpty(ultimoDia) && ultimaHora >= 0)
+            {
+                int diaPrev = GetDayIndex(ultimoDia);
+                int diaAct = GetDayIndex(Tiempo.DiaActual);
+                int difDias = diaAct - diaPrev;
+                if (difDias < 0) difDias += 7; // Ajuste para semanas
+
+                if (difDias > 0 && Tiempo.HoraActual >= ultimaHora)
+                {
+                    bloqueadoPorTiempo = false;
+                }
+                else
+                {
+                    bloqueadoPorTiempo = true;
+                }
+            }
+            else
+            {
+                bloqueadoPorTiempo = true;
+            }
+        }
+
+        // DÍA
+        bool diaCorrecto = DiaEsValido(Tiempo.DiaActual);
+
+        // Probabilidad diaria
+        if (!UsaEventoGeneral && ProbabilidadDia < 1f)
+        {
+            if (diaUltimaRevision != Tiempo.DiaActual)
+            {
+                diaUltimaRevision = Tiempo.DiaActual;
+                diaPermitido = UnityEngine.Random.value <= ProbabilidadDia;
+            }
+
+            diaCorrecto &= diaPermitido;
+        }
+
+        Debug.Log("Habilidad:" + tieneHabilidad + " Enrango:" + dentroDeRango + " Dia:" + diaCorrecto + " previa:" + vioCinematicaPrevia + " nohavistoesta:" + noHaVistoEsta + " Bloqueada:" + bloqueadoPorTiempo + " " + gameObject.name);
+
+        bool activar =
+            tieneHabilidad &&
+            dentroDeRango &&
+            diaCorrecto &&
+            vioCinematicaPrevia &&
+            noHaVistoEsta &&
+            !bloqueadoPorTiempo;
+
+        // Activación de objetos
+        foreach (var obj in ElementosAActivar)
+            if (obj != null)
+                obj.SetActive(activar);
+
+        // Guardar cinemática vista
+        if (EsCinematica)
+        {
+            if (activar && !prevActivado)
+            {
+                // Guardar solo día + hora
+                PlayerPrefs.SetString("DiaCinematica:" + NombreCinematica, Tiempo.DiaActual);
+                PlayerPrefs.SetInt("HoraCinematica:" + NombreCinematica, Tiempo.HoraActual);
+
+                PlayerPrefs.Save();
+            }
+            prevActivado = activar;
+        }
+    }
+
+    // Devuelve el índice del día (LUN=0, MAR=1,... DOM=6)
+    private int GetDayIndex(string dia)
+    {
+        string[] dias = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
+        int idx = Array.IndexOf(dias, dia);
+        return Mathf.Clamp(idx, 0, 6);
+    }
+
+    private bool DiaEsValido(string diaActual)
+    {
+        string[] dias;
+
+        if (UsaEventoGeneral)
+        {
+            var evento = Eventos.ObtenerEventoPorNombre(NombreEventoGeneral);
+            if (evento == null)
+                return false;
+
+            dias = evento.diasActivo;
+        }
+        else
+        {
+            dias = DiasValidos;
+        }
+
+        if (dias == null || dias.Length == 0) return true;
+
+        return Array.Exists(dias, d => d == diaActual);
     }
 }

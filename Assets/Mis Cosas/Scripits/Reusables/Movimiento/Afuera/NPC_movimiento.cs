@@ -65,7 +65,6 @@ public class NPC_movimiento : MonoBehaviour
                 Esperando = false;
                 ReiniciarPosiciones();
                 diaAnterior = ContolT.DiaActual;
-                Debug.Log("aa");
                 MoverAlLugarMasCercano();
             }
 
@@ -91,7 +90,6 @@ public class NPC_movimiento : MonoBehaviour
                         colliders[1].enabled = false;
                         Dialogo.OcultarIconos();
                         Dialogo.estaAdentro = false;
-                        Debug.Log("Iconos ocultos porque el NPC se está moviendo");
                     }
                 }
                 checarcambio();
@@ -134,7 +132,6 @@ public class NPC_movimiento : MonoBehaviour
     void MoverANuevaPosicion(int posIndex)
     {
         if (!agente.isOnNavMesh) return;
-        Debug.Log("Intentando mover");
         Destino = pos[posIndex].position;
         agente.isStopped = false;
         Anim.Caminando = true;
@@ -177,7 +174,6 @@ public class NPC_movimiento : MonoBehaviour
 
         if (eventoMasCercano != null)
         {
-            Debug.Log("NPC: Moviendo al evento más cercano del día al cambiar de día");
             MoverANuevaPosicion(eventoMasCercano.pos);
             eventoMasCercano.Ejecutado = true; // Marcar como hecho para evitar repetirlo
         }
