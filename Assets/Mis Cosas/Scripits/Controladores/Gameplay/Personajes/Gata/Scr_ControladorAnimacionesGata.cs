@@ -16,6 +16,8 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
     public bool PuedeRegar;
 
     public float TiempoRecoleccion;
+
+    [SerializeField] Collider Herramienta;
     public float TiempoRegar;
     public float TiempoTalar;
 
@@ -198,5 +200,15 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
         if (!EstaEnCinematica || string.IsNullOrEmpty(nombre)) return;
 
         Anim.SetBool(nombre, false);
+    }
+
+    public void ActivarColisionHerramienta()
+    {
+        Herramienta.enabled = true;
+    }
+
+    public void DesactivarColisionHerramienta()
+    {
+        Herramienta.enabled = false;
     }
 }

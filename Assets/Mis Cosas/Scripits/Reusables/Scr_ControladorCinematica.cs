@@ -1,8 +1,11 @@
 ﻿using Cinemachine;
+using PrimeTween;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Scr_ControladorCinematica : MonoBehaviour
 {
@@ -206,5 +209,31 @@ public class Scr_ControladorCinematica : MonoBehaviour
         {
             Anim.Play("Cerrar");
         }
+    }
+
+    public void ActivarReloj()
+    {
+        GameObject Reloj = GameObject.Find("Canvas").transform.GetChild(2).gameObject;
+        Reloj.SetActive(true);
+        Tween.UIAnchoredPositionY(Reloj.transform.GetChild(0).GetComponent<RectTransform>(), 15, 0.5f, Ease.Default);
+        Tween.UIAnchoredPositionX(Reloj.transform.GetChild(1).GetComponent<RectTransform>(), 0, 0.5f, Ease.Default);
+        Tween.UIAnchoredPositionX(Reloj.transform.GetChild(2).GetComponent<RectTransform>(), -610, 0.5f, Ease.Default);
+
+    }
+
+    public void DesactivarReloj()
+    {
+
+        GameObject Reloj = GameObject.Find("Canvas").transform.GetChild(2).gameObject;
+        Tween.UIAnchoredPositionY(Reloj.transform.GetChild(0).GetComponent<RectTransform>(), -100, 0.5f, Ease.Default);
+        Tween.UIAnchoredPositionX(Reloj.transform.GetChild(1).GetComponent<RectTransform>(), 226, 0.5f, Ease.Default);
+        Tween.UIAnchoredPositionX(Reloj.transform.GetChild(2).GetComponent<RectTransform>(), -800, 0.5f, Ease.Default);
+        StartCoroutine(EsperarReloj(Reloj));
+    }
+
+    IEnumerator EsperarReloj(GameObject Reloj)
+    {
+        yield return new WaitForSeconds(0.5f);
+        Reloj.SetActive(false);
     }
 }
