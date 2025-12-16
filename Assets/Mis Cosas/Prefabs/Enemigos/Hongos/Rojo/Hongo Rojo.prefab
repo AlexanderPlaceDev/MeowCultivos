@@ -5441,7 +5441,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.14
+  m_Radius: 0.58
   m_Center: {x: 0, y: 0.12, z: 0}
 --- !u!54 &8155441507092292764
 Rigidbody:
@@ -5562,9 +5562,11 @@ MonoBehaviour:
   DuracionCambioColor: 0.5
   tipoenemigo: 0
   tipocomportamiento: 1
+  Fruta: 0
   Controlador: {fileID: 0}
   estaStuneado: 0
   estaCongelado: 0
+  estaEmpujado: 0
   "CanvasDa\xF1o": {fileID: 8855847776912535175, guid: c2c9e7e03a15dbc42b7d969aee7d9fbc,
     type: 3}
   "PosInicialDa\xF1o": {fileID: 2304735858794152294}

@@ -23,7 +23,8 @@ public class Scr_ControladorArmas : MonoBehaviour
     [SerializeField] GameObject[] balaPrefab; //bala que dispara
     [SerializeField] public GameObject[] GranadaPrefab; //Granada que dispara
     [SerializeField] AudioSource source;
-
+    [SerializeField] GameObject[] FrutaMano;
+    [SerializeField] GameObject[] FrutaDrop;
     public GameObject BalaADisparar; //que va a disparar
     public Transform puntoDisparo; //lugar donde sale la bala
     public Camera camara;
@@ -77,7 +78,12 @@ public class Scr_ControladorArmas : MonoBehaviour
     private bool isGrappling = false;
     private Vector3 grapplePoint;
     private float currentDistance;
-    public LineRenderer lineRenderer; 
+    public LineRenderer lineRenderer;
+
+    GameObject Fruta;
+    string FrutaNombre;
+    bool TieneFruta;
+    public Transform puntoFruta; //lugar donde sale la bala
     [Header("Efectos")]
     public string EfectoTemp = "";
     public string EfectoHab = "";
@@ -104,7 +110,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         {
             PuntodeArma = Hijo.transform.GetChild(0);
         }
-        checarIdle();
+        //checarIdle();
         ChecarTemporal();
         if (EfectoTemp == "" && TodasLasArmas[ArmaActual].Nombre == "Chilenon")
         {
@@ -182,6 +188,9 @@ public class Scr_ControladorArmas : MonoBehaviour
                 numGolpe = 1; // Si pasan más de 5s sin atacar, vuelve a Golpe 1
             }
         }
+
+
+        RecolectarFruta();
         // Disparo basado en el modo seleccionado (automático o semiautomático)
         if (Tipo != "Automatica")
         {
@@ -219,7 +228,6 @@ public class Scr_ControladorArmas : MonoBehaviour
         {
             RecargarBala();
         }
-
     }
     private void LateUpdate()
     {
@@ -330,6 +338,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     }
     public void DisparaBala()
     {
+        if (TieneFruta) return;
         if (TodasLasArmas[ArmaActual].Nombre == "Planta")
         {
             AnimArma.Play("Morder_Planta");
@@ -737,7 +746,87 @@ public class Scr_ControladorArmas : MonoBehaviour
         }
         return 0f;
     }
-
+    void RecolectarFruta()
+    {
+        if(Fruta!=null && Input.GetKeyDown(KeyCode.Q) && !TieneFruta)
+        {
+            TieneFruta = true;
+            for (int i = 0; i < ObjetoArmas_reales.Length; i++)
+            {
+                ObjetoArmas_reales[i].SetActive(false);
+            }
+            switch (FrutaNombre)
+            {
+                case "Baya Azul":
+                    FrutaMano[0].SetActive(true);
+                    puntoFruta = FrutaMano[0].transform;
+                    break;
+                case "Baya Amarillo":
+                    FrutaMano[1].SetActive(true);
+                    puntoFruta = FrutaMano[1].transform;
+                    break;
+                case "Baya Roja":
+                    FrutaMano[2].SetActive(true);
+                    puntoFruta = FrutaMano[2].transform;
+                    break;
+                case "Platano":
+                    FrutaMano[3].SetActive(true);
+                    puntoFruta = FrutaMano[3].transform;
+                    break;
+                default:
+                    FrutaMano[0].SetActive(true);
+                    puntoFruta = FrutaMano[0].transform;
+                    break;
+            }
+            Anim.Play("FrutaAgarrada");
+            Destroy(Fruta);
+        }
+        else if ((Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.Mouse0)) && TieneFruta)
+        {
+            TieneFruta = false;
+            DispararFruta();
+            esconderFruta();
+        }
+    }
+    void DispararFruta()
+    {
+        GameObject Frut= null;
+        Anim.Play("Brazos_ NormalIddle");
+        switch (FrutaNombre)
+        {
+            case "Baya Azul":
+                Frut = Instantiate(FrutaDrop[0], puntoFruta.position, puntoFruta.rotation);
+                break;
+            case "Baya Amarillo":
+                Frut = Instantiate(FrutaDrop[1], puntoFruta.position, puntoFruta.rotation);
+                break;
+            case "Baya Roja":
+                Frut = Instantiate(FrutaDrop[2], puntoFruta.position, puntoFruta.rotation);
+                break;
+            case "Platano":
+                Frut = Instantiate(FrutaDrop[3], puntoFruta.position, puntoFruta.rotation);
+                break;
+            default:
+                Frut = Instantiate(FrutaDrop[0], puntoFruta.position, puntoFruta.rotation);
+                break;
+        }
+        Vector3 direccionBase = camara.transform.forward;
+        Vector3 direccionConDispersion = DireccionConDispersion(direccionBase, Random.Range(0, dispersion));
+        Frut.GetComponent<Rigidbody>().AddForce((direccionConDispersion * fuerzaDisparo)/3, ForceMode.Impulse);
+    }
+    void esconderFruta()
+    {
+        for (int i = 0; i < FrutaMano.Length; i++)
+        {
+            FrutaMano [i].SetActive(false);
+        }
+        if (ArmaActual != 0)
+        {
+            ObjetoArmas_reales[ArmaActual].SetActive(true);
+            AnimArma = ObjetoArmas_reales[ArmaActual].GetComponent<Animator>();
+        }
+        checarIdle();
+    }
     void DetectarEnemigoConRaycast()
     {
         if (Gata == null) return;
@@ -762,9 +851,21 @@ public class Scr_ControladorArmas : MonoBehaviour
                 Mira.GetComponent<Image>().sprite = Mirillas[1];
                 return;
             }
+            else if (hit.collider.CompareTag("Fruta"))
+            {
+                Mira.GetComponent<Image>().color = ColoresMirillas[1];
+                Mira.GetComponent<Image>().sprite = Mirillas[1];
+                Fruta=hit.collider.gameObject;
+                FrutaNombre= Fruta.GetComponent<Fruta_drop>().Nombre;
+                return;
+            }
         }
-
         // Si no golpeó enemigo o no golpeó nada
+        Fruta=null;
+        if (!TieneFruta)
+        {
+            FrutaNombre = "";
+        }
         Mira.GetComponent<Image>().color = ColoresMirillas[0];
         Mira.GetComponent<Image>().sprite = Mirillas[0];
     }

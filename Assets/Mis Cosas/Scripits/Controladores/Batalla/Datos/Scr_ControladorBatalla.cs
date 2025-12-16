@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static Scr_DatosSingletonBatalla;
 
 public class Scr_ControladorBatalla : MonoBehaviour
 {
@@ -65,6 +66,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     [SerializeField] TextMeshProUGUI Complemento;
     [SerializeField] TextMeshProUGUI Item;
 
+    public int FrutasRecolectadas;
     [Header("Barra Oleadas")]
     [SerializeField] Transform BarraSlider;
     [SerializeField] float TiempoEntreOleadas;
@@ -79,7 +81,9 @@ public class Scr_ControladorBatalla : MonoBehaviour
     private GameObject Personaje;
     private Scr_GirarCamaraBatalla CamaraBatalla;
     private Scr_ControladorOleadas controladorOleadas;
+    private Scr_ControladorRecolleccion controladorRecoleccion;
     private bool DioRecompensa = false;
+    private int experiencia = 0;
     int Bonus=0;
     [SerializeField] public GameObject particulaElectrica;
     [SerializeField] public GameObject particulaQuemado;
@@ -118,6 +122,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
         Datosarmas = Singleton.GetComponent<Scr_DatosArmas>();
         armas= GetComponent<Scr_ControladorArmas>();
         controladorOleadas = GetComponent<Scr_ControladorOleadas>();
+        controladorRecoleccion = GetComponent<Scr_ControladorRecolleccion>();
         Personaje = GameObject.Find("Personaje");
         CamaraBatalla = Personaje.transform.GetChild(0).gameObject.GetComponent<Scr_GirarCamaraBatalla>();
         Mision.text = Singleton.Mision;
@@ -141,7 +146,8 @@ public class Scr_ControladorBatalla : MonoBehaviour
         {
             RenderSettings.skybox = Singleton.SkyBoxNoche;
         }
-        Musica= GameObject.Find("Musica").GetComponent<Musica_pelea>();
+        ActivarControladores();
+        Musica = GameObject.Find("Musica").GetComponent<Musica_pelea>();
     }
 
     void Update()
@@ -152,6 +158,29 @@ public class Scr_ControladorBatalla : MonoBehaviour
         ActualizarVida();
         Terminar();
         checarmusica();
+    }
+
+    public void ActivarControladores()
+    {
+        switch (Singleton.ModoSeleccionado.ToString())
+        {
+            case "Defensa":
+                controladorOleadas.enabled = true;
+                controladorRecoleccion.enabled = true;
+                break;
+            case "Recoleccion":
+                controladorOleadas.enabled = false;
+                controladorRecoleccion.enabled = true;
+                break;
+            case "Pelea":
+                controladorOleadas.enabled = true;
+                controladorRecoleccion.enabled = false;
+                break;
+            case "":
+                controladorOleadas.enabled = true;
+                controladorRecoleccion.enabled = false;
+                break;
+        }
     }
 
     //obtiene las habilidades que tiene la arma
@@ -207,11 +236,36 @@ public class Scr_ControladorBatalla : MonoBehaviour
             NumeroCuenta.gameObject.SetActive(true);
             ComenzarCuenta = true;
         }
+        if (Singleton.ModoSeleccionado == Modo.Defensa)
+        {
+            ComienzoDefensa();
+        }
+        else if (Singleton.ModoSeleccionado == Modo.Recoleccion)
+        {
+            ComienzoRecoleccion();
+        }
+        else if (Singleton.ModoSeleccionado == Modo.Pelea)
+        {
+            ComienzoBatalla();
+        }
 
-        PrepararBatalla();
     }
-
     private void Comienzo()
+    {
+        if (Singleton.ModoSeleccionado == Modo.Defensa)
+        {
+            ComienzoDefensa();
+        }
+        else if (Singleton.ModoSeleccionado == Modo.Recoleccion)
+        {
+            ComienzoRecoleccion();
+        }
+        else if (Singleton.ModoSeleccionado == Modo.Pelea)
+        {
+            ComienzoBatalla();
+        }
+    }
+    private void ComienzoBatalla()
     {
         if (ComenzarCuenta)
         {
@@ -285,8 +339,155 @@ public class Scr_ControladorBatalla : MonoBehaviour
             }
         }
     }
+    private void ComienzoRecoleccion()
+    {
+        if (ComenzarCuenta)
+        {
+            if (Cuenta > 0)
+            {
+                // --- Preparación al inicio ---
+                if (Cuenta == 4)
+                {
+                    if (!PrimerSpawn)
+                    {
+                        OrigenLuz.color = Singleton.Luz;
+                        PrepararBatalla();
+                        controladorRecoleccion.IniciarRecoleccion();
+                        PrimerSpawn = true;
+                    }
+                }
 
+                // --- Actualizar número visual ---
+                int numeroActual = Mathf.FloorToInt(Cuenta); // floor evita el salto del 1
+                if (numeroActual > 3) numeroActual = 3;      // nunca mostrar 4
 
+                string textoMostrado = numeroActual > 0 ? numeroActual.ToString() : "¡Recolecta!";
+                NumeroCuenta.text = textoMostrado;
+
+                // --- Cambiar sonido solo cuando cambia el número o pasa a "Pelea" ---
+                if (textoMostrado != ultimoTextoMostrado)
+                {
+                    if (textoMostrado == "¡Recolecta!")
+                    {
+                        audioSource.clip = SonidoPelea; // sonido especial
+                    }
+                    else
+                    {
+                        audioSource.clip = SonidoReloj; // sonido del reloj (3,2,1)
+                    }
+                    audioSource.Play();
+
+                    ultimoTextoMostrado = textoMostrado;
+                }
+
+                Cuenta -= Time.deltaTime;
+            }
+            else
+            {
+                // --- Fin de la cuenta atrás ---
+                if (controladorRecoleccion.enemigosOleada.Count > 0 && ComenzarCuenta)
+                {
+                    foreach (GameObject Enemigo in controladorRecoleccion.enemigosOleada)
+                    {
+                        NavMeshAgent enenav = Enemigo.GetComponent<NavMeshAgent>();
+                        if (enenav != null)
+                        {
+                            NavMeshHit hit;
+                            bool enNavMesh = NavMesh.SamplePosition(Enemigo.transform.position, out hit, 1.5f, NavMesh.AllAreas);
+
+                            Debug.Log($"¿Está {Enemigo.name} sobre NavMesh? {enNavMesh}");
+                            enenav.enabled = true;
+                        }
+                        else
+                        {
+                            Debug.Log("No tiene el NavMeshAgent");
+                        }
+                    }
+                }
+
+                NumeroCuenta.gameObject.SetActive(false);
+                ComenzarCuenta = false;
+                Cuenta = 4;
+                ActivarControles(true);
+                ComenzoBatalla = true;
+            }
+        }
+    }
+    private void ComienzoDefensa()
+    {
+        if (ComenzarCuenta)
+        {
+            if (Cuenta > 0)
+            {
+                // --- Preparación al inicio ---
+                if (Cuenta == 4)
+                {
+                    if (!PrimerSpawn)
+                    {
+                        OrigenLuz.color = Singleton.Luz;
+                        PrepararBatalla();
+                        controladorOleadas.IniciarPrimeraOleada();
+                        controladorRecoleccion.IniciarRecoleccion();
+                        PrimerSpawn = true;
+                    }
+                }
+
+                // --- Actualizar número visual ---
+                int numeroActual = Mathf.FloorToInt(Cuenta); // floor evita el salto del 1
+                if (numeroActual > 3) numeroActual = 3;      // nunca mostrar 4
+
+                string textoMostrado = numeroActual > 0 ? numeroActual.ToString() : "¡Defiende!";
+                NumeroCuenta.text = textoMostrado;
+
+                // --- Cambiar sonido solo cuando cambia el número o pasa a "Pelea" ---
+                if (textoMostrado != ultimoTextoMostrado)
+                {
+                    if (textoMostrado == "¡Defiende!")
+                    {
+                        audioSource.clip = SonidoPelea; // sonido especial
+                    }
+                    else
+                    {
+                        audioSource.clip = SonidoReloj; // sonido del reloj (3,2,1)
+                    }
+                    audioSource.Play();
+
+                    ultimoTextoMostrado = textoMostrado;
+                }
+
+                Cuenta -= Time.deltaTime;
+            }
+            else
+            {
+                // --- Fin de la cuenta atrás ---
+                if (controladorOleadas.enemigosOleada.Count > 0 && ComenzarCuenta)
+                {
+                    foreach (GameObject Enemigo in controladorOleadas.enemigosOleada)
+                    {
+                        NavMeshAgent enenav = Enemigo.GetComponent<NavMeshAgent>();
+                        if (enenav != null)
+                        {
+                            NavMeshHit hit;
+                            bool enNavMesh = NavMesh.SamplePosition(Enemigo.transform.position, out hit, 1.5f, NavMesh.AllAreas);
+
+                            Debug.Log($"¿Está {Enemigo.name} sobre NavMesh? {enNavMesh}");
+                            enenav.enabled = true;
+                        }
+                        else
+                        {
+                            Debug.Log("No tiene el NavMeshAgent");
+                        }
+                    }
+                }
+
+                NumeroCuenta.gameObject.SetActive(false);
+                ComenzarCuenta = false;
+                Cuenta = 4;
+                ActivarControles(true);
+                ComenzoBatalla = true;
+            }
+        }
+    }
 
 
     private void Terminar()
@@ -331,11 +532,46 @@ public class Scr_ControladorBatalla : MonoBehaviour
         PanelFinal.SetActive(true);
     }
 
+
     private void DarRecompensa()
     {
-        var enemigo = Singleton.Enemigo.GetComponent<Scr_Enemigo>();
         var recompensasDict = new Dictionary<Scr_CreadorObjetos, int>();
-        
+        if (Singleton.ModoSeleccionado == Modo.Defensa)
+        {
+            RecompensaRecolec(recompensasDict);
+            RecopensaEnemigo(recompensasDict);
+        }
+        else if (Singleton.ModoSeleccionado == Modo.Recoleccion)
+        {
+            RecompensaRecolec(recompensasDict);
+        }
+        else if (Singleton.ModoSeleccionado == Modo.Pelea)
+        {
+            RecopensaEnemigo(recompensasDict);
+        }
+
+        MostrarRecompensas(recompensasDict);
+
+        PlayerPrefs.SetInt("XPActual", PlayerPrefs.GetInt("XPActual") + (experiencia + Bonus));
+        PlayerPrefs.Save();
+    }
+    private void RecompensaRecolec(Dictionary<Scr_CreadorObjetos, int> dict)
+    {
+        var extra = controladorRecoleccion.FrutaRecom; // ScriptableObject
+
+        if (extra == null) return;
+
+        if (dict.ContainsKey(extra))
+            dict[extra]++;
+        else
+            dict.Add(extra, 1);
+        PlayerPrefs.SetInt("Dinero", PlayerPrefs.GetInt("Dinero", 0) + Random.Range(controladorRecoleccion.DineroMin, controladorRecoleccion.DineroMax));
+    }
+    private void RecopensaEnemigo(Dictionary<Scr_CreadorObjetos, int> dict)
+    {
+        var enemigo = Singleton.Enemigo.GetComponent<Scr_Enemigo>();
+        //var recompensasDict = new Dictionary<Scr_CreadorObjetos, int>();
+
         int totalEnemigos = enemigo.CantidadEnemigosPorOleada * controladorOleadas.OleadaActual;
         Debug.Log(totalEnemigos + "**********");
         for (int k = 0; k < totalEnemigos; k++)
@@ -345,17 +581,17 @@ public class Scr_ControladorBatalla : MonoBehaviour
             {
                 if (Random.Range(0, 100) <= enemigo.Probabilidades[i])
                 {
-                    if (recompensasDict.ContainsKey(enemigo.Drops[i]))
-                        recompensasDict[enemigo.Drops[i]] += 1;
+                    if (dict.ContainsKey(enemigo.Drops[i]))
+                        dict[enemigo.Drops[i]] += 1;
                     else
-                        recompensasDict[enemigo.Drops[i]] = 1;
+                        dict[enemigo.Drops[i]] = 1;
                 }
             }
 
             // XP individual por enemigo
-            PlayerPrefs.SetInt("XPActual", PlayerPrefs.GetInt("XPActual") + Random.Range(enemigo.XPMinima, enemigo.XPMaxima));
+            experiencia += Random.Range(enemigo.XPMinima, enemigo.XPMaxima);
         }
-        
+
         int cazado = PlayerPrefs.GetInt("Cazado_Cantidad", 0);
         bool havecaza = false;
         if (cazado > 0)
@@ -386,10 +622,10 @@ public class Scr_ControladorBatalla : MonoBehaviour
             //Debug.Log("se caso" + enemigo.name + " num" + cazado);
             PlayerPrefs.SetString("Cazado_" + cazado, enemigo.name);
             PlayerPrefs.SetInt("cazado_cant" + cazado, totalEnemigos);
-            PlayerPrefs.SetInt("Cazado_Cantidad", cazado+1);
+            PlayerPrefs.SetInt("Cazado_Cantidad", cazado + 1);
         }
         PlayerPrefs.Save();
-
+        /*
         // Mostrar recompensas
         var datos = Singleton;
         datos.ObjetosRecompensa.Clear();
@@ -409,9 +645,37 @@ public class Scr_ControladorBatalla : MonoBehaviour
             rewardUI.GetChild(0).GetComponent<TextMeshProUGUI>().text = kvp.Value.ToString();
             index++;
         }
+        */
     }
+    private void MostrarRecompensas(Dictionary<Scr_CreadorObjetos, int> dict)
+    {
+        var datos = Singleton;
+        datos.ObjetosRecompensa.Clear();
+        datos.CantidadesRecompensa.Clear();
 
+        int index = 0;
+        int maxRecompensas = 3;
 
+        foreach (var kvp in dict)
+        {
+            if (index >= maxRecompensas) break;
+
+            datos.ObjetosRecompensa.Add(kvp.Key);
+            datos.CantidadesRecompensa.Add(kvp.Value);
+
+            Transform rewardUI = PanelFinal.transform
+                .GetChild(0).GetChild(6).GetChild(index);
+
+            rewardUI.GetComponent<Image>().sprite = kvp.Key.IconoInventario;
+            rewardUI.gameObject.SetActive(true);
+
+            rewardUI.GetChild(0).gameObject.SetActive(true);
+            rewardUI.GetChild(0)
+                .GetComponent<TextMeshProUGUI>().text = kvp.Value.ToString();
+
+            index++;
+        }
+    }
     private void ActivarControles(bool activar)
     {
         Cursor.visible = !activar;
@@ -485,7 +749,44 @@ public class Scr_ControladorBatalla : MonoBehaviour
         //GameObject.Find("NavMesh Surface").GetComponent<NavMeshSurface>().BuildNavMesh();
     }
 
+    public void PrepararReoleccion()
+    {
+        // Activar mapa y posicionar jugador
+        var mapa = GameObject.Find("Mapa").transform;
+        foreach (Transform child in mapa)
+        {
+            if (child.name == Singleton.NombreMapa)
+            {
+                child.gameObject.SetActive(true);
+                if (PlayerPrefs.GetString("ClimaActivadoEsta", "NO") == "SI")
+                {
+                    Transform Clim = child.transform.Find("Climas");
+                    string[] dias = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
+                    int diaActualIndex = System.Array.IndexOf(dias, PlayerPrefs.GetString("DiaActual", "LUN"));
+                    int diaclim = PlayerPrefs.GetInt("Clima" + diaActualIndex, 0);
+                    if (Clim != null && diaclim > 0)
+                    {
+                        //Clim.gameObject.SetActive(true);
+                        Clim.GetChild(diaclim).gameObject.SetActive(true);
+                    }
+                }
+                foreach (Transform objeto in child)
+                {
 
+                    if (objeto.name.Contains("Posicion Inicial"))
+                    {
+                        GameObject.Find("Personaje").transform.position = objeto.transform.position;
+                        GameObject.Find("Personaje").transform.rotation = objeto.transform.rotation;
+                    }
+                }
+            }
+        }
+
+        // Reconstruir NavMesh
+        GameObject.Find("NavMesh Surface").GetComponent<NavMeshSurface>().BuildNavMesh();
+
+        //GameObject.Find("NavMesh Surface").GetComponent<NavMeshSurface>().BuildNavMesh();
+    }
     //////////////////////////////////////////////////Estado de efecto para el jugador
     public void RecibirDaño(float DañoRecibido)
     {
@@ -725,24 +1026,34 @@ public class Scr_ControladorBatalla : MonoBehaviour
         switch (arma)
         {
             case "Brazos":
+                Checar_Rango_Brazos(Rango);
                 break;
             case "Chile":
+                Checar_Rango_Chile(Rango);
                 break;
             case "Coco":
+                Checar_Rango_Coco(Rango);
                 break;
             case "Mango":
+                Checar_Rango_Mango(Rango);
                 break;
             case "Papa":
+                Checar_Rango_Papa(Rango);
                 break;
             case "Planta":
+                Checar_Rango_Planta(Rango);
                 break;
             case "Platano":
+                Checar_Rango_Platano(Rango);
                 break;
             case "Sandia":
+                Checar_Rango_Sandia(Rango);
                 break;
             case "Tomate":
+                Checar_Rango_Tomate(Rango);
                 break;
             case "Uva":
+                Checar_Rango_Uva(Rango);
                 break;
         }
     }
