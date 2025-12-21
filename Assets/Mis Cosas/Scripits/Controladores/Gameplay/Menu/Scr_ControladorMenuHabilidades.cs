@@ -93,6 +93,8 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
                 {
                     Tween.LocalScaleY(Barras[3].transform.GetChild(0), 1, DuracionTransicion, TipoTransicionPaneles, default);
                     Tween.LocalScale(Ramas[3].transform.GetChild(1), 1, DuracionTransicion, TipoTransicionPaneles, default);
+                    Tween.LocalScale(Ramas[3].transform.GetChild(2), 1, DuracionTransicion, TipoTransicionPaneles, default);
+                    Tween.LocalPositionY(Ramas[3].transform.GetChild(2), -440, DuracionTransicion, TipoTransicionPaneles, default);
 
                     Tween.LocalScale(Arbol.transform, new Vector3(1.5f, 1.5f, 1.5f), DuracionTransicion, TipoTransicionPaneles, default);
                     Tween.LocalPosition(Arbol.transform, new Vector3(850, 780, 0), DuracionTransicion, TipoTransicionPaneles, default);
@@ -149,6 +151,8 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
                 {
                     Tween.LocalScaleY(Barras[3].transform.GetChild(0), 0, DuracionTransicion, TipoTransicionBotonesIn, default);
                     Tween.LocalScale(Ramas[3].transform.GetChild(1), 0, DuracionTransicion, TipoTransicionBotonesOut, default);
+                    Tween.LocalScale(Ramas[3].transform.GetChild(2), 0, DuracionTransicion, TipoTransicionBotonesOut, default);
+                    Tween.LocalPositionY(Ramas[3].transform.GetChild(2), -180, DuracionTransicion, TipoTransicionBotonesOut, default);
 
                     Tween.LocalScale(Arbol.transform, new Vector3(1, 1, 1), DuracionTransicion, TipoTransicionPaneles, default);
                     Tween.LocalPosition(Arbol.transform, Vector3.zero, DuracionTransicion, TipoTransicionPaneles, default);

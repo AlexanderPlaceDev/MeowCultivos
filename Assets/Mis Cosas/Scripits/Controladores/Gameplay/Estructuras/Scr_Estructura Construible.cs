@@ -1,3 +1,4 @@
+using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -58,10 +59,19 @@ public class Scr_EstructuraConstruible : MonoBehaviour
 
     public void BotonAceptar()
     {
-        BotonCerrar();
+        if (!TieneTodosLosMateriales())
+        {
+            return;
+        }
+
+        ConsumirMateriales();
+
         PlayerPrefs.SetString(Estructura, "Si");
+
+        BotonCerrar();
         Start();
     }
+
 
     public void BotonCerrar()
     {
@@ -77,4 +87,47 @@ public class Scr_EstructuraConstruible : MonoBehaviour
         ObjetoAnterior.SetActive(false);
         ObjetoDespues.SetActive(true);
     }
+
+    private bool TieneTodosLosMateriales()
+    {
+        for (int i = 0; i < Objetos.Length; i++)
+        {
+            bool encontrado = false;
+
+            for (int j = 0; j < Inventario.Objetos.Count(); j++)
+            {
+                if (Inventario.Objetos[j] == Objetos[i])
+                {
+                    encontrado = true;
+
+                    if (Inventario.Cantidades[j] < Cantidades[i])
+                        return false;
+
+                    break;
+                }
+            }
+
+            if (!encontrado)
+                return false;
+        }
+
+        return true;
+    }
+
+    private void ConsumirMateriales()
+    {
+        for (int i = 0; i < Objetos.Length; i++)
+        {
+            for (int j = 0; j < Inventario.Objetos.Count(); j++)
+            {
+                if (Inventario.Objetos[j] == Objetos[i])
+                {
+                    Inventario.Cantidades[j] -= Cantidades[i];
+                    break;
+                }
+            }
+        }
+    }
+
+
 }

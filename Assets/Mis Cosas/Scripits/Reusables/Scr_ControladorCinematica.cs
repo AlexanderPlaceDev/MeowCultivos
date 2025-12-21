@@ -236,4 +236,28 @@ public class Scr_ControladorCinematica : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         Reloj.SetActive(false);
     }
+
+    public void AumentarRango(string Rama)
+    {
+        // Aumenta rango interno
+        PlayerPrefs.SetInt(
+            "Rango Barra " + Rama,
+            PlayerPrefs.GetInt("Rango Barra " + Rama, 0) + 1
+        );
+
+        // Limpia la rama (Arsenal3 -> Arsenal)
+        string ramaLimpia = Rama.TrimEnd('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+
+        // Activa UI de rango
+        GameObject rangoUI = GameObject.Find("Canvas").transform.GetChild(10).gameObject;
+        rangoUI.SetActive(true);
+
+        // Muestra rango (interno + 1 si lo necesitas visual)
+        rangoUI.GetComponent<Scr_NuevoRango>()
+            .MostrarRango(
+                ramaLimpia,
+                PlayerPrefs.GetInt("Rango Barra " + Rama, 0)
+            );
+    }
+
 }

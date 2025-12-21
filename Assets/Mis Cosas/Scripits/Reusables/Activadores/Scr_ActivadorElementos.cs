@@ -169,36 +169,29 @@ public class Scr_ActivadorElementos : MonoBehaviour
         }
 
         // --- CONTROL DE TIEMPO SOLO POR DÍA ---
-        bool bloqueadoPorTiempo = true;
-        if (string.IsNullOrEmpty(CinematicaPrevia))
-        {
-            bloqueadoPorTiempo = false;
-        }
-        else
+        bool bloqueadoPorTiempo = false;
+
+        if (!string.IsNullOrEmpty(CinematicaPrevia))
         {
             string ultimoDia = PlayerPrefs.GetString("DiaCinematica:" + CinematicaPrevia, "");
             int ultimaHora = PlayerPrefs.GetInt("HoraCinematica:" + CinematicaPrevia, -1);
+
             if (!string.IsNullOrEmpty(ultimoDia) && ultimaHora >= 0)
             {
-                int diaPrev = GetDayIndex(ultimoDia);
-                int diaAct = GetDayIndex(Tiempo.DiaActual);
-                int difDias = diaAct - diaPrev;
-                if (difDias < 0) difDias += 7; // Ajuste para semanas
+                int horaPrevTotal = GetDayIndex(ultimoDia) * 24 + ultimaHora;
+                int horaActualTotal = GetDayIndex(Tiempo.DiaActual) * 24 + Tiempo.HoraActual;
 
-                if (difDias > 0 && Tiempo.HoraActual >= ultimaHora)
-                {
-                    bloqueadoPorTiempo = false;
-                }
-                else
-                {
+                int horasTranscurridas = horaActualTotal - horaPrevTotal;
+
+                // Ajuste si cruzó semana
+                if (horasTranscurridas < 0)
+                    horasTranscurridas += 7 * 24;
+
+                if (horasTranscurridas < HorasParaReactivar)
                     bloqueadoPorTiempo = true;
-                }
-            }
-            else
-            {
-                bloqueadoPorTiempo = true;
             }
         }
+
 
         // DÍA
         bool diaCorrecto = DiaEsValido(Tiempo.DiaActual);

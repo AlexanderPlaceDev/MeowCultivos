@@ -20,27 +20,25 @@ public class Scr_ControladorRevistero : MonoBehaviour
 
     void Update()
     {
-        if (UI.gameObject.activeSelf)
+        if (!UI.gameObject.activeSelf)
+            return;
+
+        if (PlayerPrefs.GetInt("Rango Barra Tecnica6", 0) < PrecioDeRangos.Length)
         {
-
-            if (PlayerPrefs.GetInt("Rango Barra Tecnica5", 0) < 4)
-            {
-                ActualizarDineroYPrecio();
-            }
-            else
-            {
-                TextoDinero.gameObject.SetActive(false);
-                TextoInserta.gameObject.SetActive(false);
-                TextoDescripcion.text = "Ya no quedan libros utiles";
-                BotonAceptar.SetActive(false);
-            }
-
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                PlayerPrefs.SetInt("Dinero", PlayerPrefs.GetInt("Dinero", 0) + 1000);
-            }
+            ActualizarDineroYPrecio();
+        }
+        else
+        {
+            TextoDinero.gameObject.SetActive(false);
+            TextoInserta.gameObject.SetActive(false);
+            TextoDescripcion.text = "Ya no quedan libros utiles";
+            BotonAceptar.SetActive(false);
         }
 
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            PlayerPrefs.SetInt("Dinero", PlayerPrefs.GetInt("Dinero", 0) + 1000);
+        }
     }
 
     public void CerrarUI()
@@ -51,49 +49,50 @@ public class Scr_ControladorRevistero : MonoBehaviour
 
     public void Comprar()
     {
+        int rangoInterno = PlayerPrefs.GetInt("Rango Barra Tecnica6", 0);
+        int dineroActual = PlayerPrefs.GetInt("Dinero", 0);
+
+        if (rangoInterno >= PrecioDeRangos.Length)
+            return;
+
+        int precio = PrecioDeRangos[rangoInterno];
+
+        if (dineroActual < precio)
+            return;
+
+        // Resta correcta
+        PlayerPrefs.SetInt("Dinero", dineroActual - precio);
+
+        // Sube rango interno
+        PlayerPrefs.SetInt("Rango Barra Tecnica6", rangoInterno + 1);
+
         CerrarUI();
-        PlayerPrefs.SetInt("Dinero", PlayerPrefs.GetInt("Dinero", 0) - PrecioDeRangos[PlayerPrefs.GetInt("Rango Barra Tecnica5", 0)]);
-        PlayerPrefs.SetInt("Rango Barra Tecnica5", PlayerPrefs.GetInt("Rango Barra Tecnica5", 0) + 1);
-        GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_ControladorMenuHabilidades>().ActualizarBarrasPorRango();
+
+        GameObject.Find("Gata")
+            .transform.GetChild(6)
+            .GetComponent<Scr_ControladorMenuHabilidades>()
+            .ActualizarBarrasPorRango();
+
+        // Mostrar rango VISUAL (interno + 1)
+        GameObject.Find("Canvas").transform.GetChild(10).gameObject.SetActive(true);
+        GameObject.Find("Canvas").transform.GetChild(10)
+            .GetComponent<Scr_NuevoRango>()
+            .MostrarRango("Tecnica", rangoInterno + 1);
     }
 
     void ActualizarDineroYPrecio()
     {
-        TextoTuDinero.text = "$" + PlayerPrefs.GetInt("Dinero", 0);
+        int rangoInterno = PlayerPrefs.GetInt("Rango Barra Tecnica6", 0);
+        int dinero = PlayerPrefs.GetInt("Dinero", 0);
 
-        if (PlayerPrefs.GetInt("Dinero", 0) >= PrecioDeRangos[PlayerPrefs.GetInt("Rango Barra Tecnica5", 0)]-1)
-        {
-            BotonAceptar.SetActive(true);
-        }
-        else
-        {
-            BotonAceptar.SetActive(false);
-        }
-        switch (PlayerPrefs.GetInt("Rango Barra Tecnica5", 0))
-        {
-            case 0:
-                {
-                    TextoDinero.text = "$" + PrecioDeRangos[0];
-                    break;
-                }
+        TextoTuDinero.text = "$" + dinero;
 
-            case 1:
-                {
-                    TextoDinero.text = "$" + PrecioDeRangos[1];
-                    break;
-                }
+        if (rangoInterno >= PrecioDeRangos.Length)
+            return;
 
-            case 2:
-                {
-                    TextoDinero.text = "$" + PrecioDeRangos[2];
-                    break;
-                }
+        int precio = PrecioDeRangos[rangoInterno];
 
-            case 3:
-                {
-                    TextoDinero.text = "$" + PrecioDeRangos[3];
-                    break;
-                }
-        }
+        TextoDinero.text = "$" + precio;
+        BotonAceptar.SetActive(dinero >= precio);
     }
 }

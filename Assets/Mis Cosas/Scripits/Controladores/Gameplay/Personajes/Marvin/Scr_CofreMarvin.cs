@@ -24,6 +24,8 @@ public class Scr_CofreMarvin : MonoBehaviour
     Quaternion rotacionOriginal;
     Quaternion rotacionObjetivo;
     bool estabaActivo = false;
+    bool rangoMostrado = false;
+
 
     void Start()
     {
@@ -32,12 +34,12 @@ public class Scr_CofreMarvin : MonoBehaviour
             for (int i = 0; i < ObjetosNecesarios.Length; i++)
                 PlayerPrefs.SetInt(KeyDonado(i), 0);
 
-            PlayerPrefs.SetInt("Rango Barra Industrial5", 0);   // ← FALTABA ESTO
+            PlayerPrefs.SetInt("Rango Barra Industrial4", 0);
             PlayerPrefs.Save();
         }
 
         // Si ya se completó antes, no mostrar más el cofre
-        if (PlayerPrefs.GetInt("Rango Barra Industrial5", 0) == 1)
+        if (PlayerPrefs.GetInt("Rango Barra Industrial4", 0) == 1)
         {
             Debug.Log("Desactiva start");
             gameObject.SetActive(false);
@@ -260,16 +262,23 @@ public class Scr_CofreMarvin : MonoBehaviour
 
     void RevisarCompletado()
     {
+        if (rangoMostrado) return;
+
         for (int i = 0; i < ObjetosNecesarios.Length; i++)
         {
             int donado = PlayerPrefs.GetInt(KeyDonado(i), 0);
             if (donado < CantidadesNecesarias[i])
-                return; // aún falta algo
+                return;
         }
 
-        // Todo completo
-        PlayerPrefs.SetInt("Rango Barra Industrial5", 1);
+        rangoMostrado = true;
+
+        PlayerPrefs.SetInt("Rango Barra Industrial4", 1);
         PlayerPrefs.Save();
+
+        var rangoUI = GameObject.Find("Canvas").transform.GetChild(10).GetComponent<Scr_NuevoRango>();
+        rangoUI.gameObject.SetActive(true);
+        rangoUI.MostrarRango("Industrial", 1);
 
         if (transform.GetChild(2).gameObject.activeSelf)
         {
@@ -277,11 +286,16 @@ public class Scr_CofreMarvin : MonoBehaviour
             transform.GetChild(1).gameObject.SetActive(false);
             transform.GetChild(2).gameObject.SetActive(false);
             transform.GetChild(3).gameObject.SetActive(false);
+
             GetComponent<Scr_ActivadorMenuEstructuraFijo>().CerrarTablero();
-            GameObject.Find("Gata").transform.GetChild(6).GetComponent<Scr_ControladorMenuHabilidades>().ActualizarBarrasPorRango();
+            GameObject.Find("Gata").transform.GetChild(6)
+                .GetComponent<Scr_ControladorMenuHabilidades>()
+                .ActualizarBarrasPorRango();
+
             StartCoroutine(Esperar());
         }
     }
+
 
     IEnumerator Esperar()
     {
