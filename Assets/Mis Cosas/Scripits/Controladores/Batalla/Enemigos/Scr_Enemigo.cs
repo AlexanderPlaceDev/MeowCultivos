@@ -46,7 +46,7 @@ public class Scr_Enemigo : MonoBehaviour
 
     public enum TipoComportamiento { Agresivo, Miedoso, Pacifico }
     public TipoComportamiento tipocomportamiento;
-
+    public bool Fruta;
     public GameObject Controlador;
 
     public bool estaStuneado=false;
@@ -91,6 +91,26 @@ public class Scr_Enemigo : MonoBehaviour
     {
         Controlador = GameObject.Find("Controlador");
         Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
+        ChecarModo();
+    }
+
+    public void ChecarModo()
+    {
+        switch (Singleton.ModoSeleccionado.ToString())
+        {
+            case "Defensa":
+                Fruta = true;
+                break;
+            case "Recoleccion":
+                Fruta = true;
+                break;
+            case "Pelea":
+                Fruta = false;
+                break;
+            case "":
+                Fruta = false;
+                break;
+        }
     }
     public void RecibirDaño(float DañoRecibido, Color efectoDaño)
     {

@@ -15,6 +15,7 @@ public class Scr_EnemigoJaba : Scr_Enemigo
     private bool Atacando = false;    // si está en animación de ataque
     private float ContAtaque = 0;     // timer de ataque actual
 
+    private bool AtacandoFruta;
     protected override void Start()
     {
         base.Start();
@@ -102,7 +103,21 @@ public class Scr_EnemigoJaba : Scr_Enemigo
             // si pierde objetivo, reasignarlo
             if (agente.isOnNavMesh)
             {
-                Objetivo = Gata.transform;
+                if (Fruta)
+                {
+                    Objetivo = BuscarPlanta("Planta").transform;
+                    AtacandoFruta = true;
+                }
+                else if (Vida <= (Vida * .3))
+                {
+                    Objetivo = Gata.transform;
+                    AtacandoFruta = false;
+                }
+                else
+                {
+                    Objetivo = Gata.transform;
+                    AtacandoFruta = false;
+                }
                 agente.SetDestination(Objetivo.position);
             }
         }
@@ -117,8 +132,21 @@ public class Scr_EnemigoJaba : Scr_Enemigo
             Anim.Play("Mover");
 
         agente.isStopped = false;
-
-        Objetivo = Gata.transform;
+        if (Fruta)
+        {
+            Objetivo = BuscarPlanta("Planta").transform;
+            AtacandoFruta = true;
+        }
+        else if (Vida <= (Vida * .3))
+        {
+            Objetivo = Gata.transform;
+            AtacandoFruta = false;
+        }
+        else
+        {
+            Objetivo = Gata.transform;
+            AtacandoFruta = false;
+        }
 
         // rotación suave hacia el jugador
         Vector3 dir = (Objetivo.position - transform.position).normalized;
@@ -133,6 +161,31 @@ public class Scr_EnemigoJaba : Scr_Enemigo
         agente.SetDestination(Objetivo.position);
     }
 
+    public GameObject BuscarPlanta(string tag)
+    {
+        Debug.Log("eee");
+        GameObject[] objetos = GameObject.FindGameObjectsWithTag(tag);
+
+        if (objetos.Length == 0)
+            return null;
+
+        GameObject masCercano = null;
+        float distanciaMinima = Mathf.Infinity;
+        Vector3 posicionActual = transform.position;
+
+        foreach (GameObject obj in objetos)
+        {
+            float distancia = Vector3.Distance(posicionActual, obj.transform.position);
+
+            if (distancia < distanciaMinima)
+            {
+                distanciaMinima = distancia;
+                masCercano = obj;
+            }
+        }
+        Debug.Log(masCercano.name);
+        return masCercano;
+    }
     void Atacar()
     {
         Debug.Log("Comenzo Atacar");
@@ -159,14 +212,22 @@ public class Scr_EnemigoJaba : Scr_Enemigo
             Anim.Play("Ataque2");
             DuracionDeAtaque = 1.042f;
         }
+        if (AtacandoFruta)
+        {
+            GameObject plant = BuscarPlanta("Planta");
+            plant.GetComponent<Aparecer_Fruta>().RecibirDaño(DañoMelee);
+        }
+        else
+        {
 
-        // efectos del ataque
-        Tween.ShakeCamera(Camera.main, 3);
+            // efectos del ataque
+            Tween.ShakeCamera(Camera.main, 3);
 
-        Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
+            Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
 
-        base.source.PlayOneShot(base.Golpe);
-        batalla.RecibirDaño(DañoMelee);
-        batalla.RecibirEfecto(base.Efecto.ToString());
+            base.source.PlayOneShot(base.Golpe);
+            batalla.RecibirDaño(DañoMelee);
+            batalla.RecibirEfecto(base.Efecto.ToString());
+        }
     }
 }

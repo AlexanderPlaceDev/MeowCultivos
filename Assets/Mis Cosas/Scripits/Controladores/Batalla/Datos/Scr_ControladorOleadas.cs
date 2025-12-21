@@ -238,6 +238,7 @@ public class Scr_ControladorOleadas : MonoBehaviour
 
     public void ComprobarOleada()
     {
+        if (prefabEnemigo == null) return;
         if (OleadaCompletada())
         {
             var enemigo = prefabEnemigo.GetComponent<Scr_Enemigo>();

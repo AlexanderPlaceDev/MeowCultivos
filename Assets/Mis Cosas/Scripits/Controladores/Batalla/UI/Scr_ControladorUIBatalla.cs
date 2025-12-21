@@ -58,7 +58,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     Scr_CreadorHabilidadesBatalla Hab2;
     Scr_CreadorHabilidadesBatalla HabE;
 
-
     [Header("CambioHC")]//para acomodar visaulmente los iconos de las habilidades y comsimibles
     public int Habmostrar = 0;
     public GameObject[] HabilidadesUI;
@@ -78,6 +77,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         {
             Tutopeleas = tu.GetComponent<Tutorial_peleas>();
         }
+        MostrarRango();
     }
 
     void Update()
@@ -168,7 +168,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     public void MostrarRango()
     {
         int e = PlayerPrefs.GetInt("Rango " + DatosArma.Nombre, 1) - 1;
-        Debug.Log(e);
+        //Debug.Log(e);
         Rango.sprite = Rangos[e];
     }
     public void MostrarHabilidadGuardada()
@@ -286,6 +286,55 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     }
 
     public void AceptarBatalla()
+    {
+        EsconderFlechasHabilidades();
+        checarUsosHabilidad();
+        CanvasSeleccionDeArmas.SetActive(false);
+        CanvasGameplay.SetActive(true);
+        ObjetosArmas.SetActive(true);
+        ControladorBatalla.Guardar_Pocion();
+        ControladorBatalla.GuardarHabilidadesArma(DatosArma.Nombre);
+        // Obtener nombres de habilidades desde el controlador
+        string ht = ControladorBatalla.HabilidadT;
+        string h1 = ControladorBatalla.Habilidad1;
+        string h2 = ControladorBatalla.Habilidad2;
+        string hE = ControladorBatalla.HabilidadEspecial;
+        // Buscar habilidades usando el script de datos
+        HabT = datos.BuscarHabilidadTemporalPorNombre(ht);
+        Hab1 = datos.BuscarHabilidadPermanentePorNombre(h1);
+        Hab2 = datos.BuscarHabilidadPermanentePorNombre(h2);
+        HabE = datos.BuscarHabilidadPermanentePorNombre(hE);
+
+        IconoHabilidad1.transform.GetChild(0).GetComponent<Image>().sprite = Hab1.Icono;
+        IconoHabilidad2.transform.GetChild(0).GetComponent<Image>().sprite = Hab2.Icono;
+        IconoHabilidadE.transform.GetChild(0).GetComponent<Image>().sprite = HabE.Icono;
+        if (Hab1.Tipo == "Pasiva")
+        {
+            IconoHabilidad1.transform.GetChild(1).gameObject.SetActive(false);
+        }
+        if (Hab2.Tipo == "Pasiva")
+        {
+            IconoHabilidad2.transform.GetChild(1).gameObject.SetActive(false);
+        }
+        if (HabE.Tipo == "Pasiva")
+        {
+            IconoHabilidadE.transform.GetChild(1).gameObject.SetActive(false);
+        }
+        if (Tutopeleas != null && Tutopeleas.isActiveAndEnabled)
+        {
+            Tutopeleas.ComenzarPelea();
+        }
+        if (newTem)
+        {
+            datos.UsosHabilidadesT[datos.BuscarUSoHabilidadTemporalPorNombre(ht)] -= 1;
+        }
+        ControladorBatalla.IniciarCuentaRegresiva(false);
+        ControladorBatalla.ArmaActual = Armas[ArmaActual];
+        GetComponent<Scr_ControladorArmas>().ArmaActual = ArmaActual;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+    public void AceptarRecolecion()
     {
         EsconderFlechasHabilidades();
         checarUsosHabilidad();
