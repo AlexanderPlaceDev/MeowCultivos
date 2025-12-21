@@ -27,6 +27,10 @@ public class Scr_ControladorBatalla : MonoBehaviour
     public string Habilidad2;
     public string HabilidadEspecial;
     public float PuntosActualesHabilidad = 0;
+    public string HabilidadTDefault;
+    public string Habilidad1Default;
+    public string Habilidad2Default;
+    public string HabilidadEspecialDefault;
 
     [Header("Pociones")]
     public string Pocion;
@@ -66,6 +70,8 @@ public class Scr_ControladorBatalla : MonoBehaviour
     [SerializeField] TextMeshProUGUI Complemento;
     [SerializeField] TextMeshProUGUI Item;
 
+    public GameObject ContadorFruta;
+    public GameObject ContadorEnemigos;
     public int FrutasRecolectadas;
     [Header("Barra Oleadas")]
     [SerializeField] Transform BarraSlider;
@@ -167,30 +173,104 @@ public class Scr_ControladorBatalla : MonoBehaviour
             case "Defensa":
                 controladorOleadas.enabled = true;
                 controladorRecoleccion.enabled = true;
+                ContadorEnemigos.SetActive(true);
+                ContadorFruta.SetActive(true);
                 break;
             case "Recoleccion":
                 controladorOleadas.enabled = false;
                 controladorRecoleccion.enabled = true;
+                ContadorEnemigos.SetActive(false);
+                ContadorFruta.SetActive(true);
                 break;
             case "Pelea":
                 controladorOleadas.enabled = true;
                 controladorRecoleccion.enabled = false;
+                ContadorEnemigos.SetActive(true);
+                ContadorFruta.SetActive(false);
                 break;
             case "":
                 controladorOleadas.enabled = true;
                 controladorRecoleccion.enabled = false;
+                ContadorEnemigos.SetActive(true);
+                ContadorFruta.SetActive(false);
                 break;
         }
     }
-
+    public void CehcarHabilidadDefault(string arma)
+    {
+        switch (arma)
+        {
+            case "Brazos":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Ojo";
+                Habilidad2Default = "Rugido";
+                HabilidadEspecialDefault = "Garras";
+                break;
+            case "Chilenon":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Ojo";
+                Habilidad2Default = "Rugido";
+                HabilidadEspecialDefault = "Garras";
+                break;
+            case "Coco":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Ojo";
+                Habilidad2Default = "Rugido";
+                HabilidadEspecialDefault = "Garras";
+                break;
+            case "Mango":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Ojo";
+                Habilidad2Default = "Rugido";
+                HabilidadEspecialDefault = "Garras";
+                break;
+            case "Papa":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Ojo";
+                Habilidad2Default = "Rugido";
+                HabilidadEspecialDefault = "Garras";
+                break;
+            case "Planta":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Crecimiento Rapido";
+                Habilidad2Default = "Cuidado Automata";
+                HabilidadEspecialDefault = "Cuello extensible";
+                break;
+            case "Platano":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Municion Perpetua";
+                Habilidad2Default = "Tiro explosivo";
+                HabilidadEspecialDefault = "Inyección de potasio";
+                break;
+            case "Sandia":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Fuerza Imparable";
+                Habilidad2Default = "Protección del Coloso";
+                HabilidadEspecialDefault = "Semilla explosiva";
+                break;
+            case "Tomate":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Pulso Sonoro";
+                Habilidad2Default = "Disparo explosivo";
+                HabilidadEspecialDefault = "Disparo maciso";
+                break;
+            case "Uvalon":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Ojo";
+                Habilidad2Default = "Rugido";
+                HabilidadEspecialDefault = "Garras";
+                break;
+        }
+    }
     //obtiene las habilidades que tiene la arma
     public void ConseguirHabilidadesArma(string arma)
     {
+        CehcarHabilidadDefault(arma);
         usosHabilidad = PlayerPrefs.GetInt(arma + "Usos", 0);
-        HabilidadT = PlayerPrefs.GetString(arma + "HT", "Nada");
-        Habilidad1 = PlayerPrefs.GetString(arma + "H1", "Ojo");
-        Habilidad2 = PlayerPrefs.GetString(arma + "H2", "Rugido");
-        HabilidadEspecial = PlayerPrefs.GetString(arma + "HE", "Garras");
+        HabilidadT = PlayerPrefs.GetString(arma + "HT", HabilidadTDefault);
+        Habilidad1 = PlayerPrefs.GetString(arma + "H1", Habilidad1Default);
+        Habilidad2 = PlayerPrefs.GetString(arma + "H2", Habilidad2Default);
+        HabilidadEspecial = PlayerPrefs.GetString(arma + "HE", HabilidadEspecialDefault);
     }
     public void GuardarHabilidadesArma(string arma)
     {

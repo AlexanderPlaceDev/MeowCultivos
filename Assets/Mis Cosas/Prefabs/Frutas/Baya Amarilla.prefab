@@ -171,5 +171,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f104d3f0e70e4ff44b1c27ef53df8642, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Vida: 10
   Nombre: Baya Amarillo
+  vidaTotal: 25
+  tiempoPudrirse: 15
+  tiempoPodrido: 20
+  colorNormal: {r: 1, g: 0.8980392, b: 0, a: 1}
+  colorPudriendose: {r: 0.55185556, g: 0.5943396, b: 0.030838378, a: 1}
+  colorPodrido: {r: 0.094123565, g: 0.1509434, b: 0.007831969, a: 1}
+  tiempoActual: 0
+  estadoActual: 0

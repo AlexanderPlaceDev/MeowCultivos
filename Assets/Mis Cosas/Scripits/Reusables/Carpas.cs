@@ -76,6 +76,7 @@ public class Carpas : MonoBehaviour
     }
     IEnumerator AparecerUI(float dur)
     {
+        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), -200, 1);
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 230, 1);
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(), -810, 1);

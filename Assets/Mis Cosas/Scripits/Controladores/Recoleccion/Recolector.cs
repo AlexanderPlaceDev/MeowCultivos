@@ -20,7 +20,15 @@ public class Recolector : MonoBehaviour
     {
         if (other.tag == "Fruta")
         {
-            GameObject.Find("Controlador").GetComponent<Scr_ControladorRecolleccion>().CantFrutaRecolectadas++;
+            Fruta_drop drop = other.gameObject.GetComponent<Fruta_drop>();
+            if(drop.estadoActual == Fruta_drop.EstadoFruta.Podrido)
+            {
+                GameObject.Find("Controlador").GetComponent<Scr_ControladorRecolleccion>().CantFrutaRecolectadas--;
+            }
+            else
+            {
+                GameObject.Find("Controlador").GetComponent<Scr_ControladorRecolleccion>().CantFrutaRecolectadas++;
+            }
             Destroy(other.gameObject);
         }
     }

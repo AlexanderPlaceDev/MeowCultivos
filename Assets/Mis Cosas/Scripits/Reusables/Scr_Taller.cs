@@ -36,18 +36,18 @@ public class Scr_Taller : MonoBehaviour
     [SerializeField] private GameObject advertencia;
     [SerializeField] Sprite IconoVacio;
     private int Hablugar;
-    private int objetoPrincipalInt =0;
+    private int objetoPrincipalInt = 0;
     [SerializeField] private TextMeshProUGUI NombreHabilidad;
     [SerializeField] private TextMeshProUGUI DescripcionHabilidad;
     [SerializeField] private GameObject MostarDescipcion;
-    private string htEnEspera; 
+    private string htEnEspera;
     private int cantidadht;
     private string ht;
     private string h1;
     private string h2;
     private string hE;
 
-    private List<int> CantidadObjNessesarios= new List<int>();
+    private List<int> CantidadObjNessesarios = new List<int>();
 
     [SerializeField] private Color32[] ColoresBotones;
 
@@ -58,7 +58,7 @@ public class Scr_Taller : MonoBehaviour
     public List<Scr_CreadorHabilidadesBatalla> HabilidadesPermanentes;
     public List<Scr_CreadorHabilidadesBatalla> HabilidadesEspeciales;
 
-    
+
 
     [Header("Crafteo")]
     [SerializeField] public GameObject BotCraftear;
@@ -76,6 +76,13 @@ public class Scr_Taller : MonoBehaviour
 
     private bool isOpen = false;
     private Scr_ActivadorMenuEstructuraFijo Tablero => GetComponent<Scr_ActivadorMenuEstructuraFijo>();
+
+
+
+    private string HabilidadTDefault;
+    private string Habilidad1Default;
+    private string Habilidad2Default;
+    private string HabilidadEspecialDefault;
     // Start is called before the first frame update
     void Start()
     {
@@ -858,15 +865,82 @@ public class Scr_Taller : MonoBehaviour
         advertencia.SetActive(false);
         HabilidadesSec.SetActive(true);
     }
+
+    public void CehcarHabilidadDefault(string arma)
+    {
+        switch (arma)
+        {
+            case "Brazos":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Ojo";
+                Habilidad2Default = "Rugido";
+                HabilidadEspecialDefault = "Garras";
+                break;
+            case "Chilenon":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Ojo";
+                Habilidad2Default = "Rugido";
+                HabilidadEspecialDefault = "Garras";
+                break;
+            case "Coco":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Ojo";
+                Habilidad2Default = "Rugido";
+                HabilidadEspecialDefault = "Garras";
+                break;
+            case "Mango":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Ojo";
+                Habilidad2Default = "Rugido";
+                HabilidadEspecialDefault = "Garras";
+                break;
+            case "Papa":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Ojo";
+                Habilidad2Default = "Rugido";
+                HabilidadEspecialDefault = "Garras";
+                break;
+            case "Planta":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Crecimiento Rapido";
+                Habilidad2Default = "Cuidado Automata";
+                HabilidadEspecialDefault = "Cuello extensible";
+                break;
+            case "Platano":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Municion Perpetua";
+                Habilidad2Default = "Tiro explosivo";
+                HabilidadEspecialDefault = "Inyección de potasio";
+                break;
+            case "Sandia":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Fuerza Imparable";
+                Habilidad2Default = "Protección del Coloso";
+                HabilidadEspecialDefault = "Semilla explosiva";
+                break;
+            case "Tomate":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Pulso Sonoro";
+                Habilidad2Default = "Disparo explosivo";
+                HabilidadEspecialDefault = "Disparo maciso";
+                break;
+            case "Uvalon":
+                HabilidadTDefault = "Nada";
+                Habilidad1Default = "Ojo";
+                Habilidad2Default = "Rugido";
+                HabilidadEspecialDefault = "Garras";
+                break;
+        }
+    }
     public void mostrarArmasHabilidades()
     {
         string arma = Datosarmas.TodasLasArmas[objetoPrincipalInt].Nombre;
         //cantidadht = PlayerPrefs.GetInt(arma + "Usos", 0);
-        Debug.LogWarning(PlayerPrefs.GetString(arma + "HT", "Nada"));
-        ht = PlayerPrefs.GetString(arma + "HT", "Nada");
-        h1 = PlayerPrefs.GetString(arma + "H1", "Ojo");
-        h2 = PlayerPrefs.GetString(arma + "H2", "Rugido");
-        hE = PlayerPrefs.GetString(arma + "HE", "Garras");
+        //Debug.LogWarning(PlayerPrefs.GetString(arma + "HT", "Nada"));
+        ht = PlayerPrefs.GetString(arma + "HT", HabilidadTDefault);
+        h1 = PlayerPrefs.GetString(arma + "H1", Habilidad1Default);
+        h2 = PlayerPrefs.GetString(arma + "H2", Habilidad2Default);
+        hE = PlayerPrefs.GetString(arma + "HE", HabilidadEspecialDefault);
 
         Scr_CreadorHabilidadesBatalla HabT = Datosarmas.BuscarHabilidadTemporalPorNombre(ht);
         Scr_CreadorHabilidadesBatalla Hab1 = Datosarmas.BuscarHabilidadPermanentePorNombre(h1);

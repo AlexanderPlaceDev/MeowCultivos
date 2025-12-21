@@ -171,5 +171,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f104d3f0e70e4ff44b1c27ef53df8642, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Vida: 10
   Nombre: Platano
+  vidaTotal: 25
+  tiempoPudrirse: 15
+  tiempoPodrido: 20
+  colorNormal: {r: 0.85490197, g: 0.84705883, b: 0.2509804, a: 1}
+  colorPudriendose: {r: 0.5, g: 0.49476233, b: 0.096698105, a: 1}
+  colorPodrido: {r: 0.2792486, g: 0.2924528, b: 0.15312387, a: 1}
+  tiempoActual: 0
+  estadoActual: 0

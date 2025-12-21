@@ -215,7 +215,7 @@ public class Scr_EnemigoJaba : Scr_Enemigo
         if (AtacandoFruta)
         {
             GameObject plant = BuscarPlanta("Planta");
-            plant.GetComponent<Aparecer_Fruta>().RecibirDaño();
+            plant.GetComponent<Aparecer_Fruta>().RecibirDaño(DañoMelee);
         }
         else
         {

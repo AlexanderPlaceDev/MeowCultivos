@@ -8,19 +8,18 @@ using UnityEngine.UI;
 
 public class Scr_ControladorRecolleccion : MonoBehaviour
 {
-    [Header("Barra Oleadas")]
+    [Header("Hud")]
     [SerializeField] GameObject[] Iconos;
     [SerializeField] Transform BarraSlider;
     [SerializeField] float TiempoEntreOleadas;
-    [SerializeField] GameObject BotonOleada;
     [SerializeField] TextMeshProUGUI TextoCantidadFrutas;
     [SerializeField] Sprite[] Fruta; 
-    [SerializeField] Sprite IconoFruta; 
-    
+    [SerializeField] Sprite IconoFruta;
+    [SerializeField] GameObject Tiempo;
+    [SerializeField] TextMeshProUGUI TextTiempo;
     public bool Dropear = true;
     private int CantFrutaPorOleada;
     public int CantFrutaRecolectadas;
-    public GameObject prefabFruta;
     public float TiempoDeRecoleccion=0;
     [Header("Cuenta Regresiva")]
     [SerializeField] private AudioSource audioSource;
@@ -28,10 +27,11 @@ public class Scr_ControladorRecolleccion : MonoBehaviour
     [SerializeField] private AudioClip SonidoPelea;
     private string ultimoTextoMostrado = "";
 
+
     float ContTiempoEntreOleadas;
 
     private Scr_DatosSingletonBatalla singleton;
-
+    public int CantidadPlantas=0;
 
     public List<GameObject> enemigosOleada = new List<GameObject>();
     public int OleadaActual = 1;
@@ -48,20 +48,34 @@ public class Scr_ControladorRecolleccion : MonoBehaviour
         singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
         //prefabFruta = singleton.Fruta;
         CantFrutaPorOleada = Random.Range(5,20);
+        if (CantFrutaPorOleada > 10)
+        {
+            TiempoDeRecoleccion = Random.Range(300, 330);
+        }
+        else
+        {
+            TiempoDeRecoleccion = Random.Range(230, 30);
+        }
+        Tiempo.SetActive(true);
     }
     
     private void Update()
     {
+        Frutas_colec();
+        TomarTiempo();
+    }
+
+    public void Frutas_colec()
+    {
         if (ControladorBatalla.ComenzoBatalla)
         {
             TextoCantidadFrutas.text = CantFrutaRecolectadas + "/" + CantFrutaPorOleada;
-            TiempoDeRecoleccion += Time.deltaTime;
         }
         else
         {
             TextoCantidadFrutas.text = "•/•";
         }
-        if (CantFrutaRecolectadas>= CantFrutaPorOleada)
+        if (CantFrutaRecolectadas >= CantFrutaPorOleada)
         {
             ControladorBatalla.NumeroCuenta.gameObject.SetActive(false);
             ContTiempoEntreOleadas = 0;
@@ -70,6 +84,64 @@ public class Scr_ControladorRecolleccion : MonoBehaviour
             ControladorBatalla.FinalizarBatalla(true);
             Debug.Log("Terminar");
         }
+        if (CantidadPlantas <= 0 && ControladorBatalla.ComenzoBatalla)
+        {
+            ControladorBatalla.NumeroCuenta.gameObject.SetActive(false);
+            ContTiempoEntreOleadas = 0;
+            ControladorBatalla.ComenzoBatalla = false;
+            ControladorBatalla.FrutasRecolectadas = CantFrutaRecolectadas;
+            ControladorBatalla.FinalizarBatalla(false);
+            Debug.Log("Terminar");
+        }
+    }
+
+    public void TomarTiempo()
+    {
+        if (ControladorBatalla.ComenzoBatalla)
+        {
+            if (TiempoDeRecoleccion > 0)
+            {
+                TiempoDeRecoleccion -= Time.deltaTime;
+
+                int minutos = Mathf.FloorToInt(TiempoDeRecoleccion / 60);
+                int segundos = Mathf.FloorToInt(TiempoDeRecoleccion % 60);
+
+                TextTiempo.text = minutos.ToString("00") + ":" + segundos.ToString("00");
+            }
+            else
+            {
+                comprobar_finTiempo();
+            }
+        }
+        else
+        {
+            TextTiempo.text = "00:00";
+        }
+    }
+
+    public void comprobar_finTiempo()
+    {
+        TextTiempo.text = "00:00";
+        ControladorBatalla.NumeroCuenta.gameObject.SetActive(false);
+        ContTiempoEntreOleadas = 0;
+        ControladorBatalla.ComenzoBatalla = false;
+        ControladorBatalla.FrutasRecolectadas = CantFrutaRecolectadas;
+        switch (singleton.ModoSeleccionado.ToString())
+        {
+            case "Defensa":
+                ControladorBatalla.FinalizarBatalla(true);
+                break;
+            case "Recoleccion":
+                ControladorBatalla.FinalizarBatalla(false);
+                break;
+            case "Pelea":
+                ControladorBatalla.FinalizarBatalla(false);
+                break;
+            case "":
+                ControladorBatalla.FinalizarBatalla(false);
+                break;
+        }
+        Debug.Log("Terminar");
     }
     public bool OleadaCompletada()
     {
@@ -104,6 +176,7 @@ public class Scr_ControladorRecolleccion : MonoBehaviour
         foreach (Transform hijo in padre)
         {
             hijo.gameObject.SetActive(true);
+            CantidadPlantas++;
         }
     }
     private string Planta()

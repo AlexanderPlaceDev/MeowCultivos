@@ -1,16 +1,17 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Aparecer_Fruta : MonoBehaviour
 {
+    public float Vida=1000;
     public GameObject Fruta;
     public float Espera=10f;
     private Coroutine Spawn_drop;
     private Coroutine Esperando;
     Scr_ControladorRecolleccion Recoleccion;
     private bool cambiandoColor = false; 
-    private Color da�ado = new Color(1f, 0f, 0f);
+    private Color dañado = new Color(1f, 0f, 0f);
     public float DuracionCambioColor = 0.5f;
     // Start is called before the first frame update
     void Start()
@@ -50,11 +51,19 @@ public class Aparecer_Fruta : MonoBehaviour
         Spawn_drop = StartCoroutine(Dropear_Fruta());
 
     }
-    public void RecibirDa�o()
-    {// Cambiar temporalmente el color si est� herido
+    public void RecibirDaño(float DañoRecibido)
+    {
+        Vida -= DañoRecibido;
+        if (Vida <= 0)
+        {
+            Vida = 0; // 🔹 Evita valores negativos
+            GameObject.Find("Controlador").GetComponent<Scr_ControladorRecolleccion>().CantidadPlantas--;
+            Destroy(gameObject);
+        }
+        // Cambiar temporalmente el color si está herido
         if (!cambiandoColor )
         {
-            StartCoroutine(ChangeMaterial(da�ado, DuracionCambioColor));
+            StartCoroutine(ChangeMaterial(dañado, DuracionCambioColor));
         }
         if (Spawn_drop != null)
         {
@@ -67,7 +76,6 @@ public class Aparecer_Fruta : MonoBehaviour
         Esperando = StartCoroutine(Esperar_Spawn());
 
     }
-
     private IEnumerator ChangeMaterial(Color mat, float time)
     {
         cambiandoColor = true;

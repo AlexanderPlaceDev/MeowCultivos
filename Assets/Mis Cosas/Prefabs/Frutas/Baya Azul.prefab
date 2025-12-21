@@ -171,5 +171,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f104d3f0e70e4ff44b1c27ef53df8642, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Vida: 10
   Nombre: Baya Azul
+  vidaTotal: 25
+  tiempoPudrirse: 15
+  tiempoPodrido: 20
+  colorNormal: {r: 0, g: 0.36078432, b: 1, a: 1}
+  colorPudriendose: {r: 0.04463333, g: 0.1503267, b: 0.5566038, a: 1}
+  colorPodrido: {r: 0.013841411, g: 0.0065414775, b: 0.1981132, a: 1}
+  tiempoActual: 0
+  estadoActual: 0

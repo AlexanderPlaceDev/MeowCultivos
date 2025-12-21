@@ -6,6 +6,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static Fruta_drop;
 
 public class Scr_ControladorArmas : MonoBehaviour
 {
@@ -87,6 +88,19 @@ public class Scr_ControladorArmas : MonoBehaviour
     [Header("Efectos")]
     public string EfectoTemp = "";
     public string EfectoHab = "";
+
+    [Header("Fruta")]
+    public float vidaTotal = 10f;
+    public float tiempoPudrirse = 6f;
+    public float tiempoPodrido = 9f;
+
+    public Color colorNormal = Color.white;
+    public Color colorPudriendose = Color.yellow;
+    public Color colorPodrido = Color.green;
+
+    private float tiempoActualFruta = 0f;
+    private Fruta_drop.EstadoFruta estadoActual;
+    private Renderer rendererFruta;
     void Start()
     {
         //aplica el volumen 
@@ -191,6 +205,7 @@ public class Scr_ControladorArmas : MonoBehaviour
 
 
         RecolectarFruta();
+        checar_estadoFruta();
         // Disparo basado en el modo seleccionado (automático o semiautomático)
         if (Tipo != "Automatica")
         {
@@ -748,45 +763,133 @@ public class Scr_ControladorArmas : MonoBehaviour
     }
     void RecolectarFruta()
     {
-        if(Fruta!=null && Input.GetKeyDown(KeyCode.Q) && !TieneFruta)
+        if(Fruta!=null && Input.GetKeyDown(KeyCode.E) && !TieneFruta)
         {
             TieneFruta = true;
             for (int i = 0; i < ObjetoArmas_reales.Length; i++)
             {
                 ObjetoArmas_reales[i].SetActive(false);
             }
+            Fruta_drop drop = Fruta.GetComponent<Fruta_drop>();
+            estadoActual = drop.GetEstado();
+            tiempoActualFruta = drop.tiempoActual;
+            tiempoPodrido = drop.tiempoPodrido;
+            tiempoPudrirse = drop.tiempoPudrirse;
+            vidaTotal = drop.vidaTotal;
+            FrutaNombre = drop.Nombre;
+            colorNormal= drop.colorNormal;
+            colorPodrido = drop.colorPodrido;
+            colorPudriendose = drop.colorPudriendose;
+
+
+            //Debug.Log(FrutaNombre);
             switch (FrutaNombre)
             {
                 case "Baya Azul":
                     FrutaMano[0].SetActive(true);
+                    rendererFruta= FrutaMano[0].GetComponent<Renderer>();
                     puntoFruta = FrutaMano[0].transform;
                     break;
                 case "Baya Amarillo":
                     FrutaMano[1].SetActive(true);
+                    rendererFruta = FrutaMano[1].GetComponent<Renderer>();
                     puntoFruta = FrutaMano[1].transform;
                     break;
                 case "Baya Roja":
                     FrutaMano[2].SetActive(true);
+                    rendererFruta = FrutaMano[2].GetComponent<Renderer>();
                     puntoFruta = FrutaMano[2].transform;
                     break;
                 case "Platano":
                     FrutaMano[3].SetActive(true);
+                    rendererFruta = FrutaMano[3].GetComponent<Renderer>();
                     puntoFruta = FrutaMano[3].transform;
                     break;
                 default:
                     FrutaMano[0].SetActive(true);
+                    rendererFruta = FrutaMano[0].GetComponent<Renderer>();
                     puntoFruta = FrutaMano[0].transform;
                     break;
             }
+            //rendererFruta = Fruta.GetComponent<Renderer>();
             Anim.Play("FrutaAgarrada");
             Destroy(Fruta);
         }
-        else if ((Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.Mouse0)) && TieneFruta)
+        else if ((Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Mouse0)) && TieneFruta)
         {
-            TieneFruta = false;
-            DispararFruta();
-            esconderFruta();
+            DestruirFruta();
         }
+    }
+
+    private void checar_estadoFruta()
+    {
+        if (!TieneFruta) return;
+        // El tiempo SIEMPRE avanza
+        tiempoActualFruta += Time.deltaTime;
+
+        // Cambios de estado
+        if (tiempoActualFruta >= tiempoPodrido && estadoActual != EstadoFruta.Podrido)
+            CambiarEstadoFruta(EstadoFruta.Podrido);
+        else if (tiempoActualFruta >= tiempoPudrirse && estadoActual != EstadoFruta.Pudriendose)
+            CambiarEstadoFruta(EstadoFruta.Pudriendose);
+
+        // Muerte
+        if (tiempoActualFruta >= vidaTotal)
+            DestruirFruta();
+    }
+    void CambiarEstadoFruta(EstadoFruta nuevoEstado)
+    {
+        estadoActual = nuevoEstado;
+
+        switch (estadoActual)
+        {
+            case EstadoFruta.Normal:
+                CambiarColor(colorNormal);
+                break;
+
+            case EstadoFruta.Pudriendose:
+                CambiarColor(colorPudriendose);
+                break;
+
+            case EstadoFruta.Podrido:
+                CambiarColor(colorPodrido);
+                break;
+        }
+    }
+
+    void CambiarColor(Color color)
+    {
+        if (rendererFruta == null) return;
+
+        foreach (Material mat in rendererFruta.materials)
+        {
+            Material[] materiales = rendererFruta.materials;
+            // Guardar una copia de los materiales originales
+            Material[] materialesOriginales = new Material[materiales.Length];
+            for (int i = 0; i < materiales.Length; i++)
+            {
+                materialesOriginales[i] = new Material(materiales[i]);
+            }
+
+            // Crear copias modificadas de los materiales y cambiar el _BaseColor
+            Material[] materialesModificados = new Material[materiales.Length];
+            for (int i = 0; i < materiales.Length; i++)
+            {
+                materialesModificados[i] = new Material(materiales[i]);
+                materialesModificados[i].SetColor("_Base_Color", color); // Cambiar el color
+            }
+
+            // Aplicar materiales modificados
+            rendererFruta.materials = materialesModificados;
+        }
+    }
+
+    void DestruirFruta()
+    {
+        DispararFruta();
+        FrutaNombre = "";
+        TieneFruta = false;
+        esconderFruta();
     }
     void DispararFruta()
     {
@@ -807,12 +910,21 @@ public class Scr_ControladorArmas : MonoBehaviour
                 Frut = Instantiate(FrutaDrop[3], puntoFruta.position, puntoFruta.rotation);
                 break;
             default:
-                Frut = Instantiate(FrutaDrop[0], puntoFruta.position, puntoFruta.rotation);
+                Debug.Log("No hay fruta");
                 break;
         }
-        Vector3 direccionBase = camara.transform.forward;
-        Vector3 direccionConDispersion = DireccionConDispersion(direccionBase, Random.Range(0, dispersion));
-        Frut.GetComponent<Rigidbody>().AddForce((direccionConDispersion * fuerzaDisparo)/3, ForceMode.Impulse);
+        if (Frut != null)
+        {
+            Fruta_drop drop = Frut.GetComponent<Fruta_drop>();
+            drop.estadoActual = estadoActual;
+            drop.tiempoActual = tiempoActualFruta;
+            drop.tiempoPodrido=tiempoPodrido;
+            drop.tiempoPudrirse=tiempoPudrirse;
+            drop.vidaTotal= vidaTotal;
+            Vector3 direccionBase = camara.transform.forward;
+            Vector3 direccionConDispersion = DireccionConDispersion(direccionBase, Random.Range(0, dispersion));
+            Frut.GetComponent<Rigidbody>().AddForce((direccionConDispersion * fuerzaDisparo) / 3, ForceMode.Impulse);
+        }
     }
     void esconderFruta()
     {

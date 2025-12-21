@@ -35,6 +35,8 @@ public class CambioTiempo : MonoBehaviour
 
     private int minValueM = 0;
     private int maxValueM = 60;
+
+    Transform Gata;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +44,7 @@ public class CambioTiempo : MonoBehaviour
         Minuto.text = MinutoPredeterminada.ToString();
         ControlT = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
         EventosGenerales = GameObject.Find("EventosGenerales").GetComponent<Controlador_EventosGenerales>();
+        Gata = GameObject.Find("Gata").GetComponent<Transform>();
         cabRadio();
         activarDespetador();
     }
@@ -284,7 +287,7 @@ public class CambioTiempo : MonoBehaviour
         {
             carpa.CerrarCarpa();
         }
-
+        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
     }
     public void checarTiempo()
     {
