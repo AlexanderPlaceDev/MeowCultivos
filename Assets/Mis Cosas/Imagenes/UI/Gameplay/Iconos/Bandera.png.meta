@@ -1,0 +1,1922 @@
+fileFormatVersion: 2
+guid: 268534d6afc686f47b3eb6d9cb192553
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Bandera_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 3496
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ec438e536cdeae4a837b64a65377271
+      internalID: -2016560678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_1
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 3496
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34d25f0d22f21994f9dc906110025030
+      internalID: -294157433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_2
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 3496
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d6958ef9cbf2a14a93cff6fdc4866ae
+      internalID: 980968823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_3
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 3496
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c3f39ef656acee479245261c7e8c396
+      internalID: -1347375916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_4
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 3496
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65cae1f7043558a4bb2359b17baf97a7
+      internalID: 512457262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_5
+      rect:
+        serializedVersion: 2
+        x: 1320
+        y: 3496
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d310d0b6b9be2824ba9052272ed3cbfb
+      internalID: 1826990495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_6
+      rect:
+        serializedVersion: 2
+        x: 1584
+        y: 3496
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 308d58c9a5222ae4fa7e4b7bb77165ff
+      internalID: 1418265861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_7
+      rect:
+        serializedVersion: 2
+        x: 1848
+        y: 3496
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1b4dfdd736ed4c498ff58cc6034c218
+      internalID: 50390389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_8
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 3496
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce5a4c16ac9867d4195042c80034625d
+      internalID: -2089159453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 3059
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9e37a6aae1952240aaf1f38690cf286
+      internalID: -1930542211
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_10
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 3059
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ecfc994f0771c8448a2d260476ec720
+      internalID: -2047507487
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_11
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 3059
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 43ea75849b51a2b4c841b501fa280902
+      internalID: -2033179938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_12
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 3059
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed218d5a20bf1e94fbd7474f0a9d0882
+      internalID: 1809549423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_13
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 3059
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a3218d7ceea670f439da51c9e3de1f85
+      internalID: -1350534835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_14
+      rect:
+        serializedVersion: 2
+        x: 1320
+        y: 3059
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 564d2c76692767346bd8554baabbf7c4
+      internalID: -1223546381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_15
+      rect:
+        serializedVersion: 2
+        x: 1584
+        y: 3059
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66f50f22106a10d4587d310048ce43ca
+      internalID: 2048450218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_16
+      rect:
+        serializedVersion: 2
+        x: 1848
+        y: 3059
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69bcaedf125ae29438079cff58087865
+      internalID: 1517652597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_17
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 3059
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13f0aa735584b234197095c99fbfa7bf
+      internalID: -1681830852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2622
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f10e768213face4418afb1cf8d3f357b
+      internalID: 2126948263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_19
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 2622
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24c27d34df49a8545b12aa22340827ee
+      internalID: -1694308939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_20
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 2622
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f1a4beb6c2130f498c4e2c969acf843
+      internalID: 1659194503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_21
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 2622
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d28233fe08762e74e90fbdcc51428693
+      internalID: -496126918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_22
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 2622
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e8360426603b7c4199c00df8258ee96
+      internalID: -905773711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_23
+      rect:
+        serializedVersion: 2
+        x: 1320
+        y: 2622
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81498663cd1294349a17bd00ac34582c
+      internalID: 199980371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_24
+      rect:
+        serializedVersion: 2
+        x: 1584
+        y: 2622
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ba736b08568d174181f25088265ac59
+      internalID: -420988341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_25
+      rect:
+        serializedVersion: 2
+        x: 1848
+        y: 2622
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e890cee467564a4992c1ba06392591c
+      internalID: -588732637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_26
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 2622
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a75a72ccc75def4d9fdd17c8cac397c
+      internalID: -1922389709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_27
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2185
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00f74c16c5e5eec4fb6d15da3be54f30
+      internalID: 309654724
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_28
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 2185
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 981d75919bfce194793c58146a954535
+      internalID: -221397399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_29
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 2185
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2383afef388f6f48aca036527dd5bdd
+      internalID: -624046287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_30
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 2185
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b246b648335da14ca5c9db8b1b50792
+      internalID: -1918443868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_31
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 2185
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44a123cfb84b303468e27f483f4fb940
+      internalID: 1036857090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_32
+      rect:
+        serializedVersion: 2
+        x: 1320
+        y: 2185
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7aa187aaf8599c489491d86a27226dd
+      internalID: -857047185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_33
+      rect:
+        serializedVersion: 2
+        x: 1584
+        y: 2185
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70ae9507164a93643973d1bbfd015b90
+      internalID: 1618403122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_34
+      rect:
+        serializedVersion: 2
+        x: 1848
+        y: 2185
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 27014d08c22f7564686075c697d3d8d7
+      internalID: 1036548977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_35
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 2185
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe3b1a8fb02588648b61eb2b3aa90870
+      internalID: 915857875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_36
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1748
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6bb0cc1dfd0369440ad576f7bda4f830
+      internalID: 1379174834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_37
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 1748
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5ebcfff49fd316740969b59cc0ad5d44
+      internalID: -460741052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_38
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 1748
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82d388ac6db478a46bd2de4aca75850a
+      internalID: 196419228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_39
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 1748
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f68b9856ba57ee4989b517827635c52
+      internalID: 1973798076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_40
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 1748
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 066bcedd808f01e468878bd207087ca2
+      internalID: -1145457274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_41
+      rect:
+        serializedVersion: 2
+        x: 1320
+        y: 1748
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ddd5f3a37d417e448156a468eff08b7
+      internalID: -246169499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_42
+      rect:
+        serializedVersion: 2
+        x: 1584
+        y: 1748
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1c8742abf0ed4144b25577d0b758bb0
+      internalID: -1339189725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_43
+      rect:
+        serializedVersion: 2
+        x: 1848
+        y: 1748
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fef390b9888e5124fa94b44f89eaa09e
+      internalID: 949572760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_44
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 1748
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 248e3f05a3b5b2e4ea9726d33659a2d3
+      internalID: -1735241323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_45
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1311
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b76873fe8921d11408eb5d8ef293e42b
+      internalID: 1583900688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_46
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 1311
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 611b8acda3579934ba25bf7fd3b7ce59
+      internalID: 1898342606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_47
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 1311
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d41779ec93df61a4a8743d09976afbac
+      internalID: 1824246443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_48
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 1311
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78485634189df4246857a0532cd5a8cd
+      internalID: 597436742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_49
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 1311
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a6ff2f7e753dac4a86f0a2b985428d9
+      internalID: -466655763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_50
+      rect:
+        serializedVersion: 2
+        x: 1320
+        y: 1311
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f15a906f1943bb4381f7a8cf2d1ed77
+      internalID: -703668167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_51
+      rect:
+        serializedVersion: 2
+        x: 1584
+        y: 1311
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 862e50936b734c940b387839e63e2ac4
+      internalID: 1502736432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_52
+      rect:
+        serializedVersion: 2
+        x: 1848
+        y: 1311
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c423283e626cd442b60c7a4cdf88e36
+      internalID: 1382554102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_53
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 1311
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc6bf48633122b0488568e4734fc3088
+      internalID: -818409364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_54
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 874
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2959ed7c8bb149446aa56806e9d78df5
+      internalID: -1183416318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_55
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 874
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7fada9173277b584b86ab25b32e4f4f0
+      internalID: -500186364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_56
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 874
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a01bed399f3dabb48a8f61c90956c9e4
+      internalID: 775757115
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_57
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 874
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 883eec0e7d91f734b964d104304ea34f
+      internalID: -547152629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_58
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 874
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc4f7a5ea5ffbf0458d429f6749071e8
+      internalID: 182886024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_59
+      rect:
+        serializedVersion: 2
+        x: 1320
+        y: 874
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 86c6901291dfa254e92ebab4a0917df8
+      internalID: -1931628883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_60
+      rect:
+        serializedVersion: 2
+        x: 1584
+        y: 874
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c177ea1efcff14e409b4d234060246ce
+      internalID: -363751285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_61
+      rect:
+        serializedVersion: 2
+        x: 1848
+        y: 874
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52631d67d6dd30640826adb70e7ca429
+      internalID: 1301630604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_62
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 874
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5aa31e9d9fdef6741acfc63825f1ad4e
+      internalID: -1691948777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_63
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 437
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3781f8be4bee5f340a203aa5d010b8cc
+      internalID: -751066634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_64
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 437
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1a3a041cf2a650440999bbe7e2ff5fee
+      internalID: -1570527572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_65
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 437
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b78cc7caf665374f8ff60034e8003f7
+      internalID: -953584376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_66
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 437
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 32c5c5a2dd3dcf743b72ad42160eca92
+      internalID: -250605044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_67
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 437
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0e9e7a5ab98da24690b8f46a7599d0e
+      internalID: 1760790273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_68
+      rect:
+        serializedVersion: 2
+        x: 1320
+        y: 437
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9cc6cd47f320fbf449d817f9120b31f1
+      internalID: -1163682113
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_69
+      rect:
+        serializedVersion: 2
+        x: 1584
+        y: 437
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: daa05abf37c766c42afe5e290ec58149
+      internalID: 2106131696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_70
+      rect:
+        serializedVersion: 2
+        x: 1848
+        y: 437
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b941cda10f93c3498addcae212a4203
+      internalID: 1909209527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_71
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 437
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 624eda694a705f64c9aca847fb043031
+      internalID: -989963655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_72
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 679834b6d901fba458870376333622f4
+      internalID: -611745751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_73
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 0
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e74c27a9c13a7a4ca54f019c7a42c71
+      internalID: -767477395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_74
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 0
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 574431faedff0bb49bf1e5f1aafc6ea0
+      internalID: 1302680504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_75
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 0
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e0fd36c332ecec842add1627a96d238d
+      internalID: -1894798579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_76
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 0
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 701c50d8c383d4248a9e3427605c9ceb
+      internalID: 1351812849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_77
+      rect:
+        serializedVersion: 2
+        x: 1320
+        y: 0
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 912f85282aad6be44afdacc57663055c
+      internalID: -1732247436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_78
+      rect:
+        serializedVersion: 2
+        x: 1584
+        y: 0
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 202b466e7e5c0924b8158ff131665544
+      internalID: -1162062663
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_79
+      rect:
+        serializedVersion: 2
+        x: 1848
+        y: 0
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 86b6d9ed0461155459c650a9bb97fd98
+      internalID: 553959394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bandera_80
+      rect:
+        serializedVersion: 2
+        x: 2112
+        y: 0
+        width: 264
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c99848252a95e774f8f5c06af6933bc0
+      internalID: 1083352778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: d952fd63bb819f349a6b3b82effbfe2f
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Bandera_0: -2016560678
+      Bandera_1: -294157433
+      Bandera_10: -2047507487
+      Bandera_11: -2033179938
+      Bandera_12: 1809549423
+      Bandera_13: -1350534835
+      Bandera_14: -1223546381
+      Bandera_15: 2048450218
+      Bandera_16: 1517652597
+      Bandera_17: -1681830852
+      Bandera_18: 2126948263
+      Bandera_19: -1694308939
+      Bandera_2: 980968823
+      Bandera_20: 1659194503
+      Bandera_21: -496126918
+      Bandera_22: -905773711
+      Bandera_23: 199980371
+      Bandera_24: -420988341
+      Bandera_25: -588732637
+      Bandera_26: -1922389709
+      Bandera_27: 309654724
+      Bandera_28: -221397399
+      Bandera_29: -624046287
+      Bandera_3: -1347375916
+      Bandera_30: -1918443868
+      Bandera_31: 1036857090
+      Bandera_32: -857047185
+      Bandera_33: 1618403122
+      Bandera_34: 1036548977
+      Bandera_35: 915857875
+      Bandera_36: 1379174834
+      Bandera_37: -460741052
+      Bandera_38: 196419228
+      Bandera_39: 1973798076
+      Bandera_4: 512457262
+      Bandera_40: -1145457274
+      Bandera_41: -246169499
+      Bandera_42: -1339189725
+      Bandera_43: 949572760
+      Bandera_44: -1735241323
+      Bandera_45: 1583900688
+      Bandera_46: 1898342606
+      Bandera_47: 1824246443
+      Bandera_48: 597436742
+      Bandera_49: -466655763
+      Bandera_5: 1826990495
+      Bandera_50: -703668167
+      Bandera_51: 1502736432
+      Bandera_52: 1382554102
+      Bandera_53: -818409364
+      Bandera_54: -1183416318
+      Bandera_55: -500186364
+      Bandera_56: 775757115
+      Bandera_57: -547152629
+      Bandera_58: 182886024
+      Bandera_59: -1931628883
+      Bandera_6: 1418265861
+      Bandera_60: -363751285
+      Bandera_61: 1301630604
+      Bandera_62: -1691948777
+      Bandera_63: -751066634
+      Bandera_64: -1570527572
+      Bandera_65: -953584376
+      Bandera_66: -250605044
+      Bandera_67: 1760790273
+      Bandera_68: -1163682113
+      Bandera_69: 2106131696
+      Bandera_7: 50390389
+      Bandera_70: 1909209527
+      Bandera_71: -989963655
+      Bandera_72: -611745751
+      Bandera_73: -767477395
+      Bandera_74: 1302680504
+      Bandera_75: -1894798579
+      Bandera_76: 1351812849
+      Bandera_77: -1732247436
+      Bandera_78: -1162062663
+      Bandera_79: 553959394
+      Bandera_8: -2089159453
+      Bandera_80: 1083352778
+      Bandera_9: -1930542211
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
