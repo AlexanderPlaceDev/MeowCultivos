@@ -15,6 +15,7 @@ public class Scr_CambiadorBatalla : MonoBehaviour
     [SerializeField] public Color ColorItem;
 
     [SerializeField] public Scr_DatosSingletonBatalla.Modo Modo;
+    [SerializeField] public int Pista;
     public bool Cambiando;
     private Transform Gata;
     GameObject Carga;
@@ -137,6 +138,7 @@ public class Scr_CambiadorBatalla : MonoBehaviour
         singleton.Item = Item;
         singleton.ColorItem = ColorItem;
         singleton.ModoSeleccionado = Modo;
+        singleton.Pista = Pista;
         Debug.Log("[CargarEscena] Valores básicos asignados.");
 
         var sol = GameObject.Find("Sol");

@@ -25,7 +25,7 @@ public class Fruta_drop : MonoBehaviour
     public EstadoFruta estadoActual;
     private Renderer rendererFruta;
 
-    private bool estaRecogida = false;
+    
 
     void Start()
     {

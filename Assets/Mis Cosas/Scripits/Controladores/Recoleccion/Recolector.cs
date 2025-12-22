@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class Recolector : MonoBehaviour
 {
+    Scr_ControladorRecolleccion Rec;
     // Start is called before the first frame update
     void Start()
     {
-        
+        Rec = GameObject.Find("Controlador").GetComponent<Scr_ControladorRecolleccion>();
+        if(Rec == null)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -23,11 +28,11 @@ public class Recolector : MonoBehaviour
             Fruta_drop drop = other.gameObject.GetComponent<Fruta_drop>();
             if(drop.estadoActual == Fruta_drop.EstadoFruta.Podrido)
             {
-                GameObject.Find("Controlador").GetComponent<Scr_ControladorRecolleccion>().CantFrutaRecolectadas--;
+                Rec.CantFrutaRecolectadas--;
             }
             else
             {
-                GameObject.Find("Controlador").GetComponent<Scr_ControladorRecolleccion>().CantFrutaRecolectadas++;
+                Rec.CantFrutaRecolectadas++;
             }
             Destroy(other.gameObject);
         }
