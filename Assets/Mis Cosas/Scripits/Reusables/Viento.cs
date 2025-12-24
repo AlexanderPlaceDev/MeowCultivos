@@ -38,7 +38,8 @@ public class Viento : MonoBehaviour
         if (other.name == "Gata" || other.name == "Gato Mesh")
         {
             Rigidbody rb = other.GetComponent<Rigidbody>();
-            if (rb != null)
+            Scr_Movimiento mov= other.GetComponent<Scr_Movimiento>();
+            if (rb != null && mov.isActiveAndEnabled)
             {
                 Vector3 windDir = transform.forward; // viento hacia atrás
                 rb.AddForce(windDir * FuerzaViento, ForceMode.Acceleration);

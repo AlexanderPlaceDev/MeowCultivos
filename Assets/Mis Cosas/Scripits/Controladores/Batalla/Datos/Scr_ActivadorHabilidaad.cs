@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Scr_ActivadorHabilidad : MonoBehaviour
@@ -14,7 +15,6 @@ public class Scr_ActivadorHabilidad : MonoBehaviour
     [SerializeField] Sprite[] IconosBloqueo;
     [SerializeField] Color[] Colores;
     [SerializeField] KeyCode Tecla;
-
     public bool EsPasiva=false;
     public Color ColorHabilidad;
     // Referencia al script Scr_Habilidades

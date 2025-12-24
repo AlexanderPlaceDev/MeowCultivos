@@ -103,15 +103,10 @@ public class Scr_EnemigoJaba : Scr_Enemigo
             // si pierde objetivo, reasignarlo
             if (agente.isOnNavMesh)
             {
-                if (Fruta)
+                if (Fruta && Vida > (VidaMaxima * .5f))
                 {
                     Objetivo = BuscarPlanta("Planta").transform;
                     AtacandoFruta = true;
-                }
-                else if (Vida <= (Vida * .3))
-                {
-                    Objetivo = Gata.transform;
-                    AtacandoFruta = false;
                 }
                 else
                 {
@@ -132,15 +127,10 @@ public class Scr_EnemigoJaba : Scr_Enemigo
             Anim.Play("Mover");
 
         agente.isStopped = false;
-        if (Fruta)
+        if (Fruta && Vida >(VidaMaxima * .5f))
         {
             Objetivo = BuscarPlanta("Planta").transform;
             AtacandoFruta = true;
-        }
-        else if (Vida <= (Vida * .3))
-        {
-            Objetivo = Gata.transform;
-            AtacandoFruta = false;
         }
         else
         {

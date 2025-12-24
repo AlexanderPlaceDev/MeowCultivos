@@ -44,10 +44,12 @@ public class Carpas : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && !openUI && EstaEnRango)
         {
             StartCoroutine(AparecerUI(1f));
+            Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
         }
         if (Input.GetKeyDown(KeyCode.E) && openUI && EstaEnRango)
         {
             StartCoroutine(EsconderUI(1f));
+            Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
         }
 
         if ((PlayerPrefs.GetString("Habilidad:Despertador", "No") == "Si") && !transform.GetChild(1).gameObject.activeSelf)

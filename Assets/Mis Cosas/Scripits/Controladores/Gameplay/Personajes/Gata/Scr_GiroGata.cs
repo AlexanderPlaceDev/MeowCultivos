@@ -15,10 +15,12 @@ public class Scr_GiroGata : MonoBehaviour
         if (!Control) 
         {
             GameObject.Find("Camara 360").GetComponent<CinemachineVirtualCamera>().Follow= Gata;
+            GetComponent<Scr_Movimiento>().UsaEjeHorizontal = true;
         }
         else
         {
             GameObject.Find("Camara 360").GetComponent<CinemachineVirtualCamera>().Follow = CabezaGata;
+            GetComponent<Scr_Movimiento>().UsaEjeHorizontal = false;
         }
     }
     void FixedUpdate()

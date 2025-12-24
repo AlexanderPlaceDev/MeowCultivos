@@ -8,6 +8,7 @@ public class Scr_Enemigo : MonoBehaviour
 {
     public string NombreEnemigo;
     public float Vida;
+    public float VidaMaxima;
     public float Velocidad;
     public float DañoMelee;
     public float DañoDistancia;
@@ -83,6 +84,7 @@ public class Scr_Enemigo : MonoBehaviour
             materialesOriginales = renderer.materials;
         }
         source=GetComponent<AudioSource>();
+        VidaMaxima = Vida;
         //Debug.LogError(PlayerPrefs.GetInt("Volumen", 50) + "//" + PlayerPrefs.GetInt("Volumen_Combate", 20) );
         //Debug.LogError(volumen + "//"+ volumen_general +"//" + volumen_ambiental);
     }
