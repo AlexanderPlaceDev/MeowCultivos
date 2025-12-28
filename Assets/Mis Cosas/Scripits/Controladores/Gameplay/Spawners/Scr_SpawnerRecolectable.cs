@@ -22,6 +22,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
 
 
     [Header("Estado del spawner")]
+    private Scr_CambiadorBatalla batalla;
     public bool TieneObjeto = true;
     private bool recolectando;
     private bool estaLejos;
@@ -33,6 +34,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     {
         gata = GameObject.Find("Gata").GetComponent<Transform>();
         TiempoRespawnAleatorio = Random.Range(TiempoRespawn[0], TiempoRespawn[1]);
+        batalla = GetComponent<Scr_CambiadorBatalla>();
     }
 
     void Update()
@@ -45,7 +47,11 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
                 if (Vector3.Distance(gata.position, transform.position) < distancia)
                 {
                     estaLejos = false;
-                    ActivarUI();
+                    ActivarUI(); 
+                    if (Input.GetKeyDown(KeyCode.E) && !batalla.escenaCargada)
+                    {
+                        batalla.Iniciar();
+                    }
                     if (gata.GetComponent<Animator>().GetBool("Recolectando"))
                     {
                         gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = true;
@@ -191,11 +197,29 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
         gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
         gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = teclaIcono;
         gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = icono;
-    }
+        GameObject ui = gata.GetChild(3).GetChild(2).gameObject;
+        GameObject ui2 = gata.GetChild(3).GetChild(3).gameObject;
 
+        if (!ui.activeSelf)
+        {
+            ui.SetActive(true);
+        }
+        if (!ui2.activeSelf)
+        {
+            ui2.SetActive(true);
+        }
+
+        gata.GetChild(3).GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = "E";
+        gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(1, 0, 0);
+        gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(3, 0, 0);
+    }
     void DesactivarUI()
     {
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = false;
         gata.GetChild(3).gameObject.SetActive(false);
+        gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
+        gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
+        gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
+        gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
     }
 }

@@ -19,6 +19,7 @@ public class Scr_Arbusto : MonoBehaviour
     [SerializeField] Scr_CreadorObjetos Rama;
 
     [Header("Estado del Arbusto")]
+    private Scr_CambiadorBatalla batalla;
     private int tipoActual = 0;
     private bool recolectando;
     private bool tieneMoras;
@@ -32,6 +33,9 @@ public class Scr_Arbusto : MonoBehaviour
         tipoActual = Random.Range(0, 4);
         GetComponent<MeshRenderer>().material = tipos[tipoActual];
         tieneMoras = (tipoActual > 0);
+        batalla=GetComponent<Scr_CambiadorBatalla>();
+        batalla.Fruta=objetosQueDa[tipoActual].Nombre;
+        batalla.Item = objetosQueDa[tipoActual].Nombre;
     }
 
     void Update()
@@ -44,6 +48,10 @@ public class Scr_Arbusto : MonoBehaviour
             {
                 estaLejos = false;
                 ActivarUI();
+                if (Input.GetKeyDown(KeyCode.E) && !batalla.escenaCargada)
+                {
+                    batalla.Iniciar();
+                }
                 if (gata.GetComponent<Animator>().GetBool("Recolectando"))
                 {
                     gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = true;
@@ -61,7 +69,6 @@ public class Scr_Arbusto : MonoBehaviour
                 }
             }
         }
-
         if (recolectando)
         {
             DesactivarUI();
@@ -141,11 +148,29 @@ public class Scr_Arbusto : MonoBehaviour
         gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
         gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = teclaIcono;
         gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = icono;
-    }
+        GameObject ui = gata.GetChild(3).GetChild(2).gameObject;
+        GameObject ui2 = gata.GetChild(3).GetChild(3).gameObject;
 
+        if (!ui.activeSelf)
+        {
+            ui.SetActive(true);
+        }
+        if (!ui2.activeSelf)
+        {
+            ui2.SetActive(true);
+        }
+
+        gata.GetChild(3).GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = "E";
+        gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(1,0,0);
+        gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(3, 0, 0);
+    }
     void DesactivarUI()
     {
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = false;
         gata.GetChild(3).gameObject.SetActive(false);
+        gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
+        gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
+        gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
+        gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
     }
 }

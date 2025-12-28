@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Scr_CambiadorBatalla : MonoBehaviour
 {
+    [SerializeField] public bool EsPlanta;
     [SerializeField] public GameObject PrefabEnemigo;
     [SerializeField] float CantidadEnemigosMinima;
     [SerializeField] float CantidadEnemigosMaxima;
@@ -16,12 +17,13 @@ public class Scr_CambiadorBatalla : MonoBehaviour
 
     [SerializeField] public Scr_DatosSingletonBatalla.Modo Modo;
     [SerializeField] public int Pista;
+    public string Fruta;
     public bool Cambiando;
     private Transform Gata;
     GameObject Carga;
     GameObject Reloj;
 
-    private static bool escenaCargada = false;
+    public bool escenaCargada = false;
 
     void Start()
     {
@@ -50,6 +52,7 @@ public class Scr_CambiadorBatalla : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (EsPlanta) return;
         Debug.Log($"[Trigger] Algo entró en el trigger de {gameObject.name}: {other.name}");
 
         if (!other.CompareTag("Gata"))
@@ -86,7 +89,26 @@ public class Scr_CambiadorBatalla : MonoBehaviour
         StartCoroutine(CargarEscena());
     }
 
+    public void Iniciar()
+    {
+        bool puedeCaminar = Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar;
+        Debug.Log($"[Trigger] PuedeCaminar = {puedeCaminar}");
 
+        if (!puedeCaminar)
+        {
+            Debug.Log("[Trigger] ❌ La gata NO puede caminar. No cambiamos escena.");
+            return;
+        }
+
+        // Si llegó aquí: todas las condiciones se cumplieron
+        Debug.Log("[Trigger] 🟢 TODAS LAS CONDICIONES SE CUMPLEN → INICIAR COROUTINA");
+
+        Cambiando = true;
+        escenaCargada = true;
+
+        Debug.Log("[Trigger] Cambiando = TRUE, escenaCargada = TRUE");
+        StartCoroutine(CargarEscena());
+    }
     IEnumerator CargarEscena()
     {
         Debug.Log($"[CargarEscena] 🟧 CORRUTINA INICIADA por: {gameObject.name}");
@@ -139,6 +161,7 @@ public class Scr_CambiadorBatalla : MonoBehaviour
         singleton.ColorItem = ColorItem;
         singleton.ModoSeleccionado = Modo;
         singleton.Pista = Pista;
+        singleton.NombreFruta = Fruta;
         Debug.Log("[CargarEscena] Valores básicos asignados.");
 
         var sol = GameObject.Find("Sol");

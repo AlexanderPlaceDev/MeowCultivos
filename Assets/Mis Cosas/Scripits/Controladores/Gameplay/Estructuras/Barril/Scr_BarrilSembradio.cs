@@ -23,6 +23,7 @@ public class Scr_BarrilSembradio : MonoBehaviour
     private bool recolectando;
     private bool estaLejos;
 
+    private Scr_CambiadorBatalla batalla;
     private Transform gata;
 
     void Start()
@@ -37,6 +38,7 @@ public class Scr_BarrilSembradio : MonoBehaviour
             }
         }
 
+        batalla = GetComponent<Scr_CambiadorBatalla>();
         Cantidad = PlayerPrefs.GetInt("BarrilSembradio Cantidad:" + ID, 0);
     }
 
@@ -49,6 +51,9 @@ public class Scr_BarrilSembradio : MonoBehaviour
                 PlayerPrefs.SetString("BarrilSembradio Futa:" + ID, TipoFruta.Nombre);
                 PlayerPrefs.SetInt("BarrilSembradio Cantidad:" + ID, Cantidad);
             }
+
+            batalla.Fruta = TipoFruta.Nombre;
+            batalla.Item = TipoFruta.Nombre;
             transform.GetChild(0).gameObject.SetActive(true);
             transform.GetChild(0).GetChild(1).GetComponent<Image>().sprite = TipoFruta.Icono;
             transform.GetChild(0).GetChild(2).GetComponent<TextMeshProUGUI>().text = Cantidad.ToString();
@@ -68,7 +73,11 @@ public class Scr_BarrilSembradio : MonoBehaviour
                 if (Vector3.Distance(gata.position, transform.position) < distancia)
                 {
                     estaLejos = false;
-                    ActivarUI();
+                    ActivarUI(); 
+                    if (Input.GetKeyDown(KeyCode.E) && !batalla.escenaCargada)
+                    {
+                        batalla.Iniciar();
+                    }
                     if (gata.GetComponent<Animator>().GetBool("Recolectando"))
                     {
                         gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = true;
@@ -153,12 +162,30 @@ public class Scr_BarrilSembradio : MonoBehaviour
         gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
         gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = teclaIcono;
         gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = icono;
-    }
+        GameObject ui = gata.GetChild(3).GetChild(2).gameObject;
+        GameObject ui2 = gata.GetChild(3).GetChild(3).gameObject;
 
+        if (!ui.activeSelf)
+        {
+            ui.SetActive(true);
+        }
+        if (!ui2.activeSelf)
+        {
+            ui2.SetActive(true);
+        }
+
+        gata.GetChild(3).GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = "E";
+        gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(1, 0, 0);
+        gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(3, 0, 0);
+    }
     void DesactivarUI()
     {
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = false;
         gata.GetChild(3).gameObject.SetActive(false);
+        gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
+        gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
+        gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
+        gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
     }
 
     public void ColocarIconoPanel(bool EnAlerta)
