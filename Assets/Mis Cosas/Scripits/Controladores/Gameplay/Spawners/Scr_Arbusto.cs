@@ -148,21 +148,25 @@ public class Scr_Arbusto : MonoBehaviour
         gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
         gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = teclaIcono;
         gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = icono;
-        GameObject ui = gata.GetChild(3).GetChild(2).gameObject;
-        GameObject ui2 = gata.GetChild(3).GetChild(3).gameObject;
 
-        if (!ui.activeSelf)
+        if (PlayerPrefs.GetString("TutorialPeleas", "NO") == "SI")
         {
-            ui.SetActive(true);
-        }
-        if (!ui2.activeSelf)
-        {
-            ui2.SetActive(true);
-        }
+            GameObject ui = gata.GetChild(3).GetChild(2).gameObject;
+            GameObject ui2 = gata.GetChild(3).GetChild(3).gameObject;
 
-        gata.GetChild(3).GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = "E";
-        gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(1,0,0);
-        gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(3, 0, 0);
+            if (!ui.activeSelf)
+            {
+                ui.SetActive(true);
+            }
+            if (!ui2.activeSelf)
+            {
+                ui2.SetActive(true);
+            }
+
+            gata.GetChild(3).GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = "E";
+            gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(1, 0, 0);
+            gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(3, 0, 0);
+        }
     }
     void DesactivarUI()
     {
@@ -170,7 +174,10 @@ public class Scr_Arbusto : MonoBehaviour
         gata.GetChild(3).gameObject.SetActive(false);
         gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
         gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
-        gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
-        gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
+        if (PlayerPrefs.GetString("TutorialPeleas", "NO") == "SI")
+        {
+            gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
+            gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
+        }
     }
 }

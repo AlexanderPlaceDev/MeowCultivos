@@ -330,6 +330,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         }
         ControladorBatalla.IniciarCuentaRegresiva(false);
         ControladorBatalla.ArmaActual = Armas[ArmaActual];
+        ControladorBatalla.PrepararBatalla();
         GetComponent<Scr_ControladorArmas>().ArmaActual = ArmaActual;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;

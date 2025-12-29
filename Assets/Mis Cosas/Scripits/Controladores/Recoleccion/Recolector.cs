@@ -1,15 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Recolector : MonoBehaviour
 {
     Scr_ControladorRecolleccion Rec;
+    private Scr_DatosSingletonBatalla singleton;
     // Start is called before the first frame update
     void Start()
     {
+        singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
         Rec = GameObject.Find("Controlador").GetComponent<Scr_ControladorRecolleccion>();
-        if(Rec == null)
+        if(singleton.ModoSeleccionado == Scr_DatosSingletonBatalla.Modo.Pelea)
         {
             gameObject.SetActive(false);
         }
