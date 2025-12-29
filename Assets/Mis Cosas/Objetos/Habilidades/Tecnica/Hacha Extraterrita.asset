@@ -16,5 +16,11 @@ MonoBehaviour:
   Icono: {fileID: 21300000, guid: 182074b120133964c92709942adcac8c, type: 3}
   NombreBoton: Hacha Extraterrita
   Descripcion: Tumba arboles de un golpe
-  Costo: 3
-  RequiereItems: 0
+  Costo: 8
+  RequiereItems: 1
+  ItemsRequeridos:
+  - {fileID: 11400000, guid: 16d59de0d61659641a6f7c640e284942, type: 2}
+  - {fileID: 11400000, guid: 2ae239e92871c5f40ab548eeda0a0ca0, type: 2}
+  CantidadesRequeridas: 3200000050000000
+  RequiereMedallas: 0
+  DescripcionesMejorasPermanentes: []

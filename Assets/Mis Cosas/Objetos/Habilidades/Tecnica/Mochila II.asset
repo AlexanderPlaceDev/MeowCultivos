@@ -16,5 +16,11 @@ MonoBehaviour:
   Icono: {fileID: 21300000, guid: efeb71a56af5a0d44b620ee706a0671e, type: 3}
   NombreBoton: Mochila II
   Descripcion: Aumnta un poco el espacio para llevar mas objetos
-  Costo: 3
-  RequiereItems: 0
+  Costo: 5
+  RequiereItems: 1
+  ItemsRequeridos:
+  - {fileID: 11400000, guid: 4a1357594e65d8047b0e6ca45c64e293, type: 2}
+  - {fileID: 11400000, guid: e2e5c9ac1c1b77d4b91658849ea31af6, type: 2}
+  CantidadesRequeridas: 2800000014000000
+  RequiereMedallas: 0
+  DescripcionesMejorasPermanentes: []

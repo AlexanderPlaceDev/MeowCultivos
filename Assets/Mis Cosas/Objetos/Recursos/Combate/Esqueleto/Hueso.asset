@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
-  m_Name: Cuerno
+  m_Name: Hueso
   m_EditorClassIdentifier: 
-  Nombre: Cuerno
+  Nombre: Hueso
   TipoPlanta: 
-  Descripcion: No parece ser muy util, es mas como un recuerdo
+  Descripcion: Debiste encontrarlo en algun lado
   Icono: {fileID: 21300000, guid: 552f50fdaa9806e4085402c6bccc31c0, type: 3}
   IconoInventario: {fileID: 21300000, guid: af0345a652905f7408a648f68c1afcf3, type: 3}
   MaterialesDeProduccion: []
@@ -24,5 +24,5 @@ MonoBehaviour:
   ValorComposta: 0
   MinimoMaximoSembradio: 
   XPRecolecta: 7
-  CantidadVentaMinima: 5
+  CantidadVentaMinima: 3
   ValorVentaIndividual: 5

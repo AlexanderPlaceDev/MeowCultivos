@@ -16,5 +16,12 @@ MonoBehaviour:
   Icono: {fileID: 21300000, guid: 7e9f7a1c41cce1d43bbe0199cef04f54, type: 3}
   NombreBoton: Tijeras
   Descripcion: Ahora puedes recolectar materiales sin pelear
-  Costo: 5
-  RequiereItems: 0
+  Costo: 8
+  RequiereItems: 1
+  ItemsRequeridos:
+  - {fileID: 11400000, guid: 2ae239e92871c5f40ab548eeda0a0ca0, type: 2}
+  - {fileID: 11400000, guid: 74fd9c65dd328c3479841cf247f0e23d, type: 2}
+  - {fileID: 11400000, guid: 6285dd7ac81f2b54ab9b413bc37fa082, type: 2}
+  CantidadesRequeridas: 050000000a00000001000000
+  RequiereMedallas: 0
+  DescripcionesMejorasPermanentes: []

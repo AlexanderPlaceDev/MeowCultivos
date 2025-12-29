@@ -16,5 +16,11 @@ MonoBehaviour:
   Icono: {fileID: 21300000, guid: 63c95a3611b47c34c8aabfceebdc2c15, type: 3}
   NombreBoton: Pico Extraterrita
   Descripcion: No existe mejor material en el universo
-  Costo: 3
-  RequiereItems: 0
+  Costo: 8
+  RequiereItems: 1
+  ItemsRequeridos:
+  - {fileID: 11400000, guid: 16d59de0d61659641a6f7c640e284942, type: 2}
+  - {fileID: 11400000, guid: 2ae239e92871c5f40ab548eeda0a0ca0, type: 2}
+  CantidadesRequeridas: 3200000050000000
+  RequiereMedallas: 0
+  DescripcionesMejorasPermanentes: []

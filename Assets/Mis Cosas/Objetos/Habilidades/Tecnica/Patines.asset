@@ -17,4 +17,11 @@ MonoBehaviour:
   NombreBoton: Patines
   Descripcion: Dupicla tu velocidad nuevamente
   Costo: 5
-  RequiereItems: 0
+  RequiereItems: 1
+  ItemsRequeridos:
+  - {fileID: 11400000, guid: 2ae239e92871c5f40ab548eeda0a0ca0, type: 2}
+  - {fileID: 11400000, guid: 6285dd7ac81f2b54ab9b413bc37fa082, type: 2}
+  - {fileID: 11400000, guid: 74fd9c65dd328c3479841cf247f0e23d, type: 2}
+  CantidadesRequeridas: 3c000000280000001e000000
+  RequiereMedallas: 0
+  DescripcionesMejorasPermanentes: []

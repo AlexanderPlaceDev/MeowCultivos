@@ -17,4 +17,9 @@ MonoBehaviour:
   NombreBoton: Ramas
   Descripcion: Pudes encontrar ramas en los arbustos
   Costo: 3
-  RequiereItems: 0
+  RequiereItems: 1
+  ItemsRequeridos:
+  - {fileID: 11400000, guid: a1dcbf004b25dc8478076e9ce3ec3b63, type: 2}
+  CantidadesRequeridas: 0f000000
+  RequiereMedallas: 0
+  DescripcionesMejorasPermanentes: []

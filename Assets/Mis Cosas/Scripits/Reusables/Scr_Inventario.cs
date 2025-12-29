@@ -93,9 +93,7 @@ public class Scr_Inventario : MonoBehaviour
     {
         if (Objetos == null) return;
 
-        // ✅ Obtener límite actualizado según mochilas
         int limiteActual = ObtenerLimiteActual();
-        Debug.Log("Limite:" + limiteActual);
 
         for (int i = 0; i < Objetos.Length; i++)
         {
@@ -104,29 +102,13 @@ public class Scr_Inventario : MonoBehaviour
 
             if (Objeto.Nombre == nombre)
             {
-                // Aplicar límite dinámico
-                if (Cantidades[i] + cantidad > limiteActual)
-                {
-                    Cantidades[i] = limiteActual;
-                }
-                else
-                {
-                    Cantidades[i] += cantidad;
-                }
-
-                // Agregar XP si aplica
-                if (Objeto.XPRecolecta > 0 && objetosAgregados != null)
-                {
-                    objetosAgregados.AgregarExperiencia(Objeto.XPRecolecta);
-                }
+                Cantidades[i] = Mathf.Min(Cantidades[i] + cantidad, limiteActual);
 
                 inventarioModificado = true;
                 OnInventarioActualizado?.Invoke();
                 return;
             }
         }
-
-        Debug.LogWarning($"AgregarObjeto: no se encontró '{nombre}' en Inventario.");
     }
 
 

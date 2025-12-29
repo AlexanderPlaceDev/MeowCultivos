@@ -17,8 +17,11 @@ MonoBehaviour:
   NombreBoton: Bota
   Descripcion: Duplica tu velocidad
   Costo: 3
-  RequiereItems: 0
-  ItemsRequeridos: []
-  CantidadesRequeridas: 
+  RequiereItems: 1
+  ItemsRequeridos:
+  - {fileID: 11400000, guid: 16d59de0d61659641a6f7c640e284942, type: 2}
+  - {fileID: 11400000, guid: a1dcbf004b25dc8478076e9ce3ec3b63, type: 2}
+  - {fileID: 11400000, guid: f2dd07ffe30451b4d9ced2110326053a, type: 2}
+  CantidadesRequeridas: 140000000f00000001000000
   RequiereMedallas: 0
   DescripcionesMejorasPermanentes: []

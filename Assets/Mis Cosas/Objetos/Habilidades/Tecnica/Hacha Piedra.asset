@@ -16,5 +16,11 @@ MonoBehaviour:
   Icono: {fileID: 21300000, guid: e814def36298538499c48f0f912c43c6, type: 3}
   NombreBoton: Hacha Piedra
   Descripcion: Tardas menos talando arboles
-  Costo: 3
-  RequiereItems: 0
+  Costo: 4
+  RequiereItems: 1
+  ItemsRequeridos:
+  - {fileID: 11400000, guid: 16d59de0d61659641a6f7c640e284942, type: 2}
+  - {fileID: 11400000, guid: 98bf319b9993e4e449955b29496b058f, type: 2}
+  CantidadesRequeridas: 1e00000023000000
+  RequiereMedallas: 0
+  DescripcionesMejorasPermanentes: []

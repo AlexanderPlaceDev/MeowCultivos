@@ -17,4 +17,10 @@ MonoBehaviour:
   NombreBoton: Cubeta
   Descripcion: Permite llevar una poca cantidad de agua
   Costo: 3
-  RequiereItems: 0
+  RequiereItems: 1
+  ItemsRequeridos:
+  - {fileID: 11400000, guid: 3e315dfc6eeb7984e86ba4763756b3d5, type: 2}
+  - {fileID: 11400000, guid: 2ae239e92871c5f40ab548eeda0a0ca0, type: 2}
+  CantidadesRequeridas: 0300000005000000
+  RequiereMedallas: 0
+  DescripcionesMejorasPermanentes: []
