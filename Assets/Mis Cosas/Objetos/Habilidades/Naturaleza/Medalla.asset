@@ -17,4 +17,10 @@ MonoBehaviour:
   NombreBoton: Medalla
   Descripcion: Recibes un impulso al cortar arboles
   Costo: 3
-  RequiereItems: 0
+  RequiereItems: 1
+  ItemsRequeridos:
+  - {fileID: 0}
+  - {fileID: 0}
+  CantidadesRequeridas: 
+  RequiereMedallas: 0
+  DescripcionesMejorasPermanentes: []

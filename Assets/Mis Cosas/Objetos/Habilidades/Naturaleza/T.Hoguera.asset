@@ -16,5 +16,11 @@ MonoBehaviour:
   Icono: {fileID: 21300000, guid: dd9a3b03af1b3b544964a30967b90705, type: 3}
   NombreBoton: T.Hoguera
   Descripcion: Reduce el tiempo de las hogueras
-  Costo: 3
-  RequiereItems: 0
+  Costo: 4
+  RequiereItems: 1
+  ItemsRequeridos:
+  - {fileID: 11400000, guid: 98bf319b9993e4e449955b29496b058f, type: 2}
+  - {fileID: 11400000, guid: 39699c4a042de2247955bcd7f5e992f8, type: 2}
+  CantidadesRequeridas: 0a00000005000000
+  RequiereMedallas: 0
+  DescripcionesMejorasPermanentes: []

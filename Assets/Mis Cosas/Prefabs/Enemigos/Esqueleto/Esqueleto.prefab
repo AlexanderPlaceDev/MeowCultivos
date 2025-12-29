@@ -6313,16 +6313,17 @@ MonoBehaviour:
   PrefabBala: {fileID: 0}
   SpawnBala: {fileID: 0}
   Drops:
-  - {fileID: 11400000, guid: 8cb71ac05f8d0a846a9194f88e33d893, type: 2}
+  - {fileID: 11400000, guid: a87d1159b0a18c04985e7dd619997811, type: 2}
   XPMinima: 1
   XPMaxima: 5
   Probabilidades:
-  - 90
+  - 60
   Objetivo: {fileID: 0}
   ColorHerido: {r: 0.89433956, g: 0.35604832, b: 0.35604832, a: 1}
   DuracionCambioColor: 0.5
   tipoenemigo: 0
   tipocomportamiento: 0
+  Fruta: 0
   Controlador: {fileID: 0}
   estaStuneado: 0
   estaCongelado: 0

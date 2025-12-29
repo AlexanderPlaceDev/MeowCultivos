@@ -16,9 +16,13 @@ MonoBehaviour:
   Icono: {fileID: 21300000, guid: 5d9f1d318401c9544b68d744a5cfe416, type: 3}
   NombreBoton: Linterna
   Descripcion: Generaz luz a tu alrededor
-  Costo: 3
-  RequiereItems: 0
-  ItemsRequeridos: []
-  CantidadesRequeridas: 
+  Costo: 4
+  RequiereItems: 1
+  ItemsRequeridos:
+  - {fileID: 11400000, guid: d1948edb1dc783b48b1886c7863253be, type: 2}
+  - {fileID: 11400000, guid: 6487fb8e7dd5c0b4abf46803d77c784c, type: 2}
+  - {fileID: 11400000, guid: f2dd07ffe30451b4d9ced2110326053a, type: 2}
+  - {fileID: 11400000, guid: 3e315dfc6eeb7984e86ba4763756b3d5, type: 2}
+  CantidadesRequeridas: 1e0000001e0000001e00000007000000
   RequiereMedallas: 0
   DescripcionesMejorasPermanentes: []

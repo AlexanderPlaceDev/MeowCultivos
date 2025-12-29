@@ -17,4 +17,9 @@ MonoBehaviour:
   NombreBoton: Mochila I
   Descripcion: Aumnta un poco el espacio para llevar mas objetos
   Costo: 3
-  RequiereItems: 0
+  RequiereItems: 1
+  ItemsRequeridos:
+  - {fileID: 11400000, guid: 4a1357594e65d8047b0e6ca45c64e293, type: 2}
+  CantidadesRequeridas: 14000000
+  RequiereMedallas: 0
+  DescripcionesMejorasPermanentes: []

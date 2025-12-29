@@ -16,5 +16,11 @@ MonoBehaviour:
   Icono: {fileID: 21300000, guid: 6249b641718d1cb4a91ef95760a4883c, type: 3}
   NombreBoton: Hacha Oro
   Descripcion: Puedes talar madera rara
-  Costo: 3
-  RequiereItems: 0
+  Costo: 5
+  RequiereItems: 1
+  ItemsRequeridos:
+  - {fileID: 11400000, guid: 16d59de0d61659641a6f7c640e284942, type: 2}
+  - {fileID: 11400000, guid: 2ae239e92871c5f40ab548eeda0a0ca0, type: 2}
+  CantidadesRequeridas: 280000001e000000
+  RequiereMedallas: 0
+  DescripcionesMejorasPermanentes: []

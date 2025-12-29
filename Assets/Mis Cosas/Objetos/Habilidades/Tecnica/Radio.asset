@@ -16,5 +16,11 @@ MonoBehaviour:
   Icono: {fileID: 21300000, guid: e607bd8dbbb9dee46a9defe2d64d01f2, type: 3}
   NombreBoton: Radio
   Descripcion: La informacion es vital, te permite oir el clima y ofertas especiales
-  Costo: 3
-  RequiereItems: 0
+  Costo: 2
+  RequiereItems: 1
+  ItemsRequeridos:
+  - {fileID: 11400000, guid: 2ae239e92871c5f40ab548eeda0a0ca0, type: 2}
+  - {fileID: 11400000, guid: a87d1159b0a18c04985e7dd619997811, type: 2}
+  CantidadesRequeridas: 0500000002000000
+  RequiereMedallas: 0
+  DescripcionesMejorasPermanentes: []

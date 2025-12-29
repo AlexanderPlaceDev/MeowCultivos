@@ -20,6 +20,8 @@ public class Scr_ObjetosAgregados : MonoBehaviour
     private Animator DineroAnimator;
     private AudioSource dineroAudioSource;
     private AudioSource xpAudioSource;
+    private int xpPendiente = 0;
+
     // Guarda índices de los objetos que ya dieron XP
     private HashSet<int> xpOtorgada = new HashSet<int>();
     Scr_DatosSingletonBatalla Singleton;
@@ -191,29 +193,25 @@ public class Scr_ObjetosAgregados : MonoBehaviour
 
     public void AgregarExperiencia(int cantidadXP)
     {
+        xpPendiente += cantidadXP;
+
         int xpActual = PlayerPrefs.GetInt("XPActual", 0) + cantidadXP;
-        int xpSiguiente = PlayerPrefs.GetInt("XPSiguiente", 10);
         PlayerPrefs.SetInt("XPActual", xpActual);
 
-        if (xpActual >= xpSiguiente)
-        {
-            PlayerPrefs.SetInt("XPActual", 0);
-            PlayerPrefs.SetInt("Nivel", PlayerPrefs.GetInt("Nivel", 0) + 1);
-            PlayerPrefs.SetInt("XPSiguiente", xpSiguiente * 2);
-            PlayerPrefs.SetInt("PuntosDeHabilidad", PlayerPrefs.GetInt("PuntosDeHabilidad", 0) + 3);
-            if (XPText != null) XPText.text = "LV.+1";
-            if (xpAudioSource != null) xpAudioSource.Play();
-        }
-        else
-        {
-            if (XPText != null) XPText.text = "XP + " + cantidadXP;
-        }
+        XPText.text = "XP + " + xpPendiente;
 
-        if (XPAnimator != null && !XPAnimator.GetCurrentAnimatorStateInfo(0).IsName("Desaparecer"))
-        {
+        if (XPAnimator != null)
             XPAnimator.Play("Desaparecer");
-        }
+
+        CancelInvoke(nameof(ResetXPVisual));
+        Invoke(nameof(ResetXPVisual), 0.2f);
     }
+
+    void ResetXPVisual()
+    {
+        xpPendiente = 0;
+    }
+
 
     public void AgregarDinero(int cantidad)
     {

@@ -39,6 +39,7 @@ public class Scr_NuevoRango : MonoBehaviour
         // Configuración visual
         SetAlpha(1f);
         Bandera.color = ObtenerColorRama(ramaActual);
+        Nombre.color = ObtenerColorRama(ramaActual);
         Nombre.text = ObtenerNombreRango(ramaActual, rangoActual);
 
         StartCoroutine(SecuenciaFade());

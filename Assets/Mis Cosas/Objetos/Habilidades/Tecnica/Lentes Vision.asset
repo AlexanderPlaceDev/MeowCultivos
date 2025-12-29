@@ -17,4 +17,11 @@ MonoBehaviour:
   NombreBoton: Lentes Vision
   Descripcion: Con esto podras ver en la noche
   Costo: 5
-  RequiereItems: 0
+  RequiereItems: 1
+  ItemsRequeridos:
+  - {fileID: 11400000, guid: a87d1159b0a18c04985e7dd619997811, type: 2}
+  - {fileID: 11400000, guid: 74fd9c65dd328c3479841cf247f0e23d, type: 2}
+  - {fileID: 11400000, guid: 98057a97554cd0a4ba29639b7360daad, type: 2}
+  CantidadesRequeridas: 1e000000190000003c000000
+  RequiereMedallas: 0
+  DescripcionesMejorasPermanentes: []
