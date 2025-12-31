@@ -39,6 +39,11 @@ public class Scr_ActivadorHabilidad : MonoBehaviour
         // Buscar el script Scr_Habilidades en el mismo objeto o en otro específico
         habilidades = GetComponent<Scr_Habilidades>();
         ObtenerHabilidad();
+        if (EsPasiva)
+        {
+            Bloqueo.SetActive(false);
+            TextoTiempo.SetActive(false);
+        }
     }
     void Update()
     {

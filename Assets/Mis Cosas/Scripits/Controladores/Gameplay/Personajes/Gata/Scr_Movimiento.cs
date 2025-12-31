@@ -1,8 +1,9 @@
-using System;
+Ôªøusing System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 public class Scr_Movimiento : MonoBehaviour
 {
@@ -33,7 +34,7 @@ public class Scr_Movimiento : MonoBehaviour
     private bool ListoParaSaltar = true;
 
     [Header("Tiempo en el aire")]
-    public float TiempoEnAireMaximo = 5f; // Tiempo m·ximo en el aire antes de desactivar el collider
+    public float TiempoEnAireMaximo = 5f; // Tiempo m√°ximo en el aire antes de desactivar el collider
     private float tiempoEnAire = 0f;
     private bool colisionDesactivada = false;
     private Collider colisionador;
@@ -76,10 +77,9 @@ public class Scr_Movimiento : MonoBehaviour
 
     public GameObject Controlador;
     Scr_ControladorBatalla batalla;
-
     [Header("Clima")]
     public bool EstaLloviendo = false;
-    public float MultiplicadorResbalado = 0.3f; // 0.5 = el piso tiene la mitad de fricciÛn
+    public float MultiplicadorResbalado = 0.3f; // 0.5 = el piso tiene la mitad de fricci√≥n
     public float FuerzaDeslizamiento = 4f; // fuerza para resbalar en rampas
     private void Start()
     {
@@ -143,8 +143,8 @@ public class Scr_Movimiento : MonoBehaviour
 
     private void AplicarGravedad()
     {
-        // Si el personaje no est· en el suelo, aplicar gravedad
-        if (!EstaEnElSuelo)  // Solo aplica gravedad si no est· en el suelo
+        // Si el personaje no est√° en el suelo, aplicar gravedad
+        if (!EstaEnElSuelo)  // Solo aplica gravedad si no est√° en el suelo
         {
             RB.drag = 0;
             RB.velocity = new Vector3(RB.velocity.x, RB.velocity.y - Gravedad * Time.deltaTime, RB.velocity.z);
@@ -152,7 +152,7 @@ public class Scr_Movimiento : MonoBehaviour
         else
         {
             RB.drag = Arrastre;
-            // Si est· en el suelo, aseguramos que no siga cayendo
+            // Si est√° en el suelo, aseguramos que no siga cayendo
             if (RB.velocity.y < 0)
             {
                 RB.velocity = new Vector3(RB.velocity.x, 0, RB.velocity.z);
@@ -166,14 +166,14 @@ public class Scr_Movimiento : MonoBehaviour
         EstaEnElSuelo = Physics.Raycast(transform.position + new Vector3(0, OffsetY, 0), Vector3.down, alturaVerificacion, Suelo);
         Debug.DrawRay(transform.position + new Vector3(0, OffsetY, 0), Vector3.down * alturaVerificacion, Color.red);
 
-        // Si est· en el suelo, reinicia el tiempo en el aire y activa el collider si estaba desactivado
+        // Si est√° en el suelo, reinicia el tiempo en el aire y activa el collider si estaba desactivado
         if (EstaEnElSuelo)
         {
             tiempoEnAire = 0f;
 
             if (colisionDesactivada)
             {
-                //colisionador.enabled = true; // Reactivamos la colisiÛn
+                //colisionador.enabled = true; // Reactivamos la colisi√≥n
                 colisionDesactivada = false;
             }
         }
@@ -181,25 +181,28 @@ public class Scr_Movimiento : MonoBehaviour
 
     private void ControlarColisionAerea()
     {
-        // Si el personaje no est· en el suelo, aumenta el tiempo en el aire
+        // Si el personaje no est√° en el suelo, aumenta el tiempo en el aire
         if (!EstaEnElSuelo)
         {
             tiempoEnAire += Time.deltaTime;
 
-            // Si ha estado en el aire m·s del tiempo m·ximo, desactiva el collider
+            // Si ha estado en el aire m√°s del tiempo m√°ximo, desactiva el collider
             if (tiempoEnAire >= TiempoEnAireMaximo && !colisionDesactivada)
             {
-                //colisionador.enabled = false; // Desactivar colisiÛn
+                //colisionador.enabled = false; // Desactivar colisi√≥n
                 colisionDesactivada = true;
             }
         }
     }
-
     private void CapturarInputs()
     {
         if (UsaEjeHorizontal)
         {
             InputHor = Input.GetAxisRaw("Horizontal");
+        }
+        else
+        {
+            InputHor = 0f;
         }
         if (PuedeRetroceder)
         {
@@ -295,7 +298,7 @@ public class Scr_Movimiento : MonoBehaviour
             if (batalla.Congelado) return;
             if (batalla.Stuneado) return;
         }
-        // DirecciÛn de movimiento basada en la entrada
+        // Direcci√≥n de movimiento basada en la entrada
         Direccion = transform.forward * InputVer + transform.right * InputHor;
 
         if (EstaEnElSuelo)
@@ -311,7 +314,7 @@ public class Scr_Movimiento : MonoBehaviour
             RB.velocity += new Vector3(velocidadAerea.x, 0, velocidadAerea.z) * Time.deltaTime;
         }
 
-        // Si est·s en una rampa, ajustar la direcciÛn del movimiento
+        // Si est√°s en una rampa, ajustar la direcci√≥n del movimiento
         if (Subiendo())
         {
             Vector3 direccionRampa = DireccionRampa();
@@ -413,7 +416,7 @@ public class Scr_Movimiento : MonoBehaviour
         {
             float arrastreActual = Arrastre;
 
-            // Si llueve, reduce el arrastre (fricciÛn)
+            // Si llueve, reduce el arrastre (fricci√≥n)
             if (EstaLloviendo)
             {
                 arrastreActual *= MultiplicadorResbalado;

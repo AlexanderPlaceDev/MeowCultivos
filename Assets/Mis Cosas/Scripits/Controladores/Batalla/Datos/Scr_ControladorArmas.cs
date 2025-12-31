@@ -124,7 +124,6 @@ public class Scr_ControladorArmas : MonoBehaviour
         {
             PuntodeArma = Hijo.transform.GetChild(0);
         }
-        //checarIdle();
         ChecarTemporal();
         if (EfectoTemp == "" && TodasLasArmas[ArmaActual].Nombre == "Chilenon")
         {
@@ -136,6 +135,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         balascargador = TodasLasArmas[ArmaActual].CapacidadTotal;
         alcance = TodasLasArmas[ArmaActual].Alcance;
         Physics.IgnoreLayerCollision(7, 8);
+        checarIdle();
         //"Rango" + Nombre del arma
         //PlayerPrefs.GetInt("Rango " + Datosarmas.TodasLasArmas[objShow].Nombre, 1)-1
     }
@@ -173,7 +173,8 @@ public class Scr_ControladorArmas : MonoBehaviour
         }
         daño = TodasLasArmas[ArmaActual].Daño;
         Tipo = TodasLasArmas[ArmaActual].Tipo;
-        checarIdle();
+
+        //checarIdle();
         ChecarTemporal();
         GetComponent<Scr_ControladorBatalla>().ChecarRango(TodasLasArmas[ArmaActual].Nombre);
     }
@@ -601,8 +602,8 @@ public class Scr_ControladorArmas : MonoBehaviour
             case "Platano":
                 Anim.SetBool("EsPistola", true);
                 break;
-            case "Platanon":
-                Anim.SetBool("EsPistola", true);
+            case "Tomate":
+                Anim.SetBool("EsTomate", true);
                 break;
             case "Sandia":
                 Anim.SetBool("EsSandia", true);

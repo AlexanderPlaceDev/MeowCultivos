@@ -187,14 +187,14 @@ public class Scr_ControladorRecolleccion : MonoBehaviour
                 IconoFruta = Fruta[0];
                 FrutaRecom = FrutasRecom[0];
                 return "Arbusto Baya Azul";
-            case "Baya Amarillo":
+            case "Baya Amarilla":
                 IconoFruta = Fruta[1];
                 FrutaRecom = FrutasRecom[1];
-                return "Arbusto Baya Roja";
+                return "Arbusto Baya Amarilla";
             case "Baya Roja":
                 IconoFruta = Fruta[2];
                 FrutaRecom = FrutasRecom[2];
-                return "Arbusto Baya Amarilla";
+                return "Arbusto Baya Roja";
             case "Platano":
                 IconoFruta = Fruta[3];
                 FrutaRecom = FrutasRecom[3];

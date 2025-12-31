@@ -264,7 +264,7 @@ public class Scr_Habilidades : MonoBehaviour
                     curar(10);
                 }
                 break;
-            case "Inyección de potasio":
+            case "Inyeccion de agua":
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
                     StartCoroutine(ModificarVignette(_vignette, ColorHabilidad, 0.5f, duracionHabilidad));

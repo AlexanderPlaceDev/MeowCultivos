@@ -762,10 +762,13 @@ public class Scr_ControladorBatalla : MonoBehaviour
         Cursor.lockState = activar ? CursorLockMode.Locked : CursorLockMode.None;
 
         var camara = Camera.main;
-        GetComponent<Scr_ControladorArmas>().enabled = activar;
         camara.GetComponent<Scr_GirarCamaraBatalla>().enabled = activar;
         camara.transform.parent.GetComponent<Rigidbody>().useGravity = activar;
         camara.transform.parent.GetComponent<Scr_Movimiento>().enabled = activar;
+        if (GetComponent<Scr_ControladorArmas>() != null)
+        {
+            GetComponent<Scr_ControladorArmas>().enabled = activar;
+        }
     }
 
     public void BotonAceptar()
