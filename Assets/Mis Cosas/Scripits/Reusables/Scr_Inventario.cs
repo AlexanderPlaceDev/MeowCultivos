@@ -16,36 +16,28 @@ public class Scr_Inventario : MonoBehaviour
 
     private void Awake()
     {
-        // Asegurarnos que los arrays existan y tengan el mismo tamaño
         if (Objetos == null) Objetos = new Scr_CreadorObjetos[0];
+
         if (Cantidades == null || Cantidades.Length != Objetos.Length)
-        {
             Cantidades = new int[Objetos.Length];
-        }
 
-        // Inicializar copia para detectar cambios si fuera necesario
         ultimaCopiaCantidades = new int[Cantidades.Length];
-    }
 
-    private void Start()
-    {
-        // Cargar las cantidades desde PlayerPrefs al iniciar (sólo si existen claves)
+        // 🔹 CARGA REAL AQUÍ
         for (int i = 0; i < Objetos.Length; i++)
         {
             if (Objetos[i] == null) continue;
-            string key = Objetos[i].Nombre + "_Cantidad";
-            if (PlayerPrefs.HasKey(key))
-            {
-                Cantidades[i] = PlayerPrefs.GetInt(key);
-            }
-            else
-            {
-                PlayerPrefs.SetInt(key, Cantidades[i]); // Guardar inicial si no existe
-            }
 
+            string key = Objetos[i].Nombre + "_Cantidad";
+
+            Cantidades[i] = PlayerPrefs.GetInt(key, Cantidades[i]);
             ultimaCopiaCantidades[i] = Cantidades[i];
         }
+    }
 
+
+    private void Start()
+    {
         // Buscar referencias
         var gata = GameObject.Find("Gata");
         if (gata)
@@ -89,27 +81,38 @@ public class Scr_Inventario : MonoBehaviour
         
     }
 
-    public void AgregarObjeto(int cantidad, string nombre)
+    public int AgregarObjeto(int cantidad, string nombre)
     {
-        if (Objetos == null) return;
+        if (Objetos == null || cantidad <= 0) return 0;
 
         int limiteActual = ObtenerLimiteActual();
 
         for (int i = 0; i < Objetos.Length; i++)
         {
-            var Objeto = Objetos[i];
-            if (Objeto == null) continue;
+            var objeto = Objetos[i];
+            if (objeto == null) continue;
 
-            if (Objeto.Nombre == nombre)
+            if (objeto.Nombre == nombre)
             {
-                Cantidades[i] = Mathf.Min(Cantidades[i] + cantidad, limiteActual);
+                int cantidadActual = Cantidades[i];
+                int espacioDisponible = limiteActual - cantidadActual;
+
+                if (espacioDisponible <= 0)
+                    return 0;
+
+                int cantidadAgregada = Mathf.Min(cantidad, espacioDisponible);
+                Cantidades[i] += cantidadAgregada;
 
                 inventarioModificado = true;
                 OnInventarioActualizado?.Invoke();
-                return;
+
+                return cantidadAgregada;
             }
         }
+
+        return 0;
     }
+
 
 
     private int ObtenerLimiteActual()

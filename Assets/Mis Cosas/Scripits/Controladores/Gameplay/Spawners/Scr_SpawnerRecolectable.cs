@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Scr_SpawnerRecolectable : MonoBehaviour
 {
-    [Header("Configuraci�n del spawner")]
+    [Header("Configuración del spawner")]
     [SerializeField] bool OcupaPadre;
     [SerializeField] GameObject Padre;
     [SerializeField] private Sprite icono;
@@ -140,10 +140,10 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
         float animSpeed = 1f; // Valor por defecto
 
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
-        // Verificar si la habilidad est� activa o no
+        // Verificar si la habilidad está activa o no
         if (PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si" && !string.IsNullOrEmpty(Habilidad))
         {
-            animSpeed = 2f; // Doble de velocidad si la habilidad est� activa
+            animSpeed = 2f; // Doble de velocidad si la habilidad está activa
         }
         gata.GetComponent<Animator>().speed = animSpeed;
 
@@ -172,23 +172,38 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
 
     void ActualizarInventario(int cantidad, Scr_CreadorObjetos objeto)
     {
+        if (cantidad <= 0 || objeto == null)
+            return;
+
         Scr_Inventario inventario = gata.GetChild(7).GetComponent<Scr_Inventario>();
-        Scr_ObjetosAgregados controlador = GameObject.Find("Canvas").transform.GetChild(4).GetComponent<Scr_ObjetosAgregados>();
-        if (controlador.Lista.Contains(objeto))
+        Scr_ObjetosAgregados controlador = GameObject.Find("Canvas")
+            .transform.GetChild(4)
+            .GetComponent<Scr_ObjetosAgregados>();
+
+        // 👉 INVENTARIO PRIMERO (FUENTE DE VERDAD)
+        int cantidadAgregada = inventario.AgregarObjeto(cantidad, objeto.Nombre);
+
+        // 👉 UI REFLEJA LO QUE PASÓ
+        controlador.Lista.Add(objeto);
+
+        if (cantidadAgregada > 0)
         {
-            int indice = controlador.Lista.IndexOf(objeto);
-            controlador.Cantidades[indice] += cantidad;
-            if (indice <= 3)
-            {
-                controlador.Tiempo[indice] = 2;
-            }
+            controlador.Cantidades.Add(cantidadAgregada);
+            controlador.FueExcedente.Add(false);
         }
         else
         {
-            controlador.Lista.Add(objeto);
             controlador.Cantidades.Add(cantidad);
+            controlador.FueExcedente.Add(true);
+        }
+
+        if (controlador.Tiempo != null &&
+            controlador.Lista.Count - 1 < controlador.Tiempo.Length)
+        {
+            controlador.Tiempo[controlador.Lista.Count - 1] = 2f;
         }
     }
+
 
     void ActivarUI()
     {
