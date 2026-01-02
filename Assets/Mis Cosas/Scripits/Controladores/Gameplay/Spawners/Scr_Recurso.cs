@@ -116,23 +116,42 @@ public class Scr_Recurso : MonoBehaviour
 
     void ActualizarInventario(int cantidad, Scr_CreadorObjetos objeto)
     {
-        Scr_Inventario inventario = GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>();
-        Scr_ObjetosAgregados controlador = GameObject.Find("Canvas").transform.GetChild(4).GetComponent<Scr_ObjetosAgregados>();
-        if (controlador.Lista.Contains(objeto))
+        if (cantidad <= 0 || objeto == null)
+            return;
+
+        Scr_Inventario inventario = GameObject.Find("Gata")
+            .transform.GetChild(7)
+            .GetComponent<Scr_Inventario>();
+
+        Scr_ObjetosAgregados controlador = GameObject.Find("Canvas")
+            .transform.GetChild(4)
+            .GetComponent<Scr_ObjetosAgregados>();
+
+        // 1️⃣ Inventario decide cuánto entra realmente
+        int cantidadAgregada = inventario.AgregarObjeto(cantidad, objeto.Nombre);
+
+        // 2️⃣ UI refleja el resultado
+        controlador.Lista.Add(objeto);
+
+        if (cantidadAgregada > 0)
         {
-            int indice = controlador.Lista.IndexOf(objeto);
-            controlador.Cantidades[indice] += cantidad;
-            if (indice <= 3)
-            {
-                controlador.Tiempo[indice] = 2;
-            }
+            controlador.Cantidades.Add(cantidadAgregada);
+            controlador.FueExcedente.Add(false);
         }
         else
         {
-            controlador.Lista.Add(objeto);
+            // Inventario lleno
             controlador.Cantidades.Add(cantidad);
+            controlador.FueExcedente.Add(true);
+        }
+
+        if (controlador.Tiempo != null &&
+            controlador.Lista.Count - 1 < controlador.Tiempo.Length)
+        {
+            controlador.Tiempo[controlador.Lista.Count - 1] = 2f;
         }
     }
+
 
 
     // ================= CORE =================

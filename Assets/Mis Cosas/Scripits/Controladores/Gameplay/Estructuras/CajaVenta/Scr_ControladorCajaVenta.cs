@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -8,41 +6,58 @@ using UnityEngine.EventSystems;
 public class Scr_ControladorCajaVenta : MonoBehaviour
 {
     // =========================
+    // PLAYER PREFS
+    // =========================
+    const string PREF_CAJAS = "CajasVendidas";
+    const string PREF_REGALO = "CajaVentaRegalo";
+
+    // =========================
+    // CONFIGURACIÓN
+    // =========================
+    [Header("Configuración de Ventas")]
+    [SerializeField] int VentasParaRegalo = 100;   // ← CAMBIA AQUÍ
+    [SerializeField] int TotalCajas3D = 12;
+    [SerializeField] private Scr_ObjetosAgregados ObjetosAgregados;
+
+
+    // =========================
     // REFERENCIAS
     // =========================
-
     Scr_Inventario Inventario;
 
+    [Header("Items")]
     [SerializeField] GameObject Items;
     [SerializeField] GameObject PrefabItem;
 
+    [Header("Venta UI")]
     [SerializeField] TextMeshProUGUI CantidadCajas;
     [SerializeField] TextMeshProUGUI TextoCajasVendidas;
-
     [SerializeField] GameObject MarcoVenta;
 
-    [SerializeField] Scrollbar Scroll;
+    [Header("Flechas")]
+    [SerializeField] GameObject FlechaIzquierda;
+    [SerializeField] GameObject FlechaDerecha;
 
-    [SerializeField] GameObject ObjetoFlechaIzquierda;
-    [SerializeField] GameObject ObjetoFlechaDerecha;
-
+    [Header("Progreso")]
     [SerializeField] Image Icono;
     [SerializeField] Sprite IconoCaja;
     [SerializeField] Sprite IconoRegalo;
+    [SerializeField] GameObject[] Cajas3D;
 
     // =========================
     // ESTADO
     // =========================
-
     Scr_CreadorObjetos ObjetoSeleccionado;
-    int NumeroObjetoSeleccionado = -1;
+    int IndexSeleccionado = -1;
 
     int CajasReservadas = 0;
+    int UnidadesReservadas = 0;
+
+    TextMeshProUGUI TextoCantidadPrefabSeleccionado;
 
     // =========================
     // UNITY
     // =========================
-
     void Awake()
     {
         Inventario = GameObject.Find("Gata")
@@ -52,224 +67,239 @@ public class Scr_ControladorCajaVenta : MonoBehaviour
 
     void OnEnable()
     {
+        CargarProgreso();
         RefrescarItems();
     }
 
-    void OnDisable()
-    {
-        LimpiarItems();
-    }
-
     // =========================
-    // SELECCIÓN DE ITEM
+    // SELECCIÓN ITEM
     // =========================
-
-    public void SeleccionarItem(Sprite spriteSeleccionado)
+    public void SeleccionarItem(GameObject prefabSeleccionado)
     {
         ResetearMarco();
 
+        Image img = prefabSeleccionado.GetComponent<Image>();
+        Sprite icono = img.sprite;
+
+        TextoCantidadPrefabSeleccionado =
+            prefabSeleccionado.transform.GetChild(0)
+            .GetComponent<TextMeshProUGUI>();
+
         for (int i = 0; i < Inventario.Objetos.Length; i++)
         {
-            if (Inventario.Objetos[i].IconoInventario == spriteSeleccionado)
+            if (Inventario.Objetos[i].IconoInventario == icono)
             {
                 ObjetoSeleccionado = Inventario.Objetos[i];
-                NumeroObjetoSeleccionado = i;
-
-                MarcoVenta.transform.GetChild(0).gameObject.SetActive(true);
-                MarcoVenta.transform.GetChild(0).GetComponent<Image>().sprite =
-                    ObjetoSeleccionado.IconoInventario;
-
-                CajasReservadas = 1;
-                CantidadCajas.text = "1";
-
-                ActualizarTextoCantidad();
-                ActualizarFlechas();
-                return;
+                IndexSeleccionado = i;
+                break;
             }
         }
+
+        if (ObjetoSeleccionado == null) return;
+
+        MarcoVenta.transform.GetChild(0).gameObject.SetActive(true);
+        MarcoVenta.transform.GetChild(0)
+            .GetComponent<Image>().sprite = icono;
+
+        CajasReservadas = 1;
+        ActualizarReservaVisual();
     }
 
     // =========================
     // FLECHAS
     // =========================
-
-    public void FlechaIzquierda()
+    public void FlechaMas()
     {
-        if (CajasReservadas <= 1)
-            return;
-
-        CajasReservadas--;
-        CantidadCajas.text = CajasReservadas.ToString();
-
-        ActualizarTextoCantidad();
-        ActualizarFlechas();
-    }
-
-    public void FlechaDerecha()
-    {
-        int maxCajas = Inventario.Cantidades[NumeroObjetoSeleccionado]
-            / ObjetoSeleccionado.CantidadVentaMinima;
-
-        if (CajasReservadas >= maxCajas)
-            return;
-
+        if (CajasReservadas >= ObtenerMaxCajas()) return;
         CajasReservadas++;
+        ActualizarReservaVisual();
+    }
+
+    public void FlechaMenos()
+    {
+        if (CajasReservadas <= 1) return;
+        CajasReservadas--;
+        ActualizarReservaVisual();
+    }
+
+    int ObtenerMaxCajas()
+    {
+        return Inventario.Cantidades[IndexSeleccionado] /
+               ObjetoSeleccionado.CantidadVentaMinima;
+    }
+
+    // =========================
+    // RESERVA VISUAL
+    // =========================
+    void ActualizarReservaVisual()
+    {
+        UnidadesReservadas =
+            CajasReservadas * ObjetoSeleccionado.CantidadVentaMinima;
+
         CantidadCajas.text = CajasReservadas.ToString();
 
-        ActualizarTextoCantidad();
-        ActualizarFlechas();
-    }
+        MarcoVenta.transform.GetChild(2)
+            .GetComponent<TextMeshProUGUI>()
+            .text = UnidadesReservadas.ToString();
 
-    void ActualizarFlechas()
-    {
-        if (ObjetoSeleccionado == null)
-        {
-            ObjetoFlechaIzquierda.SetActive(false);
-            ObjetoFlechaDerecha.SetActive(false);
-            return;
-        }
+        int disponiblesVisual =
+            Inventario.Cantidades[IndexSeleccionado] - UnidadesReservadas;
 
-        int maxCajas = Inventario.Cantidades[NumeroObjetoSeleccionado]
-            / ObjetoSeleccionado.CantidadVentaMinima;
+        TextoCantidadPrefabSeleccionado.text =
+            disponiblesVisual.ToString();
 
-        ObjetoFlechaIzquierda.SetActive(CajasReservadas > 1);
-        ObjetoFlechaDerecha.SetActive(CajasReservadas < maxCajas);
+        FlechaIzquierda.SetActive(CajasReservadas > 1);
+        FlechaDerecha.SetActive(CajasReservadas < ObtenerMaxCajas());
     }
 
     // =========================
-    // BOTONES DIRECTOS
+    // EMPACAR
     // =========================
-
-    public void BotonMitad()
-    {
-        if (ObjetoSeleccionado == null)
-            return;
-
-        int maxCajas = Inventario.Cantidades[NumeroObjetoSeleccionado]
-            / ObjetoSeleccionado.CantidadVentaMinima;
-
-        CajasReservadas = Mathf.Max(1, maxCajas / 2);
-
-        CantidadCajas.text = CajasReservadas.ToString();
-        ActualizarTextoCantidad();
-        ActualizarFlechas();
-    }
-
-    public void BotonMaximo()
-    {
-        if (ObjetoSeleccionado == null)
-            return;
-
-        CajasReservadas = Inventario.Cantidades[NumeroObjetoSeleccionado]
-            / ObjetoSeleccionado.CantidadVentaMinima;
-
-        CantidadCajas.text = CajasReservadas.ToString();
-        ActualizarTextoCantidad();
-        ActualizarFlechas();
-    }
-
-    // =========================
-    // EMPACAR / VENDER
-    // =========================
-
     public void BotonEmpacar()
     {
         if (ObjetoSeleccionado == null || CajasReservadas <= 0)
             return;
 
-        int totalUnidades =
-            CajasReservadas * ObjetoSeleccionado.CantidadVentaMinima;
+        if (BloqueadoPorRegalo())
+            return;
 
-        // Quitar del inventario REAL
-        Inventario.Cantidades[NumeroObjetoSeleccionado] -= totalUnidades;
+        // 1️⃣ Restar del inventario
+        Inventario.Cantidades[IndexSeleccionado] -= UnidadesReservadas;
 
-        // Dinero
-        GameObject.Find("Controlador Tiempo")
-            .GetComponent<Scr_ControladorTiempo>()
-            .DineroRecompensa +=
-            totalUnidades * ObjetoSeleccionado.ValorVentaIndividual;
+        // 2️⃣ Calcular dinero pendiente generado
+        int dineroGenerado =
+            ObjetoSeleccionado.CantidadVentaMinima *
+            ObjetoSeleccionado.ValorVentaIndividual *
+            CajasReservadas;
+
+        // 3️⃣ Agregar dinero pendiente (NO inmediato)
+        if (ObjetosAgregados != null && dineroGenerado > 0)
+        {
+            ObjetosAgregados.AgregarDineroPendiente(dineroGenerado);
+        }
+        else
+        {
+            Debug.LogWarning("ObjetosAgregados no está asignado o dinero generado es 0");
+        }
+
+        // 4️⃣ Progreso de cajas vendidas
+        int cajas = PlayerPrefs.GetInt(PREF_CAJAS, 0);
+        cajas += CajasReservadas;
+        cajas = Mathf.Min(cajas, VentasParaRegalo);
+
+        PlayerPrefs.SetInt(PREF_CAJAS, cajas);
+        PlayerPrefs.Save();
+
+        ActualizarUIProgreso(cajas);
 
         ResetearMarco();
         RefrescarItems();
     }
 
-    // =========================
-    // UI AUXILIAR
-    // =========================
 
-    void ActualizarTextoCantidad()
+    bool BloqueadoPorRegalo()
     {
-        MarcoVenta.transform.GetChild(2)
-            .GetComponent<TextMeshProUGUI>()
-            .text = (CajasReservadas *
-            ObjetoSeleccionado.CantidadVentaMinima).ToString();
+        return PlayerPrefs.GetInt(PREF_CAJAS, 0) >= VentasParaRegalo &&
+               PlayerPrefs.GetString(PREF_REGALO, "No") == "No";
     }
 
+    // =========================
+    // PROGRESO
+    // =========================
+    void CargarProgreso()
+    {
+        int cajas = PlayerPrefs.GetInt(PREF_CAJAS, 0);
+        ActualizarUIProgreso(cajas);
+    }
+
+    void ActualizarUIProgreso(int cajas)
+    {
+        TextoCajasVendidas.text = $"{cajas} / {VentasParaRegalo}";
+
+        Icono.sprite = cajas >= VentasParaRegalo
+            ? IconoRegalo
+            : IconoCaja;
+
+        // ✅ MARCAR REGALO COMO DISPONIBLE AL LLEGAR AL OBJETIVO
+        if (cajas >= VentasParaRegalo &&
+            PlayerPrefs.GetString(PREF_REGALO, "No") == "No")
+        {
+            PlayerPrefs.SetString(PREF_REGALO, "Si");
+            PlayerPrefs.Save();
+        }
+
+        ActivarCajas3D(cajas);
+    }
+
+
+    void ActivarCajas3D(int cajas)
+    {
+        float progreso = (float)cajas / VentasParaRegalo;
+        int activas = Mathf.FloorToInt(progreso * TotalCajas3D);
+
+        for (int i = 0; i < Cajas3D.Length; i++)
+            Cajas3D[i].SetActive(i < activas);
+    }
+
+    // =========================
+    // RESET
+    // =========================
     void ResetearMarco()
     {
         ObjetoSeleccionado = null;
-        NumeroObjetoSeleccionado = -1;
+        IndexSeleccionado = -1;
         CajasReservadas = 0;
+        UnidadesReservadas = 0;
+        TextoCantidadPrefabSeleccionado = null;
 
         CantidadCajas.text = "0";
-        MarcoVenta.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "0";
+        MarcoVenta.transform.GetChild(2)
+            .GetComponent<TextMeshProUGUI>().text = "0";
 
         MarcoVenta.transform.GetChild(0).gameObject.SetActive(false);
-        MarcoVenta.transform.GetChild(0).GetComponent<Image>().sprite = null;
 
-        ObjetoFlechaIzquierda.SetActive(false);
-        ObjetoFlechaDerecha.SetActive(false);
+        FlechaIzquierda.SetActive(false);
+        FlechaDerecha.SetActive(false);
     }
 
     // =========================
     // ITEMS
     // =========================
-
     void RefrescarItems()
     {
-        LimpiarItems();
+        foreach (Transform t in Items.transform)
+            Destroy(t.gameObject);
 
         for (int i = 0; i < Inventario.Objetos.Length; i++)
         {
-            if (Inventario.Cantidades[i] >=
+            if (Inventario.Cantidades[i] <
                 Inventario.Objetos[i].CantidadVentaMinima)
+                continue;
+
+            GameObject obj =
+                Instantiate(PrefabItem, Items.transform);
+
+            obj.GetComponent<Image>().sprite =
+                Inventario.Objetos[i].IconoInventario;
+
+            obj.transform.GetChild(0)
+                .GetComponent<TextMeshProUGUI>()
+                .text = Inventario.Cantidades[i].ToString();
+
+            obj.transform.GetChild(1)
+                .GetComponent<TextMeshProUGUI>()
+                .text = Inventario.Objetos[i].Nombre;
+
+            EventTrigger trigger = obj.AddComponent<EventTrigger>();
+            EventTrigger.Entry entry = new EventTrigger.Entry
             {
-                GameObject hijo =
-                    Instantiate(PrefabItem, Items.transform);
+                eventID = EventTriggerType.PointerDown
+            };
 
-                hijo.GetComponent<Image>().sprite =
-                    Inventario.Objetos[i].IconoInventario;
+            entry.callback.AddListener(_ =>
+                SeleccionarItem(obj));
 
-                hijo.transform.GetChild(0)
-                    .GetComponent<TextMeshProUGUI>()
-                    .text = Inventario.Cantidades[i].ToString();
-
-                hijo.transform.GetChild(1)
-                    .GetComponent<TextMeshProUGUI>()
-                    .text = Inventario.Objetos[i].Nombre;
-
-                int index = i;
-
-                EventTrigger trigger = hijo.AddComponent<EventTrigger>();
-                EventTrigger.Entry entry = new EventTrigger.Entry
-                {
-                    eventID = EventTriggerType.PointerDown
-                };
-
-                entry.callback.AddListener(_ =>
-                {
-                    SeleccionarItem(
-                        Inventario.Objetos[index].IconoInventario);
-                });
-
-                trigger.triggers.Add(entry);
-            }
+            trigger.triggers.Add(entry);
         }
-    }
-
-    void LimpiarItems()
-    {
-        foreach (Transform hijo in Items.transform)
-            Destroy(hijo.gameObject);
     }
 }

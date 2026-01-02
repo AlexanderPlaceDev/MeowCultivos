@@ -1,26 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class Scr_ControladorCajaVenta1 : MonoBehaviour
+public class Scr_ControladorCajaVentaRegalo : MonoBehaviour
 {
-    public bool EntregaRegalo;
-    [SerializeField] private GameObject Regalo;
-
-
+    [SerializeField] GameObject Regalo;
+    [SerializeField] GameObject Gata;
     void Start()
     {
+        Gata = GameObject.Find("Gata");
         if (PlayerPrefs.GetString("CajaVentaRegalo", "No") == "Si")
-        {
-            EntregaRegalo = true;
-        }
+            Regalo.SetActive(true);
     }
 
-    void Update()
+
+    private void Update()
     {
-        if (EntregaRegalo && !Regalo.activeSelf)
+        if (Vector3.Distance(Gata.transform.position, Regalo.transform.position) <= 10 && Input.GetKeyDown(KeyCode.E))
         {
-            Regalo.SetActive(true);
+            AbrirRegalo();
         }
+        if (PlayerPrefs.GetString("CajaVentaRegalo", "No") == "Si")
+            Regalo.SetActive(true);
+    }
+
+
+    public void AbrirRegalo()
+    {
+        PlayerPrefs.SetString("CajaVentaRegalo", "No");
+        PlayerPrefs.SetInt("CajasVendidas", 0);
+        PlayerPrefs.Save();
+
+        Regalo.SetActive(false);
     }
 }
