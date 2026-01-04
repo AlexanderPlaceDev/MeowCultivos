@@ -96,7 +96,7 @@ public class Scr_Taller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void FixedUpdate()
@@ -126,7 +126,7 @@ public class Scr_Taller : MonoBehaviour
     IEnumerator EsperarAbrir(float duracion)
     {
         yield return new WaitForSeconds(duracion);
-        Anim.Play("Abriendo"); 
+        Anim.Play("Abriendo");
     }
     IEnumerator EsperarAbrirMenu(float duracion)
     {
@@ -160,7 +160,7 @@ public class Scr_Taller : MonoBehaviour
     public void objeto_ON(int i)
     {
         //Escondervertencia();
-        OjetosSelec[i].transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().sprite = MarcoSelec[1]; 
+        OjetosSelec[i].transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().sprite = MarcoSelec[1];
         MostarDescipcion.SetActive(false);
     }
     public void objeto_Exit(int i)
@@ -231,10 +231,10 @@ public class Scr_Taller : MonoBehaviour
         switch (lugar)
         {
             case 0:
-                ObjetoPrincipal.SetActive(true); 
+                ObjetoPrincipal.SetActive(true);
                 objetoPrincipalInt = objShow;
                 ObjetoPrincipal.transform.GetChild(0).gameObject.SetActive(true);
-                ObjetoPrincipal.transform.GetChild(0).GetComponent<Image>().sprite = ObjetosACraftear[objShow].Icono; 
+                ObjetoPrincipal.transform.GetChild(0).GetComponent<Image>().sprite = ObjetosACraftear[objShow].Icono;
                 Slots.SetActive(false);
                 Crafteo.SetActive(true);
                 HabilidadesSec.SetActive(false);
@@ -256,7 +256,7 @@ public class Scr_Taller : MonoBehaviour
                 ObjetoPrincipal.SetActive(true);
                 ObjetoPrincipal.transform.GetChild(0).gameObject.SetActive(true);
                 ObjetoPrincipal.transform.GetChild(1).gameObject.SetActive(true);
-                int e = PlayerPrefs.GetInt("Rango " + Datosarmas.TodasLasArmas[objShow].Nombre, 1)-1;
+                int e = PlayerPrefs.GetInt("Rango " + Datosarmas.TodasLasArmas[objShow].Nombre, 1) - 1;
                 Debug.Log(e);
                 ObjetoPrincipal.transform.GetChild(0).GetComponent<Image>().sprite = Datosarmas.TodasLasArmas[objShow].Icono;
                 ObjetoPrincipal.transform.GetChild(1).GetComponent<Image>().sprite = Rango[e];
@@ -269,7 +269,7 @@ public class Scr_Taller : MonoBehaviour
         }
     }
 
-    
+
     public void mostrarPrincipalDescripccion()
     {
         MostarDescipcion.SetActive(true);
@@ -304,7 +304,7 @@ public class Scr_Taller : MonoBehaviour
     public void checarSeccion()
     {
         ObjetoPrincipal.transform.GetChild(0).gameObject.SetActive(false);
-        ObjetoPrincipal.transform.GetChild(1).gameObject.SetActive(false);  
+        ObjetoPrincipal.transform.GetChild(1).gameObject.SetActive(false);
         Slots.SetActive(false);
         Crafteo.SetActive(false);
         MostarDescipcion.SetActive(false);
@@ -374,7 +374,7 @@ public class Scr_Taller : MonoBehaviour
     }
 
     //cambia el objeto u habilidad dependiendo de la seccion pero desde lado izquierdo
-    public void cambiarOBjIzq() 
+    public void cambiarOBjIzq()
     {
 
         if (Ojetosint == null || Ojetosint.Count <= 1) return;
@@ -468,13 +468,13 @@ public class Scr_Taller : MonoBehaviour
         esconderCrafteosSelec();
         int Selec = CrafteosSelec.Length;
         int Chec = 0;
-        if (ObjetosNessesarios.Count<= CrafteosSelec.Length)
+        if (ObjetosNessesarios.Count <= CrafteosSelec.Length)
         {
-            Selec=ObjetosNessesarios.Count;
+            Selec = ObjetosNessesarios.Count;
         }
         for (int i = 0; i < Selec; i++)
         {
-            if (ObjetosNessesarios[i] !=null)
+            if (ObjetosNessesarios[i] != null)
             {
                 CrafteosSelec[i].SetActive(true);
                 CrafteosSelec[i].GetComponent<Image>().sprite = ObjetosNessesarios[i].Icono;
@@ -501,7 +501,7 @@ public class Scr_Taller : MonoBehaviour
         for (int i = 0; i < CrafteosSelec.Length; i++)
         {
             CrafteosSelec[i].SetActive(false);
-            
+
         }
     }
 
@@ -570,7 +570,7 @@ public class Scr_Taller : MonoBehaviour
         {
             case 0:
                 quitarobjetos();
-                inventario.AgregarObjeto(1, htEnEspera);
+                inventario.AgregarObjeto(htEnEspera, 1);
                 mostraRecursosOBJ();
                 break;
             case 1:
@@ -585,7 +585,7 @@ public class Scr_Taller : MonoBehaviour
     {
         for (int i = 0; i < ObjetosNessesarios.Count; i++)
         {
-            inventario.QuitarObjeto(CantidadObjNessesarios[i], ObjetosNessesarios[i].Nombre);
+            inventario.QuitarObjeto(ObjetosNessesarios[i].Nombre, CantidadObjNessesarios[i]);
         }
     }
     //checa las habilidades dependiendo del slot seleccionado
@@ -676,9 +676,9 @@ public class Scr_Taller : MonoBehaviour
         int show = 0;
         for (int i = 0; i < HabilidadesTemporales.Count; i++)
         {
-            if (HabilidadesTemporales[i].Arma== Datosarmas.TodasLasArmas[objetoPrincipalInt].Nombre || HabilidadesTemporales[i].Arma== "Todos")
+            if (HabilidadesTemporales[i].Arma == Datosarmas.TodasLasArmas[objetoPrincipalInt].Nombre || HabilidadesTemporales[i].Arma == "Todos")
             {
-                if(ht != HabilidadesTemporales[i].Nombre)
+                if (ht != HabilidadesTemporales[i].Nombre)
                 {
                     if (show < 3 && Datosarmas.UsosHabilidadesT[i] > 0)
                     {
@@ -689,7 +689,7 @@ public class Scr_Taller : MonoBehaviour
                     Habilidadesint.Add(i);
                 }
             }
-            
+
         }
         if (Habilidadesint.Count > 3)
         {
@@ -720,7 +720,7 @@ public class Scr_Taller : MonoBehaviour
     public void checar_HabilidadesTemporales()
     {
         HabilidadesTemporales.Clear();
-        for (int i = 0; i < Datosarmas.HabilidadesTemporales.Length; i++) 
+        for (int i = 0; i < Datosarmas.HabilidadesTemporales.Length; i++)
         {
             if (Datosarmas.HabilidatTDesbloqueadas[i])
             {
@@ -739,7 +739,7 @@ public class Scr_Taller : MonoBehaviour
         {
             if (HabilidadesPermanentes[i].Arma == Datosarmas.TodasLasArmas[objetoPrincipalInt].Nombre || HabilidadesPermanentes[i].Arma == "Todos")
             {
-                if(h1 != HabilidadesPermanentes[i].Nombre && h2 != HabilidadesPermanentes[i].Nombre)
+                if (h1 != HabilidadesPermanentes[i].Nombre && h2 != HabilidadesPermanentes[i].Nombre)
                 {
                     if (HabilidadesPermanentes[i].Tipo == "Normal" || HabilidadesPermanentes[i].Tipo == "Pasiva")
                     {
@@ -770,7 +770,7 @@ public class Scr_Taller : MonoBehaviour
         {
             if (HabilidadesPermanentes[i].Arma == Datosarmas.TodasLasArmas[objetoPrincipalInt].Nombre || HabilidadesPermanentes[i].Arma == "Todos")
             {
-                if(hE != HabilidadesPermanentes[i].Nombre)
+                if (hE != HabilidadesPermanentes[i].Nombre)
                 {
                     if (HabilidadesPermanentes[i].Tipo == "Especial")
                     {
@@ -804,7 +804,7 @@ public class Scr_Taller : MonoBehaviour
     }
     public void NuevaHabilidad(int hab)
     {
-        int habS=Habilidadesint[hab];
+        int habS = Habilidadesint[hab];
         switch (Hablugar)
         {
             case 0:
@@ -833,10 +833,10 @@ public class Scr_Taller : MonoBehaviour
     public void NuevaHabilidadTemporal()
     {
         string arma = Datosarmas.TodasLasArmas[objetoPrincipalInt].Nombre;
-        if (PlayerPrefs.GetString(arma + "HT", "Nada")== "Nada")
+        if (PlayerPrefs.GetString(arma + "HT", "Nada") == "Nada")
         {
             ht = htEnEspera;
-            Datosarmas.QuitarUsosTemporales(htEnEspera); 
+            Datosarmas.QuitarUsosTemporales(htEnEspera);
             guardarArmasHabilidades();
         }
         else
@@ -850,7 +850,7 @@ public class Scr_Taller : MonoBehaviour
         ht = htEnEspera;
         Datosarmas.QuitarUsosTemporales(htEnEspera);
         guardarArmasHabilidades();
-        Escondervertencia(); 
+        Escondervertencia();
         mostrarArmasHabilidades();
     }
     public void mostraradevertencia()
@@ -947,7 +947,7 @@ public class Scr_Taller : MonoBehaviour
         Scr_CreadorHabilidadesBatalla Hab2 = Datosarmas.BuscarHabilidadPermanentePorNombre(h2);
         Scr_CreadorHabilidadesBatalla HabE = Datosarmas.BuscarHabilidadPermanentePorNombre(hE);
 
-        if(ht== "Nada")
+        if (ht == "Nada")
         {
             Habilidades[0].GetComponent<Image>().sprite = IconoVacio;
         }
@@ -975,7 +975,7 @@ public class Scr_Taller : MonoBehaviour
     public void checar_armasActivas()
     {
         Ojetosint.Clear();
-        if (Datosarmas.ArmasDesbloqueadas.Length <6)
+        if (Datosarmas.ArmasDesbloqueadas.Length < 6)
         {
             escoonder_botones();
             for (int i = 0; i < Datosarmas.ArmasDesbloqueadas.Length; i++)
@@ -1029,11 +1029,11 @@ public class Scr_Taller : MonoBehaviour
     //esconde las flechas de los objetos o las habilidades solo en caso de que sean menos de 6
     private void escoonder_botones()
     {
-        for (int i = 0; i < 6; i++) 
+        for (int i = 0; i < 6; i++)
         {
             OjetosSelec[i].SetActive(false);
         }
-        for (int i = 0; i <BotonesOBJ.Length; i++)
+        for (int i = 0; i < BotonesOBJ.Length; i++)
         {
             BotonesOBJ[i].SetActive(false);
         }

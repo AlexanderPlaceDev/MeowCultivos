@@ -565,7 +565,7 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
                             GameObject.Find("Gata")
                                 .transform.GetChild(7)
                                 .GetComponent<Scr_Inventario>()
-                                .QuitarObjeto(habilidad.CantidadesRequeridas[Obj], Objeto.Nombre);
+                                .QuitarObjeto(Objeto.Nombre, habilidad.CantidadesRequeridas[Obj], false);
 
                             Obj++;
                         }
@@ -586,7 +586,7 @@ public class Scr_ControladorMenuHabilidades : MonoBehaviour
                             GameObject.Find("Gata")
                                 .transform.GetChild(7)
                                 .GetComponent<Scr_Inventario>()
-                                .QuitarObjeto(1, habilidad.ItemsRequeridos[rango].Nombre);
+                                .QuitarObjeto(habilidad.ItemsRequeridos[rango].Nombre, 1, false);
 
                             rango++;
                             PlayerPrefs.SetInt("Rango " + habilidad.NombreBoton, rango);

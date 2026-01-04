@@ -163,10 +163,10 @@ public class Scr_ControladorCajaVenta : MonoBehaviour
         if (BloqueadoPorRegalo())
             return;
 
-        // 1️⃣ Restar del inventario
-        Inventario.Cantidades[IndexSeleccionado] -= UnidadesReservadas;
+        // 1️ Restar del inventario
+        Inventario.QuitarObjeto(Inventario.Objetos[IndexSeleccionado].Nombre, UnidadesReservadas, false);
 
-        // 2️⃣ Calcular dinero pendiente generado
+        // 2️ Calcular dinero pendiente generado
         int dineroGenerado =
             ObjetoSeleccionado.CantidadVentaMinima *
             ObjetoSeleccionado.ValorVentaIndividual *

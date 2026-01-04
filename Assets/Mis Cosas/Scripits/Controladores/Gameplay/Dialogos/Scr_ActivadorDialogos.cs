@@ -283,53 +283,87 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     {
         List<int> misionesAEliminar = new List<int>();
 
-        var objetosAgregados = GameObject.Find("ObjetosAgregados").GetComponent<Scr_ObjetosAgregados>();
-        var inventario = Gata.transform.GetChild(7).GetComponent<Scr_Inventario>();
+        var objetosAgregados = GameObject.Find("ObjetosAgregados")
+            .GetComponent<Scr_ObjetosAgregados>();
+
+        var inventario = Gata.transform.GetChild(7)
+            .GetComponent<Scr_Inventario>();
 
         int DineroAcumulado = 0;
         int XPAcumulado = 0;
 
-        // Revisión y recompensas
+        // =========================
+        // REVISAR MISIONES
+        // =========================
         for (int i = 0; i < controladorMisiones.MisionesSecundarias.Count; i++)
         {
             var mision = controladorMisiones.MisionesSecundarias[i];
-            bool esMisionDelActivador = MisionesSecundarias.Any(m => m.TituloMision == mision.TituloMision);
-            if (!esMisionDelActivador || !controladorMisiones.MisionesScompletas[i]) continue;
+
+            bool esMisionDelActivador = MisionesSecundarias
+                .Any(m => m.TituloMision == mision.TituloMision);
+
+            if (!esMisionDelActivador ||
+                !controladorMisiones.MisionesScompletas[i])
+                continue;
 
             misionesAEliminar.Add(i);
+
+            // =========================
+            // ACUMULAR RECOMPENSAS
+            // =========================
             DineroAcumulado += mision.RecompensaDinero;
             XPAcumulado += mision.RecompensaXP;
 
-            // Recompensas de objetos
+            // =========================
+            // RECOMPENSAS DE OBJETOS
+            // =========================
             for (int j = 0; j < mision.ObjetosQueDa.Length; j++)
             {
                 var objeto = mision.ObjetosQueDa[j];
                 int cantidad = mision.CantidadesDa[j];
 
-                for (int k = 0; k < inventario.Objetos.Length; k++)
-                {
-                    if (inventario.Objetos[k] == objeto)
-                    {
-                        inventario.Cantidades[k] += cantidad;
-                        objetosAgregados.Lista.Add(objeto);
-                        objetosAgregados.Cantidades.Add(cantidad);
-                        break;
-                    }
-                }
+                if (objeto == null || cantidad <= 0)
+                    continue;
+
+                inventario.AgregarObjeto(
+                objeto.Nombre,
+                cantidad,
+                mostrarUI: true,
+                darXP: false
+                );
+
+
             }
 
-            // Quitar objetos requeridos
+            // =========================
+            // QUITAR OBJETOS REQUERIDOS
+            // =========================
             for (int j = 0; j < mision.ObjetosNecesarios.Length; j++)
-                inventario.QuitarObjeto(mision.CantidadesQuita[j], mision.ObjetosNecesarios[j].Nombre);
+            {
+                inventario.QuitarObjeto(
+                    mision.ObjetosNecesarios[j].Nombre,
+                    mision.CantidadesQuita[j],
+                    false
+                );
+            }
         }
 
-        // Recompensas totales
-        if (DineroAcumulado > 0) objetosAgregados.AgregarDinero(DineroAcumulado);
-        if (XPAcumulado > 0) objetosAgregados.AgregarExperiencia(XPAcumulado);
+        // =========================
+        // ENTREGAR RECOMPENSAS TOTALES
+        // =========================
+        if (DineroAcumulado > 0)
+            objetosAgregados.AgregarDinero(DineroAcumulado);
 
+        if (XPAcumulado > 0)
+            objetosAgregados.AgregarExperiencia(XPAcumulado);
+
+        // =========================
+        // CONTINUAR FLUJO ORIGINAL
+        // =========================
         StartCoroutine(EsperarYCambiarCamaraSecundaria(misionesAEliminar));
         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
     }
+
 
     private IEnumerator EsperarYCambiarCamaraSecundaria(List<int> misionesAEliminar)
     {

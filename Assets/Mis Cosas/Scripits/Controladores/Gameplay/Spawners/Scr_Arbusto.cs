@@ -33,8 +33,8 @@ public class Scr_Arbusto : MonoBehaviour
         tipoActual = Random.Range(0, 4);
         GetComponent<MeshRenderer>().material = tipos[tipoActual];
         tieneMoras = (tipoActual > 0);
-        batalla=GetComponent<Scr_CambiadorBatalla>();
-        batalla.Fruta=objetosQueDa[tipoActual].Nombre;
+        batalla = GetComponent<Scr_CambiadorBatalla>();
+        batalla.Fruta = objetosQueDa[tipoActual].Nombre;
         batalla.Item = objetosQueDa[tipoActual].Nombre;
     }
 
@@ -124,21 +124,33 @@ public class Scr_Arbusto : MonoBehaviour
 
     void ActualizarInventario(int cantidad, Scr_CreadorObjetos objeto)
     {
-        Scr_ObjetosAgregados controlador = GameObject.Find("Canvas").transform.GetChild(4).GetComponent<Scr_ObjetosAgregados>();
+        if (cantidad <= 0 || objeto == null)
+            return;
 
-        if (controlador.Lista.Contains(objeto))
+        Scr_Inventario inventario = FindObjectOfType<Scr_Inventario>();
+        if (inventario == null)
         {
-            int indice = controlador.Lista.IndexOf(objeto);
-            controlador.Cantidades[indice] += cantidad;
-            if (indice <= 3)
-                controlador.Tiempo[indice] = 2;
+            Debug.LogError("Inventario no encontrado");
+            return;
         }
+
+        int agregada = inventario.AgregarObjeto(objeto.Nombre, cantidad, true, true);
+
+        // Si hubo excedente, se manda al singleton para UI
+        Scr_DatosSingletonBatalla singleton =
+            GameObject.Find("Singleton")?.GetComponent<Scr_DatosSingletonBatalla>();
+
+        if (singleton == null)
+            return;
+
+        singleton.ObjetosRecompensa.Add(objeto);
+
+        if (agregada > 0)
+            singleton.CantidadesRecompensa.Add(agregada);
         else
-        {
-            controlador.Lista.Add(objeto);
-            controlador.Cantidades.Add(cantidad);
-        }
+            singleton.CantidadesRecompensa.Add(cantidad);
     }
+
 
 
     void ActivarUI()

@@ -123,34 +123,14 @@ public class Scr_Recurso : MonoBehaviour
             .transform.GetChild(7)
             .GetComponent<Scr_Inventario>();
 
-        Scr_ObjetosAgregados controlador = GameObject.Find("Canvas")
-            .transform.GetChild(4)
-            .GetComponent<Scr_ObjetosAgregados>();
-
-        // 1️⃣ Inventario decide cuánto entra realmente
-        int cantidadAgregada = inventario.AgregarObjeto(cantidad, objeto.Nombre);
-
-        // 2️⃣ UI refleja el resultado
-        controlador.Lista.Add(objeto);
-
-        if (cantidadAgregada > 0)
-        {
-            controlador.Cantidades.Add(cantidadAgregada);
-            controlador.FueExcedente.Add(false);
-        }
-        else
-        {
-            // Inventario lleno
-            controlador.Cantidades.Add(cantidad);
-            controlador.FueExcedente.Add(true);
-        }
-
-        if (controlador.Tiempo != null &&
-            controlador.Lista.Count - 1 < controlador.Tiempo.Length)
-        {
-            controlador.Tiempo[controlador.Lista.Count - 1] = 2f;
-        }
+        inventario.AgregarObjeto(
+            objeto.Nombre,
+            cantidad,
+            mostrarUI: true,
+            darXP: true
+        );
     }
+
 
 
 

@@ -47,7 +47,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
                 if (Vector3.Distance(gata.position, transform.position) < distancia)
                 {
                     estaLejos = false;
-                    ActivarUI(); 
+                    ActivarUI();
                     if (Input.GetKeyDown(KeyCode.E) && !batalla.escenaCargada)
                     {
                         batalla.Iniciar();
@@ -176,33 +176,16 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
             return;
 
         Scr_Inventario inventario = gata.GetChild(7).GetComponent<Scr_Inventario>();
-        Scr_ObjetosAgregados controlador = GameObject.Find("Canvas")
-            .transform.GetChild(4)
-            .GetComponent<Scr_ObjetosAgregados>();
 
-        // 👉 INVENTARIO PRIMERO (FUENTE DE VERDAD)
-        int cantidadAgregada = inventario.AgregarObjeto(cantidad, objeto.Nombre);
-
-        // 👉 UI REFLEJA LO QUE PASÓ
-        controlador.Lista.Add(objeto);
-
-        if (cantidadAgregada > 0)
-        {
-            controlador.Cantidades.Add(cantidadAgregada);
-            controlador.FueExcedente.Add(false);
-        }
-        else
-        {
-            controlador.Cantidades.Add(cantidad);
-            controlador.FueExcedente.Add(true);
-        }
-
-        if (controlador.Tiempo != null &&
-            controlador.Lista.Count - 1 < controlador.Tiempo.Length)
-        {
-            controlador.Tiempo[controlador.Lista.Count - 1] = 2f;
-        }
+        // INVENTARIO ES LA ÚNICA FUENTE DE VERDAD
+        inventario.AgregarObjeto(
+            objeto.Nombre,
+            cantidad,
+            mostrarUI: true,
+            darXP: true
+        );
     }
+
 
 
     void ActivarUI()

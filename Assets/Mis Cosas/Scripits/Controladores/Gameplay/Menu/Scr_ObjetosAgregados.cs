@@ -13,12 +13,11 @@ public class Scr_ObjetosAgregados : MonoBehaviour
     private const string PREF_DIA_DINERO_OTORGADO = "DiaDineroOtorgado";
 
     // =========================
-    // LISTAS
+    // LISTAS VISUALES
     // =========================
-    public List<Scr_CreadorObjetos> Lista = new List<Scr_CreadorObjetos>();
-    public List<int> Cantidades = new List<int>();
-    public List<bool> FueExcedente = new List<bool>();
-
+    public List<Scr_CreadorObjetos> Lista = new();
+    public List<int> Cantidades = new();
+    public List<bool> FueExcedente = new();
 
     [SerializeField] private GameObject[] Iconos;
     public float[] Tiempo;
@@ -26,12 +25,11 @@ public class Scr_ObjetosAgregados : MonoBehaviour
     // =========================
     // REFERENCIAS
     // =========================
-    [SerializeField] private Scr_Inventario Inventario;
     private Scr_ControladorTiempo ControladorTiempo;
     private Scr_DatosSingletonBatalla Singleton;
 
     // =========================
-    // UI
+    // UI XP / DINERO
     // =========================
     [SerializeField] private GameObject canvasXP;
     [SerializeField] private GameObject canvasDinero;
@@ -47,12 +45,10 @@ public class Scr_ObjetosAgregados : MonoBehaviour
     // ESTADO
     // =========================
     private int xpPendiente = 0;
-
-    // 🔹 DINERO
-    public int DineroPendiente = 0;          // dinero diferido
+    public int DineroPendiente = 0;
     private string DiaDineroOtorgado = "";
 
-    private HashSet<int> xpOtorgada = new HashSet<int>();
+    private HashSet<int> xpOtorgada = new();
 
     // =========================
     // UNITY
@@ -62,20 +58,15 @@ public class Scr_ObjetosAgregados : MonoBehaviour
         Singleton = GameObject.Find("Singleton")?.GetComponent<Scr_DatosSingletonBatalla>();
         ControladorTiempo = GameObject.Find("Controlador Tiempo")?.GetComponent<Scr_ControladorTiempo>();
 
-        // Cargar persistencia
         DineroPendiente = PlayerPrefs.GetInt(PREF_DINERO_PENDIENTE, 0);
         DiaDineroOtorgado = PlayerPrefs.GetString(PREF_DIA_DINERO_OTORGADO, "");
 
-        // Inicializar tiempos visuales
         if (Iconos != null)
         {
             Tiempo = new float[Iconos.Length];
             for (int i = 0; i < Tiempo.Length; i++)
                 Tiempo[i] = 2f;
         }
-
-        if (Inventario == null)
-            Inventario = FindObjectOfType<Scr_Inventario>();
 
         if (canvasDinero != null)
         {
@@ -95,98 +86,98 @@ public class Scr_ObjetosAgregados : MonoBehaviour
     void Update()
     {
         DarDineroPendiente();
-
-        if (Singleton != null)
-            ProcesarRecompensasSingleton();
-
         MostrarObjetosEnCanvas();
         ActualizarTimers();
     }
 
     // =========================
-    // DINERO DIFERIDO
+    // ENTRADA DESDE INVENTARIO
     // =========================
-    private void DarDineroPendiente()
+    public void RegistrarObjetoVisual(
+        Scr_CreadorObjetos objeto,
+        int cantidad,
+        bool fueExcedente
+    )
     {
-        if (ControladorTiempo == null)
+        if (objeto == null || cantidad <= 0)
             return;
 
-        // Solo a las 00:00
-        if (ControladorTiempo.HoraActual != 0)
-            return;
+        Lista.Add(objeto);
+        Cantidades.Add(cantidad);
+        FueExcedente.Add(fueExcedente);
 
-        if (DineroPendiente <= 0)
-            return;
-
-        string diaActual = ControladorTiempo.DiaActual;
-
-        // Ya se entregó hoy
-        if (DiaDineroOtorgado == diaActual)
-            return;
-
-        // 🔹 GUARDAR EL VALOR ANTES DE RESET
-        int dineroEntregado = DineroPendiente;
-
-        int dineroActual = PlayerPrefs.GetInt(PREF_DINERO, 0);
-        dineroActual += dineroEntregado;
-
-        PlayerPrefs.SetInt(PREF_DINERO, dineroActual);
-
-        // Reset correcto
-        DineroPendiente = 0;
-        PlayerPrefs.SetInt(PREF_DINERO_PENDIENTE, 0);
-
-        DiaDineroOtorgado = diaActual;
-        PlayerPrefs.SetString(PREF_DIA_DINERO_OTORGADO, diaActual);
-
-        PlayerPrefs.Save();
-
-        // ✅ Feedback visual correcto
-        if (DineroText != null)
-            DineroText.text = "+$" + dineroEntregado.ToString("N0");
-
-        DineroAnimator?.Play("Desaparecer");
-        dineroAudioSource?.Play();
+        if (Tiempo != null && Lista.Count - 1 < Tiempo.Length)
+            Tiempo[Lista.Count - 1] = 2f;
     }
 
-
     // =========================
-    // DINERO INMEDIATO (SE CONSERVA)
+    // DINERO
     // =========================
     public void AgregarDinero(int cantidad)
     {
         if (cantidad <= 0) return;
 
-        int dineroActual = PlayerPrefs.GetInt(PREF_DINERO, 0);
-        dineroActual += cantidad;
-
+        int dineroActual = PlayerPrefs.GetInt(PREF_DINERO, 0) + cantidad;
         PlayerPrefs.SetInt(PREF_DINERO, dineroActual);
         PlayerPrefs.Save();
 
         if (DineroText != null)
             DineroText.text = "+$" + cantidad.ToString("N0");
 
-        if (DineroAnimator != null &&
-            !DineroAnimator.GetCurrentAnimatorStateInfo(0).IsName("Desaparecer"))
-        {
-            DineroAnimator.Play("Desaparecer");
-            dineroAudioSource?.Play();
-        }
+        DineroAnimator?.Play("Desaparecer");
+        dineroAudioSource?.Play();
+    }
+
+    public void AgregarDineroPendiente(int cantidad)
+    {
+        if (cantidad <= 0) return;
+
+        DineroPendiente += cantidad;
+        PlayerPrefs.SetInt(PREF_DINERO_PENDIENTE, DineroPendiente);
+        PlayerPrefs.Save();
+    }
+
+    private void DarDineroPendiente()
+    {
+        if (ControladorTiempo == null) return;
+        if (ControladorTiempo.HoraActual != 0) return;
+        if (DineroPendiente <= 0) return;
+
+        string diaActual = ControladorTiempo.DiaActual;
+        if (DiaDineroOtorgado == diaActual) return;
+
+        int dineroActual = PlayerPrefs.GetInt(PREF_DINERO, 0) + DineroPendiente;
+        PlayerPrefs.SetInt(PREF_DINERO, dineroActual);
+
+        DineroPendiente = 0;
+        PlayerPrefs.SetInt(PREF_DINERO_PENDIENTE, 0);
+
+        DiaDineroOtorgado = diaActual;
+        PlayerPrefs.SetString(PREF_DIA_DINERO_OTORGADO, diaActual);
+        PlayerPrefs.Save();
+
+        if (DineroText != null)
+            DineroText.text = "+$" + dineroActual.ToString("N0");
+
+        DineroAnimator?.Play("Desaparecer");
+        dineroAudioSource?.Play();
     }
 
     // =========================
-    // XP
+    // XP (solo visual)
     // =========================
     public void AgregarExperiencia(int cantidadXP)
     {
+        if (cantidadXP <= 0) return;
+
         xpPendiente += cantidadXP;
 
         int xpActual = PlayerPrefs.GetInt("XPActual", 0) + cantidadXP;
         PlayerPrefs.SetInt("XPActual", xpActual);
 
         XPText.text = "XP + " + xpPendiente;
-
         XPAnimator?.Play("Desaparecer");
+
         CancelInvoke(nameof(ResetXPVisual));
         Invoke(nameof(ResetXPVisual), 0.2f);
     }
@@ -197,67 +188,6 @@ public class Scr_ObjetosAgregados : MonoBehaviour
     }
 
     // =========================
-    // RECOMPENSAS
-    // =========================
-    private void ProcesarRecompensasSingleton()
-    {
-        if (Singleton == null)
-            return;
-
-        if (Singleton.ObjetosRecompensa == null ||
-            Singleton.CantidadesRecompensa == null)
-            return;
-
-        int count = Mathf.Min(
-            Singleton.ObjetosRecompensa.Count,
-            Singleton.CantidadesRecompensa.Count
-        );
-
-        if (count == 0)
-            return;
-
-        for (int i = 0; i < count; i++)
-        {
-            Scr_CreadorObjetos obj = Singleton.ObjetosRecompensa[i];
-            int cant = Singleton.CantidadesRecompensa[i];
-
-            if (obj == null || cant <= 0)
-                continue;
-
-            if (Inventario == null)
-            {
-                Debug.LogError("Inventario es NULL en Scr_ObjetosAgregados");
-                return;
-            }
-
-            int cantidadAgregada = Inventario.AgregarObjeto(cant, obj.Nombre);
-
-            // SI NO SE AGREGÓ NADA, NO SE CREA UI POSITIVA
-            if (cantidadAgregada <= 0)
-            {
-                Lista.Add(obj);
-                Cantidades.Add(cant);
-                FueExcedente.Add(true);
-            }
-            else
-            {
-                Lista.Add(obj);
-                Cantidades.Add(cantidadAgregada);
-                FueExcedente.Add(false);
-            }
-
-            if (Tiempo != null && Lista.Count - 1 < Tiempo.Length)
-                Tiempo[Lista.Count - 1] = 2f;
-
-
-        }
-
-        Singleton.ObjetosRecompensa.Clear();
-        Singleton.CantidadesRecompensa.Clear();
-    }
-
-
-    // =========================
     // VISUAL
     // =========================
     private void MostrarObjetosEnCanvas()
@@ -265,60 +195,32 @@ public class Scr_ObjetosAgregados : MonoBehaviour
         for (int i = 0; i < Iconos.Length; i++)
         {
             var img = Iconos[i].GetComponent<Image>();
-            TextMeshProUGUI txt = null;
-
-            if (Iconos[i].transform.childCount > 0)
-                txt = Iconos[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            var txt = Iconos[i].transform.childCount > 0
+                ? Iconos[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>()
+                : null;
 
             if (i < Lista.Count)
             {
                 var item = Lista[i];
-                int cantidad = (i < Cantidades.Count) ? Cantidades[i] : 0;
+                int cantidad = Cantidades[i];
+                bool excedente = FueExcedente[i];
 
-                bool excedente = (i < FueExcedente.Count) && FueExcedente[i];
-
-                // Sprite
                 img.sprite = item.Icono;
 
-                // TEXTO + COLOR
-                if (txt != null)
-                {
-                    if (excedente)
-                    {
-                        txt.text = "-" + cantidad;
-                        txt.color = Color.red;
-                    }
-                    else
-                    {
-                        txt.text = "+" + cantidad;
-                        txt.color = Color.white;
-                    }
-                }
-
-                // Fade
                 float alpha = Mathf.Clamp01(Tiempo[i] / 2f);
-                img.color = new Color(1f, 1f, 1f, alpha);
+                img.color = new Color(1, 1, 1, alpha);
 
                 if (txt != null)
                 {
+                    txt.text = (excedente ? "-" : "+") + cantidad;
                     Color baseColor = excedente ? Color.red : Color.white;
                     txt.color = new Color(baseColor.r, baseColor.g, baseColor.b, alpha);
-                }
-
-                // XP SOLO SI NO FUE EXCEDENTE
-                if (!excedente &&
-                    !xpOtorgada.Contains(i) &&
-                    item.XPRecolecta > 0)
-                {
-                    AgregarExperiencia(item.XPRecolecta * cantidad);
-                    xpOtorgada.Add(i);
                 }
             }
             else
             {
                 img.sprite = null;
                 img.color = Color.clear;
-
                 if (txt != null)
                 {
                     txt.text = "";
@@ -326,38 +228,43 @@ public class Scr_ObjetosAgregados : MonoBehaviour
                 }
             }
         }
-
-        // Limpieza de seguridad
-        while (FueExcedente.Count > Lista.Count)
-            FueExcedente.RemoveAt(FueExcedente.Count - 1);
-
-        xpOtorgada.RemoveWhere(i => i >= Lista.Count);
     }
 
-
+    // =========================
+    // TIMERS
+    // =========================
     private void ActualizarTimers()
     {
-        for (int i = 0; i < Tiempo.Length; i++)
+        for (int i = Lista.Count - 1; i >= 0; i--)
         {
-            if (i >= Lista.Count) continue;
-
             Tiempo[i] -= Time.deltaTime;
-            if (Tiempo[i] < 0f) Tiempo[i] = 0f;
+
+            if (Tiempo[i] <= 0f)
+            {
+                Lista.RemoveAt(i);
+                Cantidades.RemoveAt(i);
+                FueExcedente.RemoveAt(i);
+
+                ReindexarXP(i);
+
+                for (int t = i; t < Tiempo.Length - 1; t++)
+                    Tiempo[t] = Tiempo[t + 1];
+
+                Tiempo[Tiempo.Length - 1] = 0f;
+            }
         }
     }
 
-    // =========================
-    // ACUMULAR DINERO DIFERIDO
-    // =========================
-    public void AgregarDineroPendiente(int cantidad)
+    private void ReindexarXP(int indiceEliminado)
     {
-        if (cantidad <= 0)
-            return;
+        HashSet<int> nuevo = new();
 
-        DineroPendiente += cantidad;
+        foreach (int idx in xpOtorgada)
+        {
+            if (idx < indiceEliminado) nuevo.Add(idx);
+            else if (idx > indiceEliminado) nuevo.Add(idx - 1);
+        }
 
-        PlayerPrefs.SetInt(PREF_DINERO_PENDIENTE, DineroPendiente);
-        PlayerPrefs.Save();
+        xpOtorgada = nuevo;
     }
-
 }
