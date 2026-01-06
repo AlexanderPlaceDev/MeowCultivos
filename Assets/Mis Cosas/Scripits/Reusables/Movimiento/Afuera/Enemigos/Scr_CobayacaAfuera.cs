@@ -14,112 +14,83 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
 
     private NavMeshAgent agente;
     private GameObject jaba;
+
     private bool corriendo = false;
-    private bool ejecutando = false; // para evitar solapamientos de corutinas
+    private bool ejecutando = false;
+    private bool iniciado = false;
+
     private Vector3 destino;
 
-    // ======= SONIDOS =======
+    // ===== SONIDOS =====
     private Scr_Sonidos sonidos;
     private AudioSource audioSource;
-
     private Coroutine rutinaSonidos;
+
     private float pitchOriginal;
     private float velocidadOriginal;
-    private bool reproduciendoSonidos = false;
 
+    private float tiempoSinMover = 0f;
+    private const float tiempoMaxSinMover = 1.5f;
 
     void Start()
     {
-
         sonidos = GetComponent<Scr_Sonidos>();
         audioSource = GetComponent<AudioSource>();
 
+        if (!anim) anim = GetComponent<Animator>();
+
         pitchOriginal = audioSource.pitch;
-        velocidadOriginal = anim.speed; // por si usas velocidad de animación
+        velocidadOriginal = anim.speed;
 
-        rutinaSonidos = StartCoroutine(RutinaSonidosCaminar());
-        reproduciendoSonidos = true;
-
-
-        if (GetComponent<NavMeshAgent>().isOnNavMesh)
+        if (TryGetComponent(out NavMeshAgent nav) && nav.isOnNavMesh)
         {
-            agente = GetComponent<NavMeshAgent>();
+            agente = nav;
             agente.speed = Velocidad;
             agente.isStopped = true;
+            agente.autoBraking = true;
         }
-        if (anim == null) anim = GetComponent<Animator>();
+
+        rutinaSonidos = StartCoroutine(RutinaSonidosCaminar());
+
+        CambiarAnimacion("Iddle1");
         LanzarNuevoEstado();
+        iniciado = true;
     }
 
     void Update()
     {
-        // =========================
-        // Estado de huida
-        // =========================
-        if (corriendo)
+        if (corriendo && jaba == null)
         {
-            if (Vector3.Distance(transform.position, destino) < agente.stoppingDistance)
+            SalirDeHuida();
+            return;
+        }
+
+        if (agente != null && agente.hasPath && !agente.isStopped)
+        {
+            if (agente.velocity.magnitude < 0.05f)
+                tiempoSinMover += Time.deltaTime;
+            else
+                tiempoSinMover = 0f;
+
+            // 🔴 EVITA QUEDARSE CAMINANDO EN EL BORDE
+            if (tiempoSinMover >= tiempoMaxSinMover)
             {
-                // Genera nuevo punto de huida cada poco tiempo
-                destino = ObtenerDestinoAleatorioSeguro();
-                agente.SetDestination(destino);
+                agente.ResetPath();
+                agente.isStopped = true;
+                ejecutando = false;
+                tiempoSinMover = 0f;
+                LanzarNuevoEstado();
             }
         }
     }
-
-    IEnumerator RutinaSonidosCaminar()
-    {
-        while (!corriendo)
-        {
-            if (sonidos.caminar_sonido.Length > 0)
-            {
-                AudioClip clip = sonidos.caminar_sonido[Random.Range(0, sonidos.caminar_sonido.Length)];
-                audioSource.pitch = pitchOriginal;
-                audioSource.PlayOneShot(clip);
-            }
-
-            float espera = Random.Range(5f, 20f);
-
-            float t = 0f;
-            while (t < espera && !corriendo)
-            {
-                t += Time.deltaTime;
-                yield return null;
-            }
-        }
-    }
-
-    IEnumerator RutinaSonidosCorrer()
-    {
-        while (corriendo)
-        {
-            if (sonidos.correr_sonido.Length > 0)
-            {
-                AudioClip clip = sonidos.correr_sonido[Random.Range(0, sonidos.correr_sonido.Length)];
-                audioSource.pitch = pitchOriginal + 0.1f;
-                audioSource.PlayOneShot(clip);
-            }
-
-            // Espera entre 1 y 3 segundos
-            float espera = Random.Range(1f, 3f);
-
-            float t = 0f;
-            while (t < espera && corriendo)
-            {
-                t += Time.deltaTime;
-                yield return null;
-            }
-        }
-    }
-
-
 
     // ================================
-    // RUTINA PRINCIPAL DE COMPORTAMIENTO
+    // COMPORTAMIENTO BASE
     // ================================
     void LanzarNuevoEstado()
     {
         if (corriendo || ejecutando) return;
+
         ejecutando = true;
 
         int rnd = Random.Range(0, 100);
@@ -133,11 +104,10 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
 
     IEnumerator EjecutarIdle(string animacion, float duracion)
     {
-        if (GetComponent<NavMeshAgent>().isOnNavMesh)
+        if (agente != null)
         {
             agente.isStopped = true;
             agente.ResetPath();
-            agente.velocity = Vector3.zero;
         }
 
         CambiarAnimacion(animacion);
@@ -151,37 +121,25 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
     {
         CambiarAnimacion("Caminar");
 
-        if (GetComponent<NavMeshAgent>().isOnNavMesh)
+        if (agente != null)
         {
+            Vector3 punto = ObtenerDestinoSeguro();
+
             agente.isStopped = false;
             agente.speed = Velocidad;
-            destino = ObtenerDestinoAleatorioSeguro();
-            agente.SetDestination(destino);
-            
-            float tiempo = 0f;
+            agente.SetDestination(punto);
 
-        // Espera a que el agente tenga un camino válido antes de verificar distancia
-        while (agente.pathPending)
-            yield return null;
+            while (agente.pathPending)
+                yield return null;
 
-        while (!corriendo && tiempo < 7f)
-        {
-            // Espera a que realmente se mueva antes de cortar
-            if (!agente.pathPending && agente.remainingDistance <= agente.stoppingDistance)
-                break;
+            while (!corriendo && agente.remainingDistance > 1.2f)
+                yield return null;
 
-            tiempo += Time.deltaTime;
-            yield return null;
+            agente.isStopped = true;
         }
-
-        agente.isStopped = true;
-        agente.ResetPath();
 
         ejecutando = false;
         LanzarNuevoEstado();
-        }
-
-        
     }
 
     // ================================
@@ -189,85 +147,134 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
     // ================================
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.name.Contains("Jaba") && !corriendo)
+        if (!iniciado || corriendo) return;
+        if (!other.gameObject.name.Contains("Jaba")) return;
+
+        jaba = other.gameObject;
+        corriendo = true;
+
+        if (rutinaSonidos != null)
+            StopCoroutine(rutinaSonidos);
+
+        anim.speed = velocidadOriginal * 1.3f;
+        audioSource.pitch = pitchOriginal + 0.1f;
+        rutinaSonidos = StartCoroutine(RutinaSonidosCorrer());
+
+        CambiarAnimacion("Corriendo");
+
+        if (agente != null)
         {
-            Debug.Log("Mantiene");
-            jaba = other.gameObject;
-            corriendo = true;
-
-            // Parar rutinas anteriores
-            StopAllCoroutines();
-
-            // Cambios de sonido
-            audioSource.pitch = pitchOriginal + 0.1f;
-            anim.speed = velocidadOriginal * 1.3f;
-            rutinaSonidos = StartCoroutine(RutinaSonidosCorrer());
-
-            ejecutando = false;
-            CambiarAnimacion("Corriendo");
-
             agente.isStopped = false;
             agente.speed = velocidadCorrer;
-            destino = ObtenerDestinoAleatorioSeguro();
-            agente.SetDestination(destino);
+            agente.SetDestination(ObtenerDestinoSeguro());
         }
-
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject == jaba)
-        {
-            jaba = null;
-            corriendo = false;
-
-            // Restaurar sonido
-            audioSource.pitch = pitchOriginal;
-            anim.speed = velocidadOriginal;
-
-            // Reanudar sonidos normales
-            rutinaSonidos = StartCoroutine(RutinaSonidosCaminar());
-
-            agente.isStopped = true;
-            agente.ResetPath();
-            agente.velocity = Vector3.zero;
-
-            CambiarAnimacion("Iddle1");
-            ejecutando = false;
-            LanzarNuevoEstado();
-        }
-
+            SalirDeHuida();
     }
 
-    // ================================
-    // UTILIDADES
-    // ================================
-    Vector3 ObtenerDestinoAleatorioSeguro()
+    private void SalirDeHuida()
     {
-        for (int i = 0; i < 20; i++)
+        corriendo = false;
+        jaba = null;
+
+        if (rutinaSonidos != null)
+            StopCoroutine(rutinaSonidos);
+
+        anim.speed = velocidadOriginal;
+        audioSource.pitch = pitchOriginal;
+        rutinaSonidos = StartCoroutine(RutinaSonidosCaminar());
+
+        if (agente != null)
         {
-            Vector3 randomDirection = Random.insideUnitSphere * RadioDeDeambulacion;
-            randomDirection.y = 0;
-            randomDirection += transform.position;
-
-            if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, RadioDeDeambulacion, NavMesh.AllAreas))
-            {
-                NavMeshPath path = new NavMeshPath();
-                agente.CalculatePath(hit.position, path);
-
-                // Solo aceptar destinos con camino COMPLETO
-                if (path.status == NavMeshPathStatus.PathComplete)
-                    return hit.position;
-            }
+            agente.ResetPath();
+            agente.isStopped = true;
         }
 
-        // Si todos fallan, busca en pequeño radio
-        Vector3 fallback = transform.position + (Random.insideUnitSphere * 2f);
-        fallback.y = transform.position.y;
-
-        return fallback;
+        CambiarAnimacion("Iddle1");
+        ejecutando = false;
+        LanzarNuevoEstado();
     }
 
+    // ================================
+    // DESTINO SEGURO (CLAVE)
+    // ================================
+    Vector3 ObtenerDestinoSeguro()
+    {
+        if (agente == null)
+            return transform.position;
+
+        int areaMask = agente.areaMask;
+
+        for (int i = 0; i < 40; i++)
+        {
+            Vector3 random = transform.position +
+                             Random.insideUnitSphere * RadioDeDeambulacion;
+            random.y = transform.position.y;
+
+            // 1️⃣ Proyectar al NavMesh DEL AGENTE
+            if (!NavMesh.SamplePosition(random, out NavMeshHit hit, 3f, areaMask))
+                continue;
+
+            // 2️⃣ Rechazar bordes del NavMesh
+            if (NavMesh.FindClosestEdge(hit.position, out NavMeshHit edge, areaMask))
+            {
+                if (edge.distance < agente.radius * 1.5f)
+                    continue;
+            }
+
+            // 3️⃣ Validar path COMPLETO desde la posición actual
+            NavMeshPath path = new NavMeshPath();
+            if (!agente.CalculatePath(hit.position, path))
+                continue;
+
+            if (path.status != NavMeshPathStatus.PathComplete)
+                continue;
+
+            // 4️⃣ Punto final suficientemente lejos
+            if (Vector3.Distance(transform.position, hit.position) < 1f)
+                continue;
+
+            return hit.position;
+        }
+
+        // 🔁 Fallback seguro
+        agente.ResetPath();
+        return transform.position;
+    }
+
+
+    // ================================
+    // SONIDOS
+    // ================================
+    IEnumerator RutinaSonidosCaminar()
+    {
+        while (!corriendo)
+        {
+            if (sonidos.caminar_sonido.Length > 0)
+                audioSource.PlayOneShot(
+                    sonidos.caminar_sonido[Random.Range(0, sonidos.caminar_sonido.Length)]
+                );
+
+            yield return new WaitForSeconds(Random.Range(5f, 20f));
+        }
+    }
+
+    IEnumerator RutinaSonidosCorrer()
+    {
+        while (corriendo)
+        {
+            if (sonidos.correr_sonido.Length > 0)
+                audioSource.PlayOneShot(
+                    sonidos.correr_sonido[Random.Range(0, sonidos.correr_sonido.Length)]
+                );
+
+            yield return new WaitForSeconds(Random.Range(1f, 3f));
+        }
+    }
 
     void CambiarAnimacion(string nueva)
     {
@@ -276,11 +283,5 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
         anim.SetBool("Caminar", false);
         anim.SetBool("Corriendo", false);
         anim.SetBool(nueva, true);
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = corriendo ? Color.red : Color.green;
-        Gizmos.DrawWireSphere(transform.position, RadioDeDeambulacion);
     }
 }

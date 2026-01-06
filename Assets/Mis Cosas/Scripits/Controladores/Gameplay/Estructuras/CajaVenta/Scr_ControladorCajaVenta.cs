@@ -65,6 +65,13 @@ public class Scr_ControladorCajaVenta : MonoBehaviour
             .GetComponent<Scr_Inventario>();
     }
 
+    void Start()
+    {
+        CargarProgreso();
+        RefrescarItems();
+    }
+
+
     void OnEnable()
     {
         CargarProgreso();

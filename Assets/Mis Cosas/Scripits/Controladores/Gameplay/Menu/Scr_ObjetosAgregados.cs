@@ -199,6 +199,10 @@ public class Scr_ObjetosAgregados : MonoBehaviour
                 ? Iconos[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>()
                 : null;
 
+            Image imgExcedente = null;
+
+            imgExcedente = Iconos[i].transform.GetChild(1).GetComponent<Image>();
+
             if (i < Lista.Count)
             {
                 var item = Lista[i];
@@ -208,6 +212,21 @@ public class Scr_ObjetosAgregados : MonoBehaviour
                 img.sprite = item.Icono;
 
                 float alpha = Mathf.Clamp01(Tiempo[i] / 2f);
+                if (imgExcedente != null)
+                {
+                    if (excedente)
+                    {
+                        // Fade sincronizado con texto e icono
+                        Color c = imgExcedente.color;
+                        imgExcedente.color = new Color(c.r, c.g, c.b, alpha);
+                    }
+                    else
+                    {
+                        // Mantener invisible si no es excedente
+                        Color c = imgExcedente.color;
+                        imgExcedente.color = new Color(c.r, c.g, c.b, 0f);
+                    }
+                }
                 img.color = new Color(1, 1, 1, alpha);
 
                 if (txt != null)
@@ -226,6 +245,13 @@ public class Scr_ObjetosAgregados : MonoBehaviour
                     txt.text = "";
                     txt.color = Color.clear;
                 }
+
+                if (imgExcedente != null)
+                {
+                    Color c = imgExcedente.color;
+                    imgExcedente.color = new Color(c.r, c.g, c.b, 0f);
+                }
+
             }
         }
     }
