@@ -240,7 +240,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 HabilidadTDefault = "Nada";
                 Habilidad1Default = "Municion Perpetua";
                 Habilidad2Default = "Tiro explosivo";
-                HabilidadEspecialDefault = "Inyección de potasio";
+                HabilidadEspecialDefault = "Tiro Esparcido";
                 break;
             case "Sandia":
                 HabilidadTDefault = "Nada";

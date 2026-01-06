@@ -56,7 +56,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     Scr_CreadorHabilidadesBatalla HabT;
     Scr_CreadorHabilidadesBatalla Hab1;
     Scr_CreadorHabilidadesBatalla Hab2;
-    Scr_CreadorHabilidadesBatalla HabE;
+    public Scr_CreadorHabilidadesBatalla HabE;
 
     [Header("CambioHC")]//para acomodar visaulmente los iconos de las habilidades y comsimibles
     public int Habmostrar = 0;
