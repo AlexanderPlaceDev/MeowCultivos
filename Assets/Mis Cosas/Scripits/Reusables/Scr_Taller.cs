@@ -910,7 +910,7 @@ public class Scr_Taller : MonoBehaviour
                 HabilidadTDefault = "Nada";
                 Habilidad1Default = "Municion Perpetua";
                 Habilidad2Default = "Tiro explosivo";
-                HabilidadEspecialDefault = "Inyección de potasio";
+                HabilidadEspecialDefault = "Tiro Esparcido";
                 break;
             case "Sandia":
                 HabilidadTDefault = "Nada";
@@ -935,6 +935,7 @@ public class Scr_Taller : MonoBehaviour
     public void mostrarArmasHabilidades()
     {
         string arma = Datosarmas.TodasLasArmas[objetoPrincipalInt].Nombre;
+        CehcarHabilidadDefault(arma);
         //cantidadht = PlayerPrefs.GetInt(arma + "Usos", 0);
         //Debug.LogWarning(PlayerPrefs.GetString(arma + "HT", "Nada"));
         ht = PlayerPrefs.GetString(arma + "HT", HabilidadTDefault);
