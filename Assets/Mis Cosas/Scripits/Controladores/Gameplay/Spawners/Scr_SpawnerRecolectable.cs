@@ -200,16 +200,16 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
 
         if (!ui.activeSelf)
         {
-            ui.SetActive(true);
+            ui.SetActive(false);
         }
         if (!ui2.activeSelf)
         {
-            ui2.SetActive(true);
+            ui2.SetActive(false);
         }
 
-        gata.GetChild(3).GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = "E";
-        gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(1, 0, 0);
-        gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(3, 0, 0);
+
+        gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
+        gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
     }
     void DesactivarUI()
     {
