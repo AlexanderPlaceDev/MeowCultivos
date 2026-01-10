@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SocialPlatforms;
 
 public class Scr_Movimiento : MonoBehaviour
@@ -53,6 +54,10 @@ public class Scr_Movimiento : MonoBehaviour
     public KeyCode CorrerTecla = KeyCode.LeftShift;
     public KeyCode AgacharTecla = KeyCode.LeftControl;
 
+    private InputAction SaltoTecla_;
+    private InputAction CorrerTecla_;
+    private InputAction AgacharTecla_;
+
     public Estados Estado;
     public enum Estados
     {
@@ -75,14 +80,20 @@ public class Scr_Movimiento : MonoBehaviour
     float NFov = 0;
 
 
+    PlayerInput playerInput;
     public GameObject Controlador;
     Scr_ControladorBatalla batalla;
     [Header("Clima")]
     public bool EstaLloviendo = false;
     public float MultiplicadorResbalado = 0.3f; // 0.5 = el piso tiene la mitad de fricción
     public float FuerzaDeslizamiento = 4f; // fuerza para resbalar en rampas
+
     private void Start()
     {
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        SaltoTecla_= playerInput.actions["SaltoTecla"];
+        CorrerTecla_ = playerInput.actions["CorrerTecla"];
+        AgacharTecla_ = playerInput.actions["AgacharTecla"];
         if (Controlador != null)
         {
             Controlador = GameObject.Find("Controlador");
@@ -109,7 +120,7 @@ public class Scr_Movimiento : MonoBehaviour
 
     private void AplicarFovAlCorrer()
     {
-        if (Estado == Estados.Correr || (Estado == Estados.Aire && Input.GetKey(CorrerTecla)))
+        if (Estado == Estados.Correr || (Estado == Estados.Aire && CorrerTecla_.IsPressed()))
         {
             if (NFov < AumentoDeFov)
             {
@@ -240,7 +251,7 @@ public class Scr_Movimiento : MonoBehaviour
             Estado = Estados.Agachado;
             Velocidad = VelAgachado;
         }
-        else if ((EstaEnElSuelo || Subiendo()) && InputVer > 0 && Input.GetKey(CorrerTecla))
+        else if ((EstaEnElSuelo || Subiendo()) && InputVer > 0 && CorrerTecla_.IsPressed())
         {
             Estado = Estados.Correr;
             Velocidad = VelCorrer;
