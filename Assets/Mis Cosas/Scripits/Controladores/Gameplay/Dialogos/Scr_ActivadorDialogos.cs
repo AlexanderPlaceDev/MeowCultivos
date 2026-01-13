@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Controla los diálogos, misiones y tiendas con los NPCs.
@@ -46,6 +47,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     private Scr_ControladorMisiones controladorMisiones;
     private Transform Gata;
 
+    PlayerInput playerInput;
+    private InputAction Interactuar;
     //=====================
     //=== CINEMACHINE ===
     //=====================
@@ -65,6 +68,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
         sistemaDialogos = GetComponent<Scr_SistemaDialogos>();
         controladorMisiones = Gata.GetChild(4).GetComponent<Scr_ControladorMisiones>();
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        Interactuar = playerInput.actions["Interactuar"];
     }
 
     //===================
@@ -84,7 +89,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         if (!autoIniciarDialogo)
         {
             // Iniciar diálogo (E)
-            if (Input.GetKeyDown(KeyCode.E) && !ViendoMisiones && !Comprando)
+            if (Interactuar.IsPressed() && !ViendoMisiones && !Comprando)
             {
                 if (EsTienda)
                 {

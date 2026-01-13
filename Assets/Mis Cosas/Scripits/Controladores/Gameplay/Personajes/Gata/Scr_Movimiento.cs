@@ -54,9 +54,13 @@ public class Scr_Movimiento : MonoBehaviour
     public KeyCode CorrerTecla = KeyCode.LeftShift;
     public KeyCode AgacharTecla = KeyCode.LeftControl;
 
+    PlayerInput playerInput;
     private InputAction SaltoTecla_;
     private InputAction CorrerTecla_;
     private InputAction AgacharTecla_;
+
+    private InputAction MoverHorizontal;
+    private InputAction MoverVertical;
 
     public Estados Estado;
     public enum Estados
@@ -80,7 +84,6 @@ public class Scr_Movimiento : MonoBehaviour
     float NFov = 0;
 
 
-    PlayerInput playerInput;
     public GameObject Controlador;
     Scr_ControladorBatalla batalla;
     [Header("Clima")]
@@ -94,6 +97,8 @@ public class Scr_Movimiento : MonoBehaviour
         SaltoTecla_= playerInput.actions["SaltoTecla"];
         CorrerTecla_ = playerInput.actions["CorrerTecla"];
         AgacharTecla_ = playerInput.actions["AgacharTecla"];
+        MoverHorizontal= playerInput.actions["MoverHorizontal"];
+        MoverVertical = playerInput.actions["MoverVertical"];
         if (Controlador != null)
         {
             Controlador = GameObject.Find("Controlador");
@@ -209,7 +214,7 @@ public class Scr_Movimiento : MonoBehaviour
     {
         if (UsaEjeHorizontal)
         {
-            InputHor = Input.GetAxisRaw("Horizontal");
+            InputHor = MoverHorizontal.ReadValue<float>();
         }
         else
         {
@@ -217,28 +222,28 @@ public class Scr_Movimiento : MonoBehaviour
         }
         if (PuedeRetroceder)
         {
-            InputVer = Input.GetAxisRaw("Vertical");
+            InputVer = MoverVertical.ReadValue<float>();
         }
         else
         {
-            if (Input.GetAxisRaw("Vertical") >= 0)
+            if (MoverVertical.ReadValue<float>() >= 0)
             {
-                InputVer = Input.GetAxisRaw("Vertical");
+                InputVer = MoverVertical.ReadValue<float>();
             }
         }
 
-        if (Input.GetKeyDown(SaltoTecla) && ListoParaSaltar && EstaEnElSuelo)
+        if (SaltoTecla_.IsPressed() && ListoParaSaltar && EstaEnElSuelo)
         {
             ListoParaSaltar = false;
             Saltar();
             Invoke(nameof(ReiniciarSalto), SaltoCoolDown);
         }
 
-        if (Input.GetKeyDown(AgacharTecla))
+        if (AgacharTecla_.IsPressed())
         {
             Agachar();
         }
-        if (Input.GetKeyUp(AgacharTecla))
+        if (AgacharTecla_.WasReleasedThisFrame())
         {
             Levantarse();
         }
@@ -246,7 +251,7 @@ public class Scr_Movimiento : MonoBehaviour
 
     private void ActualizarEstado()
     {
-        if (Input.GetKey(AgacharTecla))
+        if (AgacharTecla_.IsPressed())
         {
             Estado = Estados.Agachado;
             Velocidad = VelAgachado;

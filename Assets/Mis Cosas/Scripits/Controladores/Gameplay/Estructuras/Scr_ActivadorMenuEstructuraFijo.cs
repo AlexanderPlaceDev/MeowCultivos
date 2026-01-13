@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
@@ -25,17 +26,29 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
     public bool EstaDentro = false;
     GameObject Camara360;
     GameObject Canvas;
-
+    ChecarInput Checar_input;
+    PlayerInput playerInput;
+    private InputAction Interactuar;
+    InputIconProvider IconProvider;
+    private Sprite iconoActual = null;
+    private string textoActual = "";
+    private Sprite iconoActualInteractuar = null;
+    private string textoActualInteractuar = "";
     void Awake()
     {
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
         Camara360 = GameObject.Find("Camara 360");
         Canvas = GameObject.Find("Canvas");
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        Checar_input = GameObject.Find("Singleton").GetComponent<ChecarInput>();
+        Interactuar = playerInput.actions["Interactuar"];
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Interactuar = playerInput.actions["Interactuar"];
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && EstaEnRango && !EstaDentro)
+        if (Interactuar.IsPressed() && EstaEnRango && !EstaDentro)
         {
             if (CanvasMenu != null)
             {
@@ -51,10 +64,11 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), -200, 1);
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 230, 1);
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(), -810, 1);
+            Checar_input.CammbiarAction_UI();
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.E) && EstaEnRango && EstaDentro)
+            if (Interactuar.IsPressed() && EstaEnRango && EstaDentro)
             {
                 if (CanvasMenu != null)
                 {
@@ -89,14 +103,49 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         }
     }
 
+    void ActualizarIconoUI(InputAction action, Transform uiTransform, ref Sprite iconoActual, ref string textoActual)
+    {
+        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = true;
+        Gata.GetChild(3).gameObject.SetActive(true);
+
+        Gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = Icono;
+
+
+        Gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
+        Gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
+        if (IconProvider.UsandoGamepad())
+        {
+            Sprite nuevoIcono = IconProvider.GetIcon(action);
+            if (iconoActual != nuevoIcono)
+            {
+                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
+                uiTransform.GetComponent<Image>().sprite = nuevoIcono;
+                uiTransform.transform.localScale = new Vector3(1, 1, 1);
+                iconoActual = nuevoIcono;
+                textoActual = "";
+            }
+        }
+        else
+        {
+            string tecla = IconProvider.GetKeyText(action);
+            if (textoActual != tecla)
+            {
+                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
+                uiTransform.GetComponent<Image>().sprite = IconoTecla;
+                uiTransform.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+                textoActual = tecla;
+                iconoActual = IconoTecla;
+            }
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.name == "Gata" || other.name == "Gato Mesh")
         {
             EstaEnRango = true;
             Gata.GetChild(3).gameObject.SetActive(true);
-            Gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Letra;
-            Gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = IconoTecla;
+
+            ActualizarIconoUI(Interactuar, Gata.GetChild(3).GetChild(0), ref iconoActualInteractuar, ref textoActualInteractuar);
         }
     }
 
@@ -125,6 +174,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
 
     public void CerrarTablero()
     {
+        Checar_input.CammbiarAction_Player();
         EstaDentro = false;
         Camara360.SetActive(true);
         Gata.GetChild(2).gameObject.SetActive(true);

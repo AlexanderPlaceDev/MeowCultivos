@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Scr_BarrilSembradio : MonoBehaviour
@@ -26,6 +27,8 @@ public class Scr_BarrilSembradio : MonoBehaviour
     private Scr_CambiadorBatalla batalla;
     private Transform gata;
 
+    PlayerInput playerInput;
+    private InputAction Interactuar;
     void Start()
     {
         gata = GameObject.Find("Gata").GetComponent<Transform>();
@@ -40,6 +43,9 @@ public class Scr_BarrilSembradio : MonoBehaviour
 
         batalla = GetComponent<Scr_CambiadorBatalla>();
         Cantidad = PlayerPrefs.GetInt("BarrilSembradio Cantidad:" + ID, 0);
+
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        Interactuar = playerInput.actions["Interactuar"];
     }
 
     void Update()
@@ -74,7 +80,7 @@ public class Scr_BarrilSembradio : MonoBehaviour
                 {
                     estaLejos = false;
                     ActivarUI(); 
-                    if (Input.GetKeyDown(KeyCode.E) && !batalla.escenaCargada)
+                    if (Interactuar.IsPressed() && !batalla.escenaCargada)
                     {
                         batalla.Iniciar();
                     }

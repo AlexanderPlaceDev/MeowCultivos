@@ -1,6 +1,7 @@
-﻿using TMPro;
-using PrimeTween;
+﻿using PrimeTween;
+using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
@@ -21,12 +22,21 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
     float TiempoCamara = 0;
     GameObject ControladorMenu;
 
+    InputIconProvider IconProvider;
+    PlayerInput playerInput;
+    private InputAction Interactuar;
+    private Sprite iconoActualInteractuar = null;
+    private string textoActualInteractuar = "";
     void Awake()
     {
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
         ControladorMenu = Gata.GetChild(6).gameObject;
         Camara360 = GameObject.Find("Camara 360");
         Canvas = GameObject.Find("Canvas");
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Interactuar = playerInput.actions["Interactuar"];
     }
 
     void Update()
@@ -41,10 +51,7 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
         if (Vector3.Distance(Gata.position, transform.position) < Distancia && !EstaDentro)
         {
             EstaLejos = false;
-            Gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Tecla;
-            Gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = IconoTecla;
-            Gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = Icono;
-            Gata.GetChild(3).gameObject.SetActive(true);
+            ActualizarIconoUI(Interactuar, Gata.GetChild(3).GetChild(0), ref iconoActualInteractuar, ref textoActualInteractuar);
         }
         if (Vector3.Distance(Gata.position, transform.position) > Distancia && !EstaLejos)
         {
@@ -52,7 +59,39 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
             EstaLejos = true;
         }
     }
+    void ActualizarIconoUI(InputAction action, Transform uiTransform, ref Sprite iconoActual, ref string textoActual)
+    {
+        Gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = Icono;
+        Gata.GetChild(3).gameObject.SetActive(true);
 
+
+        Gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
+        Gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
+        if (IconProvider.UsandoGamepad())
+        {
+            Sprite nuevoIcono = IconProvider.GetIcon(action);
+            if (iconoActual != nuevoIcono)
+            {
+                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
+                uiTransform.GetComponent<Image>().sprite = nuevoIcono;
+                uiTransform.transform.localScale = new Vector3(1, 1, 1);
+                iconoActual = nuevoIcono;
+                textoActual = "";
+            }
+        }
+        else
+        {
+            string tecla = IconProvider.GetKeyText(action);
+            if (textoActual != tecla)
+            {
+                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
+                uiTransform.GetComponent<Image>().sprite = IconoTecla;
+                uiTransform.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+                textoActual = tecla;
+                iconoActual = IconoTecla;
+            }
+        }
+    }
     private void CambiarCamaras()
     {
         if (EstaDentro)
@@ -97,7 +136,7 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
         }
 
 
-        if (!EstaLejos && Input.GetKeyDown(KeyCode.E))
+        if (!EstaLejos && Interactuar.IsPressed())
         {
 
             if (Camara360 == null)

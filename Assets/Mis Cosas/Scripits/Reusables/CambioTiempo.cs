@@ -281,6 +281,7 @@ public class CambioTiempo : MonoBehaviour
 
     public void cerrarUI()
     {
+        Debug.LogError("ee");
         //IconoEvento.SetActive(false);
         //PanelCambio.SetActive(false);
         if (carpa != null)

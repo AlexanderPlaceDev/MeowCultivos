@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Scr_SpawnerRecolectable : MonoBehaviour
@@ -10,7 +11,6 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     [SerializeField] bool OcupaPadre;
     [SerializeField] GameObject Padre;
     [SerializeField] private Sprite icono;
-    [SerializeField] private string tecla;
     [SerializeField] private Sprite teclaIcono;
     [SerializeField] private float distancia;
     [SerializeField] private float velocidadGiro;
@@ -19,7 +19,6 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     [SerializeField] string Habilidad;
     [SerializeField] string Habilidad2;
     [SerializeField] float[] TiempoRespawn;
-
 
     [Header("Estado del spawner")]
     private Scr_CambiadorBatalla batalla;
@@ -30,28 +29,60 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     private float TiempoRespawnAleatorio;
     private Transform gata;
 
+    PlayerInput playerInput;
+    private InputAction Recolectar;
+    InputIconProvider IconProvider;
+    private Sprite iconoActualRecolectar = null;
+    private string textoActualRecolectar = "";
+    public bool uiActiva = false;
+
     void Start()
     {
-        gata = GameObject.Find("Gata").GetComponent<Transform>();
+        gata = GameObject.Find("Gata").transform;
         TiempoRespawnAleatorio = Random.Range(TiempoRespawn[0], TiempoRespawn[1]);
         batalla = GetComponent<Scr_CambiadorBatalla>();
+
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        Recolectar = playerInput.actions["Recolectar"];
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+    }
+
+    void OnEnable()
+    {
+        InputSystem.onDeviceChange += OnDeviceChange;
+    }
+
+    void OnDisable()
+    {
+        InputSystem.onDeviceChange -= OnDeviceChange;
+    }
+
+    private void OnDeviceChange(InputDevice device, InputDeviceChange change)
+    {
+        if (uiActiva)
+        {
+            ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(2), ref iconoActualRecolectar, ref textoActualRecolectar);
+        }
     }
 
     void Update()
     {
         if (TieneObjeto)
         {
+            float distanciaGata = Vector3.Distance(gata.position, transform.position);
+
             if (!recolectando)
             {
-                // Si se acerca, se encienden los iconos
-                if (Vector3.Distance(gata.position, transform.position) < distancia)
+                // Activar UI si está cerca
+                if (distanciaGata < distancia)
                 {
                     estaLejos = false;
-                    ActivarUI();
-                    if (Input.GetKeyDown(KeyCode.E) && !batalla.escenaCargada)
-                    {
-                        batalla.Iniciar();
-                    }
+                    if (!uiActiva) ActivarUI();
+
+                    // Actualizar icono continuamente
+                    ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(2), ref iconoActualRecolectar, ref textoActualRecolectar);
+
+                    // Iniciar animación de recolección
                     if (gata.GetComponent<Animator>().GetBool("Recolectando"))
                     {
                         gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = true;
@@ -60,99 +91,92 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
                         StartCoroutine(Esperar());
                     }
                 }
-                else
+                else if (!estaLejos)
                 {
-                    if (!estaLejos)
-                    {
-                        DesactivarUI();
-                        estaLejos = true;
-                    }
+                    DesactivarUI();
+                    estaLejos = true;
                 }
             }
-
         }
         else
         {
+            // Manejo de respawn
             Tiempo += Time.deltaTime;
             if (Tiempo >= TiempoRespawnAleatorio)
             {
                 Tiempo = 0;
-
+                TiempoRespawnAleatorio = Random.Range(TiempoRespawn[0], TiempoRespawn[1]);
                 if (OcupaPadre && Padre.GetComponent<MeshRenderer>().enabled)
-                {
-                    TieneObjeto = true;
-                    try
-                    {
-                        GetComponent<Collider>().enabled = true;
-                        GetComponent<MeshRenderer>().enabled = true;
-                    }
-                    catch
-                    {
-                        foreach (Transform Hijo in transform.GetComponentInChildren<Transform>())
-                        {
-                            if (Hijo.GetComponent<Collider>())
-                            {
-                                Hijo.GetComponent<Collider>().enabled = true;
-                            }
-                            if (Hijo.GetComponent<SkinnedMeshRenderer>())
-                            {
-                                Hijo.GetComponent<SkinnedMeshRenderer>().enabled = true;
-                            }
-                        }
-                    }
-                }
-
+                    ActivarObjeto();
             }
             else
             {
-                try
-                {
-                    GetComponent<Collider>().enabled = false;
-                    GetComponent<MeshRenderer>().enabled = false;
-                }
-                catch
-                {
-                    foreach (Transform Hijo in transform.GetComponentInChildren<Transform>())
-                    {
-                        if (Hijo.GetComponent<Collider>())
-                        {
-                            Hijo.GetComponent<Collider>().enabled = false;
-                        }
-                        if (Hijo.GetComponent<SkinnedMeshRenderer>())
-                        {
-                            Hijo.GetComponent<SkinnedMeshRenderer>().enabled = false;
-                        }
-                    }
-                }
+                DesactivarObjeto();
             }
         }
 
         if (recolectando)
         {
-            DesactivarUI();
+            // Girar hacia el objeto mientras recolecta
             Quaternion objetivo = Quaternion.LookRotation(new Vector3(transform.position.x, gata.position.y, transform.position.z) - gata.position);
             gata.rotation = Quaternion.RotateTowards(gata.rotation, objetivo, velocidadGiro * Time.deltaTime);
+            DesactivarUI();
+        }
+    }
+
+    void ActivarObjeto()
+    {
+        TieneObjeto = true;
+        try
+        {
+            GetComponent<Collider>().enabled = true;
+            GetComponent<MeshRenderer>().enabled = true;
+        }
+        catch
+        {
+            foreach (Transform hijo in transform)
+            {
+                if (hijo.GetComponent<Collider>()) hijo.GetComponent<Collider>().enabled = true;
+                if (hijo.GetComponent<SkinnedMeshRenderer>()) hijo.GetComponent<SkinnedMeshRenderer>().enabled = true;
+            }
+        }
+    }
+
+    void DesactivarObjeto()
+    {
+        try
+        {
+            GetComponent<Collider>().enabled = false;
+            GetComponent<MeshRenderer>().enabled = false;
+        }
+        catch
+        {
+            foreach (Transform hijo in transform)
+            {
+                if (hijo.GetComponent<Collider>()) hijo.GetComponent<Collider>().enabled = false;
+                if (hijo.GetComponent<SkinnedMeshRenderer>()) hijo.GetComponent<SkinnedMeshRenderer>().enabled = false;
+            }
         }
     }
 
     IEnumerator Esperar()
     {
-        float animSpeed = 1f; // Valor por defecto
-
+        float animSpeed = 1f;
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
-        // Verificar si la habilidad está activa o no
+
         if (PlayerPrefs.GetString("Habilidad:" + Habilidad, "No") == "Si" && !string.IsNullOrEmpty(Habilidad))
-        {
-            animSpeed = 2f; // Doble de velocidad si la habilidad está activa
-        }
+            animSpeed = 2f;
+
         gata.GetComponent<Animator>().speed = animSpeed;
 
         yield return new WaitForSeconds(5.22f / animSpeed);
+
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
         gata.GetComponent<Animator>().speed = 1;
 
         recolectando = false;
         gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = false;
+
         if (TieneObjeto)
         {
             DarObjeto();
@@ -164,60 +188,77 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     {
         int cantidad = Random.Range(minimoMaximo[0], minimoMaximo[1]);
         if (PlayerPrefs.GetString("Habilidad:" + Habilidad2, "No") == "Si")
-        {
-            cantidad = cantidad * 2;
-        }
+            cantidad *= 2;
+
         ActualizarInventario(cantidad, objetoQueDa);
     }
 
     void ActualizarInventario(int cantidad, Scr_CreadorObjetos objeto)
     {
-        if (cantidad <= 0 || objeto == null)
-            return;
+        if (cantidad <= 0 || objeto == null) return;
 
         Scr_Inventario inventario = gata.GetChild(7).GetComponent<Scr_Inventario>();
-
-        // INVENTARIO ES LA ÚNICA FUENTE DE VERDAD
-        inventario.AgregarObjeto(
-            objeto.Nombre,
-            cantidad,
-            mostrarUI: true,
-            darXP: true
-        );
+        inventario.AgregarObjeto(objeto.Nombre, cantidad, mostrarUI: true, darXP: true);
     }
-
-
 
     void ActivarUI()
     {
+        uiActiva = true;
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = true;
         gata.GetChild(3).gameObject.SetActive(true);
-        gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
-        gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = teclaIcono;
-        gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = icono;
-        GameObject ui = gata.GetChild(3).GetChild(2).gameObject;
-        GameObject ui2 = gata.GetChild(3).GetChild(3).gameObject;
 
-        if (!ui.activeSelf)
-        {
-            ui.SetActive(false);
-        }
-        if (!ui2.activeSelf)
-        {
-            ui2.SetActive(false);
-        }
+        gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = icono;
 
 
         gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
         gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
+        ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(0), ref iconoActualRecolectar, ref textoActualRecolectar);
     }
+
     void DesactivarUI()
     {
+        uiActiva = false;
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = false;
         gata.GetChild(3).gameObject.SetActive(false);
-        gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
-        gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
-        gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
-        gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
+
+        iconoActualRecolectar = null;
+        textoActualRecolectar = "";
+
+        if (PlayerPrefs.GetString("TutorialPeleas", "NO") == "SI")
+        {
+            gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
+            gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
+        }
+    }
+
+    
+    void ActualizarIconoUI(InputAction action, Transform uiTransform, ref Sprite iconoActual, ref string textoActual)
+    {
+        if (!uiActiva || action == null) return;
+
+        if (IconProvider.UsandoGamepad())
+        {
+            Sprite nuevoIcono = IconProvider.GetIcon(action);
+            if (iconoActual != nuevoIcono)
+            {
+                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
+                uiTransform.GetComponent<Image>().sprite = nuevoIcono;
+                uiTransform.transform.localScale = new Vector3(1, 1, 1);
+                iconoActual = nuevoIcono;
+                textoActual = "";
+            }
+        }
+        else
+        {
+            string tecla = IconProvider.GetKeyText(action);
+            if (textoActual != tecla)
+            {
+                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
+                uiTransform.GetComponent<Image>().sprite = teclaIcono;
+                uiTransform.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+                textoActual = tecla;
+                iconoActual = teclaIcono;
+            }
+        }
     }
 }

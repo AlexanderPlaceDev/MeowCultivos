@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static Scr_Movimiento;
 public class Carpas : MonoBehaviour
@@ -10,7 +11,7 @@ public class Carpas : MonoBehaviour
 
     [SerializeField] Sprite IconoTecla;
     [SerializeField] string Letra;
-
+    [SerializeField] Sprite Icono;
 
     public bool Tiene_Radio;//si puede ver el radio
     public bool Tiene_Reloj;//si puede ver el radio
@@ -27,6 +28,14 @@ public class Carpas : MonoBehaviour
     GameObject Canvas;
 
     public bool dentroHorario;
+
+    PlayerInput playerInput;
+    private InputAction Interactuar;
+    InputIconProvider IconProvider;
+    private Sprite iconoActual = null;
+    private string textoActual = "";
+    private Sprite iconoActualInteractuar = null;
+    private string textoActualInteractuar = "";
     // Start is called before the first frame update
     void Start()
     {
@@ -36,20 +45,18 @@ public class Carpas : MonoBehaviour
         //radio = transform.GetChild(3).gameObject;
         //Reloj = transform.GetChild(1).gameObject;
         Canvas = GameObject.Find("Canvas");
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Interactuar = playerInput.actions["Interactuar"];
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && !openUI && EstaEnRango)
+        if (Interactuar.IsPressed() && !openUI && EstaEnRango)
         {
             StartCoroutine(AparecerUI(1f));
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
-        }
-        if (Input.GetKeyDown(KeyCode.E) && openUI && EstaEnRango)
-        {
-            StartCoroutine(EsconderUI(1f));
-            Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
         }
 
         if ((PlayerPrefs.GetString("Habilidad:Despertador", "No") == "Si") && !transform.GetChild(1).gameObject.activeSelf)
@@ -155,6 +162,42 @@ public class Carpas : MonoBehaviour
         }
     }
 
+    void ActualizarIconoUI(InputAction action, Transform uiTransform, ref Sprite iconoActual, ref string textoActual)
+    {
+        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = true;
+        Gata.GetChild(3).gameObject.SetActive(true);
+
+        Gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = Icono;
+
+
+        Gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
+        Gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
+        if (IconProvider.UsandoGamepad())
+        {
+            Sprite nuevoIcono = IconProvider.GetIcon(action);
+            if (iconoActual != nuevoIcono)
+            {
+                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
+                uiTransform.GetComponent<Image>().sprite = nuevoIcono;
+                uiTransform.transform.localScale = new Vector3(1, 1, 1);
+                iconoActual = nuevoIcono;
+                textoActual = "";
+            }
+        }
+        else
+        {
+            string tecla = IconProvider.GetKeyText(action);
+            if (textoActual != tecla)
+            {
+                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
+                uiTransform.GetComponent<Image>().sprite = IconoTecla;
+                uiTransform.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+                textoActual = tecla;
+                iconoActual = IconoTecla;
+            }
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.name == "Gata" || other.name == "Gato Mesh")
@@ -164,8 +207,8 @@ public class Carpas : MonoBehaviour
                 //Debug.LogError(ContolT.HoraActual > HoraDeSiesta);
                 EstaEnRango = true;
                 Gata.GetChild(3).gameObject.SetActive(true);
-                Gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Letra;
-                Gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = IconoTecla;
+
+                ActualizarIconoUI(Interactuar, Gata.GetChild(3).GetChild(0), ref iconoActualInteractuar, ref textoActualInteractuar);
             }
         }
     }

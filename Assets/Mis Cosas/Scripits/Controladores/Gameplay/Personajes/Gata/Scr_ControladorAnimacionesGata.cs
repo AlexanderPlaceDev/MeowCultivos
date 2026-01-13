@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Scr_ControladorAnimacionesGata : MonoBehaviour
 {
@@ -9,6 +10,12 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
     public KeyCode Talar = KeyCode.Mouse0;
     public KeyCode Recolectar = KeyCode.F;
     public KeyCode Regar = KeyCode.F;
+
+
+    PlayerInput playerInput;
+    private InputAction Talar_;
+    private InputAction Recolectar_;
+    private InputAction Regar_;
 
     public bool PuedeCaminar;
     public bool PuedeTalar;
@@ -31,6 +38,10 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
     public string HabilidadUsando;
     void Start()
     {
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        Talar_ = playerInput.actions["Talar"];
+        Recolectar_ = playerInput.actions["Recolectar"];
+        Regar_ = playerInput.actions["Regar"];
         Anim = GetComponent<Animator>();
         Mov = GetComponent<Scr_Movimiento>();
     }
@@ -105,19 +116,19 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
     {
         if (!Talando && !Recolectando && !Regando)
         {
-            if (PuedeTalar && Input.GetKeyDown(Talar))
+            if (PuedeTalar && Talar_.IsPressed())
             {
                 Talando = true;
                 StartCoroutine(EsperarTalar());
             }
 
-            if (PuedeRecolectar && Input.GetKeyDown(Recolectar))
+            if (PuedeRecolectar && Recolectar_.IsPressed())
             {
                 Recolectando = true;
                 StartCoroutine(EsperarRecolectar());
             }
 
-            if (PuedeRegar && Input.GetKeyDown(Regar))
+            if (PuedeRegar && Regar_.IsPressed())
             {
                 Regando = true;
                 StartCoroutine(EsperarRegar());
