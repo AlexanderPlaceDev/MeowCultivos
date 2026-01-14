@@ -36,6 +36,7 @@ public class Carpas : MonoBehaviour
     private string textoActual = "";
     private Sprite iconoActualInteractuar = null;
     private string textoActualInteractuar = "";
+    ChecarInput Checar_input;
     // Start is called before the first frame update
     void Start()
     {
@@ -45,6 +46,7 @@ public class Carpas : MonoBehaviour
         //radio = transform.GetChild(3).gameObject;
         //Reloj = transform.GetChild(1).gameObject;
         Canvas = GameObject.Find("Canvas");
+        Checar_input = GameObject.Find("Singleton").GetComponent<ChecarInput>();
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         Interactuar = playerInput.actions["Interactuar"];
@@ -57,6 +59,7 @@ public class Carpas : MonoBehaviour
         {
             StartCoroutine(AparecerUI(1f));
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
+            Checar_input.CammbiarAction_UI();
         }
 
         if ((PlayerPrefs.GetString("Habilidad:Despertador", "No") == "Si") && !transform.GetChild(1).gameObject.activeSelf)
@@ -81,6 +84,7 @@ public class Carpas : MonoBehaviour
 
     public void CerrarCarpa()
     {
+        Checar_input.CammbiarAction_Player();
         StartCoroutine(EsconderUI(.5f));
     }
     IEnumerator AparecerUI(float dur)

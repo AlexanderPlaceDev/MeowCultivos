@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -29,6 +30,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
     ChecarInput Checar_input;
     PlayerInput playerInput;
     private InputAction Interactuar;
+    private InputAction Cerrar;
     InputIconProvider IconProvider;
     private Sprite iconoActual = null;
     private string textoActual = "";
@@ -44,6 +46,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         Interactuar = playerInput.actions["Interactuar"];
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         Interactuar = playerInput.actions["Interactuar"];
+        Cerrar = playerInput.actions["Cerrar"];
     }
 
     void Update()
@@ -68,7 +71,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         }
         else
         {
-            if (Interactuar.IsPressed() && EstaEnRango && EstaDentro)
+            if ((Interactuar.IsPressed() || Cerrar.IsPressed()) && EstaEnRango && EstaDentro)
             {
                 if (CanvasMenu != null)
                 {

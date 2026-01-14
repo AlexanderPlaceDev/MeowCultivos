@@ -1,8 +1,12 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEditor.PlayerSettings;
 
 public class Scr_CambiadorMenus : MonoBehaviour
 {
@@ -27,6 +31,7 @@ public class Scr_CambiadorMenus : MonoBehaviour
     public string MenuActual = "Inventario";
     public string MenuArriba = "Habilidades";
     public string MenuAbajo = "Opciones";
+
 
     private void Update()
     {

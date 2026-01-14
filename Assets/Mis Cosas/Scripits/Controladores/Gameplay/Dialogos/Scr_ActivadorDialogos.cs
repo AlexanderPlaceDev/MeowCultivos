@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 /// <summary>
 /// Controla los diálogos, misiones y tiendas con los NPCs.
@@ -37,7 +39,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     [SerializeField] private GameObject camaraTienda;
     [SerializeField] private GameObject camaraDialogo;
     [SerializeField] private GameObject camaraGata;
-
+    [SerializeField] private Sprite teclaIcono;
     //=============================
     //=== REFERENCIAS A SCRIPTS ===
     //=============================
@@ -48,7 +50,13 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     private Transform Gata;
 
     PlayerInput playerInput;
+    InputIconProvider IconProvider;
     private InputAction Interactuar;
+    private InputAction Misiones;
+    private Sprite iconoActualInteractuar = null;
+    private string textoActualInteractuar = "";
+    private Sprite iconoActualMisiones = null;
+    private string textoActualMisiones = "";
     //=====================
     //=== CINEMACHINE ===
     //=====================
@@ -69,7 +77,9 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         sistemaDialogos = GetComponent<Scr_SistemaDialogos>();
         controladorMisiones = Gata.GetChild(4).GetComponent<Scr_ControladorMisiones>();
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         Interactuar = playerInput.actions["Interactuar"];
+        Misiones = playerInput.actions["Misiones"];
     }
 
     //===================
@@ -105,7 +115,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             }
 
             // Ver misiones (F)
-            if (UsaMisionesSecundarias && Input.GetKeyDown(KeyCode.F) && !Hablando && !Comprando)
+            if (UsaMisionesSecundarias && Misiones.IsPressed() && !Hablando && !Comprando)
             {
                 Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
                 ControladorMisionesSecundariasUI.activadorActual = this;
@@ -451,6 +461,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         {
             foreach (var icono in iconos)
                 if (icono != null) icono.SetActive(true);
+            ActualizarIconoUI(Interactuar, iconos[1].transform, ref iconoActualInteractuar, ref textoActualInteractuar);
+            ActualizarIconoUI(Misiones, iconos[3].transform, ref iconoActualMisiones, ref textoActualMisiones);
         }
         else
         {
@@ -464,6 +476,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
                 else
                     iconos[i].SetActive(false);
             }
+
+            ActualizarIconoUI(Interactuar, iconos[1].transform, ref iconoActualInteractuar, ref textoActualInteractuar);
         }
     }
 
@@ -499,5 +513,35 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         if (!other.CompareTag("Gata")) return;
         estaAdentro = false;
         OcultarIconos();
+    }
+
+    void ActualizarIconoUI(InputAction action, Transform uiTransform, ref Sprite iconoActual, ref string textoActual)
+    {
+        //if (ViendoMisiones || action == null ) return;
+
+        if (IconProvider.UsandoGamepad())
+        {
+            Sprite nuevoIcono = IconProvider.GetIcon(action);
+            if (iconoActual != nuevoIcono)
+            {
+                uiTransform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
+                uiTransform.GetComponent<SpriteRenderer>().sprite = nuevoIcono;
+                //uiTransform.transform.localScale = new Vector3(1, 1, 1);
+                iconoActual = nuevoIcono;
+                textoActual = "";
+            }
+        }
+        else
+        {
+            string tecla = IconProvider.GetKeyText(action);
+            if (textoActual != tecla)
+            {
+                uiTransform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
+                uiTransform.GetComponent<SpriteRenderer>().sprite = teclaIcono;
+                //uiTransform.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                textoActual = tecla;
+                iconoActual = teclaIcono;
+            }
+        }
     }
 }

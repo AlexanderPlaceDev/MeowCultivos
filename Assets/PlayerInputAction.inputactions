@@ -87,6 +87,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Misiones",
+                    "type": "Button",
+                    "id": "4904ef04-8755-49c8-9848-8c926fcd7148",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Talar",
                     "type": "Button",
                     "id": "e1865224-a5ba-42f8-ae56-5dc6c20f9f8f",
@@ -117,6 +126,15 @@
                     "name": "Reloj",
                     "type": "Button",
                     "id": "2f0c1abe-d028-48da-9634-c94878f9d676",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Mapa",
+                    "type": "Button",
+                    "id": "bcd33969-18bb-4149-936f-36ef0be280e4",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -1068,6 +1086,94 @@
                     "action": "CamaraLibre",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b42f6b0b-be47-4f56-a482-785430d2a86f",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoard-Mouse",
+                    "action": "Misiones",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b224467c-3270-4b5e-885a-7140386706a8",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Control",
+                    "action": "Misiones",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b348c047-ec15-47ca-afd1-cdecefea1f66",
+                    "path": "<DualShockGamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayController",
+                    "action": "Misiones",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "767ccb7a-d79d-472b-9525-04edb6928bb4",
+                    "path": "<DualSenseGamepadHID>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayController",
+                    "action": "Misiones",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b11fa188-014a-46af-a096-31a822bb4114",
+                    "path": "<Keyboard>/m",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoard-Mouse",
+                    "action": "Mapa",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3be17995-77de-47ff-bd57-965af014bd16",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Control",
+                    "action": "Mapa",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "78faa48c-0f4f-4302-b673-6bbe89ba94d4",
+                    "path": "<DualShockGamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayController",
+                    "action": "Mapa",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "02ce2ffb-4435-4f05-9e6b-b19fb2d462f5",
+                    "path": "<DualSenseGamepadHID>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayController",
+                    "action": "Mapa",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -1085,7 +1191,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Interactuar",
+                    "name": "Cerrar",
                     "type": "PassThrough",
                     "id": "a545a043-d849-4fad-bc53-dbd620ad8e4d",
                     "expectedControlType": "Button",
@@ -1178,15 +1284,6 @@
                     "name": "Regresar",
                     "type": "Button",
                     "id": "d82ddbbd-a29e-4381-9dfd-0f866f5dadbd",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Cerrar",
-                    "type": "Button",
-                    "id": "ba345e04-d01d-4afe-a01a-1fb637c4c9f1",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -1449,17 +1546,6 @@
                 },
                 {
                     "name": "",
-                    "id": "80f9510e-90c5-45c5-97ab-d59db115af94",
-                    "path": "<Keyboard>/tab",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyBoard-Mouse",
-                    "action": "Cerrar",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "b94aa0ea-0cd8-4ce2-8817-a6d592eba5b1",
                     "path": "<Keyboard>/tab",
                     "interactions": "",
@@ -1476,7 +1562,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyBoard-Mouse",
-                    "action": "Interactuar",
+                    "action": "Cerrar",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1487,7 +1573,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Control",
-                    "action": "Interactuar",
+                    "action": "Cerrar",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1498,7 +1584,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "PlayController",
-                    "action": "Interactuar",
+                    "action": "Cerrar",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1509,7 +1595,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "PlayController",
-                    "action": "Interactuar",
+                    "action": "Cerrar",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

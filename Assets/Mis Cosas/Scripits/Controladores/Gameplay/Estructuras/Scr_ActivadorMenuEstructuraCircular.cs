@@ -1,5 +1,6 @@
 ﻿using PrimeTween;
 using TMPro;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -25,6 +26,8 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
     InputIconProvider IconProvider;
     PlayerInput playerInput;
     private InputAction Interactuar;
+    private InputAction Cerrar;
+    ChecarInput Checar_input;
     private Sprite iconoActualInteractuar = null;
     private string textoActualInteractuar = "";
     void Awake()
@@ -35,8 +38,10 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
         Canvas = GameObject.Find("Canvas");
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
 
+        Checar_input = GameObject.Find("Singleton").GetComponent<ChecarInput>();
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         Interactuar = playerInput.actions["Interactuar"];
+        Cerrar = playerInput.actions["Cerrar"];
     }
 
     void Update()
@@ -153,6 +158,7 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
             transform.GetChild(1).gameObject.SetActive(true);//Activa la camara hoguera
             ControladorMenu.GetComponent<Scr_ControladorMenuGameplay>().enabled = false;// Desactiva logica reloj
             Canvas.transform.GetChild(2).gameObject.SetActive(false);//Desactiva UI reloj
+            Checar_input.CammbiarAction_UI();
             /*
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), -250, 1);
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 250, 1);
@@ -160,7 +166,7 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.E) && EstaDentro)
+            if (Cerrar.IsPressed() && EstaDentro)
             {
                 Salir();
             }
@@ -195,6 +201,7 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
         transform.GetChild(2).gameObject.SetActive(false);
         ControladorMenu.GetComponent<Scr_ControladorMenuGameplay>().enabled = true; //Activa logica del reloj
         Canvas.transform.GetChild(2).gameObject.SetActive(true);// Activa UI Reloj
+        Checar_input.CammbiarAction_Player();
         /*
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), 30, 1);
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 0, 1);
