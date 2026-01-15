@@ -79,7 +79,7 @@
                 },
                 {
                     "name": "Recolectar",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "13287ec4-7a99-4a75-a476-74f59a3cda37",
                     "expectedControlType": "Button",
                     "processors": "",
@@ -117,6 +117,15 @@
                     "name": "Regar",
                     "type": "Button",
                     "id": "4038fb2a-f2ac-4cfe-b702-7f6049c086ce",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Recargar",
+                    "type": "Button",
+                    "id": "2ea422b4-c5c3-4d49-9474-6363137c17fa",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -1172,6 +1181,50 @@
                     "processors": "",
                     "groups": "PlayController",
                     "action": "Mapa",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "de74727b-8092-42b2-9bbe-f518071d2be1",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoard-Mouse",
+                    "action": "Recargar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d36b5378-870b-4d39-a43e-d9e95b72e648",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Control",
+                    "action": "Recargar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "95ce85fb-b187-45fe-a034-0489ef9bf75f",
+                    "path": "<DualShockGamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayController",
+                    "action": "Recargar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7717b725-7cfd-47be-9f54-f0f065b6a82a",
+                    "path": "<DualSenseGamepadHID>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayController",
+                    "action": "Recargar",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -1,9 +1,11 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.UI;
 using UnityEngine.InputSystem.Switch;
 using UnityEngine.InputSystem.Utilities;
 using UnityEngine.InputSystem.XInput;
@@ -21,7 +23,7 @@ public class InputIconProvider : MonoBehaviour
     public InputIconSet IconSetActual;
 
     private InputDevice lastDevice;
-
+    public Sprite[] Iconos;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -129,4 +131,62 @@ public class InputIconProvider : MonoBehaviour
         }
         return "";
     }
+
+
+    public void ActualizarIconoUI(InputAction action, Transform uiTransform, ref Sprite iconoActual, ref string textoActual, bool cambiarTam)
+    {
+        if (action == null) return;
+        if (UsandoGamepad())
+        {
+            Sprite nuevoIcono = GetIcon(action);
+            if (iconoActual != nuevoIcono)
+            {
+                Image img = uiTransform.GetComponent<Image>();
+
+                if (img == null)
+                {
+                    uiTransform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
+                    uiTransform.GetComponent<SpriteRenderer>().sprite = nuevoIcono;
+                }
+                else
+                {
+                    uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
+                    uiTransform.GetComponent<Image>().sprite = nuevoIcono;
+                }
+                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
+                iconoActual = nuevoIcono;
+                textoActual = "";
+                if (cambiarTam) 
+                {
+                    uiTransform.transform.localScale = new Vector3(1, 1, 1);
+                }
+            }
+        }
+        else
+        {
+            string tecla = GetKeyText(action);
+            if (textoActual != tecla)
+            {
+                Image img = uiTransform.GetComponent<Image>();
+
+                if (img == null)
+                {
+                    uiTransform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
+                    uiTransform.GetComponent<SpriteRenderer>().sprite = Iconos[0];
+                }
+                else
+                {
+                    uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
+                    uiTransform.GetComponent<Image>().sprite = Iconos[0];
+                }
+                textoActual = tecla;
+                iconoActual = Iconos[0]; 
+                if (cambiarTam)
+                {
+                    uiTransform.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+                }
+            }
+        }
+    }
+
 }

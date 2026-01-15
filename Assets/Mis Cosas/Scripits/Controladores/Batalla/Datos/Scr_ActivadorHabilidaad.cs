@@ -1,10 +1,17 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Scr_ActivadorHabilidad : MonoBehaviour
 {
+    enum hab
+    {
+        Habilidad1,
+        Habilidad2,
+        Ulti,
+    }
     [SerializeField] float TiempoActual = 0;
     [SerializeField] float TiempoMaximo = 5;
     [SerializeField] GameObject TextoTiempo;
@@ -14,7 +21,8 @@ public class Scr_ActivadorHabilidad : MonoBehaviour
     [SerializeField] GameObject Porcentaje;
     [SerializeField] Sprite[] IconosBloqueo;
     [SerializeField] Color[] Colores;
-    [SerializeField] KeyCode Tecla;
+    [SerializeField] hab Input;
+    [SerializeField] GameObject Boton;
     public bool EsPasiva=false;
     public Color ColorHabilidad;
     // Referencia al script Scr_Habilidades
@@ -25,12 +33,22 @@ public class Scr_ActivadorHabilidad : MonoBehaviour
     Scr_DatosArmas DatosArmas;
 
     public int cargaHabilidad;
+
+    PlayerInput playerInput;
+    InputIconProvider IconProvider;
+    private InputAction Habilidad;
+
+    private Sprite iconoActualHabilidad = null;
+    private string textoActualHabilidad = "";
     void Start()
     {
         ControladorBatalla = GameObject.Find("Controlador").GetComponent<Scr_ControladorBatalla>();
         DatosArmas = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>();
         // Buscar el script Scr_Habilidades en el mismo objeto o en otro específico
         habilidades = GetComponent<Scr_Habilidades>();
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Habilidad = playerInput.actions[Input.ToString()];
     }
     private void OnEnable()
     {
@@ -44,10 +62,15 @@ public class Scr_ActivadorHabilidad : MonoBehaviour
             Bloqueo.SetActive(false);
             TextoTiempo.SetActive(false);
         }
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Habilidad = playerInput.actions[Input.ToString()];
     }
     void Update()
     {
         if (EsPasiva) return;
+
+        IconProvider.ActualizarIconoUI(Habilidad, Boton.transform, ref iconoActualHabilidad, ref textoActualHabilidad, false);
         ActivarHabilidad();
         if (EsFinal)
         {
@@ -131,7 +154,7 @@ public class Scr_ActivadorHabilidad : MonoBehaviour
 
     private void ActivarHabilidad()
     {
-        if (Input.GetKeyDown(Tecla) && !EsPasiva)
+        if (Habilidad.IsPressed() && !EsPasiva)
         {
             if (EsFinal)
             {

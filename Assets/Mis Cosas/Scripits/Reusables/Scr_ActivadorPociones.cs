@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Scr_ActivadorPociones : MonoBehaviour
@@ -14,6 +15,7 @@ public class Scr_ActivadorPociones : MonoBehaviour
     [SerializeField] Color[] Colores;
     [SerializeField] KeyCode Tecla;
 
+    [SerializeField] GameObject Boton;
     public int usos;
     public bool Espermanente = false;
     public Color ColorHabilidad;
@@ -27,14 +29,25 @@ public class Scr_ActivadorPociones : MonoBehaviour
 
     public int cargaHabilidad;
 
-    
+
+    PlayerInput playerInput;
+    InputIconProvider IconProvider;
+    private InputAction Pocion;
+
+    private Sprite iconoActualPocion = null;
+    private string textoActualPocion = "";
+
     string PocionChec = "";
     void Start()
     {
         ControladorBatalla = GameObject.Find("Controlador").GetComponent<Scr_ControladorBatalla>();
         DatosArmas = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>();
         // Buscar el script Scr_Habilidades en el mismo objeto o en otro específico
-        Pociones = GetComponent<Scr_ControladorPociones>();
+        Pociones = GetComponent<Scr_ControladorPociones>(); playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Pocion = playerInput.actions["Pocion"];
     }
     private void OnEnable()
     {
@@ -42,12 +55,17 @@ public class Scr_ActivadorPociones : MonoBehaviour
         DatosArmas = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>();
         // Buscar el script Scr_Habilidades en el mismo objeto o en otro específico
         Pociones = GetComponent<Scr_ControladorPociones>();
-        ObtenerPocion();
+        ObtenerPocion(); 
+        Pociones = GetComponent<Scr_ControladorPociones>(); playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Pocion = playerInput.actions["Pocion"];
     }
     void Update()
     {
         if (Espermanente) return;
 
+        IconProvider.ActualizarIconoUI(Pocion, Boton.transform, ref iconoActualPocion, ref textoActualPocion, false);
         ActivarHabilidad();
 
         if (TiempoActual > 0 && usando)
@@ -96,7 +114,7 @@ public class Scr_ActivadorPociones : MonoBehaviour
 
     private void ActivarHabilidad()
     {
-        if (Input.GetKeyDown(Tecla) && !Espermanente)
+        if (Pocion.IsPressed() && !Espermanente)
         {
             if (Pociones != null )
             {

@@ -461,8 +461,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         {
             foreach (var icono in iconos)
                 if (icono != null) icono.SetActive(true);
-            ActualizarIconoUI(Interactuar, iconos[1].transform, ref iconoActualInteractuar, ref textoActualInteractuar);
-            ActualizarIconoUI(Misiones, iconos[3].transform, ref iconoActualMisiones, ref textoActualMisiones);
+            IconProvider.ActualizarIconoUI(Interactuar, iconos[1].transform, ref iconoActualInteractuar, ref textoActualInteractuar,false);
+            IconProvider.ActualizarIconoUI(Misiones, iconos[3].transform, ref iconoActualMisiones, ref textoActualMisiones, false);
         }
         else
         {
@@ -477,7 +477,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
                     iconos[i].SetActive(false);
             }
 
-            ActualizarIconoUI(Interactuar, iconos[1].transform, ref iconoActualInteractuar, ref textoActualInteractuar);
+            IconProvider.ActualizarIconoUI(Interactuar, iconos[1].transform, ref iconoActualInteractuar, ref textoActualInteractuar,false);
         }
     }
 
@@ -515,33 +515,4 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         OcultarIconos();
     }
 
-    void ActualizarIconoUI(InputAction action, Transform uiTransform, ref Sprite iconoActual, ref string textoActual)
-    {
-        //if (ViendoMisiones || action == null ) return;
-
-        if (IconProvider.UsandoGamepad())
-        {
-            Sprite nuevoIcono = IconProvider.GetIcon(action);
-            if (iconoActual != nuevoIcono)
-            {
-                uiTransform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
-                uiTransform.GetComponent<SpriteRenderer>().sprite = nuevoIcono;
-                //uiTransform.transform.localScale = new Vector3(1, 1, 1);
-                iconoActual = nuevoIcono;
-                textoActual = "";
-            }
-        }
-        else
-        {
-            string tecla = IconProvider.GetKeyText(action);
-            if (textoActual != tecla)
-            {
-                uiTransform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
-                uiTransform.GetComponent<SpriteRenderer>().sprite = teclaIcono;
-                //uiTransform.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-                textoActual = tecla;
-                iconoActual = teclaIcono;
-            }
-        }
-    }
 }

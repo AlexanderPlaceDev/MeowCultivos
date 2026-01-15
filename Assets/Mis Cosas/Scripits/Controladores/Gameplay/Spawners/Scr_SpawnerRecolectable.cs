@@ -61,7 +61,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     {
         if (uiActiva)
         {
-            ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(2), ref iconoActualRecolectar, ref textoActualRecolectar);
+            IconProvider.ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(2), ref iconoActualRecolectar, ref textoActualRecolectar, true);
         }
     }
 
@@ -80,7 +80,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
                     if (!uiActiva) ActivarUI();
 
                     // Actualizar icono continuamente
-                    ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(2), ref iconoActualRecolectar, ref textoActualRecolectar);
+                    IconProvider.ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(2), ref iconoActualRecolectar, ref textoActualRecolectar, true);
 
                     // Iniciar animación de recolección
                     if (gata.GetComponent<Animator>().GetBool("Recolectando"))
@@ -212,7 +212,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
 
         gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
         gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
-        ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(0), ref iconoActualRecolectar, ref textoActualRecolectar);
+        IconProvider.ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(0), ref iconoActualRecolectar, ref textoActualRecolectar, true);
     }
 
     void DesactivarUI()
@@ -232,33 +232,4 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     }
 
     
-    void ActualizarIconoUI(InputAction action, Transform uiTransform, ref Sprite iconoActual, ref string textoActual)
-    {
-        if (!uiActiva || action == null) return;
-
-        if (IconProvider.UsandoGamepad())
-        {
-            Sprite nuevoIcono = IconProvider.GetIcon(action);
-            if (iconoActual != nuevoIcono)
-            {
-                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
-                uiTransform.GetComponent<Image>().sprite = nuevoIcono;
-                uiTransform.transform.localScale = new Vector3(1, 1, 1);
-                iconoActual = nuevoIcono;
-                textoActual = "";
-            }
-        }
-        else
-        {
-            string tecla = IconProvider.GetKeyText(action);
-            if (textoActual != tecla)
-            {
-                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
-                uiTransform.GetComponent<Image>().sprite = teclaIcono;
-                uiTransform.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-                textoActual = tecla;
-                iconoActual = teclaIcono;
-            }
-        }
-    }
 }

@@ -13,7 +13,7 @@ public class ChecarInput : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        giro= GameObject.Find("Gata").GetComponent<Scr_GiroGata>();
+        //giro= GameObject.Find("Gata").GetComponent<Scr_GiroGata>();
         playerInput= GetComponent<PlayerInput>();
     }
 

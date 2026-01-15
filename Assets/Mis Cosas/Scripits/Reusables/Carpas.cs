@@ -55,6 +55,10 @@ public class Carpas : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (EstaEnRango)
+        {
+            Actualizar_icono();
+        }
         if (Interactuar.IsPressed() && !openUI && EstaEnRango)
         {
             StartCoroutine(AparecerUI(1f));
@@ -166,7 +170,7 @@ public class Carpas : MonoBehaviour
         }
     }
 
-    void ActualizarIconoUI(InputAction action, Transform uiTransform, ref Sprite iconoActual, ref string textoActual)
+    void Actualizar_icono()
     {
         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = true;
         Gata.GetChild(3).gameObject.SetActive(true);
@@ -176,30 +180,8 @@ public class Carpas : MonoBehaviour
 
         Gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
         Gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
-        if (IconProvider.UsandoGamepad())
-        {
-            Sprite nuevoIcono = IconProvider.GetIcon(action);
-            if (iconoActual != nuevoIcono)
-            {
-                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
-                uiTransform.GetComponent<Image>().sprite = nuevoIcono;
-                uiTransform.transform.localScale = new Vector3(1, 1, 1);
-                iconoActual = nuevoIcono;
-                textoActual = "";
-            }
-        }
-        else
-        {
-            string tecla = IconProvider.GetKeyText(action);
-            if (textoActual != tecla)
-            {
-                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
-                uiTransform.GetComponent<Image>().sprite = IconoTecla;
-                uiTransform.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-                textoActual = tecla;
-                iconoActual = IconoTecla;
-            }
-        }
+
+        IconProvider.ActualizarIconoUI(Interactuar, Gata.GetChild(3).GetChild(0), ref iconoActualInteractuar, ref textoActualInteractuar,true);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -211,8 +193,6 @@ public class Carpas : MonoBehaviour
                 //Debug.LogError(ContolT.HoraActual > HoraDeSiesta);
                 EstaEnRango = true;
                 Gata.GetChild(3).gameObject.SetActive(true);
-
-                ActualizarIconoUI(Interactuar, Gata.GetChild(3).GetChild(0), ref iconoActualInteractuar, ref textoActualInteractuar);
             }
         }
     }

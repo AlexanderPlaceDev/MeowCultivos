@@ -128,7 +128,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
             InputPanelMisiones();
         }
-        ActualizarIconoUI(Mapa, Mapa_.transform, ref iconoActualMapa, ref textoActualMapa);
+        IconProvider.ActualizarIconoUI(Mapa, Mapa_.transform, ref iconoActualMapa, ref textoActualMapa,false);
     }
 
     private void InputPanelMisiones()
@@ -555,31 +555,6 @@ public class Scr_ControladorMisiones : MonoBehaviour
         return true; // Todas las construcciones están listas
     }
 
-    void ActualizarIconoUI(InputAction action, Transform uiTransform, ref Sprite iconoActual, ref string textoActual)
-    {
-        if (action == null) return;
-        if (IconProvider.UsandoGamepad())
-        {
-            Sprite nuevoIcono = IconProvider.GetIcon(action);
-            if (iconoActual != nuevoIcono)
-            {
-                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
-                uiTransform.GetComponent<Image>().sprite = nuevoIcono;
-                iconoActual = nuevoIcono;
-                textoActual = "";
-            }
-        }
-        else
-        {
-            string tecla = IconProvider.GetKeyText(action);
-            if (textoActual != tecla)
-            {
-                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
-                uiTransform.GetComponent<Image>().sprite = teclaIcono;
-                textoActual = tecla;
-                iconoActual = teclaIcono;
-            }
-        }
-    }
+    
 
 }

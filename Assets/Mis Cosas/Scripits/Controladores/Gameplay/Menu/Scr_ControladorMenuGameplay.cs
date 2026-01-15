@@ -69,8 +69,8 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
             Gata.GetComponent<Scr_GiroGata>().enabled = false;
             if ((Regresar.IsPressed() || Reloj.IsPressed())  && !Esperando && !EstaReproduciendoAnimacion())
             {
-                ActualizarIconoUI(Regresar, RelojUI.transform, ref iconoActualRegresar, ref textoActualRegresar);
-                ActualizarIconoUI(Click, Click_.transform, ref iconoActualClick, ref textoActualClick);
+                IconProvider.ActualizarIconoUI(Regresar, RelojUI.transform, ref iconoActualRegresar, ref textoActualRegresar, false);
+                IconProvider.ActualizarIconoUI(Click, Click_.transform, ref iconoActualClick, ref textoActualClick, false);
                 if (Menu.transform.GetChild(2).gameObject.activeSelf)
                 {
                     Esperando = true;
@@ -87,7 +87,7 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
         }
         else
         {
-            ActualizarIconoUI(Reloj, reloj.transform, ref iconoActualReloj, ref textoActualReloj);
+            IconProvider.ActualizarIconoUI(Reloj, reloj.transform, ref iconoActualReloj, ref textoActualReloj, false);
             if ((Regresar.IsPressed() || Reloj.IsPressed()) && !Esperando && !EstaReproduciendoAnimacion())
             {
                 Esperando = true;
@@ -168,34 +168,5 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
     public void ReproducirSonidoBoton(int Sonido)
     {
         Audio.PlayOneShot(Sonidos[Sonido]);
-    }
-
-    void ActualizarIconoUI(InputAction action, Transform uiTransform, ref Sprite iconoActual, ref string textoActual)
-    {
-        if (action == null) return;
-        if (IconProvider.UsandoGamepad())
-        {
-            Sprite nuevoIcono = IconProvider.GetIcon(action);
-            if (iconoActual != nuevoIcono)
-            {
-                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
-                uiTransform.GetComponent<Image>().sprite = nuevoIcono;
-                //uiTransform.transform.localScale = new Vector3(1, 1, 1);
-                iconoActual = nuevoIcono;
-                textoActual = "";
-            }
-        }
-        else
-        {
-            string tecla = IconProvider.GetKeyText(action);
-            if (textoActual != tecla)
-            {
-                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
-                uiTransform.GetComponent<Image>().sprite = teclaIcono;
-                //uiTransform.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-                textoActual = tecla;
-                iconoActual = teclaIcono;
-            }
-        }
     }
 }
