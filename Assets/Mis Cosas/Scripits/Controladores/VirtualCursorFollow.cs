@@ -9,6 +9,7 @@ public class VirtualCursorFollow : MonoBehaviour
 
     void Update()
     {
+        /*
         if (!cursorUI.activeSelf) return;
         if (VirtualMouseGamepad.virtualMouse == null) return;
 
@@ -16,5 +17,7 @@ public class VirtualCursorFollow : MonoBehaviour
 
         // Convertir a posición de pantalla a Canvas si es necesario
         cursorUI.transform.position = pos;
+
+        */
     }
 }

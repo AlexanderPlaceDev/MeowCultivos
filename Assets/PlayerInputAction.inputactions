@@ -571,7 +571,7 @@
                 {
                     "name": "",
                     "id": "c4409d79-c29c-4190-8dda-7d096e378625",
-                    "path": "<Gamepad>/select",
+                    "path": "<Gamepad>/dpad/down",
                     "interactions": "",
                     "processors": "",
                     "groups": "Control",
@@ -1471,7 +1471,7 @@
                     "path": "<VirtualMouse>/{Point}",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Control",
+                    "groups": "Control;PlayController",
                     "action": "Point",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1515,7 +1515,7 @@
                     "path": "<VirtualMouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Control",
+                    "groups": "Control;PlayController",
                     "action": "Click",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1544,11 +1544,55 @@
                 },
                 {
                     "name": "",
+                    "id": "921559ba-ccd7-4a53-8626-016b986aeebe",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Control",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ea5ab4df-0066-4d46-b7e5-3ae9a6a44408",
+                    "path": "<DualShockGamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayController",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bb31f8bb-8c90-461c-863b-5bd4c56f42f7",
+                    "path": "<DualSenseGamepadHID>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayController",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "8836fe42-ba89-4612-879b-abb219ae4c0f",
                     "path": "<Mouse>/scroll",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse;KeyBoard-Mouse",
+                    "action": "ScrollWheel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3cf3ad5e-a0ae-402e-b65b-89296a50df29",
+                    "path": "<VirtualMouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Control;PlayController",
                     "action": "ScrollWheel",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1604,6 +1648,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyBoard-Mouse",
+                    "action": "Regresar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1cb85fab-3cda-4879-ab8d-ef5204178e61",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Control",
                     "action": "Regresar",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1690,6 +1745,11 @@
                     "devicePath": "<Joystick>",
                     "isOptional": false,
                     "isOR": false
+                },
+                {
+                    "devicePath": "<VirtualMouse>",
+                    "isOptional": true,
+                    "isOR": false
                 }
             ]
         },
@@ -1700,6 +1760,11 @@
                 {
                     "devicePath": "<DualShockGamepad>",
                     "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<VirtualMouse>",
+                    "isOptional": true,
                     "isOR": false
                 }
             ]

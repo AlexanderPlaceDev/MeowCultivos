@@ -6,7 +6,6 @@ using UnityEngine.InputSystem.LowLevel;
 
 public class ChecarInput : MonoBehaviour
 {
-    Scr_GiroGata giro;
     PlayerInput playerInput;
     public GameObject EventSystem;
 
@@ -23,42 +22,11 @@ public class ChecarInput : MonoBehaviour
         
     }
 
-    public void CambiarControl()
-    {
-        if (playerInput != null) 
-        {
-            if(playerInput.currentControlScheme== "Control" || playerInput.currentControlScheme == "PlayController")
-            {
-                if (giro != null)
-                {
-                    giro.Control = true;
-                    giro.checar_Control();
-                }
-            }
-            else
-            {
-                if (giro != null)
-                {
-                    giro.Control = false;
-                    giro.checar_Control();
-                }
-            }
-        }
-    }
     public void quepex()
     {
 
         //Debug.LogError("aaa");
     }
-    public void ControlDesconectado()
-    {
-        if (giro != null)
-        {
-            giro.Control = false;
-            giro.checar_Control();
-        }
-    }
-
 
     public void Chechar_controlador_Interfaz()
     {

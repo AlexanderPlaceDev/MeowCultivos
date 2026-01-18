@@ -1,152 +1,160 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.InputSystem.Users;
-
 public class VirtualMouseGamepad : MonoBehaviour
 {
-    [Header("Configuración")]
-    public float speed = 1200f;
+    [SerializeField]
     public PlayerInput playerInput;
-    public string uiActionMapName = "UI";
-    public GameObject cursorUI;
 
-    // Mouse virtual accesible desde otros scripts
-    public static Mouse virtualMouse;
+    [SerializeField]
+    private RectTransform cursorTransform;
+    [SerializeField]
+    private Canvas canvas;
+    [SerializeField]
+    private RectTransform canvasRectTransForm;
 
-    private Gamepad gamepad;
-    private bool virtualMouseActive;
+    [SerializeField]
+    private float cursorSpeed = 1000;
+    [SerializeField]
+    private float padding = 35f;
 
-    void Awake()
+    private bool previousMouseState;
+    private Mouse virtualMouse;
+    private Mouse currentMouse;
+    private Camera mainCamera;
+
+    private string PreviousControlSheme = "";
+    private const string gamepadScheme = "Gamepad";
+    private const string mouseScheme = "Keyboard&Mouse";
+    private const string playControllerScheme = "PlayController";  // Agregado para el esquema de PlayStation
+    private const string uiActionMap = "UI"; // El nombre del Action Map de UI
+
+    private void OnEnable()
     {
-        if (playerInput == null)
-            playerInput = FindObjectOfType<PlayerInput>();
+        mainCamera = Camera.main;
+        currentMouse = Mouse.current;
 
+        // Asegúrate de que el mouse virtual se cree si no existe
         if (virtualMouse == null)
         {
-            virtualMouse = InputSystem.AddDevice<Mouse>();
-            InputState.Change(
-                virtualMouse.position,
-                new Vector2(Screen.width / 2f, Screen.height / 2f)
-            );
+            virtualMouse = (Mouse)InputSystem.AddDevice("VirtualMouse");
+        }
+        else if (!virtualMouse.added)
+        {
+            InputSystem.AddDevice("VirtualMouse");
         }
 
-        InputSystem.onDeviceChange += OnDeviceChange;
+        // Empareja el ratón virtual con el usuario
+        InputUser.PerformPairingWithDevice(virtualMouse, playerInput.user);
+
+        // Inicializa la posición del cursor en el centro de la pantalla
+        if (cursorTransform != null)
+        {
+            Vector2 centerPosition = new Vector2(Screen.width / 2, Screen.height / 2);
+            InputState.Change(virtualMouse.position, centerPosition);
+        }
+
+        InputSystem.onAfterUpdate += UpdateMotion;
+        playerInput.onControlsChanged += OnControlsChange;
     }
 
-    void OnDestroy()
+    private void OnDisable()
     {
-        InputSystem.onDeviceChange -= OnDeviceChange;
+        InputSystem.RemoveDevice(virtualMouse);
+        InputSystem.onAfterUpdate -= UpdateMotion;
+        playerInput.onControlsChanged -= OnControlsChange;
+    }
 
-        if (virtualMouse != null)
+    private void Update()
+    {
+        // Verifica si el Action Map actual es el de UI
+        if (playerInput.currentActionMap.name != uiActionMap)
         {
-            InputSystem.RemoveDevice(virtualMouse);
-            virtualMouse = null;
+            // Si no es el Action Map de UI, desactiva el cursor virtual
+            cursorTransform.gameObject.SetActive(false);
+            Cursor.visible = true;
+        }
+        else
+        {
+            // Si es el Action Map de UI, activa el cursor virtual
+            cursorTransform.gameObject.SetActive(true);
+            Cursor.visible = false;
         }
     }
 
-    void Update()
+    private void UpdateMotion()
     {
-        if (playerInput == null || virtualMouse == null || InputIconProvider.Instance == null)
-            return;
+        // Asegúrate de que no haya controladores nulos
+        if (virtualMouse == null || Gamepad.current == null) { return; }
 
-        bool inUI = playerInput.currentActionMap != null &&
-                    playerInput.currentActionMap.name == uiActionMapName;
+        // Lee el movimiento del stick izquierdo
+        Vector2 DeltaValue = Gamepad.current.leftStick.ReadValue();
+        DeltaValue *= cursorSpeed * Time.deltaTime;
 
-        bool usingGamepad = InputIconProvider.Instance.UsandoGamepad();
+        // Obtiene la posición actual del ratón y calcula la nueva posición
+        Vector2 currentPosition = virtualMouse.position.ReadValue();
+        Vector2 newPostition = currentPosition + DeltaValue;
 
-        if (inUI && usingGamepad && !virtualMouseActive)
-            ActivateVirtualMouse();
-        else if ((!inUI || !usingGamepad) && virtualMouseActive)
-            DeactivateVirtualMouse();
+        // Limita la posición para evitar que se salga de la pantalla
+        newPostition.x = Mathf.Clamp(newPostition.x, padding, Screen.width - padding);
+        newPostition.y = Mathf.Clamp(newPostition.y, padding, Screen.height - padding);
 
-        if (virtualMouseActive && gamepad != null)
-            MoveVirtualMouse();
-    }
+        // Actualiza el estado del ratón virtual
+        InputState.Change(virtualMouse.position, newPostition);
+        InputState.Change(virtualMouse.delta, DeltaValue);
 
-    private void ActivateVirtualMouse()
-    {
-        if (gamepad == null)
-            gamepad = Gamepad.current;
-
-        if (gamepad == null)
-            return;
-
-        virtualMouseActive = true;
-
-        InputState.Change(
-            virtualMouse.position,
-            new Vector2(Screen.width / 2f, Screen.height / 2f)
-        );
-
-        if (cursorUI != null)
-            cursorUI.SetActive(true);
-
-        Debug.Log("✅ Virtual Mouse ACTIVADO");
-    }
-
-    private void DeactivateVirtualMouse()
-    {
-        virtualMouseActive = false;
-
-        if (cursorUI != null)
-            cursorUI.SetActive(false);
-
-        Debug.Log("🖱️ Virtual Mouse DESACTIVADO");
-    }
-
-    private void MoveVirtualMouse()
-    {
-        if (gamepad == null) return;
-
-        Vector2 stick = gamepad.rightStick.ReadValue();
-        if (stick.sqrMagnitude < 0.001f) stick = Vector2.zero;
-
-        Vector2 pos = virtualMouse.position.ReadValue();
-        pos += stick * speed * Time.deltaTime;
-        pos.x = Mathf.Clamp(pos.x, 0, Screen.width);
-        pos.y = Mathf.Clamp(pos.y, 0, Screen.height);
-
-        bool click = gamepad.buttonSouth.isPressed;
-
-        var mouseState = new MouseState
+        // Gestiona el clic del botón A
+        bool aButtonIspressed = Gamepad.current.aButton.IsPressed();
+        if (previousMouseState != aButtonIspressed)
         {
-            position = pos,
-            delta = stick,
-            buttons = (ushort)(click ? 1 : 0)
-        };
+            virtualMouse.CopyState<MouseState>(out var mouseState);
+            mouseState.WithButton(MouseButton.Left, aButtonIspressed);
+            InputState.Change(virtualMouse, mouseState);
+            previousMouseState = aButtonIspressed;
+        }
 
-        InputState.Change(virtualMouse, mouseState);
-
-        if (cursorUI != null && cursorUI.activeSelf)
-            cursorUI.transform.position = pos;
+        // Actualiza la posición del cursor en la UI
+        AnchorCursor(newPostition);
     }
 
-    private void OnDeviceChange(InputDevice device, InputDeviceChange change)
+    private void AnchorCursor(Vector2 position)
     {
-        if (!(device is Gamepad gp)) return;
+        // Convierte la posición de la pantalla a coordenadas locales de la UI
+        Vector2 anchoredPosition;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransForm, position,
+            canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : mainCamera, out anchoredPosition);
+        cursorTransform.anchoredPosition = anchoredPosition;
+    }
 
-        switch (change)
+    private void OnControlsChange(PlayerInput input)
+    {
+        // Detecta el esquema de control y actúa en consecuencia
+        if (playerInput.currentControlScheme == mouseScheme && PreviousControlSheme != mouseScheme)
         {
-            case InputDeviceChange.Added:
-                gamepad = gp;
-                Debug.Log("🎮 Gamepad conectado");
-                break;
-
-            case InputDeviceChange.Removed:
-                if (gp == gamepad)
-                {
-                    gamepad = null;
-                    virtualMouseActive = false;
-                    if (cursorUI != null)
-                        cursorUI.SetActive(false);
-                    Debug.Log("🎮 Gamepad desconectado");
-                }
-                break;
+            cursorTransform.gameObject.SetActive(false);
+            Cursor.visible = true;
+            currentMouse.WarpCursorPosition(virtualMouse.position.ReadValue());
+            PreviousControlSheme = mouseScheme;
+        }
+        else if (playerInput.currentControlScheme == gamepadScheme && PreviousControlSheme != gamepadScheme)
+        {
+            cursorTransform.gameObject.SetActive(true);
+            Cursor.visible = false;
+            InputState.Change(virtualMouse.position, currentMouse.position.ReadDefaultValue());
+            AnchorCursor(currentMouse.position.ReadValue());
+            PreviousControlSheme = gamepadScheme;
+        }
+        else if (playerInput.currentControlScheme == playControllerScheme && PreviousControlSheme != playControllerScheme)
+        {
+            // Agregado manejo para el controlador de PlayStation
+            cursorTransform.gameObject.SetActive(true);
+            Cursor.visible = false;
+            InputState.Change(virtualMouse.position, currentMouse.position.ReadDefaultValue());
+            AnchorCursor(currentMouse.position.ReadValue());
+            PreviousControlSheme = playControllerScheme;
         }
     }
+
 }

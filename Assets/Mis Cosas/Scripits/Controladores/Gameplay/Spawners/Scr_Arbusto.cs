@@ -217,37 +217,9 @@ public class Scr_Arbusto : MonoBehaviour
 
     void ActualizarIconosUI()
     {
-        ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(0), ref iconoActualRecolectar, ref textoActualRecolectar);
-        ActualizarIconoUI(Interactuar, gata.GetChild(3).GetChild(2), ref iconoActualInteractuar, ref textoActualInteractuar);
+        if (!uiActiva) return;
+        IconProvider.ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(0), ref iconoActualRecolectar, ref textoActualRecolectar, true);
+        IconProvider.ActualizarIconoUI(Interactuar, gata.GetChild(3).GetChild(2), ref iconoActualInteractuar, ref textoActualInteractuar, true);
     }
 
-    void ActualizarIconoUI(InputAction action, Transform uiTransform, ref Sprite iconoActual, ref string textoActual)
-    {
-        if (!uiActiva || action == null) return;
-
-        if (IconProvider.UsandoGamepad())
-        {
-            Sprite nuevoIcono = IconProvider.GetIcon(action);
-            if (iconoActual != nuevoIcono)
-            {
-                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
-                uiTransform.GetComponent<Image>().sprite = nuevoIcono;
-                uiTransform.transform.localScale = new Vector3(1,1,1);
-                iconoActual = nuevoIcono;
-                textoActual = "";
-            }
-        }
-        else
-        {
-            string tecla = IconProvider.GetKeyText(action);
-            if (textoActual != tecla)
-            {
-                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
-                uiTransform.GetComponent<Image>().sprite = teclaIcono;
-                uiTransform.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-                textoActual = tecla;
-                iconoActual = teclaIcono;
-            }
-        }
-    }
 }

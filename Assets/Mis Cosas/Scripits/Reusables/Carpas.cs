@@ -32,8 +32,6 @@ public class Carpas : MonoBehaviour
     PlayerInput playerInput;
     private InputAction Interactuar;
     InputIconProvider IconProvider;
-    private Sprite iconoActual = null;
-    private string textoActual = "";
     private Sprite iconoActualInteractuar = null;
     private string textoActualInteractuar = "";
     ChecarInput Checar_input;

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,24 +6,36 @@ using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
-using UnityEngine.InputSystem.Switch;
-using UnityEngine.InputSystem.Utilities;
-using UnityEngine.InputSystem.XInput;
 
 public class InputIconProvider : MonoBehaviour
 {
     public static InputIconProvider Instance;
 
-    [Header("Icon Sets por defecto")]
+    [Header("Icon Sets Gamepad")]
     public InputIconSet xboxGenericIcons;
     public InputIconSet playStationIcons;
-    public InputIconSet tecladoIcons; // opcional
 
     [HideInInspector]
     public InputIconSet IconSetActual;
 
+    [Header("Icono base teclado")]
+    public Sprite tecladoBaseIcon;
+    public Sprite tecladoMoreIcon;
+    [Header("Iconos especiales de Mouse")]
+    public Sprite mouseLeftIcon;
+    public Sprite mouseRightIcon;
+    public Sprite mouseMiddleIcon;
+    public Sprite mouseBackIcon;
+    public Sprite mouseForwardIcon;
+    public Sprite mouseScrollUpIcon;
+    public Sprite mouseScrollDownIcon;
+
     private InputDevice lastDevice;
-    public Sprite[] Iconos;
+
+    private const float STICK_DEADZONE = 0.2f;
+    private const float AXIS_DEADZONE = 0.1f;
+
+    // ---------------------------
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -31,10 +43,11 @@ public class InputIconProvider : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // Suscribirse a la detección global de botones
+        // Suscribirse a la detección global de inputs
         InputSystem.onEvent += OnInputEvent;
     }
 
@@ -43,16 +56,38 @@ public class InputIconProvider : MonoBehaviour
         InputSystem.onEvent -= OnInputEvent;
     }
 
+    // --------------------------------------------------
+    // Detecta último dispositivo usado
+    // --------------------------------------------------
     private void OnInputEvent(InputEventPtr eventPtr, InputDevice device)
     {
-        // Ignorar eventos de tipo stateChange sin botones presionados
-        if (device != null && eventPtr.IsA<StateEvent>() || eventPtr.IsA<DeltaStateEvent>())
+        if (device == null) return;
+
+        bool inputReal = false;
+
+        if (device is Gamepad gamepad)
         {
-            lastDevice = device;
-            UpdateIconSet();
+            // Botones presionados
+            inputReal = gamepad.allControls.Any(c =>
+                (c is ButtonControl btn && btn.wasPressedThisFrame) ||
+                (c is AxisControl axis && Mathf.Abs(axis.ReadValue()) > AXIS_DEADZONE) ||
+                (c is StickControl stick && stick.ReadValue().magnitude > STICK_DEADZONE)
+            );
         }
+        else if (device is Keyboard || device is Mouse)
+        {
+            // Cualquier input de teclado/mouse
+            inputReal = true;
+        }
+
+        if (!inputReal) return;
+        if (lastDevice == device) return;
+
+        lastDevice = device;
+        UpdateIconSet();
     }
 
+    // --------------------------------------------------
     public bool UsandoGamepad()
     {
         return lastDevice is Gamepad;
@@ -67,32 +102,19 @@ public class InputIconProvider : MonoBehaviour
     {
         if (UsandoGamepad())
             IconSetActual = IsPlayStation() ? playStationIcons : xboxGenericIcons;
-        else
-            IconSetActual = tecladoIcons != null ? tecladoIcons : xboxGenericIcons;
     }
 
-    /// <summary>
-    /// Devuelve el sprite según el control de la acción
-    /// </summary>
-    public Sprite GetIcon(InputAction action)
+    // --------------------------------------------------
+    // ICONOS GAMEPAD
+    // --------------------------------------------------
+    public Sprite GetGamepadIcon(InputAction action)
     {
         if (action == null || action.controls.Count == 0) return null;
 
         UpdateIconSet();
-        InputControl control = null;
 
-        // Buscar gamepad primero
-        foreach (var c in action.controls)
-        {
-            if (c.device is Gamepad)
-            {
-                control = c;
-                break;
-            }
-        }
-
-        if (control == null)
-            control = action.controls[0];
+        InputControl control = action.controls
+            .FirstOrDefault(c => c.device is Gamepad) ?? action.controls[0];
 
         string path = control.path.ToLower();
         InputIconSet icons = IconSetActual;
@@ -115,78 +137,108 @@ public class InputIconProvider : MonoBehaviour
         return null;
     }
 
-    /// <summary>
-    /// Devuelve el texto de la tecla si es teclado/mouse
-    /// </summary>
-    public string GetKeyText(InputAction action)
+    // --------------------------------------------------
+    // ICONOS ESPECIALES DE MOUSE
+    // --------------------------------------------------
+    private Sprite GetMouseIcon(InputAction action)
     {
-        if (action == null || action.controls.Count == 0) return "";
-
         foreach (var c in action.controls)
         {
-            if (c.device is Keyboard || c.device is Mouse)
+            if (c.device is not Mouse) continue;
+
+            string path = c.path.ToLower();
+
+            if (path.Contains("leftbutton")) return mouseLeftIcon;
+            if (path.Contains("rightbutton")) return mouseRightIcon;
+            if (path.Contains("middlebutton")) return mouseMiddleIcon;
+            if (path.Contains("backbutton")) return mouseBackIcon;
+            if (path.Contains("forwardbutton")) return mouseForwardIcon;
+
+            if (path.Contains("scroll"))
             {
-                return c.displayName; // Esto da "E", "Space", "Left Mouse Button", etc.
+                float scroll = Mouse.current.scroll.ReadValue().y;
+                if (scroll > 0) return mouseScrollUpIcon;
+                if (scroll < 0) return mouseScrollDownIcon;
             }
+        }
+
+        return null;
+    }
+
+    // --------------------------------------------------
+    // TEXTO TECLADO
+    // --------------------------------------------------
+    private string GetKeyText(InputAction action)
+    {
+        foreach (var c in action.controls)
+        {
+            if (c.device is Keyboard)
+                return c.displayName;
         }
         return "";
     }
 
-
-    public void ActualizarIconoUI(InputAction action, Transform uiTransform, ref Sprite iconoActual, ref string textoActual, bool cambiarTam)
+    // --------------------------------------------------
+    // ACTUALIZACIÓN DE UI
+    // --------------------------------------------------
+    public void ActualizarIconoUI(
+        InputAction action,
+        Transform uiTransform,
+        ref Sprite iconoActual,
+        ref string textoActual,
+        bool cambiarTam)
     {
         if (action == null) return;
+
+        Image img = uiTransform.GetComponent<Image>();
+        SpriteRenderer sr = uiTransform.GetComponent<SpriteRenderer>();
+        TextMeshProUGUI txt = uiTransform.GetComponentInChildren<TextMeshProUGUI>();
+
+        // ---------------- GAMEPAD ----------------
         if (UsandoGamepad())
         {
-            Sprite nuevoIcono = GetIcon(action);
-            if (iconoActual != nuevoIcono)
-            {
-                Image img = uiTransform.GetComponent<Image>();
+            Sprite icon = GetGamepadIcon(action);
+            if (icon == null || iconoActual == icon) return;
 
-                if (img == null)
-                {
-                    uiTransform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
-                    uiTransform.GetComponent<SpriteRenderer>().sprite = nuevoIcono;
-                }
-                else
-                {
-                    uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
-                    uiTransform.GetComponent<Image>().sprite = nuevoIcono;
-                }
-                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
-                iconoActual = nuevoIcono;
-                textoActual = "";
-                if (cambiarTam) 
-                {
-                    uiTransform.transform.localScale = new Vector3(1, 1, 1);
-                }
-            }
+            if (img) img.sprite = icon;
+            if (sr) sr.sprite = icon;
+            if (txt) txt.text = "";
+
+            iconoActual = icon;
+            textoActual = "";
+
+            if (cambiarTam)
+                uiTransform.localScale = Vector3.one;
+
+            return;
         }
-        else
-        {
-            string tecla = GetKeyText(action);
-            if (textoActual != tecla)
-            {
-                Image img = uiTransform.GetComponent<Image>();
 
-                if (img == null)
-                {
-                    uiTransform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
-                    uiTransform.GetComponent<SpriteRenderer>().sprite = Iconos[0];
-                }
+        // ---------------- TECLADO ----------------
+        string tecla = GetKeyText(action);
+
+        // Elegimos el icono según la longitud de la tecla
+        Sprite icono = tecladoBaseIcon;
+        if (tecla.Length > 1)
+            icono = tecladoMoreIcon;
+
+        // Actualizamos solo si cambió el texto o el icono
+        if (textoActual != tecla || iconoActual != icono)
+        {
+            if (img) img.sprite = icono;
+            if (sr) sr.sprite = icono;
+            if (txt) txt.text = tecla;
+
+            textoActual = tecla;
+            iconoActual = icono;
+
+            if (cambiarTam)
+            {
+                // Escala: puedes ajustar según icono
+                if (icono == tecladoMoreIcon)
+                    uiTransform.localScale = Vector3.one * 1.2f;
                 else
-                {
-                    uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
-                    uiTransform.GetComponent<Image>().sprite = Iconos[0];
-                }
-                textoActual = tecla;
-                iconoActual = Iconos[0]; 
-                if (cambiarTam)
-                {
-                    uiTransform.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-                }
+                    uiTransform.localScale = Vector3.one * 1.5f;
             }
         }
     }
-
 }

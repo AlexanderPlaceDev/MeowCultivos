@@ -32,8 +32,6 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
     private InputAction Interactuar;
     private InputAction Cerrar;
     InputIconProvider IconProvider;
-    private Sprite iconoActual = null;
-    private string textoActual = "";
     private Sprite iconoActualInteractuar = null;
     private string textoActualInteractuar = "";
     void Awake()
@@ -106,41 +104,6 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         }
     }
 
-    void ActualizarIconoUI(InputAction action, Transform uiTransform, ref Sprite iconoActual, ref string textoActual)
-    {
-        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = true;
-        Gata.GetChild(3).gameObject.SetActive(true);
-
-        Gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = Icono;
-
-
-        Gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
-        Gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
-        if (IconProvider.UsandoGamepad())
-        {
-            Sprite nuevoIcono = IconProvider.GetIcon(action);
-            if (iconoActual != nuevoIcono)
-            {
-                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
-                uiTransform.GetComponent<Image>().sprite = nuevoIcono;
-                uiTransform.transform.localScale = new Vector3(1, 1, 1);
-                iconoActual = nuevoIcono;
-                textoActual = "";
-            }
-        }
-        else
-        {
-            string tecla = IconProvider.GetKeyText(action);
-            if (textoActual != tecla)
-            {
-                uiTransform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
-                uiTransform.GetComponent<Image>().sprite = IconoTecla;
-                uiTransform.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-                textoActual = tecla;
-                iconoActual = IconoTecla;
-            }
-        }
-    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.name == "Gata" || other.name == "Gato Mesh")
@@ -148,7 +111,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
             EstaEnRango = true;
             Gata.GetChild(3).gameObject.SetActive(true);
 
-            ActualizarIconoUI(Interactuar, Gata.GetChild(3).GetChild(0), ref iconoActualInteractuar, ref textoActualInteractuar);
+            IconProvider.ActualizarIconoUI(Interactuar, Gata.GetChild(3).GetChild(0), ref iconoActualInteractuar, ref textoActualInteractuar,true);
         }
     }
 

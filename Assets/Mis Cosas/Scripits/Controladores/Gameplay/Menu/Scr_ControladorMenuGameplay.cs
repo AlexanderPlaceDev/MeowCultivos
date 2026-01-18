@@ -40,8 +40,6 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
     private string textoActualRegresar = "";
     private Sprite iconoActualReloj = null;
     private string textoActualReloj = "";
-    private Sprite iconoActualReloj1 = null;
-    private string textoActualReloj1 = "";
     private Sprite iconoActualClick= null;
     private string textoActualClick = "";
     [SerializeField] AudioClip[] Sonidos;
