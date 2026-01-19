@@ -28,6 +28,7 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
     private InputAction Interactuar;
     private InputAction Cerrar;
     ChecarInput Checar_input;
+
     private Sprite iconoActualInteractuar = null;
     private string textoActualInteractuar = "";
     void Awake()

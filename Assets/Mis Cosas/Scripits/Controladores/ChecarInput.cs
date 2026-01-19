@@ -56,6 +56,7 @@ public class ChecarInput : MonoBehaviour
     }
     public void CammbiarAction_Player()
     {
+        if (playerInput == null) return;
         playerInput.SwitchCurrentActionMap("Player");
         EventSystem.SetActive(false); VirtualCursorFollow virtualCursor = GameObject.Find("Camera").GetComponent<VirtualCursorFollow>();
         if (virtualCursor != null)

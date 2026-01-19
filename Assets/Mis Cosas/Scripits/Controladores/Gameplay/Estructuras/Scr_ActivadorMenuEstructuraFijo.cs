@@ -41,7 +41,6 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         Canvas = GameObject.Find("Canvas");
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         Checar_input = GameObject.Find("Singleton").GetComponent<ChecarInput>();
-        Interactuar = playerInput.actions["Interactuar"];
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         Interactuar = playerInput.actions["Interactuar"];
         Cerrar = playerInput.actions["Cerrar"];

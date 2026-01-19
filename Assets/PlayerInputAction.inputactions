@@ -114,6 +114,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Dialogo",
+                    "type": "Button",
+                    "id": "39c4892a-5627-401c-b91d-44559bec323f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Regar",
                     "type": "Button",
                     "id": "4038fb2a-f2ac-4cfe-b702-7f6049c086ce",
@@ -516,7 +525,7 @@
                 {
                     "name": "",
                     "id": "137e9b97-bb7c-4907-b595-05a392b6ba29",
-                    "path": "<Keyboard>/e",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyBoard-Mouse",
@@ -879,7 +888,7 @@
                 {
                     "name": "",
                     "id": "8008d547-1bba-4e53-a5f4-1fcfaaabbbd6",
-                    "path": "<Keyboard>/f",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyBoard-Mouse",
@@ -1225,6 +1234,50 @@
                     "processors": "",
                     "groups": "PlayController",
                     "action": "Recargar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9153e9bd-5ae5-4b88-8ed6-70ab8b523de2",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoard-Mouse",
+                    "action": "Dialogo",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5a33ce78-f16e-46cf-b8b3-b851d068be5c",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Control",
+                    "action": "Dialogo",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9147a6e6-1a3b-49f4-8f13-9c4eea33f135",
+                    "path": "<DualShockGamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayController",
+                    "action": "Dialogo",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bc3119c5-6481-4967-ba79-8344a763ec53",
+                    "path": "<DualSenseGamepadHID>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayController",
+                    "action": "Dialogo",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

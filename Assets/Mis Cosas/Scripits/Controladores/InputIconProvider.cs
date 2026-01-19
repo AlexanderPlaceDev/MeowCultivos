@@ -147,7 +147,7 @@ public class InputIconProvider : MonoBehaviour
             if (c.device is not Mouse) continue;
 
             string path = c.path.ToLower();
-
+            Debug.LogError(path);
             if (path.Contains("leftbutton")) return mouseLeftIcon;
             if (path.Contains("rightbutton")) return mouseRightIcon;
             if (path.Contains("middlebutton")) return mouseMiddleIcon;
@@ -218,26 +218,56 @@ public class InputIconProvider : MonoBehaviour
 
         // Elegimos el icono según la longitud de la tecla
         Sprite icono = tecladoBaseIcon;
+        bool ocupaText = false;
         if (tecla.Length > 1)
-            icono = tecladoMoreIcon;
-
-        // Actualizamos solo si cambió el texto o el icono
-        if (textoActual != tecla || iconoActual != icono)
         {
+            icono = GetMouseIcon(action);
+            if (icono == null)
+            {
+                icono = tecladoMoreIcon;
+            }
+            else
+            {
+                ocupaText=true;
+            }
+        }
+
+        if (ocupaText)
+        {
+            if (icono == null || iconoActual == icono) return;
+
             if (img) img.sprite = icono;
             if (sr) sr.sprite = icono;
-            if (txt) txt.text = tecla;
+            if (txt) txt.text = "";
 
-            textoActual = tecla;
             iconoActual = icono;
+            textoActual = "";
 
             if (cambiarTam)
+                uiTransform.localScale = Vector3.one;
+
+            return;
+        }
+        else
+        {
+            // Actualizamos solo si cambió el texto o el icono
+            if (textoActual != tecla || iconoActual != icono)
             {
-                // Escala: puedes ajustar según icono
-                if (icono == tecladoMoreIcon)
-                    uiTransform.localScale = Vector3.one * 1.2f;
-                else
-                    uiTransform.localScale = Vector3.one * 1.5f;
+                if (img) img.sprite = icono;
+                if (sr) sr.sprite = icono;
+                if (txt) txt.text = tecla;
+
+                textoActual = tecla;
+                iconoActual = icono;
+
+                if (cambiarTam)
+                {
+                    // Escala: puedes ajustar según icono
+                    if (icono == tecladoMoreIcon)
+                        uiTransform.localScale = Vector3.one * 1.2f;
+                    else
+                        uiTransform.localScale = Vector3.one * 1.5f;
+                }
             }
         }
     }

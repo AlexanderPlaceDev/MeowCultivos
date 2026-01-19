@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Scr_SistemaDialogos : MonoBehaviour
@@ -45,6 +46,13 @@ public class Scr_SistemaDialogos : MonoBehaviour
     private int ultimoIndiceAudio = -1;
 
 
+    public GameObject Boton;
+    PlayerInput playerInput;
+    private InputAction Dialogo;
+    InputIconProvider IconProvider;
+    private Sprite iconoActualDialogo = null;
+    private string textoActualDialogo = "";
+
     //Tutoria Pelea
     private Tutorial_peleas Tutopeleas;
 
@@ -61,13 +69,20 @@ public class Scr_SistemaDialogos : MonoBehaviour
 
         activadorDialogos = GetComponent<Scr_ActivadorDialogos>();
         Tutopeleas = GetComponent<Tutorial_peleas>();
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Dialogo = playerInput.actions["Dialogo"];
     }
 
     private void Update()
     {
+        if (Texto.transform.parent.gameObject.activeSelf)
+        {
+            IconProvider.ActualizarIconoUI(Dialogo, Boton.transform, ref iconoActualDialogo, ref textoActualDialogo, false);
+        }
         if (!EnPausa && (EsCinematica || activadorDialogos != null))
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Dialogo.WasPressedThisFrame())
             {
                 if (Leyendo)
                     SaltarDialogo();
@@ -77,7 +92,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
         }
         else if (!EnPausa && Tutopeleas != null)
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Dialogo.WasPressedThisFrame())
             {
                 if (Leyendo)
                     SaltarDialogo();
