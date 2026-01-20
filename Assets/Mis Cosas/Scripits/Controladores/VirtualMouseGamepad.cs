@@ -25,12 +25,15 @@ public class VirtualMouseGamepad : MonoBehaviour
     private Mouse currentMouse;
     private Camera mainCamera;
 
+    private bool TieneControl;
+
     private string PreviousControlSheme = "";
     private const string gamepadScheme = "Gamepad";
     private const string mouseScheme = "Keyboard&Mouse";
     private const string playControllerScheme = "PlayController";  // Agregado para el esquema de PlayStation
     private const string uiActionMap = "UI"; // El nombre del Action Map de UI
 
+    InputIconProvider IconProvider;
     private void OnEnable()
     {
         mainCamera = Camera.main;
@@ -56,6 +59,8 @@ public class VirtualMouseGamepad : MonoBehaviour
             InputState.Change(virtualMouse.position, centerPosition);
         }
 
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+
         InputSystem.onAfterUpdate += UpdateMotion;
         playerInput.onControlsChanged += OnControlsChange;
     }
@@ -69,26 +74,24 @@ public class VirtualMouseGamepad : MonoBehaviour
 
     private void Update()
     {
-        // Verifica si el Action Map actual es el de UI
-        if (playerInput.currentActionMap.name != uiActionMap)
+        if (playerInput.currentActionMap.name == uiActionMap && Gamepad.current != null)
         {
             // Si no es el Action Map de UI, desactiva el cursor virtual
-            cursorTransform.gameObject.SetActive(false);
-            Cursor.visible = true;
+            cursorTransform.gameObject.SetActive(true);
+            Cursor.visible = false;
         }
         else
         {
             // Si es el Action Map de UI, activa el cursor virtual
-            cursorTransform.gameObject.SetActive(true);
-            Cursor.visible = false;
+            cursorTransform.gameObject.SetActive(false);
+            Cursor.visible = true;
         }
     }
 
     private void UpdateMotion()
     {
         // Asegúrate de que no haya controladores nulos
-        if (virtualMouse == null || Gamepad.current == null) { return; }
-
+        if (virtualMouse == null || Gamepad.current == null){ return; }
         // Lee el movimiento del stick izquierdo
         Vector2 DeltaValue = Gamepad.current.leftStick.ReadValue();
         DeltaValue *= cursorSpeed * Time.deltaTime;
@@ -137,6 +140,7 @@ public class VirtualMouseGamepad : MonoBehaviour
             Cursor.visible = true;
             currentMouse.WarpCursorPosition(virtualMouse.position.ReadValue());
             PreviousControlSheme = mouseScheme;
+            Debug.LogError("es mouse");
         }
         else if (playerInput.currentControlScheme == gamepadScheme && PreviousControlSheme != gamepadScheme)
         {
@@ -145,6 +149,7 @@ public class VirtualMouseGamepad : MonoBehaviour
             InputState.Change(virtualMouse.position, currentMouse.position.ReadDefaultValue());
             AnchorCursor(currentMouse.position.ReadValue());
             PreviousControlSheme = gamepadScheme;
+            Debug.LogError("es pad");
         }
         else if (playerInput.currentControlScheme == playControllerScheme && PreviousControlSheme != playControllerScheme)
         {
@@ -154,6 +159,8 @@ public class VirtualMouseGamepad : MonoBehaviour
             InputState.Change(virtualMouse.position, currentMouse.position.ReadDefaultValue());
             AnchorCursor(currentMouse.position.ReadValue());
             PreviousControlSheme = playControllerScheme;
+
+            Debug.LogError("es play");
         }
     }
 

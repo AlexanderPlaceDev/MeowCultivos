@@ -218,8 +218,9 @@ public class InputIconProvider : MonoBehaviour
 
         // Elegimos el icono según la longitud de la tecla
         Sprite icono = tecladoBaseIcon;
+
         bool ocupaText = false;
-        if (tecla.Length > 1)
+        if (tecla.Length > 1 || tecla == "")
         {
             icono = GetMouseIcon(action);
             if (icono == null)
@@ -228,7 +229,7 @@ public class InputIconProvider : MonoBehaviour
             }
             else
             {
-                ocupaText=true;
+                ocupaText = true;
             }
         }
 

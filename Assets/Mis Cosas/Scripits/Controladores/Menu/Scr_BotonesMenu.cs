@@ -11,10 +11,12 @@ public class Scr_BotonesMenu : MonoBehaviour
     [SerializeField] Color[] Colores;
     Scr_ControladorMenu Controlador;
 
+    ChecarInput Checar_input;
     bool EstaAdentro;
     private void Start()
     {
         Controlador = GameObject.Find("Controlador").GetComponent<Scr_ControladorMenu>();
+        Checar_input = GameObject.Find("Singleton").GetComponent<ChecarInput>();
     }
 
     private void Update()
@@ -81,6 +83,7 @@ public class Scr_BotonesMenu : MonoBehaviour
     {
         if (!Controlador.EstaEnOpciones)
         {
+            Checar_input.CammbiarAction_Player();
             Tween.Color(GameObject.Find("Pantalla").GetComponent<SpriteRenderer>(), Color.black, 4, Ease.Default, cycles: 1);
             StartCoroutine(CambiarEscena());
         }

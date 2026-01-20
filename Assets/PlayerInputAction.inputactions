@@ -525,7 +525,7 @@
                 {
                     "name": "",
                     "id": "137e9b97-bb7c-4907-b595-05a392b6ba29",
-                    "path": "<Mouse>/rightButton",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyBoard-Mouse",
@@ -975,22 +975,22 @@
                 },
                 {
                     "name": "",
-                    "id": "bbc71d87-1715-4b2e-9e5a-538d4a1425d9",
-                    "path": "<Gamepad>/rightStick",
+                    "id": "7ef4c61a-0225-4e72-9622-8b1a28442068",
+                    "path": "<Pointer>/delta",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Control",
+                    "groups": "KeyBoard-Mouse",
                     "action": "Mirar",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "7ef4c61a-0225-4e72-9622-8b1a28442068",
-                    "path": "<Pointer>/delta",
+                    "id": "bbc71d87-1715-4b2e-9e5a-538d4a1425d9",
+                    "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
-                    "groups": "KeyBoard-Mouse",
+                    "groups": "Control",
                     "action": "Mirar",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1240,7 +1240,7 @@
                 {
                     "name": "",
                     "id": "9153e9bd-5ae5-4b88-8ed6-70ab8b523de2",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyBoard-Mouse",
