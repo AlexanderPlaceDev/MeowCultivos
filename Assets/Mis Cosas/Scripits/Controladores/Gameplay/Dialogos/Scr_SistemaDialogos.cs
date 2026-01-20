@@ -49,6 +49,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
     public GameObject Boton;
     PlayerInput playerInput;
     private InputAction Dialogo;
+    private InputAction DialogoUI;
     InputIconProvider IconProvider;
     private Sprite iconoActualDialogo = null;
     private string textoActualDialogo = "";
@@ -72,6 +73,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         Dialogo = playerInput.actions["Dialogo"];
+        DialogoUI = playerInput.actions["DialogoUI"];
     }
 
     private void Update()
@@ -82,7 +84,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
         }
         if (!EnPausa && (EsCinematica || activadorDialogos != null))
         {
-            if (Dialogo.WasPressedThisFrame())
+            if (Dialogo.WasPressedThisFrame() || DialogoUI.WasPressedThisFrame())
             {
                 if (Leyendo)
                     SaltarDialogo();
@@ -92,7 +94,7 @@ public class Scr_SistemaDialogos : MonoBehaviour
         }
         else if (!EnPausa && Tutopeleas != null)
         {
-            if (Dialogo.WasPressedThisFrame())
+            if (Dialogo.WasPressedThisFrame() || DialogoUI.WasPressedThisFrame())
             {
                 if (Leyendo)
                     SaltarDialogo();

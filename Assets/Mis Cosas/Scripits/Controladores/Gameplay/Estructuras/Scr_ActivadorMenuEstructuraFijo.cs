@@ -48,7 +48,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
 
     void Update()
     {
-        if (Interactuar.IsPressed() && EstaEnRango && !EstaDentro)
+        if (Interactuar.WasPressedThisFrame() && EstaEnRango && !EstaDentro)
         {
             if (CanvasMenu != null)
             {
@@ -68,7 +68,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         }
         else
         {
-            if ((Interactuar.IsPressed() || Cerrar.IsPressed()) && EstaEnRango && EstaDentro)
+            if ((Interactuar.WasPressedThisFrame() || Cerrar.WasPressedThisFrame()) && EstaEnRango && EstaDentro)
             {
                 if (CanvasMenu != null)
                 {

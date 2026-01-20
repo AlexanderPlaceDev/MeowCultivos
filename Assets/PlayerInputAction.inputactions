@@ -525,7 +525,7 @@
                 {
                     "name": "",
                     "id": "137e9b97-bb7c-4907-b595-05a392b6ba29",
-                    "path": "<Mouse>/rightButton",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyBoard-Mouse",
@@ -975,22 +975,22 @@
                 },
                 {
                     "name": "",
-                    "id": "bbc71d87-1715-4b2e-9e5a-538d4a1425d9",
-                    "path": "<Gamepad>/rightStick",
+                    "id": "7ef4c61a-0225-4e72-9622-8b1a28442068",
+                    "path": "<Pointer>/delta",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Control",
+                    "groups": "KeyBoard-Mouse",
                     "action": "Mirar",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "7ef4c61a-0225-4e72-9622-8b1a28442068",
-                    "path": "<Pointer>/delta",
+                    "id": "bbc71d87-1715-4b2e-9e5a-538d4a1425d9",
+                    "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
-                    "groups": "KeyBoard-Mouse",
+                    "groups": "Control",
                     "action": "Mirar",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1240,7 +1240,7 @@
                 {
                     "name": "",
                     "id": "9153e9bd-5ae5-4b88-8ed6-70ab8b523de2",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyBoard-Mouse",
@@ -1292,6 +1292,15 @@
                     "type": "PassThrough",
                     "id": "8dc21d0b-d703-45b2-85cb-d8831dc30ab7",
                     "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "DialogoUI",
+                    "type": "Button",
+                    "id": "be5e4515-bbab-4901-a7d2-f37bc193c59e",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -1757,6 +1766,50 @@
                     "processors": "",
                     "groups": "PlayController",
                     "action": "Cerrar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e55732ba-fd49-4841-a123-10fbf6696494",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoard-Mouse",
+                    "action": "DialogoUI",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "717448a3-95c5-466f-93b3-76a4066f879d",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Control",
+                    "action": "DialogoUI",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "efa4e713-35e0-4570-8934-3760253e24c3",
+                    "path": "<DualShockGamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayController",
+                    "action": "DialogoUI",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a2e66e89-d3b0-4770-bdbd-2db0f4c120c8",
+                    "path": "<DualSenseGamepadHID>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayController",
+                    "action": "DialogoUI",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
