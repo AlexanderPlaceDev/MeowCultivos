@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static Fruta_drop;
 
@@ -101,6 +102,12 @@ public class Scr_ControladorArmas : MonoBehaviour
     private float tiempoActualFruta = 0f;
     private Fruta_drop.EstadoFruta estadoActual;
     private Renderer rendererFruta;
+
+    PlayerInput playerInput;
+    InputIconProvider IconProvider;
+    private InputAction Dispara;
+    private InputAction Recargar;
+    private InputAction Recolectar;
     void Start()
     {
         //aplica el volumen 
@@ -108,8 +115,14 @@ public class Scr_ControladorArmas : MonoBehaviour
         int volumen_ambiental = PlayerPrefs.GetInt("Volumen_Combate", 20);
         float volumen = (volumen_general * volumen_ambiental) / 100;
         camara = Camera.main;
-        //Debug.LogError(PlayerPrefs.GetInt("Volumen", 50) + "//" + PlayerPrefs.GetInt("Volumen_Combate", 20) );
-        //Debug.LogError(volumen + "//"+ volumen_general +"//" + volumen_ambiental);
+
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Dispara = playerInput.actions["Disparar"];
+        Recargar = playerInput.actions["Recargar"];
+        Recolectar = playerInput.actions["Recolectar"];
+
+
         source.volume = volumen;
         if (ObjetoArmas == null) return;
         //tenia el armaActual pero por ahora es 0
@@ -211,7 +224,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         if (Tipo != "Automatica")
         {
             // Modo automático: Dispara continuamente mientras se mantiene presionado el botón del ratón
-            if (Input.GetKey(KeyCode.Mouse0) && !Atacando && PuedeDisparar() && temporizadorDisparo >= (cadencia * MenosCadencia))
+            if (Dispara.IsPressed() && !Atacando && PuedeDisparar() && temporizadorDisparo >= (cadencia * MenosCadencia))
             {
                 Disparar();
                 temporizadorDisparo = 0f; // Reinicia el temporizador después de disparar
@@ -220,11 +233,11 @@ public class Scr_ControladorArmas : MonoBehaviour
         else
         {
             // Modo semiautomático: Dispara solo cuando se presiona el botón
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (Dispara.IsPressed())
             {
                 Manteniendo = true;
             }
-            if (Input.GetKeyUp(KeyCode.Mouse0))
+            if (!Dispara.IsPressed())
             {
                 Manteniendo = false;
             }
@@ -240,7 +253,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             }
         }
         //prueba de recarga
-        if (Input.GetKey(KeyCode.R))
+        if (Recargar.IsPressed())
         {
             RecargarBala();
         }
@@ -764,7 +777,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     }
     void RecolectarFruta()
     {
-        if(Fruta!=null && Input.GetKeyDown(KeyCode.E) && !TieneFruta)
+        if(Fruta!=null && Recolectar.IsPressed() && !TieneFruta)
         {
             TieneFruta = true;
             for (int i = 0; i < ObjetoArmas_reales.Length; i++)
@@ -816,7 +829,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             Anim.Play("FrutaAgarrada");
             Destroy(Fruta);
         }
-        else if ((Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Mouse0)) && TieneFruta)
+        else if (/*Recolectar.IsPressed() ||*/ Dispara.IsPressed() && TieneFruta)
         {
             DestruirFruta();
         }

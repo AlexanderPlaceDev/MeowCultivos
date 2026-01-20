@@ -2,7 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 /// <summary>
 /// Controla los diálogos, misiones y tiendas con los NPCs.
@@ -36,7 +39,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     [SerializeField] private GameObject camaraTienda;
     [SerializeField] private GameObject camaraDialogo;
     [SerializeField] private GameObject camaraGata;
-
+    [SerializeField] private Sprite teclaIcono;
     //=============================
     //=== REFERENCIAS A SCRIPTS ===
     //=============================
@@ -46,6 +49,14 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     private Scr_ControladorMisiones controladorMisiones;
     private Transform Gata;
 
+    PlayerInput playerInput;
+    InputIconProvider IconProvider;
+    private InputAction Interactuar;
+    private InputAction Misiones;
+    private Sprite iconoActualInteractuar = null;
+    private string textoActualInteractuar = "";
+    private Sprite iconoActualMisiones = null;
+    private string textoActualMisiones = "";
     //=====================
     //=== CINEMACHINE ===
     //=====================
@@ -65,6 +76,10 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
         sistemaDialogos = GetComponent<Scr_SistemaDialogos>();
         controladorMisiones = Gata.GetChild(4).GetComponent<Scr_ControladorMisiones>();
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Interactuar = playerInput.actions["Interactuar"];
+        Misiones = playerInput.actions["Misiones"];
     }
 
     //===================
@@ -84,7 +99,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         if (!autoIniciarDialogo)
         {
             // Iniciar diálogo (E)
-            if (Input.GetKeyDown(KeyCode.E) && !ViendoMisiones && !Comprando)
+            if (Interactuar.IsPressed() && !ViendoMisiones && !Comprando)
             {
                 if (EsTienda)
                 {
@@ -100,7 +115,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             }
 
             // Ver misiones (F)
-            if (UsaMisionesSecundarias && Input.GetKeyDown(KeyCode.F) && !Hablando && !Comprando)
+            if (UsaMisionesSecundarias && Misiones.IsPressed() && !Hablando && !Comprando)
             {
                 Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
                 ControladorMisionesSecundariasUI.activadorActual = this;
@@ -446,6 +461,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         {
             foreach (var icono in iconos)
                 if (icono != null) icono.SetActive(true);
+            IconProvider.ActualizarIconoUI(Interactuar, iconos[1].transform, ref iconoActualInteractuar, ref textoActualInteractuar,false);
+            IconProvider.ActualizarIconoUI(Misiones, iconos[3].transform, ref iconoActualMisiones, ref textoActualMisiones, false);
         }
         else
         {
@@ -459,6 +476,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
                 else
                     iconos[i].SetActive(false);
             }
+
+            IconProvider.ActualizarIconoUI(Interactuar, iconos[1].transform, ref iconoActualInteractuar, ref textoActualInteractuar,false);
         }
     }
 
@@ -495,4 +514,5 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         estaAdentro = false;
         OcultarIconos();
     }
+
 }

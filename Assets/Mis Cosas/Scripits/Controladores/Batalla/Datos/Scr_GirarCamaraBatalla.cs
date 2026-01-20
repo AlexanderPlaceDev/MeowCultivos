@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Scr_GirarCamaraBatalla : MonoBehaviour
 {
     [Header("Sensibilidad")]
-    public float mouseSensitivityX = 100f;
-    public float mouseSensitivityY = 100f;
+    public float mouseSensitivityX = 30;
+    public float mouseSensitivityY = 30f;
+    public float JoystikcX = 20f;
+    public float JoystikcY = 20f;
 
     [Header("Suavizado")]
     [Range(0f, 1f)] public float smoothFactor = 0.05f; // entre 0.0 y 1.0 (0 = instantáneo, 1 = muy lento)
@@ -15,6 +18,10 @@ public class Scr_GirarCamaraBatalla : MonoBehaviour
     private float xRotation;
     private float yRotation;
 
+
+    PlayerInput playerInput;
+    InputIconProvider IconProvider;
+    private InputAction Mirar;
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -25,14 +32,25 @@ public class Scr_GirarCamaraBatalla : MonoBehaviour
 
         // Inicializa las rotaciones
         yRotation = playerBody.eulerAngles.y;
-        xRotation = transform.localEulerAngles.x;
+        xRotation = transform.localEulerAngles.x; 
+        
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Mirar = playerInput.actions["Mirar"];
     }
 
     void Update()
     {
         // --- Lectura del ratón ---
-        Vector2 mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
-        mouseDelta *= new Vector2(mouseSensitivityX, mouseSensitivityY) * Time.deltaTime;
+        Vector2 mouseDelta = Mirar.ReadValue<Vector2>();
+        if (IconProvider.UsandoGamepad())
+        {
+            mouseDelta *= new Vector2(JoystikcX, JoystikcY) * Time.deltaTime;
+        }
+        else
+        {
+            mouseDelta *= new Vector2(mouseSensitivityX, mouseSensitivityY) * Time.deltaTime;
+        }
 
         // --- Suavizado real ---
         currentMouseDelta = Vector2.SmoothDamp(currentMouseDelta, mouseDelta, ref currentMouseDeltaVelocity, smoothFactor);

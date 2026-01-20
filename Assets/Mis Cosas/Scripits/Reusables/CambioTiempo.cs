@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -37,6 +38,10 @@ public class CambioTiempo : MonoBehaviour
     private int maxValueM = 60;
 
     Transform Gata;
+
+    PlayerInput playerInput;
+    private InputAction Cerrar;
+    ChecarInput Checar_input;
     // Start is called before the first frame update
     void Start()
     {
@@ -45,6 +50,8 @@ public class CambioTiempo : MonoBehaviour
         ControlT = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
         EventosGenerales = GameObject.Find("EventosGenerales").GetComponent<Controlador_EventosGenerales>();
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        Cerrar = playerInput.actions["Cerrar"];
         cabRadio();
         activarDespetador();
     }
@@ -296,6 +303,9 @@ public class CambioTiempo : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Cerrar.IsPressed())
+        {
+            cerrarUI();
+        }
     }
 }

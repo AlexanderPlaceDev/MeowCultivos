@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Scr_ControladorMenuGameplay : MonoBehaviour
@@ -18,13 +19,29 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
     [SerializeField] TextMeshProUGUI XP;
     [SerializeField] TextMeshProUGUI Dinero;
 
+    [SerializeField] private Sprite teclaIcono;
     bool Esperando = false;
     bool EstaEnMenu = false;
     float TiempoDeEspera = 0;
     GameObject Gata;
     private Animator animator;
 
+    [SerializeField] GameObject reloj;
+    [SerializeField] GameObject RelojUI;
+    [SerializeField] GameObject Click_;
 
+    PlayerInput playerInput;
+    InputIconProvider IconProvider;
+    private InputAction Reloj;
+    private InputAction Regresar;
+    private InputAction Click;
+    ChecarInput Checar_input;
+    private Sprite iconoActualRegresar = null;
+    private string textoActualRegresar = "";
+    private Sprite iconoActualReloj = null;
+    private string textoActualReloj = "";
+    private Sprite iconoActualClick= null;
+    private string textoActualClick = "";
     [SerializeField] AudioClip[] Sonidos;
     [SerializeField] AudioSource Audio;
     void Start()
@@ -32,6 +49,12 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
         // Busca y guarda una referencia al objeto de la gata
         Gata = GameObject.Find("Gata");
         animator = Menu.GetComponent<Animator>();
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Reloj = playerInput.actions["Reloj"];
+        Regresar = playerInput.actions["Regresar"];
+        Click = playerInput.actions["click"];
+        Checar_input = GameObject.Find("Singleton").GetComponent<ChecarInput>();
     }
 
     void Update()
@@ -42,14 +65,16 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
         {
             // Desactiva los componentes de movimiento de la gata mientras está en el menú
             Gata.GetComponent<Scr_GiroGata>().enabled = false;
-            if (Input.GetKeyDown(KeyCode.Tab) && !Esperando && !EstaReproduciendoAnimacion())
+            if ((Regresar.IsPressed() || Reloj.IsPressed())  && !Esperando && !EstaReproduciendoAnimacion())
             {
-
+                IconProvider.ActualizarIconoUI(Regresar, RelojUI.transform, ref iconoActualRegresar, ref textoActualRegresar, false);
+                IconProvider.ActualizarIconoUI(Click, Click_.transform, ref iconoActualClick, ref textoActualClick, false);
                 if (Menu.transform.GetChild(2).gameObject.activeSelf)
                 {
                     Esperando = true;
                     Menu.GetComponent<Animator>().Play("Cerrar");
                     Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
+                    Checar_input.CammbiarAction_Player();
                 }
                 else
                 {
@@ -60,13 +85,15 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.Tab) && !Esperando && !EstaReproduciendoAnimacion())
+            IconProvider.ActualizarIconoUI(Reloj, reloj.transform, ref iconoActualReloj, ref textoActualReloj, false);
+            if ((Regresar.IsPressed() || Reloj.IsPressed()) && !Esperando && !EstaReproduciendoAnimacion())
             {
                 Esperando = true;
                 RestablecerColor();
                 Menu.SetActive(true);
                 Menu.GetComponent<Animator>().Play("Aparecer");
                 Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
+                Checar_input.CammbiarAction_UI();
             }
         }
 

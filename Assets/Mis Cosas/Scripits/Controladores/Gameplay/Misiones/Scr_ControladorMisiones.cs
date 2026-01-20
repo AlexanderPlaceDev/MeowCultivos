@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static Scr_CreadorMisiones;
 
@@ -45,6 +46,13 @@ public class Scr_ControladorMisiones : MonoBehaviour
     private bool[] TeclasPresionadas;
     private float[] TiempoTeclas;
 
+    [SerializeField] private Sprite teclaIcono;
+    [SerializeField] GameObject Mapa_;
+    PlayerInput playerInput;
+    InputIconProvider IconProvider;
+    private InputAction Mapa;
+    private Sprite iconoActualMapa = null;
+    private string textoActualMapa = "";
     // ================================
     // === TRACKING DE PROGRESO ===
     // ================================
@@ -68,6 +76,9 @@ public class Scr_ControladorMisiones : MonoBehaviour
         Inventario.OnInventarioActualizado += OnInventarioCambiado;
         TodasLasConstrucciones = Buscartag.BuscarObjetosConTagInclusoInactivos("Construcciones");
 
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Mapa = playerInput.actions["Mapa"];
         // Cargar datos guardados
         CargarMisiones();
         ActualizarUI();
@@ -117,12 +128,12 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
             InputPanelMisiones();
         }
-
+        IconProvider.ActualizarIconoUI(Mapa, Mapa_.transform, ref iconoActualMapa, ref textoActualMapa,false);
     }
 
     private void InputPanelMisiones()
     {
-        if (Input.GetKeyDown(KeyCode.M))
+        if (Mapa.IsInProgress())
         {
             if (EstadoPanelMisiones)
             {
@@ -544,6 +555,6 @@ public class Scr_ControladorMisiones : MonoBehaviour
         return true; // Todas las construcciones están listas
     }
 
-
+    
 
 }

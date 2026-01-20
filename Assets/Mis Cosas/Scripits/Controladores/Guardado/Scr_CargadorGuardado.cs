@@ -18,6 +18,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
     [SerializeField] bool Moviendo;
 
     GameObject camara;
+    ChecarInput Checar_input;
 
     private void Awake()
     {
@@ -86,6 +87,9 @@ public class Scr_CargadorGuardado : MonoBehaviour
         {
             posicionPersonaje(i);
         }
+
+        Checar_input = GameObject.Find("Singleton").GetComponent<ChecarInput>();
+        Checar_input.CammbiarAction_Player();
     }
     private void Update()
     {

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SocialPlatforms;
 
 public class Scr_Movimiento : MonoBehaviour
@@ -53,6 +54,14 @@ public class Scr_Movimiento : MonoBehaviour
     public KeyCode CorrerTecla = KeyCode.LeftShift;
     public KeyCode AgacharTecla = KeyCode.LeftControl;
 
+    PlayerInput playerInput;
+    private InputAction SaltoTecla_;
+    private InputAction CorrerTecla_;
+    private InputAction AgacharTecla_;
+
+    private InputAction MoverHorizontal;
+    private InputAction MoverVertical;
+
     public Estados Estado;
     public enum Estados
     {
@@ -81,8 +90,15 @@ public class Scr_Movimiento : MonoBehaviour
     public bool EstaLloviendo = false;
     public float MultiplicadorResbalado = 0.3f; // 0.5 = el piso tiene la mitad de fricción
     public float FuerzaDeslizamiento = 4f; // fuerza para resbalar en rampas
+
     private void Start()
     {
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        SaltoTecla_= playerInput.actions["SaltoTecla"];
+        CorrerTecla_ = playerInput.actions["CorrerTecla"];
+        AgacharTecla_ = playerInput.actions["AgacharTecla"];
+        MoverHorizontal= playerInput.actions["MoverHorizontal"];
+        MoverVertical = playerInput.actions["MoverVertical"];
         if (Controlador != null)
         {
             Controlador = GameObject.Find("Controlador");
@@ -109,7 +125,7 @@ public class Scr_Movimiento : MonoBehaviour
 
     private void AplicarFovAlCorrer()
     {
-        if (Estado == Estados.Correr || (Estado == Estados.Aire && Input.GetKey(CorrerTecla)))
+        if (Estado == Estados.Correr || (Estado == Estados.Aire && CorrerTecla_.IsPressed()))
         {
             if (NFov < AumentoDeFov)
             {
@@ -198,7 +214,7 @@ public class Scr_Movimiento : MonoBehaviour
     {
         if (UsaEjeHorizontal)
         {
-            InputHor = Input.GetAxisRaw("Horizontal");
+            InputHor = MoverHorizontal.ReadValue<float>();
         }
         else
         {
@@ -206,28 +222,28 @@ public class Scr_Movimiento : MonoBehaviour
         }
         if (PuedeRetroceder)
         {
-            InputVer = Input.GetAxisRaw("Vertical");
+            InputVer = MoverVertical.ReadValue<float>();
         }
         else
         {
-            if (Input.GetAxisRaw("Vertical") >= 0)
+            if (MoverVertical.ReadValue<float>() >= 0)
             {
-                InputVer = Input.GetAxisRaw("Vertical");
+                InputVer = MoverVertical.ReadValue<float>();
             }
         }
 
-        if (Input.GetKeyDown(SaltoTecla) && ListoParaSaltar && EstaEnElSuelo)
+        if (SaltoTecla_.IsPressed() && ListoParaSaltar && EstaEnElSuelo)
         {
             ListoParaSaltar = false;
             Saltar();
             Invoke(nameof(ReiniciarSalto), SaltoCoolDown);
         }
 
-        if (Input.GetKeyDown(AgacharTecla))
+        if (AgacharTecla_.IsPressed())
         {
             Agachar();
         }
-        if (Input.GetKeyUp(AgacharTecla))
+        if (AgacharTecla_.WasReleasedThisFrame())
         {
             Levantarse();
         }
@@ -235,12 +251,12 @@ public class Scr_Movimiento : MonoBehaviour
 
     private void ActualizarEstado()
     {
-        if (Input.GetKey(AgacharTecla))
+        if (AgacharTecla_.IsPressed())
         {
             Estado = Estados.Agachado;
             Velocidad = VelAgachado;
         }
-        else if ((EstaEnElSuelo || Subiendo()) && InputVer > 0 && Input.GetKey(CorrerTecla))
+        else if ((EstaEnElSuelo || Subiendo()) && InputVer > 0 && CorrerTecla_.IsPressed())
         {
             Estado = Estados.Correr;
             Velocidad = VelCorrer;

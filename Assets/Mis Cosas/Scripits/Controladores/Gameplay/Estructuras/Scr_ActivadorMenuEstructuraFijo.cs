@@ -4,7 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
@@ -25,17 +27,28 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
     public bool EstaDentro = false;
     GameObject Camara360;
     GameObject Canvas;
-
+    ChecarInput Checar_input;
+    PlayerInput playerInput;
+    private InputAction Interactuar;
+    private InputAction Cerrar;
+    InputIconProvider IconProvider;
+    private Sprite iconoActualInteractuar = null;
+    private string textoActualInteractuar = "";
     void Awake()
     {
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
         Camara360 = GameObject.Find("Camara 360");
         Canvas = GameObject.Find("Canvas");
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        Checar_input = GameObject.Find("Singleton").GetComponent<ChecarInput>();
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Interactuar = playerInput.actions["Interactuar"];
+        Cerrar = playerInput.actions["Cerrar"];
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && EstaEnRango && !EstaDentro)
+        if (Interactuar.IsPressed() && EstaEnRango && !EstaDentro)
         {
             if (CanvasMenu != null)
             {
@@ -51,10 +64,11 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), -200, 1);
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 230, 1);
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(), -810, 1);
+            Checar_input.CammbiarAction_UI();
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.E) && EstaEnRango && EstaDentro)
+            if ((Interactuar.IsPressed() || Cerrar.IsPressed()) && EstaEnRango && EstaDentro)
             {
                 if (CanvasMenu != null)
                 {
@@ -95,8 +109,8 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         {
             EstaEnRango = true;
             Gata.GetChild(3).gameObject.SetActive(true);
-            Gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = Letra;
-            Gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = IconoTecla;
+
+            IconProvider.ActualizarIconoUI(Interactuar, Gata.GetChild(3).GetChild(0), ref iconoActualInteractuar, ref textoActualInteractuar,true);
         }
     }
 
@@ -125,6 +139,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
 
     public void CerrarTablero()
     {
+        Checar_input.CammbiarAction_Player();
         EstaDentro = false;
         Camara360.SetActive(true);
         Gata.GetChild(2).gameObject.SetActive(true);
