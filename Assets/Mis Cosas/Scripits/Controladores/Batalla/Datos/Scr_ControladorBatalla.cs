@@ -122,6 +122,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     private string ultimoTextoMostrado = "";
 
     Musica_pelea Musica;
+    ChecarInput Checar_input;
     void Start()
     {
         Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
@@ -154,6 +155,9 @@ public class Scr_ControladorBatalla : MonoBehaviour
         }
         ActivarControladores();
         Musica = GameObject.Find("Musica").GetComponent<Musica_pelea>();
+
+        Checar_input = GameObject.Find("Singleton").GetComponent<ChecarInput>();
+        Checar_input.CammbiarAction_UI();
     }
 
     void Update()
@@ -332,6 +336,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     }
     private void Comienzo()
     {
+        Checar_input.CammbiarAction_Player();
         if (Singleton.ModoSeleccionado == Modo.Defensa)
         {
             ComienzoDefensa();

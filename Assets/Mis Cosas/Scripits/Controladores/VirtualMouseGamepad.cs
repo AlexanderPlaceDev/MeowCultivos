@@ -91,7 +91,7 @@ public class VirtualMouseGamepad : MonoBehaviour
     private void UpdateMotion()
     {
         // Asegúrate de que no haya controladores nulos
-        if (virtualMouse == null || Gamepad.current == null){ return; }
+        if (virtualMouse == null || Gamepad.current == null || playerInput.currentActionMap.name != uiActionMap) { return; }
         // Lee el movimiento del stick izquierdo
         Vector2 DeltaValue = Gamepad.current.leftStick.ReadValue();
         DeltaValue *= cursorSpeed * Time.deltaTime;
