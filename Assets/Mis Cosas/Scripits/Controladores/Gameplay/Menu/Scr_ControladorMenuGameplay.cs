@@ -44,6 +44,8 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
     private string textoActualClick = "";
     [SerializeField] AudioClip[] Sonidos;
     [SerializeField] AudioSource Audio;
+
+    Scr_ControladorTiempo tiempo;
     void Start()
     {
         // Busca y guarda una referencia al objeto de la gata
@@ -55,6 +57,7 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
         Regresar = playerInput.actions["Regresar"];
         Click = playerInput.actions["click"];
         Checar_input = GameObject.Find("Singleton").GetComponent<ChecarInput>();
+        tiempo = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
     }
 
     void Update()
@@ -148,15 +151,16 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
 
     void ActualizarInfoPrincipal(TextMeshProUGUI Hora, TextMeshProUGUI Dia, TextMeshProUGUI Nivel, TextMeshProUGUI XP, TextMeshProUGUI Dinero)
     {
-        if (GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().MinutoActual == 0)
+        if (tiempo == null) { Debug.LogError("No hay tiempo"); return; }
+        if (tiempo.MinutoActual == 0)
         {
-            Hora.text = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().HoraActual + ":00";
+            Hora.text = tiempo.HoraActual + ":00";
         }
         else
         {
-            Hora.text = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().HoraActual + ":" + GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().MinutoActual;
+            Hora.text = tiempo.HoraActual + ":" + tiempo.MinutoActual;
         }
-        Dia.text = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().DiaActual;
+        Dia.text = tiempo.DiaActual;
         Nivel.text = "Lv." + PlayerPrefs.GetInt("Nivel", 0);
         XP.text = PlayerPrefs.GetInt("XPActual", 0) + " / " + PlayerPrefs.GetInt("XPSiguiente", 10) + " :XP";
         Dinero.text = "$" + PlayerPrefs.GetInt("Dinero", 0);
