@@ -10,12 +10,28 @@ public class Scr_SpawnerEnemigosAfueraVariable : MonoBehaviour
     [SerializeField] private int CantidadDeEnemigos;
     [SerializeField] private float TiempoSpawn;
     [SerializeField] private float ProbabilidadSpawn;
+    [SerializeField] private string CinematicaRequerida;
 
     private List<GameObject> Entidades = new List<GameObject>();
     private float TiempoRestanteSpawn;
 
+    // NUEVO: controla solo el spawn de enemigos
+    private bool PuedeSpawnearEnemigos = true;
+
     void Start()
     {
+        // 🔹 Regla de cinemática
+        if (!string.IsNullOrEmpty(CinematicaRequerida))
+        {
+            string key = "Cinematica " + CinematicaRequerida;
+            PuedeSpawnearEnemigos = PlayerPrefs.GetString(key, "No") == "Si";
+        }
+        else
+        {
+            // Cinemática vacía → enemigos permitidos
+            PuedeSpawnearEnemigos = true;
+        }
+
         TiempoRestanteSpawn = PlayerPrefs.GetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoSpawn);
         RestaurarEntidades();
         StartCoroutine(SpawnLoop());
@@ -51,7 +67,9 @@ public class Scr_SpawnerEnemigosAfueraVariable : MonoBehaviour
         float randomValue = Random.Range(0f, 100f);
         GameObject nuevaEntidad;
 
-        if (randomValue < ProbabilidadSpawn) // Probabilidad correcta
+        bool puedeSalirEnemigo = PuedeSpawnearEnemigos && randomValue < ProbabilidadSpawn;
+
+        if (puedeSalirEnemigo)
         {
             nuevaEntidad = Instantiate(Enemigo, transform.position, Quaternion.identity, transform.parent.parent);
         }
@@ -66,7 +84,6 @@ public class Scr_SpawnerEnemigosAfueraVariable : MonoBehaviour
         {
             Entidades.Remove(nuevaEntidad);
 
-            // Verifica si el objeto sigue activo antes de iniciar la corrutina
             if (gameObject.activeInHierarchy)
             {
                 StartCoroutine(EsperarYSpawnear());
@@ -76,16 +93,12 @@ public class Scr_SpawnerEnemigosAfueraVariable : MonoBehaviour
 
     IEnumerator EsperarYSpawnear()
     {
-        Debug.Log("⏳ Esperando para respawnear...");
         yield return new WaitForSeconds(TiempoSpawn);
         SpawnearEntidad();
     }
 
-
-
     void GuardarEstado()
     {
-        // 🔹 Lista de enemigos para eliminar
         List<int> indicesParaEliminar = new List<int>();
 
         for (int i = Entidades.Count - 1; i >= 0; i--)
@@ -97,10 +110,8 @@ public class Scr_SpawnerEnemigosAfueraVariable : MonoBehaviour
             }
         }
 
-        // 🔹 Eliminar datos de enemigos destruidos en PlayerPrefs
         foreach (int i in indicesParaEliminar)
         {
-            Debug.Log($"🛑 Eliminando enemigo {i} de PlayerPrefs");
             PlayerPrefs.DeleteKey($"{IDSpawner}_EnemigoX_{i}");
             PlayerPrefs.DeleteKey($"{IDSpawner}_EnemigoY_{i}");
             PlayerPrefs.DeleteKey($"{IDSpawner}_EnemigoZ_{i}");
@@ -108,7 +119,6 @@ public class Scr_SpawnerEnemigosAfueraVariable : MonoBehaviour
 
         PlayerPrefs.SetInt($"{IDSpawner}_CantidadEntidadesVivas", Entidades.Count);
 
-        // 🔹 Guardar solo los enemigos vivos
         for (int i = 0; i < Entidades.Count; i++)
         {
             if (Entidades[i] != null)
@@ -124,8 +134,6 @@ public class Scr_SpawnerEnemigosAfueraVariable : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-
-
     void RestaurarEntidades()
     {
         int entidadesVivas = PlayerPrefs.GetInt($"{IDSpawner}_CantidadEntidadesVivas", 0);
@@ -137,10 +145,8 @@ public class Scr_SpawnerEnemigosAfueraVariable : MonoBehaviour
             string keyY = $"{IDSpawner}_EnemigoY_{i}";
             string keyZ = $"{IDSpawner}_EnemigoZ_{i}";
 
-            // 🔹 Si el enemigo fue destruido, NO lo restauramos
             if (!PlayerPrefs.HasKey(keyX) || !PlayerPrefs.HasKey(keyY) || !PlayerPrefs.HasKey(keyZ))
             {
-                Debug.Log($"❌ No se encontró la posición del enemigo {i}, esperando para spawnearlo...");
                 StartCoroutine(EsperarYSpawnear());
                 continue;
             }
@@ -152,17 +158,15 @@ public class Scr_SpawnerEnemigosAfueraVariable : MonoBehaviour
             );
 
             float randomValue = Random.Range(0f, 100f);
-            GameObject entidadRestaurada = (randomValue < ProbabilidadSpawn)
+            bool puedeSalirEnemigo = PuedeSpawnearEnemigos && randomValue < ProbabilidadSpawn;
+
+            GameObject entidadRestaurada = puedeSalirEnemigo
                 ? Instantiate(Enemigo, pos, Quaternion.identity, transform.parent.parent)
                 : Instantiate(Objeto, pos, Quaternion.identity, transform.parent.parent);
 
             Entidades.Add(entidadRestaurada);
-            //Debug.Log($"✅ Restaurando enemigo {i} en {pos}");
         }
     }
-
-
-
 }
 
 // Clase para detectar cuando un objeto o enemigo desaparece
