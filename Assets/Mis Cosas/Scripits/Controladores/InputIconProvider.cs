@@ -226,6 +226,7 @@ public class InputIconProvider : MonoBehaviour
             if (icono == null)
             {
                 icono = tecladoMoreIcon;
+                tecla = TeclasEspeciales(tecla);
             }
             else
             {
@@ -270,6 +271,22 @@ public class InputIconProvider : MonoBehaviour
                         uiTransform.localScale = Vector3.one * 1.5f;
                 }
             }
+        }
+    }
+
+    public string TeclasEspeciales(string tecla)
+    {
+        switch (tecla) 
+        {
+            case "Tabulacion":
+                return "TAB";
+            case "Barra Espaciadora":
+                return "Space";
+            case "Escape":
+                return "Esc";
+            default:
+                return "ESP";
+                    
         }
     }
 }

@@ -336,7 +336,6 @@ public class Scr_ControladorBatalla : MonoBehaviour
     }
     private void Comienzo()
     {
-        Checar_input.CammbiarAction_Player();
         if (Singleton.ModoSeleccionado == Modo.Defensa)
         {
             ComienzoDefensa();
@@ -615,6 +614,8 @@ public class Scr_ControladorBatalla : MonoBehaviour
         Barra.fillAmount = (float)PlayerPrefs.GetInt("XPActual", 0) / PlayerPrefs.GetInt("XPSiguiente", 10);
 
         PanelFinal.SetActive(true);
+
+        Checar_input.CammbiarAction_UI();
     }
 
 
@@ -834,6 +835,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
         // Reconstruir NavMesh
         GameObject.Find("NavMesh Surface").GetComponent<NavMeshSurface>().BuildNavMesh();
 
+        Checar_input.CammbiarAction_Player();
         //GameObject.Find("NavMesh Surface").GetComponent<NavMeshSurface>().BuildNavMesh();
     }
 

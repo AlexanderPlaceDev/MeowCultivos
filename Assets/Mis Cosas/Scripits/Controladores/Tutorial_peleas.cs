@@ -50,7 +50,6 @@ public class Tutorial_peleas : MonoBehaviour
 
     public void IniciarDialogo()
     {
-        Debug.LogError(sistemaDialogos.DialogoActual);
         ChecarDialogo();
         //ApagarBotonesHabilidades();
         if (sistemaDialogos.DialogoActual<= 1)
