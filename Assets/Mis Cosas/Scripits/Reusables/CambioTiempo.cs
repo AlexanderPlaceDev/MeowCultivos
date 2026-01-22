@@ -60,7 +60,7 @@ public class CambioTiempo : MonoBehaviour
     {
         //PlayerPrefs.GetString("Habilidad:" + "Radio", "No") == "Si"
         //PlayerPrefs.GetInt("Estructura" + 8, 0) == 1
-        if (PlayerPrefs.GetInt("Estructura" + 8, 0) == 1)
+        if (PlayerPrefs.GetString("Habilidad:Radio", "No") == "Si")
         {
             Tiene_Radio = true;
         }

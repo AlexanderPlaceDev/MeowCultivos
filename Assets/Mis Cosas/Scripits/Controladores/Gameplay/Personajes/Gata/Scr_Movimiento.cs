@@ -317,16 +317,29 @@ public class Scr_Movimiento : MonoBehaviour
         // Dirección de movimiento basada en la entrada
         Direccion = transform.forward * InputVer + transform.right * InputHor;
 
+        float multiplicadorVelocidad = 1f;
+
+        if (PlayerPrefs.GetString("Habilidad:Bota", "No") == "Si")
+        {
+            multiplicadorVelocidad = 1.3f;
+        }
+        else if (PlayerPrefs.GetString("Habilidad:Patines", "No") == "Si")
+        {
+            multiplicadorVelocidad = 1.6f;
+        }
+
+
         if (EstaEnElSuelo)
         {
             // Movimiento en el suelo
-            Vector3 velocidadDeseada = Direccion.normalized * Velocidad;
+            Vector3 velocidadDeseada = Direccion.normalized * Velocidad * multiplicadorVelocidad;
+
             RB.velocity = new Vector3(velocidadDeseada.x, RB.velocity.y, velocidadDeseada.z);
         }
         else
         {
             // Movimiento en el aire (menos controlado)
-            Vector3 velocidadAerea = Direccion.normalized * Velocidad * MultiplicadorDeAire;
+            Vector3 velocidadAerea = Direccion.normalized * Velocidad * multiplicadorVelocidad * MultiplicadorDeAire;
             RB.velocity += new Vector3(velocidadAerea.x, 0, velocidadAerea.z) * Time.deltaTime;
         }
 
@@ -334,7 +347,7 @@ public class Scr_Movimiento : MonoBehaviour
         if (Subiendo())
         {
             Vector3 direccionRampa = DireccionRampa();
-            RB.velocity += direccionRampa * Velocidad * Time.deltaTime;
+            RB.velocity += direccionRampa * Velocidad * multiplicadorVelocidad * Time.deltaTime;
         }
         if (EstaLloviendo && Subiendo())
         {
@@ -347,11 +360,25 @@ public class Scr_Movimiento : MonoBehaviour
     {
         Vector3 velocidadHorizontal = new Vector3(RB.velocity.x, 0, RB.velocity.z);
 
-        if (velocidadHorizontal.magnitude > Velocidad)
+        float multiplicadorVelocidad = 1f;
+
+        if (PlayerPrefs.GetString("Habilidad:Bota", "No") == "Si")
         {
-            Vector3 velocidadLimite = velocidadHorizontal.normalized * Velocidad;
+            multiplicadorVelocidad = 1.3f;
+        }
+        else if (PlayerPrefs.GetString("Habilidad:Patines", "No") == "Si")
+        {
+            multiplicadorVelocidad = 1.6f;
+        }
+
+        float velocidadMaxima = Velocidad * multiplicadorVelocidad;
+
+        if (velocidadHorizontal.magnitude > velocidadMaxima)
+        {
+            Vector3 velocidadLimite = velocidadHorizontal.normalized * velocidadMaxima;
             RB.velocity = new Vector3(velocidadLimite.x, RB.velocity.y, velocidadLimite.z);
         }
+
 
         if (FuerzaSalto != 0)
         {

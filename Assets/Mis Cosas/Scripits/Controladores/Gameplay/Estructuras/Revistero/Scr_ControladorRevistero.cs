@@ -13,6 +13,10 @@ public class Scr_ControladorRevistero : MonoBehaviour
     [SerializeField] private int[] PrecioDeRangos;
     [SerializeField] GameObject BotonAceptar;
 
+    // NUEVO: control de revistas disponibles
+    // false = disponible | true = bloqueada
+    [SerializeField] bool[] RevistasDisponibles = new bool[4];
+
     void Start()
     {
         ActualizarDineroYPrecio();
@@ -23,7 +27,10 @@ public class Scr_ControladorRevistero : MonoBehaviour
         if (!UI.gameObject.activeSelf)
             return;
 
-        if (PlayerPrefs.GetInt("Rango Barra Tecnica6", 0) < PrecioDeRangos.Length)
+        int maxComprable = ObtenerMaximoComprable();
+        int rangoInterno = PlayerPrefs.GetInt("Rango Barra Tecnica6", 0);
+
+        if (rangoInterno < maxComprable)
         {
             ActualizarDineroYPrecio();
         }
@@ -51,8 +58,9 @@ public class Scr_ControladorRevistero : MonoBehaviour
     {
         int rangoInterno = PlayerPrefs.GetInt("Rango Barra Tecnica6", 0);
         int dineroActual = PlayerPrefs.GetInt("Dinero", 0);
+        int maxComprable = ObtenerMaximoComprable();
 
-        if (rangoInterno >= PrecioDeRangos.Length)
+        if (rangoInterno >= maxComprable)
             return;
 
         int precio = PrecioDeRangos[rangoInterno];
@@ -60,10 +68,10 @@ public class Scr_ControladorRevistero : MonoBehaviour
         if (dineroActual < precio)
             return;
 
-        // Resta correcta
+        // Resta dinero
         PlayerPrefs.SetInt("Dinero", dineroActual - precio);
 
-        // Sube rango interno
+        // Aumenta rango
         PlayerPrefs.SetInt("Rango Barra Tecnica6", rangoInterno + 1);
 
         CerrarUI();
@@ -73,7 +81,7 @@ public class Scr_ControladorRevistero : MonoBehaviour
             .GetComponent<Scr_ControladorMenuHabilidades>()
             .ActualizarBarrasPorRango();
 
-        // Mostrar rango VISUAL (interno + 1)
+        // Mostrar rango visual
         GameObject.Find("Canvas").transform.GetChild(10).gameObject.SetActive(true);
         GameObject.Find("Canvas").transform.GetChild(10)
             .GetComponent<Scr_NuevoRango>()
@@ -84,15 +92,32 @@ public class Scr_ControladorRevistero : MonoBehaviour
     {
         int rangoInterno = PlayerPrefs.GetInt("Rango Barra Tecnica6", 0);
         int dinero = PlayerPrefs.GetInt("Dinero", 0);
+        int maxComprable = ObtenerMaximoComprable();
 
         TextoTuDinero.text = "$" + dinero;
 
-        if (rangoInterno >= PrecioDeRangos.Length)
+        if (rangoInterno >= maxComprable)
             return;
 
         int precio = PrecioDeRangos[rangoInterno];
 
         TextoDinero.text = "$" + precio;
         BotonAceptar.SetActive(dinero >= precio);
+    }
+
+    // NUEVO: calcula cuántas revistas se pueden comprar
+    int ObtenerMaximoComprable()
+    {
+        int contador = 0;
+
+        for (int i = 0; i < RevistasDisponibles.Length; i++)
+        {
+            if (!RevistasDisponibles[i])
+                contador++;
+            else
+                break;
+        }
+
+        return contador;
     }
 }
