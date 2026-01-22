@@ -21,6 +21,7 @@ public class Scr_GiroGata : MonoBehaviour
         CambiarCamara = playerInput.actions["CamaraLibre"];
         rb = GetComponent<Rigidbody>();
         checar_Control();
+
     }
 
     public void checar_Control()
@@ -38,7 +39,7 @@ public class Scr_GiroGata : MonoBehaviour
     }
     private void Update()
     {
-        if (CambiarCamara.IsInProgress())
+        if (CambiarCamara.WasPressedThisFrame())
         {
             if (Control)
             {

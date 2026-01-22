@@ -191,7 +191,7 @@ public class Scr_Arbusto : MonoBehaviour
             gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(3, 0, 0);
         }
         // Actualizamos ambos botones
-        ActualizarIconosUI();
+        //ActualizarIconosUI();
     }
 
     void DesactivarUI()
@@ -217,7 +217,7 @@ public class Scr_Arbusto : MonoBehaviour
 
     void ActualizarIconosUI()
     {
-        if (!uiActiva) return;
+        //if (!uiActiva) return;
         IconProvider.ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(0), ref iconoActualRecolectar, ref textoActualRecolectar, true);
         IconProvider.ActualizarIconoUI(Interactuar, gata.GetChild(3).GetChild(2), ref iconoActualInteractuar, ref textoActualInteractuar, true);
     }
