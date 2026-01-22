@@ -133,7 +133,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
     private void InputPanelMisiones()
     {
-        if (Mapa.IsInProgress())
+        if (Mapa.WasPressedThisFrame())
         {
             if (EstadoPanelMisiones)
             {

@@ -66,12 +66,12 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
         ActualizarInfoPrincipal(Hora, Dia, Nivel, XP, Dinero);
         if (EstaEnMenu)
         {
+            IconProvider.ActualizarIconoUI(Regresar, RelojUI.transform, ref iconoActualRegresar, ref textoActualRegresar, false);
+            IconProvider.ActualizarIconoUI(Click, Click_.transform, ref iconoActualClick, ref textoActualClick, false);
             // Desactiva los componentes de movimiento de la gata mientras está en el menú
             Gata.GetComponent<Scr_GiroGata>().enabled = false;
-            if ((Regresar.IsPressed() || Reloj.IsPressed())  && !Esperando && !EstaReproduciendoAnimacion())
+            if ((Regresar.WasPressedThisFrame() || Reloj.WasPressedThisFrame())  && !Esperando && !EstaReproduciendoAnimacion())
             {
-                IconProvider.ActualizarIconoUI(Regresar, RelojUI.transform, ref iconoActualRegresar, ref textoActualRegresar, false);
-                IconProvider.ActualizarIconoUI(Click, Click_.transform, ref iconoActualClick, ref textoActualClick, false);
                 if (Menu.transform.GetChild(2).gameObject.activeSelf)
                 {
                     Esperando = true;

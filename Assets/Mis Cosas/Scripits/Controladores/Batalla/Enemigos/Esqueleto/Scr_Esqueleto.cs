@@ -216,6 +216,7 @@ public class Scr_Esqueleto : Scr_Enemigo
     }
     public void HacerDaño()
     {
+        
         Scr_AreaDeAtaqueEnemiga area = areaAtaque.GetComponent<Scr_AreaDeAtaqueEnemiga>();
         if (EstaMuerto || area == null) return;
 
