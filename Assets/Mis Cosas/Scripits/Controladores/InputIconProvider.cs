@@ -147,7 +147,6 @@ public class InputIconProvider : MonoBehaviour
             if (c.device is not Mouse) continue;
 
             string path = c.path.ToLower();
-            Debug.LogError(path);
             if (path.Contains("leftbutton")) return mouseLeftIcon;
             if (path.Contains("rightbutton")) return mouseRightIcon;
             if (path.Contains("middlebutton")) return mouseMiddleIcon;
