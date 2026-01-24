@@ -5038,8 +5038,39 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 64eb18d1c730e6e46a8199013de634a0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5591253160105435686}
   m_SourcePrefab: {fileID: 100100000, guid: 64eb18d1c730e6e46a8199013de634a0, type: 3}
+--- !u!1 &7277128848516291725 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 64eb18d1c730e6e46a8199013de634a0,
+    type: 3}
+  m_PrefabInstance: {fileID: 7511133297137852892}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &5591253160105435686
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7277128848516291725}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 752bb402b95e60a4cbd842da01b542e5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &8049725345168868919 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 64eb18d1c730e6e46a8199013de634a0,
@@ -5224,10 +5255,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ce1986922dd10542b8084a299567b99,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7147398497334785624}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ce1986922dd10542b8084a299567b99,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 4261342600705945152}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ce1986922dd10542b8084a299567b99,
         type: 3}
@@ -5252,27 +5279,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 9005735609103102974}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &7147398497334785624
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8087238990687637167}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 752bb402b95e60a4cbd842da01b542e5, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!135 &4261342600705945152
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5378,13 +5384,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1c1e2532443d2a4d97e0a07d550d19c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NombreEnemigo: 
+  NombreEnemigo: Ojo Volador
   Vida: 10
   VidaMaxima: 0
-  Velocidad: 2
+  Velocidad: 8
   "Da\xF1oMelee": 5
   "Da\xF1oDistancia": 5
-  DistanciaDeAtaque: 10
+  DistanciaDeAtaque: 16
   DuracionDeAtaque: 1
   SaleDelArea: 1
   NombreAnimacionAparecer: 
@@ -5432,14 +5438,15 @@ MonoBehaviour:
   resistenciaEmpujar: 0.05
   resistenciaElectrificar: 0.25
   resistenciaExplotar: 0.4
-  Anim: {fileID: 7147398497334785624}
+  Anim: {fileID: 5591253160105435686}
   gata: {fileID: 0}
-  speed: 10
-  rotationSpeed: 5
-  attackDistance: 100
-  retreatHeight: 15
-  patrolCenter: {x: 0, y: 0, z: 0}
-  patrolRadius: 10
+  VelocidadRotacion: 5
+  AlturaPatrulla: 15
+  AlturaAtaque: 1
+  CentroPatrol: {x: 0, y: 0, z: 0}
+  RadioPatrol: 10
+  amplitudVuelo: 0.5
+  frecuenciaVuelo: 2
 --- !u!4 &8894738658789184533 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6ce1986922dd10542b8084a299567b99,

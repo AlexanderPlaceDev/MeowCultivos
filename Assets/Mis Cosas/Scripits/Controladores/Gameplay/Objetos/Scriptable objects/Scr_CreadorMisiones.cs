@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [CreateAssetMenu(fileName = "CrearObjeto", menuName = "Crear Objeto/Mision", order = 0)]
 public class Scr_CreadorMisiones : ScriptableObject
@@ -22,6 +23,7 @@ public class Scr_CreadorMisiones : ScriptableObject
     {
         Exploracion,
         Teclas,
+        Movimiento,
         Recoleccion,
         Construccion,
         Caza
@@ -39,6 +41,17 @@ public class Scr_CreadorMisiones : ScriptableObject
     public string[] ObjetivosACazar;
     public int[] CantidadACazar;
     public Sprite[] IconosACazar;
+    public enum DireccionMovimiento
+    {
+        Arriba,
+        Abajo,
+        Izquierda,
+        Derecha
+    }
+
+    public DireccionMovimiento[] DireccionesRequeridas;
+    public InputActionReference AccionMovimientoH;
+    public InputActionReference AccionMovimientoV;
     public KeyCode[] Teclas;
     public bool EsContinua;
     public bool QuitaObjetos;

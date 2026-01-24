@@ -68,6 +68,11 @@ public class Scr_ControladorMisiones : MonoBehaviour
     // ================================
     // === MÉTODOS UNITY ===
     // ================================
+
+
+    private InputAction MoverHorizontal;
+    private InputAction MoverVertical;
+    private bool[] direccionesCompletadas;
     void Awake()
     {
         // Buscar referencias importantes
@@ -78,6 +83,9 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+
+        MoverHorizontal = playerInput.actions["MoverHorizontal"];
+        MoverVertical = playerInput.actions["MoverVertical"];
         Mapa = playerInput.actions["Mapa"];
         // Cargar datos guardados
         CargarMisiones();
@@ -102,7 +110,19 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
     void Update()
     {
-        if (MisionActual != null && MisionActual.Tipo == Tipos.Teclas)
+        if (MisionActual != null && MisionActual.Tipo == Tipos.Movimiento)
+        {
+            if (EstaEnDialogo)
+            {
+                BotonesUI.SetActive(false);
+            }
+            else
+            {
+                ProcesarMisionMovimiento();
+                BotonesUI.SetActive(!MisionActualCompleta);
+            }
+        }
+        else if (MisionActual != null && MisionActual.Tipo == Tipos.Teclas)
         {
             if (EstaEnDialogo)
             {
@@ -267,6 +287,73 @@ public class Scr_ControladorMisiones : MonoBehaviour
         {
             MisionActualCompleta = MisionPCompleta;
         }
+    }
+
+    private void ProcesarMisionMovimiento()
+    {
+        if (direccionesCompletadas == null ||
+            direccionesCompletadas.Length != MisionActual.DireccionesRequeridas.Length)
+        {
+            direccionesCompletadas = new bool[MisionActual.DireccionesRequeridas.Length];
+            TiempoTeclas = new float[MisionActual.DireccionesRequeridas.Length];
+        }
+
+        float horizontal = MoverHorizontal.ReadValue<float>();
+        float vertical = MoverVertical.ReadValue<float>();
+
+        for (int i = 0; i < MisionActual.DireccionesRequeridas.Length; i++)
+        {
+            bool direccionCorrecta = false;
+
+            switch (MisionActual.DireccionesRequeridas[i])
+            {
+                case DireccionMovimiento.Arriba:
+                    direccionCorrecta = vertical > 0.5f;
+                    break;
+
+                case DireccionMovimiento.Abajo:
+                    direccionCorrecta = vertical < -0.5f;
+                    break;
+
+                case DireccionMovimiento.Derecha:
+                    direccionCorrecta = horizontal > 0.5f;
+                    break;
+
+                case DireccionMovimiento.Izquierda:
+                    direccionCorrecta = horizontal < -0.5f;
+                    break;
+            }
+
+            if (TiempoTeclas[i] >= 1f)
+            {
+                direccionesCompletadas[i] = true;
+            }
+            else
+            {
+                TiempoTeclas[i] += direccionCorrecta ? Time.deltaTime : -Time.deltaTime;
+                TiempoTeclas[i] = Mathf.Clamp01(TiempoTeclas[i]);
+            }
+
+            Image fillImage = BotonesUI.transform
+                .GetChild(i)
+                .GetChild(1)
+                .GetComponent<Image>();
+
+            fillImage.fillAmount = TiempoTeclas[i];
+        }
+        bool completa = System.Array.TrueForAll(direccionesCompletadas, d => d);
+
+        MisionActualCompleta = completa;
+
+        if (MisionPrincipal == MisionActual)
+        {
+            MisionPCompleta = completa;
+        }
+    }
+
+    private void ResetearMisionMovimiento()
+    {
+        direccionesCompletadas = null;
     }
 
     // ================================

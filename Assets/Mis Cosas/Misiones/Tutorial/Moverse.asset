@@ -12,19 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea24d2bc748133d448a419af8bc82e61, type: 3}
   m_Name: Moverse
   m_EditorClassIdentifier: 
-  MisionName: Moverse
+  TituloMision: 
   LogoMision: {fileID: 0}
   Descripcion: Vamos a estirar las piernas!!
   DescripcionCompleta: Regresa con Miguel
   DialogoEnMision: {fileID: 0}
   DialogoMisionCompleta: {fileID: 0}
   prioridad: 0
-  Tipo: 1
+  Tipo: 2
   ObjetosNecesarios: []
   CantidadesQuita: 
   ObjetivosACazar: []
   CantidadACazar: 
   IconosACazar: []
+  DireccionesRequeridas: 02000000000000000100000003000000
+  AccionMovimientoH: {fileID: 1209991967715731354, guid: 3c57a15fe30ee8049af66f37e751ce27,
+    type: 3}
+  AccionMovimientoV: {fileID: -3406575343073809771, guid: 3c57a15fe30ee8049af66f37e751ce27,
+    type: 3}
   Teclas: 61000000770000007300000064000000
   EsContinua: 0
   QuitaObjetos: 0
