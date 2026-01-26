@@ -127,8 +127,7 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
                 Recolectando = true;
                 StartCoroutine(EsperarRecolectar());
             }
-
-            if (PuedeRegar && Regar_.IsPressed())
+            if (PuedeRegar && Regar_.WasPressedThisFrame())
             {
                 Regando = true;
                 StartCoroutine(EsperarRegar());

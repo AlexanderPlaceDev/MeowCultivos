@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Scr_BloqueAgua : MonoBehaviour
@@ -20,6 +21,14 @@ public class Scr_BloqueAgua : MonoBehaviour
     private GameObject Herramienta;
     private Transform gata;
 
+
+
+
+    PlayerInput playerInput;
+    private InputAction Regar;
+    InputIconProvider IconProvider;
+    private Sprite iconoActualRegar = null;
+    private string textoActualRegar = "";
     void Awake()
     {
         gata = GameObject.Find("Gata").GetComponent<Transform>();
@@ -29,6 +38,9 @@ public class Scr_BloqueAgua : MonoBehaviour
         Herramienta = gata.GetChild(0).GetChild(0).GetChild(0).GetChild(1)
                                 .GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(2).gameObject;
 
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Regar = playerInput.actions["Regar"];
 
 
     }
@@ -43,6 +55,7 @@ public class Scr_BloqueAgua : MonoBehaviour
             {
                 estaLejos = false;
                 ActivarUI();
+                IconProvider.ActualizarIconoUI(Regar, gata.GetChild(3).GetChild(0), ref iconoActualRegar, ref textoActualRegar, true);
                 SpawnearHerramienta();
                 if (gata.GetComponent<Animator>().GetBool("Regando"))
                 {
@@ -103,9 +116,6 @@ public class Scr_BloqueAgua : MonoBehaviour
     {
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRegar = true;
         gata.GetChild(3).gameObject.SetActive(true);
-        gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
-        gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = teclaIcono;
-        gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = icono;
     }
 
     void DesactivarUI()
