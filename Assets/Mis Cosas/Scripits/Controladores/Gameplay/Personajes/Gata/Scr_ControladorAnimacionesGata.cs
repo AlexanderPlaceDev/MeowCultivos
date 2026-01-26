@@ -15,7 +15,7 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
     PlayerInput playerInput;
     private InputAction Talar_;
     private InputAction Recolectar_;
-    private InputAction Regar_;
+    private InputAction papa;
 
     public bool PuedeCaminar;
     public bool PuedeTalar;
@@ -41,7 +41,7 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         Talar_ = playerInput.actions["Talar"];
         Recolectar_ = playerInput.actions["Recolectar"];
-        Regar_ = playerInput.actions["Regar"];
+        papa = playerInput.actions["Regar"];
         Anim = GetComponent<Animator>();
         Mov = GetComponent<Scr_Movimiento>();
     }
@@ -127,7 +127,7 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
                 Recolectando = true;
                 StartCoroutine(EsperarRecolectar());
             }
-            if (PuedeRegar && Regar_.WasPressedThisFrame())
+            if (PuedeRegar && papa.WasPressedThisFrame())
             {
                 Regando = true;
                 StartCoroutine(EsperarRegar());

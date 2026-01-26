@@ -284,7 +284,7 @@ public class InputIconProvider : MonoBehaviour
             case "Escape":
                 return "Esc";
             default:
-                return "ESP";
+                return "tecla";
                     
         }
     }
