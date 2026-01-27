@@ -188,7 +188,6 @@ public class InputIconProvider : MonoBehaviour
         bool cambiarTam)
     {
         if (action == null) return;
-
         Image img = uiTransform.GetComponent<Image>();
         SpriteRenderer sr = uiTransform.GetComponent<SpriteRenderer>();
         TextMeshProUGUI txt = uiTransform.GetComponentInChildren<TextMeshProUGUI>();
@@ -236,11 +235,10 @@ public class InputIconProvider : MonoBehaviour
         if (ocupaText)
         {
             if (icono == null || iconoActual == icono) return;
-
+            
             if (img) img.sprite = icono;
             if (sr) sr.sprite = icono;
             if (txt) txt.text = "";
-
             iconoActual = icono;
             textoActual = "";
 
@@ -284,7 +282,7 @@ public class InputIconProvider : MonoBehaviour
             case "Escape":
                 return "Esc";
             default:
-                return "ESP";
+                return "tecla";
                     
         }
     }
