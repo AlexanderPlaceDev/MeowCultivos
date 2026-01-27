@@ -32,8 +32,8 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     PlayerInput playerInput;
     private InputAction Recolectar;
     InputIconProvider IconProvider;
-    private Sprite iconoActualRecolectar = null;
-    private string textoActualRecolectar = "";
+    private Sprite iconoActualSpawn = null;
+    private string textoActualSpawn = "";
     public bool uiActiva = false;
 
     void Start()
@@ -61,7 +61,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     {
         if (uiActiva)
         {
-            IconProvider.ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(2), ref iconoActualRecolectar, ref textoActualRecolectar, true);
+            IconProvider.ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(2), ref iconoActualSpawn, ref textoActualSpawn, true);
         }
     }
 
@@ -80,7 +80,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
                     if (!uiActiva) ActivarUI();
 
                     // Actualizar icono continuamente
-                    IconProvider.ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(2), ref iconoActualRecolectar, ref textoActualRecolectar, true);
+                    IconProvider.ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(2), ref iconoActualSpawn, ref textoActualSpawn, true);
 
                     // Iniciar animación de recolección
                     if (gata.GetComponent<Animator>().GetBool("Recolectando"))
@@ -212,7 +212,9 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
 
         gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
         gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
-        IconProvider.ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(0), ref iconoActualRecolectar, ref textoActualRecolectar, true);
+        iconoActualSpawn = null;
+        textoActualSpawn = "";
+        IconProvider.ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(0), ref iconoActualSpawn, ref textoActualSpawn, true);
     }
 
     void DesactivarUI()
@@ -221,8 +223,8 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = false;
         gata.GetChild(3).gameObject.SetActive(false);
 
-        iconoActualRecolectar = null;
-        textoActualRecolectar = "";
+        iconoActualSpawn = null;
+        textoActualSpawn = "";
 
         if (PlayerPrefs.GetString("TutorialPeleas", "NO") == "SI")
         {

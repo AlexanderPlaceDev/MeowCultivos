@@ -57,16 +57,22 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
         if (Vector3.Distance(Gata.position, transform.position) < Distancia && !EstaDentro)
         {
             EstaLejos = false; 
+
+
             Gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = Icono;
             Gata.GetChild(3).gameObject.SetActive(true);
             Gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
             Gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
+
             IconProvider.ActualizarIconoUI(Interactuar, Gata.GetChild(3).GetChild(0), ref iconoActualInteractuar, ref textoActualInteractuar,true);
         }
         if (Vector3.Distance(Gata.position, transform.position) > Distancia && !EstaLejos)
         {
             Gata.GetChild(3).gameObject.SetActive(false);
             EstaLejos = true;
+
+            iconoActualInteractuar = null;
+            textoActualInteractuar = "";
         }
     }
     
@@ -132,6 +138,7 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
             ControladorMenu.GetComponent<Scr_ControladorMenuGameplay>().enabled = false;// Desactiva logica reloj
             Canvas.transform.GetChild(2).gameObject.SetActive(false);//Desactiva UI reloj
             Checar_input.CammbiarAction_UI();
+
             /*
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), -250, 1);
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 250, 1);
@@ -175,6 +182,9 @@ public class Scr_ActivadorMenuEstructuraCircular : MonoBehaviour
         ControladorMenu.GetComponent<Scr_ControladorMenuGameplay>().enabled = true; //Activa logica del reloj
         Canvas.transform.GetChild(2).gameObject.SetActive(true);// Activa UI Reloj
         Checar_input.CammbiarAction_Player();
+
+        iconoActualInteractuar = null;
+        textoActualInteractuar = "";
         /*
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), 30, 1);
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 0, 1);

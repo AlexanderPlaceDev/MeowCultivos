@@ -48,6 +48,10 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
 
     void Update()
     {
+        if (EstaEnRango)
+        {
+            IconProvider.ActualizarIconoUI(Interactuar, Gata.GetChild(3).GetChild(0), ref iconoActualInteractuar, ref textoActualInteractuar, true);
+        }
         if (Interactuar.WasPressedThisFrame() && EstaEnRango && !EstaDentro)
         {
             if (CanvasMenu != null)
@@ -110,7 +114,9 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
             EstaEnRango = true;
             Gata.GetChild(3).gameObject.SetActive(true);
 
-            IconProvider.ActualizarIconoUI(Interactuar, Gata.GetChild(3).GetChild(0), ref iconoActualInteractuar, ref textoActualInteractuar,true);
+            Gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = Icono;
+
+            IconProvider.ActualizarIconoUI(Interactuar, Gata.GetChild(3).GetChild(0), ref iconoActualInteractuar, ref textoActualInteractuar, true);
         }
     }
 
@@ -120,6 +126,8 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         {
             EstaEnRango = false;
             Gata.GetChild(3).gameObject.SetActive(false);
+            iconoActualInteractuar = null;
+            textoActualInteractuar = "";
         }
     }
 
