@@ -10,9 +10,15 @@ public class Scr_ActivadorCinematica : MonoBehaviour
     [SerializeField] string CinematicaAnterior;
     private bool EstaEnCinematica;
     private GameObject Gata;
+    private Scr_ControladorTiempo Tiempo;
 
     private void Awake()
     {
+        Tiempo = FindObjectOfType<Scr_ControladorTiempo>();
+
+        if (Tiempo == null)
+            Debug.LogError("No se encontró Scr_ControladorTiempo");
+
         // Si la cinemática ya fue reproducida, desactivar el activador completo
         if (PlayerPrefs.GetString("Cinematica " + Cinematica, "No") == "Si")
         {
@@ -44,7 +50,7 @@ public class Scr_ActivadorCinematica : MonoBehaviour
             }
 
             //Desactivar camara principal
-            GameObject.Find("Cosas Inutiles").transform.GetChild(3).gameObject.SetActive(false);
+            GameObject.Find("Cosas Inutiles").transform.GetChild(2).gameObject.SetActive(false);
         }
     }
 
@@ -70,7 +76,6 @@ public class Scr_ActivadorCinematica : MonoBehaviour
         // ✅ Guardar la cinemática como completada
         PlayerPrefs.SetString("Cinematica " + Cinematica, "Si");
 
-        Scr_ControladorTiempo Tiempo = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
         PlayerPrefs.SetString("DiaCinematica:" + gameObject.transform.parent.parent.name, Tiempo.DiaActual);
         PlayerPrefs.SetInt("HoraCinematica:" + gameObject.transform.parent.parent.name, Tiempo.HoraActual);
         Debug.Log("Guarda desde: " + gameObject.name);
@@ -108,7 +113,7 @@ public class Scr_ActivadorCinematica : MonoBehaviour
 
         Debug.Log("ActivaPrincipal");
         //Activar camara principal
-        GameObject.Find("Cosas Inutiles").transform.GetChild(3).gameObject.SetActive(true);
+        GameObject.Find("Cosas Inutiles").transform.GetChild(2).gameObject.SetActive(true);
 
         EstaEnCinematica = false;
         // ✅ Desactivar elementos y activador

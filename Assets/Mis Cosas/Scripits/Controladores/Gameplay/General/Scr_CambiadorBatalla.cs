@@ -27,23 +27,23 @@ public class Scr_CambiadorBatalla : MonoBehaviour
 
     void Start()
     {
-        Debug.Log($"[Start] 🟦 Iniciando {gameObject.name}");
+        //Debug.Log($"[Start] 🟦 Iniciando {gameObject.name}");
 
         escenaCargada = false;
-        Debug.Log("[Start] escenaCargada = FALSE");
+        //Debug.Log("[Start] escenaCargada = FALSE");
 
         Reloj = GameObject.Find("Canvas")?.transform.GetChild(2).gameObject;
-        Debug.Log($"[Start] Reloj encontrado: {Reloj != null}");
+        //Debug.Log($"[Start] Reloj encontrado: {Reloj != null}");
 
         Carga = GameObject.Find("Canvas")?.transform.GetChild(6).gameObject;
-        Debug.Log($"[Start] Carga encontrada: {Carga != null}");
+        //Debug.Log($"[Start] Carga encontrada: {Carga != null}");
 
         Gata = GameObject.Find("Gata")?.GetComponent<Transform>();
-        Debug.Log($"[Start] Gata encontrada: {Gata != null}");
+        //Debug.Log($"[Start] Gata encontrada: {Gata != null}");
 
         if (Gata == null)
         {
-            Debug.LogError("❌ No se encontró el objeto 'Gata' en la escena.");
+            //Debug.LogError("❌ No se encontró el objeto 'Gata' en la escena.");
         }
     }
 
@@ -53,38 +53,38 @@ public class Scr_CambiadorBatalla : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (EsPlanta) return;
-        Debug.Log($"[Trigger] Algo entró en el trigger de {gameObject.name}: {other.name}");
+        //Debug.Log($"[Trigger] Algo entró en el trigger de {gameObject.name}: {other.name}");
 
         if (!other.CompareTag("Gata"))
         {
-            Debug.Log("[Trigger] ❌ El objeto NO es la Gata. Ignorado.");
+            //Debug.Log("[Trigger] ❌ El objeto NO es la Gata. Ignorado.");
             return;
         }
 
-        Debug.Log("[Trigger] ✔ Es la Gata.");
+        //Debug.Log("[Trigger] ✔ Es la Gata.");
 
         if (escenaCargada)
         {
-            Debug.Log("[Trigger] ❌ escenaCargada ya era TRUE. No repetimos.");
+            //Debug.Log("[Trigger] ❌ escenaCargada ya era TRUE. No repetimos.");
             return;
         }
 
         bool puedeCaminar = Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar;
-        Debug.Log($"[Trigger] PuedeCaminar = {puedeCaminar}");
+        //Debug.Log($"[Trigger] PuedeCaminar = {puedeCaminar}");
 
         if (!puedeCaminar)
         {
-            Debug.Log("[Trigger] ❌ La gata NO puede caminar. No cambiamos escena.");
+            //Debug.Log("[Trigger] ❌ La gata NO puede caminar. No cambiamos escena.");
             return;
         }
 
         // Si llegó aquí: todas las condiciones se cumplieron
-        Debug.Log("[Trigger] 🟢 TODAS LAS CONDICIONES SE CUMPLEN → INICIAR COROUTINA");
+        //Debug.Log("[Trigger] 🟢 TODAS LAS CONDICIONES SE CUMPLEN → INICIAR COROUTINA");
 
         Cambiando = true;
         escenaCargada = true;
 
-        Debug.Log("[Trigger] Cambiando = TRUE, escenaCargada = TRUE");
+        //Debug.Log("[Trigger] Cambiando = TRUE, escenaCargada = TRUE");
 
         StartCoroutine(CargarEscena());
     }
@@ -92,43 +92,43 @@ public class Scr_CambiadorBatalla : MonoBehaviour
     public void Iniciar()
     {
         bool puedeCaminar = Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar;
-        Debug.Log($"[Trigger] PuedeCaminar = {puedeCaminar}");
+        //Debug.Log($"[Trigger] PuedeCaminar = {puedeCaminar}");
 
         if (!puedeCaminar)
         {
-            Debug.Log("[Trigger] ❌ La gata NO puede caminar. No cambiamos escena.");
+            //Debug.Log("[Trigger] ❌ La gata NO puede caminar. No cambiamos escena.");
             return;
         }
 
         // Si llegó aquí: todas las condiciones se cumplieron
-        Debug.Log("[Trigger] 🟢 TODAS LAS CONDICIONES SE CUMPLEN → INICIAR COROUTINA");
+        //Debug.Log("[Trigger] 🟢 TODAS LAS CONDICIONES SE CUMPLEN → INICIAR COROUTINA");
 
         Cambiando = true;
         escenaCargada = true;
 
-        Debug.Log("[Trigger] Cambiando = TRUE, escenaCargada = TRUE");
+        //Debug.Log("[Trigger] Cambiando = TRUE, escenaCargada = TRUE");
         StartCoroutine(CargarEscena());
     }
     IEnumerator CargarEscena()
     {
-        Debug.Log($"[CargarEscena] 🟧 CORRUTINA INICIADA por: {gameObject.name}");
-        Debug.Log($"[CargarEscena] Estado inicial → Cambiando={Cambiando}, escenaCargada={escenaCargada}");
+        //Debug.Log($"[CargarEscena] 🟧 CORRUTINA INICIADA por: {gameObject.name}");
+        //Debug.Log($"[CargarEscena] Estado inicial → Cambiando={Cambiando}, escenaCargada={escenaCargada}");
 
         PlayerPrefs.Save();
-        Debug.Log("[CargarEscena] PlayerPrefs guardados");
+        //Debug.Log("[CargarEscena] PlayerPrefs guardados");
 
-        Debug.Log("[CargarEscena] Preparando cámara...");
+        //Debug.Log("[CargarEscena] Preparando cámara...");
 
         var mainCamera = Camera.main;
-        Debug.Log($"[CargarEscena] Cámara principal: {mainCamera != null}");
+        //Debug.Log($"[CargarEscena] Cámara principal: {mainCamera != null}");
 
         if (mainCamera != null)
         {
             var animador1 = mainCamera.transform.GetChild(0)?.GetComponent<Animator>();
             var animador2 = mainCamera.transform.GetChild(1)?.GetComponent<Animator>();
 
-            Debug.Log($"[CargarEscena] Animator 1 encontrado: {animador1 != null}");
-            Debug.Log($"[CargarEscena] Animator 2 encontrado: {animador2 != null}");
+            //Debug.Log($"[CargarEscena] Animator 1 encontrado: {animador1 != null}");
+            //Debug.Log($"[CargarEscena] Animator 2 encontrado: {animador2 != null}");
 
             if (animador1 != null) animador1.Play("Cerrar");
             if (animador2 != null) animador2.Play("Cerrar");
@@ -136,22 +136,22 @@ public class Scr_CambiadorBatalla : MonoBehaviour
 
         if (Reloj != null)
         {
-            Debug.Log("[CargarEscena] Desactivando reloj.");
+            //Debug.Log("[CargarEscena] Desactivando reloj.");
             Reloj.SetActive(false);
         }
         else Debug.LogWarning("[CargarEscena] ⚠ No se encontró el reloj");
 
         var singleton = GameObject.Find("Singleton")?.GetComponent<Scr_DatosSingletonBatalla>();
-        Debug.Log($"[CargarEscena] Singleton encontrado: {singleton != null}");
+        //Debug.Log($"[CargarEscena] Singleton encontrado: {singleton != null}");
 
         if (singleton == null)
         {
-            Debug.LogError("❌ No se encontró el Singleton. No se puede continuar.");
+            //Debug.LogError("❌ No se encontró el Singleton. No se puede continuar.");
             Cambiando = false;
             yield break;
         }
 
-        Debug.Log("[CargarEscena] Asignando valores al Singleton...");
+        //Debug.Log("[CargarEscena] Asignando valores al Singleton...");
 
         singleton.Enemigo = PrefabEnemigo;
         singleton.Mision = Mision;
@@ -162,40 +162,40 @@ public class Scr_CambiadorBatalla : MonoBehaviour
         singleton.ModoSeleccionado = Modo;
         singleton.Pista = Pista;
         singleton.NombreFruta = Fruta;
-        Debug.Log("[CargarEscena] Valores básicos asignados.");
+        //Debug.Log("[CargarEscena] Valores básicos asignados.");
 
         var sol = GameObject.Find("Sol");
-        Debug.Log($"[CargarEscena] Sol encontrado: {sol != null}");
+        //Debug.Log($"[CargarEscena] Sol encontrado: {sol != null}");
 
         singleton.Luz = sol.GetComponent<Light>().color;
 
         var controladorTiempo = GameObject.Find("Controlador Tiempo");
-        Debug.Log($"[CargarEscena] Controlador Tiempo encontrado: {controladorTiempo != null}");
+        //Debug.Log($"[CargarEscena] Controlador Tiempo encontrado: {controladorTiempo != null}");
 
         singleton.HoraActual = controladorTiempo.GetComponent<Scr_ControladorTiempo>().HoraActual;
 
         if (Carga != null)
         {
-            Debug.Log("[CargarEscena] Activando pantalla de carga.");
+           // Debug.Log("[CargarEscena] Activando pantalla de carga.");
             Carga.SetActive(true);
         }
         else Debug.LogWarning("[CargarEscena] ⚠ No se encontró la pantalla de carga.");
 
-        Debug.Log("[CargarEscena] Esperando 1 segundo...");
+        //Debug.Log("[CargarEscena] Esperando 1 segundo...");
         yield return new WaitForSeconds(1);
 
-        Debug.Log("[CargarEscena] Comprobando build settings...");
+        //Debug.Log("[CargarEscena] Comprobando build settings...");
 
         if (SceneManager.sceneCountInBuildSettings > 3)
         {
-            Debug.Log("[CargarEscena] OK. Iniciando carga asíncrona...");
+            //Debug.Log("[CargarEscena] OK. Iniciando carga asíncrona...");
 
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(3);
             asyncLoad.allowSceneActivation = false;
 
             while (!asyncLoad.isDone)
             {
-                Debug.Log($"📡 Progreso de carga: {(asyncLoad.progress * 100f)}%");
+                //Debug.Log($"📡 Progreso de carga: {(asyncLoad.progress * 100f)}%");
 
                 if (asyncLoad.progress >= 0.9f)
                 {
@@ -206,13 +206,13 @@ public class Scr_CambiadorBatalla : MonoBehaviour
                 yield return null;
             }
 
-            Debug.Log("🎉 Escena activada correctamente.");
+            //Debug.Log("🎉 Escena activada correctamente.");
         }
         else
         {
-            Debug.LogError("❌ La escena 3 no está en los Build Settings.");
+            //Debug.LogError("❌ La escena 3 no está en los Build Settings.");
         }
 
-        Debug.Log("[CargarEscena] FIN de la corrutina.");
+        //Debug.Log("[CargarEscena] FIN de la corrutina.");
     }
 }

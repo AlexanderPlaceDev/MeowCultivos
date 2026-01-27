@@ -93,7 +93,7 @@ public class Controlador_EventosGenerales : MonoBehaviour
                 e.sonidoReproducido = false;
             }
 
-            Debug.Log("RESET DIARIO DE EVENTOS: " + diaActual);
+            //Debug.Log("RESET DIARIO DE EVENTOS: " + diaActual);
         }
         // -------------------------------
 

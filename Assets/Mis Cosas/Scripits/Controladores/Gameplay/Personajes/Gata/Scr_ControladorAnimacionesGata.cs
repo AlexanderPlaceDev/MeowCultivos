@@ -89,8 +89,16 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
             Anim.SetBool("Retrocediendo", false);
         }
 
-        GetComponent<Scr_Movimiento>().enabled = PuedeCaminar;
-        GetComponent<Scr_GiroGata>().enabled = PuedeCaminar;
+        if (GetComponent<Scr_Movimiento>())
+        {
+            GetComponent<Scr_Movimiento>().enabled = PuedeCaminar;
+
+        }
+
+        if (GetComponent<Scr_GiroGata>())
+        {
+            GetComponent<Scr_GiroGata>().enabled = PuedeCaminar;
+        }
     }
 
     public void DetenerGata()

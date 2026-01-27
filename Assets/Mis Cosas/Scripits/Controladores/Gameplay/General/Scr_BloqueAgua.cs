@@ -116,6 +116,7 @@ public class Scr_BloqueAgua : MonoBehaviour
     {
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRegar = true;
         gata.GetChild(3).gameObject.SetActive(true);
+        gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite=icono;
     }
 
     void DesactivarUI()

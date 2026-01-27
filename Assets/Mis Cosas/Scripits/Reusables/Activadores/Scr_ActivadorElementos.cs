@@ -131,15 +131,14 @@ public class Scr_ActivadorElementos : MonoBehaviour
 
         if (string.IsNullOrEmpty(CinematicaPrevia))
         {
-            Debug.Log(5 + " " + gameObject.name);
+            //Debug.Log(5 + " " + gameObject.name);
             vioCinematicaPrevia = true;
         }
         else
         {
-            Debug.Log(PlayerPrefs.GetString("Cinematica " + CinematicaPrevia, "No") + " cinematica " + CinematicaPrevia);
+            //Debug.Log(PlayerPrefs.GetString("Cinematica " + CinematicaPrevia, "No") + " cinematica " + CinematicaPrevia);
             if (PlayerPrefs.GetString("Cinematica " + CinematicaPrevia, "No") == "Si")
             {
-                Debug.Log(7);
                 vioCinematicaPrevia = true;
             }
         }
@@ -208,7 +207,7 @@ public class Scr_ActivadorElementos : MonoBehaviour
             diaCorrecto &= diaPermitido;
         }
 
-        Debug.Log("Habilidad:" + tieneHabilidad + " Enrango:" + dentroDeRango + " Dia:" + diaCorrecto + " previa:" + vioCinematicaPrevia + " nohavistoesta:" + noHaVistoEsta + " Bloqueada:" + bloqueadoPorTiempo + " " + gameObject.name);
+        //Debug.Log("Habilidad:" + tieneHabilidad + " Enrango:" + dentroDeRango + " Dia:" + diaCorrecto + " previa:" + vioCinematicaPrevia + " nohavistoesta:" + noHaVistoEsta + " Bloqueada:" + bloqueadoPorTiempo + " " + gameObject.name);
 
         bool activar =
             tieneHabilidad &&
