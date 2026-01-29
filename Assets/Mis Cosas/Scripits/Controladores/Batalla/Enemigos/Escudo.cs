@@ -29,7 +29,6 @@ public class Escudo : MonoBehaviour
         if (other.gameObject.tag == "Golpe")
         {
             enemy.FueBloqueado = true; 
-            Debug.LogError("wwww");
             int Daño = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño;
             quitar_Restiencia(Daño);
         }
@@ -45,7 +44,6 @@ public class Escudo : MonoBehaviour
 
     public void quitar_Restiencia(float daño)
     {
-        Debug.LogError("Escudo");
         EscudoSalud -= daño;
         if (EscudoSalud < 0)
         {
