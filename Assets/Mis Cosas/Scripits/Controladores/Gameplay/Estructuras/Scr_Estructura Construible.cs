@@ -16,8 +16,10 @@ public class Scr_EstructuraConstruible : MonoBehaviour
     [SerializeField] GameObject[] ObjetosUI;
     [SerializeField] GameObject Canvas;
 
+    [SerializeField] GameObject CanvasDemo;
     Scr_Inventario Inventario;
 
+    ChecarInput Checar_input;
     void Start()
     {
         Inventario = GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>();
@@ -69,6 +71,8 @@ public class Scr_EstructuraConstruible : MonoBehaviour
         PlayerPrefs.SetString(Estructura, "Si");
 
         BotonCerrar();
+
+        CrearUIdemo();
         Start();
     }
 
@@ -79,6 +83,13 @@ public class Scr_EstructuraConstruible : MonoBehaviour
         GetComponent<Scr_ActivadorMenuEstructuraFijo>().CerrarTablero();
     }
 
+    void CrearUIdemo()
+    {
+
+        Checar_input = GameObject.Find("Singleton").GetComponent<ChecarInput>();
+        Checar_input.CammbiarAction_UI();
+        Instantiate(CanvasDemo);
+    }
     private void DesactivarCartel()
     {
         Canvas.SetActive(false );
