@@ -31,6 +31,33 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
     [SerializeField] private float DuracionBarra;
     [SerializeField] private GameObject ObjetoCreado;
 
+    [Header("En caso de tener varias estructuras")]
+    [SerializeField] string PlanoRequerido;
+    [SerializeField] GameObject BotonEstructuraPrimaria;
+    [SerializeField] Sprite ImagenBotonEstructuraPrimaria;
+    [SerializeField] Sprite ImagenIconoEstructuraPrimaria;
+    [SerializeField] GameObject BotonEstructuraSecundaria;
+    [SerializeField] Sprite ImagenBotonEstructuraSecundaria;
+    [SerializeField] Sprite ImagenIconoEstructuraSecundaria;
+    [SerializeField] Image PanelObjetos;
+    [SerializeField] Sprite PanelObjetosPrincipal;
+    [SerializeField] Sprite PanelObjetosSecundario;
+    [SerializeField] Image PanelInformacion;
+    [SerializeField] Sprite PanelInformacionPrincipal;
+    [SerializeField] Sprite PanelInformacionsecundario;
+    [SerializeField] Image PanelProductos;
+    [SerializeField] Sprite PanelProductoPrincipal;
+    [SerializeField] Sprite PanelProductoSecundario;
+    [SerializeField] GameObject[] ObjetosPrincipales;
+    [SerializeField] GameObject[] ObjetosSecundarios;
+    [SerializeField] GameObject BarraCarga;
+    [SerializeField] Sprite CargaPrincipal;
+    [SerializeField] Sprite CargaSombraPrincipal;
+    [SerializeField] Sprite CargaSecundario;
+    [SerializeField] Sprite CargaSombraSecundario;
+    private int estructuraActual = 0;
+    [SerializeField] private Scr_ActivadorMenuEstructuraCircular Activador;
+
     private Image Carga;
     private int ObjetoActual = 0;
     private float TiempoProduciendo = 0;
@@ -49,6 +76,8 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
 
     void Start()
     {
+
+
         Carga = Barra.transform.GetChild(1).GetComponent<Image>();
         Cargar();
 
@@ -57,6 +86,17 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
             ActualizarObjetoCreadoVisual();
         else
             LimpiarObjetoCreadoUI();
+    }
+
+    private void OnEnable()
+    {
+        if (PlanoRequerido != "")
+        {
+            if (PlayerPrefs.GetString("Habilidad:" + PlanoRequerido, "No") == "Si")
+            {
+                BotonEstructuraSecundaria.gameObject.SetActive(true);
+            }
+        }
     }
 
     void Update()
@@ -311,4 +351,90 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
             .GetComponent<TextMeshProUGUI>()
             .text = "0";
     }
+
+    public void DecidirCambiarOSalir(int NumEstructura)
+    {
+
+        if (Produciendo || cantidadAProducir > 0)
+        {
+            return;
+        }
+
+
+        if (NumEstructura == estructuraActual)
+        {
+            Activador.Salir();
+        }
+        else
+        {
+            estructuraActual = NumEstructura;
+            ActualizarEstructura();
+        }
+    }
+
+    private void ActualizarEstructura()
+    {
+        if (estructuraActual == 0)
+        {
+            BotonEstructuraPrimaria.GetComponent<Image>().sprite = ImagenBotonEstructuraPrimaria;
+            BotonEstructuraPrimaria.transform.GetChild(0).gameObject.SetActive(true);
+            BotonEstructuraSecundaria.GetComponent<Image>().sprite = ImagenIconoEstructuraSecundaria;
+            BotonEstructuraSecundaria.transform.GetChild(0).gameObject.SetActive(false);
+
+
+            PanelInformacion.sprite = PanelInformacionPrincipal;
+            PanelObjetos.sprite = PanelObjetosPrincipal;
+            PanelProductos.sprite = PanelProductoPrincipal;
+            PanelProductos.transform.GetChild(1).GetComponent<Image>().sprite = PanelProductoPrincipal;
+            BarraCarga.transform.GetChild(0).GetComponent<Image>().sprite = CargaSombraPrincipal;
+            BarraCarga.transform.GetChild(1).GetComponent<Image>().sprite = CargaPrincipal;
+
+            foreach (GameObject Objeto in ObjetosPrincipales)
+            {
+                Objeto.SetActive(true);
+            }
+            foreach (GameObject Objeto in ObjetosSecundarios)
+            {
+                Objeto.SetActive(false);
+            }
+        }
+        else
+        {
+            BotonEstructuraPrimaria.GetComponent<Image>().sprite = ImagenIconoEstructuraPrimaria;
+            BotonEstructuraPrimaria.transform.GetChild(0).gameObject.SetActive(false);
+            BotonEstructuraSecundaria.GetComponent<Image>().sprite = ImagenBotonEstructuraSecundaria;
+            BotonEstructuraSecundaria.transform.GetChild(0).gameObject.SetActive(true);
+
+            PanelInformacion.sprite = PanelInformacionsecundario;
+            PanelObjetos.sprite = PanelObjetosSecundario;
+            PanelProductos.sprite = PanelProductoSecundario;
+            PanelProductos.transform.GetChild(1).GetComponent<Image>().sprite = PanelProductoSecundario;
+            BarraCarga.transform.GetChild(0).GetComponent<Image>().sprite = CargaSombraSecundario;
+            BarraCarga.transform.GetChild(1).GetComponent<Image>().sprite = CargaSecundario;
+
+            foreach (GameObject Objeto in ObjetosPrincipales)
+            {
+                Objeto.SetActive(false);
+            }
+
+            foreach (GameObject Objeto in ObjetosSecundarios)
+            {
+                Objeto.SetActive(true);
+            }
+        }
+
+        for (int i = 0; i < ObjetosInfo.transform.childCount; i++)
+        {
+            Transform hijo = ObjetosInfo.transform.GetChild(i);
+
+            if (hijo.gameObject.activeInHierarchy)
+            {
+                SeleccionarItem(i);
+                break;
+            }
+        }
+
+    }
+
+
 }
