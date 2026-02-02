@@ -4,6 +4,7 @@ using Unity.AI.Navigation;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Scr_ControladorOleadas : MonoBehaviour
@@ -36,12 +37,28 @@ public class Scr_ControladorOleadas : MonoBehaviour
     public List<GameObject> enemigosOleada = new List<GameObject>();
     public int OleadaActual = 1;
     Scr_ControladorBatalla ControladorBatalla;
+
+
+    PlayerInput playerInput;
+    InputIconProvider IconProvider;
+    private InputAction Interactuar;
+
+
+    private Sprite iconoActualInteractuar = null;
+    private string textoActualInteractuar = "";
     void Start()
     {
         ControladorBatalla = GetComponent<Scr_ControladorBatalla>();
         singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
         prefabEnemigo = singleton.Enemigo;
         CantEnemigosPorOleada = prefabEnemigo.GetComponent<Scr_Enemigo>().CantidadEnemigosPorOleada;
+
+
+        playerInput = singleton.GetComponent<PlayerInput>();
+        IconProvider = singleton.GetComponent<InputIconProvider>();
+
+
+        Interactuar = playerInput.actions["Interactuar"];
         // Inicializar barra de oleadas
         var enemigo = singleton.Enemigo.GetComponent<Scr_Enemigo>();
         float dificultad = enemigo.DificultadInicial;
@@ -104,6 +121,8 @@ public class Scr_ControladorOleadas : MonoBehaviour
             {
                 TextoCantidadEnemigos.text = (CantEnemigosPorOleada * OleadaActual) - enemigosOleada.Count + "/" + CantEnemigosPorOleada * OleadaActual;
                 BotonOleada.SetActive(false);
+                iconoActualInteractuar = null;
+                textoActualInteractuar = "";
             }
             else
             {
@@ -115,7 +134,8 @@ public class Scr_ControladorOleadas : MonoBehaviour
                 {
                     BotonOleada.SetActive(true);
 
-                    if (Input.GetKey(KeyCode.E))
+                    IconProvider.ActualizarIconoUI(Interactuar, BotonOleada.transform, ref iconoActualInteractuar, ref textoActualInteractuar, true);
+                    if (Interactuar.IsPressed())
                     {
                         estaPresionandoE = true;
                         tiempoPresionE += Time.deltaTime;

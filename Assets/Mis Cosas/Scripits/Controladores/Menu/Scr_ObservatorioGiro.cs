@@ -19,6 +19,8 @@ public class Scr_ObservatorioGiro : MonoBehaviour
 
     private Quaternion childInitialLocalRotation;
 
+    InputIconProvider IconProvider;
+    VirtualMouseGamepad MouseGamepad;
     void Start()
     {
         if (child != null)
@@ -26,13 +28,27 @@ public class Scr_ObservatorioGiro : MonoBehaviour
             // Guarda la rotación inicial del hijo para no perderla
             childInitialLocalRotation = child.localRotation;
         }
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        MouseGamepad = GameObject.Find("Singleton").transform.GetChild(1).GetComponent<VirtualMouseGamepad>();
     }
 
     void Update()
     {
-        // Normalizar posición del mouse (0..1)
-        float mouseX = Mathf.Clamp01(Input.mousePosition.x / Screen.width);
-        float mouseY = Mathf.Clamp01(Input.mousePosition.y / Screen.height);
+        float mouseX=0;
+        float mouseY = 0;
+        if (IconProvider.UsandoGamepad())
+        {
+            mouseX = Mathf.Clamp01(MouseGamepad.virtualMouse.position.ReadValue().x / Screen.width);
+            mouseY = Mathf.Clamp01(MouseGamepad.virtualMouse.position.ReadValue().y / Screen.height);
+        }
+        else
+        {
+
+            // Normalizar posición del mouse (0..1)
+            mouseX = Mathf.Clamp01(Input.mousePosition.x / Screen.width);
+            mouseY = Mathf.Clamp01(Input.mousePosition.y / Screen.height);
+        }
+
 
         // Mapear a ángulos
         float parentAngle = Mathf.Lerp(parentMinAngle, parentMaxAngle, mouseX);
