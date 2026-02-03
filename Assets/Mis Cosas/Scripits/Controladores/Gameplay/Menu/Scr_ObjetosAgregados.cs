@@ -164,7 +164,7 @@ public class Scr_ObjetosAgregados : MonoBehaviour
     }
 
     // =========================
-    // XP (solo visual)
+    // XP (con niveles y habilidades)
     // =========================
     public void AgregarExperiencia(int cantidadXP)
     {
@@ -172,15 +172,45 @@ public class Scr_ObjetosAgregados : MonoBehaviour
 
         xpPendiente += cantidadXP;
 
-        int xpActual = PlayerPrefs.GetInt("XPActual", 0) + cantidadXP;
-        PlayerPrefs.SetInt("XPActual", xpActual);
+        int xpActual = PlayerPrefs.GetInt("XPActual", 0);
+        int xpSiguiente = PlayerPrefs.GetInt("XPSiguiente", 10);
+        int nivelActual = PlayerPrefs.GetInt("Nivel", 1);
 
-        XPText.text = "XP + " + xpPendiente;
+        xpActual += cantidadXP;
+
+        // SUBIDA DE NIVEL
+        if (xpActual >= xpSiguiente)
+        {
+            xpActual -= xpSiguiente;
+
+            nivelActual++;
+            xpSiguiente *= 2;
+
+            PlayerPrefs.SetInt("Nivel", nivelActual);
+            PlayerPrefs.SetInt("XPSiguiente", xpSiguiente);
+            PlayerPrefs.SetInt("PuntosDeHabilidad",
+                PlayerPrefs.GetInt("PuntosDeHabilidad", 0) + 3);
+
+            if (XPText != null)
+                XPText.text = "LV.+1";
+
+            xpAudioSource?.Play();
+        }
+        else
+        {
+            if (XPText != null)
+                XPText.text = "XP + " + xpPendiente;
+        }
+
+        PlayerPrefs.SetInt("XPActual", xpActual);
+        PlayerPrefs.Save();
+
         XPAnimator?.Play("Desaparecer");
 
         CancelInvoke(nameof(ResetXPVisual));
         Invoke(nameof(ResetXPVisual), 0.2f);
     }
+
 
     void ResetXPVisual()
     {
