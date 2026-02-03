@@ -19,6 +19,10 @@ public class InputIconSet : ScriptableObject
     public Sprite dpadRight;
     public Sprite leftStick;
     public Sprite rightStick;
+    public Sprite select;
+    public Sprite start;
+    public Sprite touchpad;
+    public Sprite options;
 
     // Opcional: teclado / mouse
     public Sprite leftMouseButton;

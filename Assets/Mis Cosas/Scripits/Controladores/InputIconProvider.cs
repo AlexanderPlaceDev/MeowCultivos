@@ -118,7 +118,7 @@ public class InputIconProvider : MonoBehaviour
 
         string path = control.path.ToLower();
         InputIconSet icons = IconSetActual;
-
+        Debug.LogWarning(path);
         if (path.Contains("buttonsouth")) return icons.buttonSouth;
         if (path.Contains("buttonnorth")) return icons.buttonNorth;
         if (path.Contains("buttoneast")) return icons.buttonEast;
@@ -133,7 +133,10 @@ public class InputIconProvider : MonoBehaviour
         if (path.Contains("dpad/right")) return icons.dpadRight;
         if (path.Contains("leftstick")) return icons.leftStick;
         if (path.Contains("rightstick")) return icons.rightStick;
-
+        if (path.Contains("select")) return icons.select;
+        if (path.Contains("start")) return icons.start;
+        if (path.Contains("touchpadbutton")) return icons.touchpad;
+        if (path.Contains("options")) return icons.options;
         return null;
     }
 
@@ -282,7 +285,7 @@ public class InputIconProvider : MonoBehaviour
             case "Escape":
                 return "Esc";
             default:
-                return "tecla";
+                return tecla;
                     
         }
     }
