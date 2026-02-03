@@ -21,7 +21,7 @@ public class VirtualMouseGamepad : MonoBehaviour
     private float padding = 35f;
 
     private bool previousMouseState;
-    private Mouse virtualMouse;
+    public Mouse virtualMouse;
     private Mouse currentMouse;
     private Camera mainCamera;
 
