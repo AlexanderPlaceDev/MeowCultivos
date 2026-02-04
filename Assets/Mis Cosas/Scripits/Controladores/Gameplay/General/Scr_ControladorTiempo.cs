@@ -310,6 +310,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
         if (indexMinutos < intervalosMinutos.Length - 1)
         {
             MinutoActual = intervalosMinutos[indexMinutos + 1];
+            GuardarClimaDeldia();
         }
         else
         {
