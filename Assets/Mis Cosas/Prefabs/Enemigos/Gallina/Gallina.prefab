@@ -5288,6 +5288,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NombreEnemigo: 
   Vida: 10
+  VidaMaxima: 0
   Velocidad: 5
   "Da\xF1oMelee": 0
   "Da\xF1oDistancia": 0
@@ -5301,7 +5302,7 @@ MonoBehaviour:
   SpawnLejos: 0
   SpawnDistancia: 0
   CantidadDeOleadas: 1
-  CantidadEnemigosPorOleada: 20
+  CantidadEnemigosPorOleada: 3
   DificultadInicial: 1
   PuntoDeHuida: 2
   EstaMuerto: 0
@@ -5311,18 +5312,17 @@ MonoBehaviour:
   PrefabBala: {fileID: 0}
   SpawnBala: {fileID: 0}
   Drops:
-  - {fileID: 11400000, guid: 0addce6000cff2f459b2151a8a308c97, type: 2}
   - {fileID: 11400000, guid: e2e5c9ac1c1b77d4b91658849ea31af6, type: 2}
   XPMinima: 2
   XPMaxima: 3
   Probabilidades:
-  - 50
-  - 50
+  - 70
   Objetivo: {fileID: 0}
   ColorHerido: {r: 1, g: 0.5803922, b: 0.5803922, a: 1}
   DuracionCambioColor: 0.5
   tipoenemigo: 0
   tipocomportamiento: 1
+  Fruta: 0
   Controlador: {fileID: 0}
   estaStuneado: 0
   estaCongelado: 0

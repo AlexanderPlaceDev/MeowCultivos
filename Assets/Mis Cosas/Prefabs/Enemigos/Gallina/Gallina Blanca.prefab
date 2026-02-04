@@ -5298,6 +5298,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NombreEnemigo: 
   Vida: 10
+  VidaMaxima: 0
   Velocidad: 5
   "Da\xF1oMelee": 0
   "Da\xF1oDistancia": 0
@@ -5327,12 +5328,13 @@ MonoBehaviour:
   XPMaxima: 3
   Probabilidades:
   - 50
-  - 50
+  - 30
   Objetivo: {fileID: 0}
   ColorHerido: {r: 1, g: 0.5803922, b: 0.5803922, a: 1}
   DuracionCambioColor: 0.5
   tipoenemigo: 0
   tipocomportamiento: 1
+  Fruta: 0
   Controlador: {fileID: 0}
   estaStuneado: 0
   estaCongelado: 0
