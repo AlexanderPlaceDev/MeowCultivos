@@ -145,21 +145,27 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
 
     IEnumerator EsperarTalar()
     {
+        PuedeCaminar = false;
         yield return new WaitForSeconds(TiempoTalar);
+        PuedeCaminar = true;
         Talando = false;
     }
 
     IEnumerator EsperarRecolectar()
     {
         int tiempo = PlayerPrefs.GetString("Habilidad:Guante", "No") == "Si" ? 2 : 1;
+        PuedeCaminar = false;
         yield return new WaitForSeconds(TiempoRecoleccion / tiempo);
+        PuedeCaminar = true;
         Recolectando = false;
     }
 
     IEnumerator EsperarRegar()
     {
-        int tiempo = PlayerPrefs.GetString("Habilidad:Guante", "No") == "Si" ? 2 : 1;
+        int tiempo = PlayerPrefs.GetString("Habilidad:Guante", "No") == "Si" ? 2 : 1; 
+        PuedeCaminar = false;
         yield return new WaitForSeconds(TiempoRegar / tiempo);
+        PuedeCaminar = true;
         Regando = false;
     }
 

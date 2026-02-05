@@ -29,7 +29,7 @@ public class Scr_DatosArmas : MonoBehaviour
             }
             else
             {
-                ArmasDesbloqueadas[i] = true;
+                ArmasDesbloqueadas[i] = false;
             }
         }
 

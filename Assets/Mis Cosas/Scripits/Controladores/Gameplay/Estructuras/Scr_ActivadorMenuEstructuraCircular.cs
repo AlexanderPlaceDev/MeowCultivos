@@ -1,7 +1,4 @@
-﻿using PrimeTween;
-using TMPro;
-using UnityEditor.PackageManager;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 

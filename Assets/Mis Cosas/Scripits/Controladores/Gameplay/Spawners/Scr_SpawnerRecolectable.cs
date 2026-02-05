@@ -29,6 +29,13 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     private float TiempoRespawnAleatorio;
     private Transform gata;
 
+    [Header("Debug (solo lectura)")]
+    [SerializeField] private float tiempoActualRespawn;
+    [SerializeField] private float tiempoRestanteRespawn;
+    [SerializeField] private bool empiezaSinObjeto = false;
+
+
+
     PlayerInput playerInput;
     private InputAction Recolectar;
     InputIconProvider IconProvider;
@@ -36,16 +43,96 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     private string textoActualSpawn = "";
     public bool uiActiva = false;
 
+    private string KeyTieneObjeto => "Recolectable_Tiene_" + gameObject.name;
+    private string KeyRespawn => "Recolectable_Respawn_" + gameObject.name;
+    private string KeyRespawnObjetivo => "Recolectable_RespawnObjetivo_" + gameObject.name;
+
+
     void Start()
     {
         gata = GameObject.Find("Gata").transform;
-        TiempoRespawnAleatorio = Random.Range(TiempoRespawn[0], TiempoRespawn[1]);
         batalla = GetComponent<Scr_CambiadorBatalla>();
 
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         Recolectar = playerInput.actions["Recolectar"];
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+
+        // ================= ESTADO INICIAL REAL =================
+        bool estadoInicialTieneObjeto = false;
+
+        if (TryGetComponent<MeshRenderer>(out var mr))
+        {
+            estadoInicialTieneObjeto = mr.enabled;
+        }
+        else
+        {
+            foreach (Transform h in transform)
+            {
+                if (h.GetComponent<Renderer>()?.enabled == true)
+                {
+                    estadoInicialTieneObjeto = true;
+                    break;
+                }
+            }
+        }
+
+        // ================= CARGA / INIT PERSISTENTE =================
+        bool tieneSave = PlayerPrefs.HasKey(KeyTieneObjeto);
+
+        if (!tieneSave)
+        {
+            // PRIMER ARRANQUE
+            TieneObjeto = estadoInicialTieneObjeto;
+
+            if (TieneObjeto)
+            {
+                ActivarObjeto();
+            }
+            else
+            {
+                TieneObjeto = false;
+                Tiempo = 0f;
+                TiempoRespawnAleatorio = Random.Range(TiempoRespawn[0], TiempoRespawn[1]);
+
+                PlayerPrefs.SetInt(KeyTieneObjeto, 0);
+                PlayerPrefs.SetFloat(KeyRespawn, Tiempo);
+                PlayerPrefs.SetFloat(KeyRespawnObjetivo, TiempoRespawnAleatorio);
+                PlayerPrefs.Save();
+
+                DesactivarObjeto();
+            }
+        }
+        else
+        {
+            TieneObjeto = PlayerPrefs.GetInt(KeyTieneObjeto) == 1;
+
+            if (TieneObjeto)
+            {
+                ActivarObjeto();
+            }
+            else
+            {
+                Tiempo = PlayerPrefs.GetFloat(KeyRespawn, 0f);
+
+                // 🔒 CREAR Y GUARDAR EL OBJETIVO SI NO EXISTE
+                if (!PlayerPrefs.HasKey(KeyRespawnObjetivo))
+                {
+                    TiempoRespawnAleatorio = Random.Range(TiempoRespawn[0], TiempoRespawn[1]);
+                    PlayerPrefs.SetFloat(KeyRespawnObjetivo, TiempoRespawnAleatorio);
+                    PlayerPrefs.Save();
+                }
+                else
+                {
+                    TiempoRespawnAleatorio = PlayerPrefs.GetFloat(KeyRespawnObjetivo);
+                }
+
+                DesactivarObjeto();
+            }
+        }
+
     }
+
+
 
     void OnEnable()
     {
@@ -100,20 +187,36 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
         }
         else
         {
-            // Manejo de respawn
             Tiempo += Time.deltaTime;
+
+            tiempoActualRespawn = Tiempo;
+            tiempoRestanteRespawn = Mathf.Max(0f, TiempoRespawnAleatorio - Tiempo);
+
+            // 🔒 Persistir tiempo transcurrido
+            PlayerPrefs.SetFloat(KeyRespawn, Tiempo);
+
             if (Tiempo >= TiempoRespawnAleatorio)
             {
                 Tiempo = 0;
+                tiempoActualRespawn = 0;
+                tiempoRestanteRespawn = 0;
+
                 TiempoRespawnAleatorio = Random.Range(TiempoRespawn[0], TiempoRespawn[1]);
-                if (OcupaPadre && Padre.GetComponent<MeshRenderer>().enabled)
-                    ActivarObjeto();
+                PlayerPrefs.SetFloat(KeyRespawnObjetivo, TiempoRespawnAleatorio);
+
+                ActivarObjeto();
+
+                PlayerPrefs.SetInt(KeyTieneObjeto, 1);
+                PlayerPrefs.DeleteKey(KeyRespawn);
+                PlayerPrefs.Save();
             }
             else
             {
                 DesactivarObjeto();
             }
         }
+
+
 
         if (recolectando)
         {
@@ -181,7 +284,14 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
         {
             DarObjeto();
             TieneObjeto = false;
+
+            PlayerPrefs.SetInt(KeyTieneObjeto, 0);
+            PlayerPrefs.SetFloat(KeyRespawn, Tiempo);
+            PlayerPrefs.SetFloat(KeyRespawnObjetivo, TiempoRespawnAleatorio);
+            PlayerPrefs.Save();
+
         }
+
     }
 
     void DarObjeto()
