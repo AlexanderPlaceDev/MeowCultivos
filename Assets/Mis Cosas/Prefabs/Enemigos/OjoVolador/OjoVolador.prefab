@@ -5406,7 +5406,7 @@ MonoBehaviour:
   EstaMuerto: 0
   UsaParticulasAlMorir: 1
   ParticulasMuerte: {fileID: 3735573181099434274}
-  MeshMuerte: {fileID: 0}
+  MeshMuerte: {fileID: 7277128848516291725}
   PrefabBala: {fileID: 0}
   SpawnBala: {fileID: 0}
   Drops: []
@@ -5416,6 +5416,7 @@ MonoBehaviour:
   Objetivo: {fileID: 0}
   ColorHerido: {r: 1, g: 0.5803922, b: 0.5803922, a: 0}
   DuracionCambioColor: 0.5
+  cambiandoColor: 0
   tipoenemigo: 1
   tipocomportamiento: 0
   Fruta: 0

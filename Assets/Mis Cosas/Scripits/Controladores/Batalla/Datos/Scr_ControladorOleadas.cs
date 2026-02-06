@@ -51,7 +51,7 @@ public class Scr_ControladorOleadas : MonoBehaviour
         ControladorBatalla = GetComponent<Scr_ControladorBatalla>();
         singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
         prefabEnemigo = singleton.Enemigo;
-        CantEnemigosPorOleada = prefabEnemigo.GetComponent<Scr_Enemigo>().CantidadEnemigosPorOleada;
+        CantEnemigosPorOleada = singleton.CantidadEnemigosPorOleada;
 
 
         playerInput = singleton.GetComponent<PlayerInput>();

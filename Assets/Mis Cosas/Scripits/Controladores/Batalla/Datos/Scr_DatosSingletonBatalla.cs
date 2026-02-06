@@ -5,6 +5,7 @@ using UnityEngine;
 public class Scr_DatosSingletonBatalla : MonoBehaviour
 {
     public GameObject Enemigo;
+    public int CantidadEnemigosPorOleada;
     public GameObject Fruta;
     public string NombreMapa;
     public string Mision;

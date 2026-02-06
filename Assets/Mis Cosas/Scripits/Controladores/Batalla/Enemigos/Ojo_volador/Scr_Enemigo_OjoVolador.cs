@@ -63,6 +63,7 @@ public class Scr_Enemigo_OjoVolador : Scr_Enemigo
     {
         if (!Aparecio || EstaMuerto) return;
 
+        Anim.SetBool("Golpeado", cambiandoColor);
         switch (currentState)
         {
             case State.Patrol:
@@ -119,6 +120,8 @@ public class Scr_Enemigo_OjoVolador : Scr_Enemigo
 
     void DiveAttack()
     {
+
+        Anim.SetBool("Atacando", true); 
         // Picado directo
         Vector3 picado = gata.transform.position;
         picado.y += AlturaAtaque;
@@ -129,8 +132,8 @@ public class Scr_Enemigo_OjoVolador : Scr_Enemigo
         if (!yaAtaco &&
             Vector3.Distance(transform.position, gata.transform.position) < 2.5f)
         {
-            yaAtaco = true;
 
+            yaAtaco = true;
             Scr_ControladorBatalla batalla =
                 Controlador.GetComponent<Scr_ControladorBatalla>();
 
@@ -147,6 +150,8 @@ public class Scr_Enemigo_OjoVolador : Scr_Enemigo
 
     void Retreat()
     {
+
+        Anim.SetBool("Atacando", false);
         MoveTowards(PosiciondelObjetivo, false);
 
         if (transform.position.y >= AlturaPatrulla - 0.5f)
