@@ -8,7 +8,7 @@ public class Scr_GiroGata : MonoBehaviour
 {
     public Transform Gata;
     public Transform CabezaGata;
-    public bool Control;
+    public bool CamFija;
     public float velocidad;
     Rigidbody rb;
     PlayerInput playerInput;
@@ -20,13 +20,23 @@ public class Scr_GiroGata : MonoBehaviour
         MoverHorizontal = playerInput.actions["MoverHorizontal"];
         CambiarCamara = playerInput.actions["CamaraLibre"];
         rb = GetComponent<Rigidbody>();
+       
+
+        if (PlayerPrefs.GetString("CamaraFija", "SI")== "SI")
+        {
+            CamFija = true;
+        }
+        else
+        {
+            CamFija = false;
+        }
         checar_Control();
 
     }
 
     public void checar_Control()
     {
-        if (!Control)
+        if (!CamFija)
         {
             GameObject.Find("Cosas Inutiles").transform.GetChild(2).GetComponent<CinemachineVirtualCamera>().Follow = Gata;
             //GetComponent<Scr_Movimiento>().UsaEjeHorizontal = false;
@@ -36,18 +46,27 @@ public class Scr_GiroGata : MonoBehaviour
             GameObject.Find("Cosas Inutiles").transform.GetChild(2).GetComponent<CinemachineVirtualCamera>().Follow = CabezaGata;
             //GetComponent<Scr_Movimiento>().UsaEjeHorizontal = false;
         }
+
+        if (CamFija)
+        {
+            PlayerPrefs.SetString("CamaraFija", "SI");
+        }
+        else
+        {
+            PlayerPrefs.SetString("CamaraFija", "NO");
+        }
     }
     private void Update()
     {
         if (CambiarCamara.WasPressedThisFrame())
         {
-            if (Control)
+            if (CamFija)
             {
-                Control = false;
+                CamFija = false;
             }
             else
             {
-                Control = true;
+                CamFija = true;
             }
             checar_Control();
         }

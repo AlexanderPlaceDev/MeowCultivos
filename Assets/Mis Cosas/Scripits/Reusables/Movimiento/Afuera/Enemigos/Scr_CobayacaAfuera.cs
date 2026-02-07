@@ -77,6 +77,9 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
             {
                 agente.ResetPath();
                 agente.isStopped = true;
+
+                CambiarAnimacion(Random.value < 0.5f ? "Iddle1" : "Iddle2");
+
                 ejecutando = false;
                 tiempoSinMover = 0f;
                 LanzarNuevoEstado();
@@ -132,11 +135,15 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
             while (agente.pathPending)
                 yield return null;
 
-            while (!corriendo && agente.remainingDistance > 1.2f)
+            while (!corriendo && agente.hasPath && agente.remainingDistance > agente.stoppingDistance + 0.1f)
                 yield return null;
 
+            agente.ResetPath();
             agente.isStopped = true;
         }
+
+        // 🔴 FORZAR IDLE AL TERMINAR
+        CambiarAnimacion(Random.value < 0.5f ? "Iddle1" : "Iddle2");
 
         ejecutando = false;
         LanzarNuevoEstado();
