@@ -251,7 +251,7 @@ public class Scr_ControladorCajaVenta : MonoBehaviour
     // =========================
     // RESET
     // =========================
-    void ResetearMarco()
+    public void ResetearMarco()
     {
         ObjetoSeleccionado = null;
         IndexSeleccionado = -1;
@@ -309,4 +309,47 @@ public class Scr_ControladorCajaVenta : MonoBehaviour
             trigger.triggers.Add(entry);
         }
     }
+
+    public void BotonSeleccionarMitad()
+    {
+        if (ObjetoSeleccionado == null)
+            return;
+
+        int max = ObtenerMaxCajas();
+        if (max <= 0)
+            return;
+
+        int mitad = max / 2;
+
+        // Si solo hay 1 caja posible, se queda en 1
+        CajasReservadas = Mathf.Max(1, mitad);
+
+        ActualizarReservaVisual();
+    }
+
+    public void BotonSeleccionarMaximo()
+    {
+        if (ObjetoSeleccionado == null)
+            return;
+
+        int max = ObtenerMaxCajas();
+        if (max <= 0)
+            return;
+
+        CajasReservadas = max;
+        ActualizarReservaVisual();
+    }
+
+    public void BotonResetearTodo()
+    {
+        // Si había un item seleccionado, restaurar su cantidad visual
+        if (TextoCantidadPrefabSeleccionado != null && IndexSeleccionado >= 0)
+        {
+            TextoCantidadPrefabSeleccionado.text =
+                Inventario.Cantidades[IndexSeleccionado].ToString();
+        }
+
+        ResetearMarco();
+    }
+
 }

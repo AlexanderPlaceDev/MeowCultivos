@@ -436,5 +436,42 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
 
     }
 
+    public void BotonResetearProduccion()
+    {
+        // Devolver todo lo pendiente usando la lógica existente
+        while (cantidadAProducir > 0)
+        {
+            Flechas(false);
+        }
+    }
+
+    public void BotonProducirMitad()
+    {
+        int maxReal = cantidadAProducir + ObtenerCantidadMinima();
+        if (maxReal <= 0)
+            return;
+
+        int mitad = maxReal / 2;
+        mitad = Mathf.Max(1, mitad);
+
+        while (cantidadAProducir < mitad)
+            Flechas(true);
+
+        while (cantidadAProducir > mitad)
+            Flechas(false);
+    }
+
+
+
+    public void BotonProducirMaximo()
+    {
+        int maxReal = cantidadAProducir + ObtenerCantidadMinima();
+        if (maxReal <= 0)
+            return;
+
+        while (cantidadAProducir < maxReal)
+            Flechas(true);
+    }
+
 
 }

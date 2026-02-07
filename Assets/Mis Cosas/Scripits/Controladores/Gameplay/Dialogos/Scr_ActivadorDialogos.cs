@@ -115,13 +115,14 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             }
 
             // Ver misiones (F)
-            if (UsaMisionesSecundarias && Misiones.IsPressed() && !Hablando && !Comprando)
+            if (UsaMisionesSecundarias && Misiones.IsPressed() && !Hablando && !Comprando && !ViendoMisiones)
             {
                 Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
                 ControladorMisionesSecundariasUI.activadorActual = this;
                 ViendoMisiones = true;
                 ManejarMisionesSecundarias();
             }
+
         }
 
         // Si el diálogo terminó y no hay tienda activa → salir del modo diálogo
