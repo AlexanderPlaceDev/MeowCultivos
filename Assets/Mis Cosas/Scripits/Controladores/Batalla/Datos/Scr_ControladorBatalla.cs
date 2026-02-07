@@ -1108,7 +1108,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     public void ChecarRango(string arma)
     {
         int Rango = PlayerPrefs.GetInt("Rango " + arma, 1) - 1;
-        Debug.Log(Rango);
+        //Debug.LogWarning(Rango);
         if (Rango <= 0) return;
         //"Rango" + Nombre del arma
         //PlayerPrefs.GetInt("Rango " + Datosarmas.TodasLasArmas[objShow].Nombre, 1)-1
@@ -1146,6 +1146,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 Checar_Rango_Uva(Rango);
                 break;
         }
+
     }
 
     public void AumentarVelocidad(float plus)

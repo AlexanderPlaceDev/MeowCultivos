@@ -39,7 +39,7 @@ public class Scr_Enemigo : MonoBehaviour
     public Color ColorHerido;
     public float DuracionCambioColor = 0.5f; // Duración del cambio de color en segundos
     private Material[] materialesOriginales;
-    private bool cambiandoColor = false;
+    public bool cambiandoColor = false;
     private Scr_DatosSingletonBatalla Singleton;
 
     public enum TipoEnemigo { Terrestre, Volador }
