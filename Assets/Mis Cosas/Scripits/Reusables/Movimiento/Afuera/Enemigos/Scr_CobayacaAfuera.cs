@@ -124,25 +124,35 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
     {
         CambiarAnimacion("Caminar");
 
-        if (agente != null)
+        Vector3 punto = ObtenerDestinoSeguro();
+
+        if (agente == null || punto == transform.position)
         {
-            Vector3 punto = ObtenerDestinoSeguro();
-
-            agente.isStopped = false;
-            agente.speed = Velocidad;
-            agente.SetDestination(punto);
-
-            while (agente.pathPending)
-                yield return null;
-
-            while (!corriendo && agente.hasPath && agente.remainingDistance > agente.stoppingDistance + 0.1f)
-                yield return null;
-
-            agente.ResetPath();
-            agente.isStopped = true;
+            ejecutando = false;
+            LanzarNuevoEstado();
+            yield break;
         }
 
-        // 🔴 FORZAR IDLE AL TERMINAR
+        agente.isStopped = false;
+        agente.speed = Velocidad;
+        agente.SetDestination(punto);
+        Debug.Log($"Pending:{agente.pathPending} Dist:{agente.remainingDistance} Vel:{agente.velocity.magnitude}");
+        // ⏳ Esperar a que el path se calcule
+        while (agente.pathPending)
+            yield return null;
+
+        // 🚶‍♂️ Esperar a que realmente camine
+        while (!corriendo &&
+               agente.hasPath &&
+               agente.remainingDistance > agente.stoppingDistance)
+        {
+            yield return null;
+        }
+
+        // 🛑 Llegó correctamente
+        agente.ResetPath();
+        agente.isStopped = true;
+
         CambiarAnimacion(Random.value < 0.5f ? "Iddle1" : "Iddle2");
 
         ejecutando = false;
@@ -242,7 +252,7 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
                 continue;
 
             // 4️⃣ Punto final suficientemente lejos
-            if (Vector3.Distance(transform.position, hit.position) < 1f)
+            if (Vector3.Distance(transform.position, hit.position) < agente.stoppingDistance + 0.5f)
                 continue;
 
             return hit.position;

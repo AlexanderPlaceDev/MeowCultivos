@@ -5238,10 +5238,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 61a1e30d5ee4d6b43b3b1cde3ed981d8,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1968179448154146497}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 61a1e30d5ee4d6b43b3b1cde3ed981d8,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 664262159450791172}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 61a1e30d5ee4d6b43b3b1cde3ed981d8,
         type: 3}
@@ -5301,33 +5297,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!54 &1968179448154146497
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 979010116969621658}
-  serializedVersion: 4
-  m_Mass: 5
-  m_Drag: 2
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 2
 --- !u!195 &664262159450791172
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -5364,6 +5333,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NombreEnemigo: Lobo
   Vida: 10
+  VidaMaxima: 0
   Velocidad: 10
   "Da\xF1oMelee": 1
   "Da\xF1oDistancia": 0
@@ -5395,8 +5365,10 @@ MonoBehaviour:
   Objetivo: {fileID: 0}
   ColorHerido: {r: 1, g: 0.5803922, b: 0.5803922, a: 1}
   DuracionCambioColor: 0.5
+  cambiandoColor: 0
   tipoenemigo: 0
   tipocomportamiento: 0
+  Fruta: 0
   Controlador: {fileID: 0}
   estaStuneado: 0
   estaCongelado: 0

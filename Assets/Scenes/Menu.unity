@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.20421652, g: 0.03699344, b: 0.11615969, a: 1}
+  m_IndirectSpecularColor: {r: 0.20422114, g: 0.036994975, b: 0.116158225, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3363,8 +3363,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8bb3884ef9ddd542a3c1ab429fb8a7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xboxGenericIcons: {fileID: 11400000, guid: f2d1984c58c70ea4a830edcbf22c2cc2, type: 2}
-  playStationIcons: {fileID: 11400000, guid: da0489abcc1561d4488381ec5580358a, type: 2}
+  xboxGenericIcons: {fileID: 11400000, guid: 7436d26954db701488c8c34c93519918, type: 2}
+  playStationIcons: {fileID: 11400000, guid: 3e4a9a41706915a4e85411924e8121bb, type: 2}
   IconSetActual: {fileID: 0}
   tecladoBaseIcon: {fileID: 21300000, guid: 30a3d575549e6914680c16cd43762d9d, type: 3}
   tecladoMoreIcon: {fileID: 21300000, guid: 24bb285386dff32488bbc64e7b54c6e6, type: 3}
@@ -3542,6 +3542,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 39c4892a-5627-401c-b91d-44559bec323f
     m_ActionName: Player/Dialogo[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: be5e4515-bbab-4901-a7d2-f37bc193c59e
+    m_ActionName: UI/DialogoUI[/Keyboard/space,/DualSenseGamepadHID/buttonWest]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: UI
@@ -3573,6 +3577,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Enemigo: {fileID: 178227796199041654, guid: 56ec785b842568445b4122069a02dfb7, type: 3}
+  CantidadEnemigosPorOleada: 0
   Fruta: {fileID: 0}
   NombreMapa: Batalla Base
   Mision: 

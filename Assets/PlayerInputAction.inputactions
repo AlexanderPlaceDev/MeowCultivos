@@ -1812,6 +1812,28 @@
                     "action": "DialogoUI",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8e89a2f4-246e-4001-bca9-1c6aba536598",
+                    "path": "<DualShockGamepad>/touchpadButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayController",
+                    "action": "Regresar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4419e036-d459-4f0e-993b-94934e7b1275",
+                    "path": "<DualSenseGamepadHID>/touchpadButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayController",
+                    "action": "Regresar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
