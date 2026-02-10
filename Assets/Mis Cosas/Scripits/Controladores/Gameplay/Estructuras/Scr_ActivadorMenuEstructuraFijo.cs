@@ -29,7 +29,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
     InputIconProvider IconProvider;
     private Sprite iconoActualInteractuar = null;
     private string textoActualInteractuar = "";
-    void Awake()
+    void Start()
     {
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
         Camara360 = GameObject.Find("Camara 360");
