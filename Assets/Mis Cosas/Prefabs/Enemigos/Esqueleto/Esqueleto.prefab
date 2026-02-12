@@ -6322,6 +6322,7 @@ MonoBehaviour:
   Objetivo: {fileID: 0}
   ColorHerido: {r: 0.89433956, g: 0.35604832, b: 0.35604832, a: 1}
   DuracionCambioColor: 0.5
+  cambiandoColor: 0
   tipoenemigo: 0
   tipocomportamiento: 0
   Fruta: 0
@@ -6634,7 +6635,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.1, y: 11.76, z: 16.13}
+  m_Size: {x: 0.69, y: 11.76, z: 10.9}
   m_Center: {x: 1.04, y: -0.0037025327, z: -0.050677333}
 --- !u!114 &5456040745407882796
 MonoBehaviour:
