@@ -46,7 +46,7 @@ public class Scr_DatosArmas : MonoBehaviour
             }
             else
             {
-                HabilidatTDesbloqueadas[i] = true;
+                HabilidatTDesbloqueadas[i] = false;
             }
 
             UsosHabilidadesT[i] = PlayerPrefs.GetInt("UsoTemporal" + HabilidadesTemporales[i].Nombre, 0);
@@ -61,7 +61,7 @@ public class Scr_DatosArmas : MonoBehaviour
             }
             else
             {
-                HabilidatPDesbloqueadas[i] = true;
+                HabilidatPDesbloqueadas[i] = false;
             }
         }
 

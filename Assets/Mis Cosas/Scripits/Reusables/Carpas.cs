@@ -201,6 +201,8 @@ public class Carpas : MonoBehaviour
         {
             EstaEnRango = false;
             Gata.GetChild(3).gameObject.SetActive(false);
+            iconoActualInteractuar = null;
+            textoActualInteractuar = "";
         }
     }
 }

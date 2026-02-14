@@ -33,6 +33,7 @@ public class Scr_Arbusto : MonoBehaviour
     private InputAction Interactuar;
     private InputAction Recolectar;
     InputIconProvider IconProvider;
+    Scr_ControladorMisiones Mis;
 
     // Variables por botón para evitar parpadeo
     private Sprite iconoActualRecolectar = null;
@@ -54,6 +55,8 @@ public class Scr_Arbusto : MonoBehaviour
 
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+
+        Mis = GameObject.Find("ControladorMisiones").GetComponent<Scr_ControladorMisiones>();
 
         Interactuar = playerInput.actions["Interactuar"];
         Recolectar = playerInput.actions["Recolectar"];
@@ -180,7 +183,7 @@ public class Scr_Arbusto : MonoBehaviour
         gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = icono;
 
 
-        if (PlayerPrefs.GetString("TutorialPeleas", "NO") == "SI")
+        if (HayMisionRecoleccion())
         {
             gata.GetChild(3).GetChild(2).gameObject.SetActive(true);
             gata.GetChild(3).GetChild(3).gameObject.SetActive(true);
@@ -222,4 +225,22 @@ public class Scr_Arbusto : MonoBehaviour
         IconProvider.ActualizarIconoUI(Interactuar, gata.GetChild(3).GetChild(2), ref iconoActualInteractuar, ref textoActualInteractuar, true);
     }
 
+
+    public bool HayMisionRecoleccion()
+    {
+        if(Mis.MisionPrincipal.Tipo == Scr_CreadorMisiones.Tipos.Recoleccion)
+        {
+            return true;
+        }
+
+        for (int i = 0; i < Mis.MisionesSecundarias.Count; i++) 
+        {
+            if (Mis.MisionesSecundarias[i].Tipo == Scr_CreadorMisiones.Tipos.Recoleccion)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
