@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
+  m_Name: Gel
+  m_EditorClassIdentifier: 
+  Nombre: Gel
+  TipoPlanta: 
+  Descripcion: Es una sustancia babosa y pegajosa
+  Icono: {fileID: 21300000, guid: e1a4fe776a92add448ead4eab3ee284f, type: 3}
+  IconoInventario: {fileID: 21300000, guid: 81821b804592e0043ad6f12ae1f09c03, type: 3}
+  MaterialesDeProduccion:
+  - {fileID: 11400000, guid: a1dcbf004b25dc8478076e9ce3ec3b63, type: 2}
+  - {fileID: 11400000, guid: 628ebdecdc44ae84da2bdd80604007a8, type: 2}
+  - {fileID: 11400000, guid: 0addce6000cff2f459b2151a8a308c97, type: 2}
+  - {fileID: 0}
+  CantidadMaterialesDeProduccion: 020000000200000002000000
+  CantidadProducto: 3
+  TiempoDeProduccion: 6
+  ValorComposta: 10
+  MinimoMaximoSembradio: 
+  XPRecolecta: 3
+  CantidadVentaMinima: 3
+  ValorVentaIndividual: 6
