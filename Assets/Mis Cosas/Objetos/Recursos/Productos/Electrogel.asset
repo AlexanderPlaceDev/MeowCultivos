@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
+  m_Name: Electrogel
+  m_EditorClassIdentifier: 
+  Nombre: Criogel
+  TipoPlanta: 
+  Descripcion: Un catodo y anodo se unen para formar esto...
+  Icono: {fileID: 21300000, guid: 494d262518af2f4439acea0be2a78f0a, type: 3}
+  IconoInventario: {fileID: 21300000, guid: 9ef20384df2179b4685b6db7c0f9d308, type: 3}
+  MaterialesDeProduccion:
+  - {fileID: 11400000, guid: 5ba7d52a723e74c4686db45ccc9fa656, type: 2}
+  - {fileID: 11400000, guid: d1948edb1dc783b48b1886c7863253be, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  CantidadMaterialesDeProduccion: 0100000002000000
+  CantidadProducto: 1
+  TiempoDeProduccion: 4
+  ValorComposta: 0
+  MinimoMaximoSembradio: 
+  XPRecolecta: 3
+  CantidadVentaMinima: 1
+  ValorVentaIndividual: 5
