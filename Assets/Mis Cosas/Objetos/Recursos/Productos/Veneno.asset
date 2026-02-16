@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
+  m_Name: Veneno
+  m_EditorClassIdentifier: 
+  Nombre: Veneno
+  TipoPlanta: 
+  Descripcion: "Una peque\xF1a cantidad puede dejarte inconciente durante horas"
+  Icono: {fileID: 21300000, guid: e85475006a0beab49899138d484a8036, type: 3}
+  IconoInventario: {fileID: 21300000, guid: ffdd64c2916c5a7449a9a956b315ed66, type: 3}
+  MaterialesDeProduccion:
+  - {fileID: 11400000, guid: 937cf6adbb4c6df4baaecd7679105a24, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  CantidadMaterialesDeProduccion: 03000000
+  CantidadProducto: 1
+  TiempoDeProduccion: 10
+  ValorComposta: 0
+  MinimoMaximoSembradio: 
+  XPRecolecta: 4
+  CantidadVentaMinima: 2
+  ValorVentaIndividual: 7

@@ -90,14 +90,22 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
 
     private void OnEnable()
     {
+        estructuraActual = 0;   // Fuerza estructura primaria al abrir
+        ActualizarEstructura(); // Aplica el estado visual correcto
+
         if (PlanoRequerido != "")
         {
             if (PlayerPrefs.GetString("Habilidad:" + PlanoRequerido, "No") == "Si")
             {
                 BotonEstructuraSecundaria.gameObject.SetActive(true);
             }
+            else
+            {
+                BotonEstructuraSecundaria.gameObject.SetActive(false);
+            }
         }
     }
+
 
     void Update()
     {
