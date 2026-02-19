@@ -208,7 +208,8 @@ public class Scr_Arbusto : MonoBehaviour
         iconoActualInteractuar = null;
         textoActualInteractuar = "";
 
-        if (PlayerPrefs.GetString("TutorialPeleas", "NO") == "SI")
+        //(PlayerPrefs.GetString("TutorialPeleas", "NO") == "SI")
+        if (HayMisionRecoleccion())
         {
             gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
             gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
