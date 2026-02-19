@@ -384,10 +384,13 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
     {
         if (estructuraActual == 0)
         {
+            if (BotonEstructuraPrimaria != null)
+            {
             BotonEstructuraPrimaria.GetComponent<Image>().sprite = ImagenBotonEstructuraPrimaria;
             BotonEstructuraPrimaria.transform.GetChild(0).gameObject.SetActive(true);
             BotonEstructuraSecundaria.GetComponent<Image>().sprite = ImagenIconoEstructuraSecundaria;
             BotonEstructuraSecundaria.transform.GetChild(0).gameObject.SetActive(false);
+            }
 
 
             PanelInformacion.sprite = PanelInformacionPrincipal;

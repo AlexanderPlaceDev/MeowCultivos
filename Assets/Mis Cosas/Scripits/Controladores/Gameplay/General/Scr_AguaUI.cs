@@ -33,11 +33,18 @@ public class Scr_AguaUI : MonoBehaviour
 
         // Animación "Temblar" del padre del texto
         Animator anim = TextoCantidad.transform.parent.GetComponent<Animator>();
-        AnimatorStateInfo animInfo = anim.GetCurrentAnimatorStateInfo(0);
+        if (anim.gameObject.activeSelf)
+        {
+            AnimatorStateInfo animInfo = anim.GetCurrentAnimatorStateInfo(0);
 
-        
+        }
+
+
+        if (anim.gameObject.activeSelf)
+        {
             anim.Play("Temblar");  // reproduce desde el inicio
-        
+        }
+
 
         // Si está corriendo, acumula tiempo
         contadorActual += Time.deltaTime;
