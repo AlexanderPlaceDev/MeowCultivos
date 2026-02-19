@@ -1,74 +1,105 @@
-using System.Collections;
+ï»¿using System.Collections;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 
 public class Lugar_point : MonoBehaviour
 {
-    [SerializeField] private string NombreLugar;
+    [SerializeField] private string NombreLugar; 
     public GameObject entornoUI;
     public TextMeshProUGUI Entorno;
     private bool isshow=false;
     public float esperaTime=2;
+
+
+    public float fadeDuration = 0.5f; 
+    private float ladoAnterior = 0f;
+    private bool jugadorDentro;
     // Start is called before the first frame update
     void Start()
     {
-        GameObject resultado = BuscarGameObjectPorTag("Entorno");
-        if (resultado != null)
-        {
-            Debug.Log("Encontrado: " + resultado.gameObject.name);
-            entornoUI = resultado;
-            Entorno= entornoUI.GetComponentInChildren<TextMeshProUGUI>();
-        }
-        else
-        {
-            //Debug.Log("No se encontró ningún GameObject con ese tag.");
-        }
-    }
-    GameObject BuscarGameObjectPorTag(string tag)
-    {
-        GameObject[] todos = Resources.FindObjectsOfTypeAll<GameObject>();
-
-        foreach (GameObject go in todos)
-        {
-            // Asegurarse de que no sea parte del editor (como prefabs)
-            /*if (go.CompareTag(tag) && !EditorUtility.IsPersistent(go))
-            {
-                return go;
-            }*/
-        }
-
-        return null;
+        //Debug.Log("Encontrado: " + entornoUI.gameObject.name);
+        Entorno = entornoUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
     }
     // Update is called once per frame
     void Update()
     {
-        
+
+        Debug.DrawRay(transform.position, transform.forward * 5f, Color.blue);
     }
+
+
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Gata")) return;
+        if (PlayerPrefs.GetString("TutorialPeleas", "NO") == "NO") return;
+        if (!other.CompareTag("Gata") ||isshow == true) return;
         if (isshow) return;
-        Scr_ControladorMisiones ControladorMisiones= other.gameObject.GetComponentInChildren<Scr_ControladorMisiones>();
-        Debug.Log("Se detecto ");
+
+        Debug.DrawRay(transform.position, transform.forward * 5f, Color.blue);
+        //Scr_ControladorMisiones ControladorMisiones= other.gameObject.GetComponentInChildren<Scr_ControladorMisiones>();
+        //Debug.Log("Se detecto ");
         //ControladorMisiones.actualizarTargetsExploratod(NombreLugar);
-        StartCoroutine(Showtext());
-    }
 
-    private IEnumerator Showtext()
-    {
-        isshow = true;
-        entornoUI.SetActive(true);
-        Entorno.text = NombreLugar;
-        yield return new WaitForSeconds(esperaTime);
-        entornoUI.SetActive(false);
-        isshow = false;
-    }
+        Vector3 direccion = other.transform.position - transform.position;
+        direccion.y = 0;
 
-        /*
-        private void OnTriggerExit(Collider other)
+        float lado = Vector3.Dot(transform.forward, direccion);
+
+        Debug.Log("Lado al entrar: " + lado);
+
+        // Si entra por el frente
+        if (lado > 0)
         {
-            if (!other.CompareTag("Gata")) return;
+            entornoUI.SetActive(true);
+            StartCoroutine(Showtext(NombreLugar));
+            isshow = true;
+        }
+        //float dotRight = Vector3.Dot(transform.right, direccionAlJugador);
 
-        }*/
+    }
+
+    private IEnumerator Showtext(string texto)
+    {
+        if (Entorno == null) yield break;
+
+        isshow = true;
+        Entorno.text = texto;
+
+        float t = 0;
+        float fadeDuration = 0.5f;
+
+        // Fade In
+        while (t < fadeDuration)
+        {
+            t += Time.deltaTime;
+            float alpha = Mathf.Lerp(0, 1, t / fadeDuration);
+
+            Color c = Entorno.color;
+            c.a = alpha;
+            Entorno.color = c;
+
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(esperaTime);
+
+        // Fade Out
+        t = 0;
+        while (t < fadeDuration)
+        {
+            t += Time.deltaTime;
+            float alpha = Mathf.Lerp(1, 0, t / fadeDuration);
+
+            Color c = Entorno.color;
+            c.a = alpha;
+            Entorno.color = c;
+
+            yield return null;
+        }
+
+        isshow = false;
+
+        entornoUI.SetActive(false);
+    }
+
 }

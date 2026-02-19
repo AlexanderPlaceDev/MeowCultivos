@@ -33,6 +33,7 @@ public class Scr_DatosArmas : MonoBehaviour
             }
         }
 
+        int gad = 0;
         for (int i = 0; i < HabilidadesTemporales.Length; i++)
         {
             if (i == 0)
@@ -42,14 +43,19 @@ public class Scr_DatosArmas : MonoBehaviour
             else if (PlayerPrefs.GetString("Habilidad" + HabilidadesTemporales[i].Nombre, "No") == "Si")
             {
                 HabilidatTDesbloqueadas[i] = true;
-
+                gad++;
             }
             else
             {
-                HabilidatTDesbloqueadas[i] = true;
+                HabilidatTDesbloqueadas[i] = false;
             }
 
             UsosHabilidadesT[i] = PlayerPrefs.GetInt("UsoTemporal" + HabilidadesTemporales[i].Nombre, 0);
+        }
+
+        if (gad<=0)
+        {
+            ChecarGagetsIniciales();
         }
 
         for (int i = 0; i < HabilidadesPermanentes.Length; i++)
@@ -61,7 +67,7 @@ public class Scr_DatosArmas : MonoBehaviour
             }
             else
             {
-                HabilidatPDesbloqueadas[i] = true;
+                HabilidatPDesbloqueadas[i] = false;
             }
         }
 
@@ -203,5 +209,18 @@ public class Scr_DatosArmas : MonoBehaviour
         }
 
         return null; // No se encontró
+    }
+
+    public void ChecarGagetsIniciales()
+    {
+        for (int i = 0; i < HabilidadesTemporales.Length; i++)
+        {
+            if (HabilidadesTemporales[i].Arma=="Brazos" || HabilidadesTemporales[i].Arma == "Platano" || HabilidadesTemporales[i].Arma == "Sandia" || HabilidadesTemporales[i].Arma == "Tomate")
+            {
+                HabilidatTDesbloqueadas[i] = true;
+
+            }
+        }
+        guardarHabilidadesTemporales();
     }
 }
