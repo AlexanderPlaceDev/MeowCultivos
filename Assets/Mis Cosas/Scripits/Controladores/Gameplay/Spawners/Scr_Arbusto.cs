@@ -82,7 +82,7 @@ public class Scr_Arbusto : MonoBehaviour
                 estaLejos = false;
 
                 // Detectar interacción
-                if (Interactuar.IsPressed() && !batalla.escenaCargada && PlayerPrefs.GetString("TutorialPeleas", "NO") == "SI")
+                if (Interactuar.IsPressed() && !batalla.escenaCargada && Mis.HayMisionRecolectar())
                     batalla.Iniciar();
 
                 if (gata.GetComponent<Animator>().GetBool("Recolectando"))
@@ -183,7 +183,7 @@ public class Scr_Arbusto : MonoBehaviour
         gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = icono;
 
 
-        if (HayMisionRecoleccion())
+        if (Mis.HayMisionRecolectar())
         {
             gata.GetChild(3).GetChild(2).gameObject.SetActive(true);
             gata.GetChild(3).GetChild(3).gameObject.SetActive(true);
@@ -209,7 +209,7 @@ public class Scr_Arbusto : MonoBehaviour
         textoActualInteractuar = "";
 
         //(PlayerPrefs.GetString("TutorialPeleas", "NO") == "SI")
-        if (HayMisionRecoleccion())
+        if (Mis.HayMisionRecolectar())
         {
             gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
             gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
@@ -227,21 +227,4 @@ public class Scr_Arbusto : MonoBehaviour
     }
 
 
-    public bool HayMisionRecoleccion()
-    {
-        if(Mis.MisionPrincipal.Tipo == Scr_CreadorMisiones.Tipos.Recoleccion)
-        {
-            return true;
-        }
-
-        for (int i = 0; i < Mis.MisionesSecundarias.Count; i++) 
-        {
-            if (Mis.MisionesSecundarias[i].Tipo == Scr_CreadorMisiones.Tipos.Recoleccion)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

@@ -642,6 +642,22 @@ public class Scr_ControladorMisiones : MonoBehaviour
         return true; // Todas las construcciones están listas
     }
 
-    
+    public bool HayMisionRecolectar()
+    {
+        if (MisionPrincipal.Tipo == Scr_CreadorMisiones.Tipos.Recoleccion)
+        {
+            return true;
+        }
+
+        for (int i = 0; i < MisionesSecundarias.Count; i++)
+        {
+            if (MisionesSecundarias[i].Tipo == Scr_CreadorMisiones.Tipos.Recolectar)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 }

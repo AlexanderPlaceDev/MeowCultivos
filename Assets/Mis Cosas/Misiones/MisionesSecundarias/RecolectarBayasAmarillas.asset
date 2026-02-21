@@ -10,18 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea24d2bc748133d448a419af8bc82e61, type: 3}
-  m_Name: Prueba_construccion
+  m_Name: RecolectarBayasAmarillas
   m_EditorClassIdentifier: 
-  TituloMision: 
-  LogoMision: {fileID: 0}
-  Descripcion: Se esta Probando la contruccion xd
-  DescripcionCompleta: 
+  TituloMision: ' Bayas Rojas'
+  LogoMision: {fileID: 21300000, guid: 2514de36403757b46b7984658ff7cccf, type: 3}
+  Descripcion: Recolecta 15 Bayas Rojas
+  DescripcionCompleta: Recolecta Bayas Rojas Recien salidas de los arbustos
   DialogoEnMision: {fileID: 0}
   DialogoMisionCompleta: {fileID: 0}
   prioridad: 1
-  Tipo: 6
-  ObjetosNecesarios: []
-  CantidadesQuita: 
+  Tipo: 4
+  ObjetosNecesarios:
+  - {fileID: 11400000, guid: f2dd07ffe30451b4d9ced2110326053a, type: 2}
+  CantidadesQuita: 0f000000
   ObjetivosACazar: []
   CantidadACazar: 
   IconosACazar: []
@@ -29,11 +30,11 @@ MonoBehaviour:
   AccionMovimientoH: {fileID: 0}
   AccionMovimientoV: {fileID: 0}
   Teclas: 
-  EsContinua: 0
-  QuitaObjetos: 0
+  EsContinua: 1
+  QuitaObjetos: 1
   DaObjetos: 0
-  RecompensaDinero: 0
-  RecompensaXP: 0
+  RecompensaDinero: 100
+  RecompensaXP: 10
   ObjetosQueDa: []
   CantidadesDa: 
   objetosCostruir: []

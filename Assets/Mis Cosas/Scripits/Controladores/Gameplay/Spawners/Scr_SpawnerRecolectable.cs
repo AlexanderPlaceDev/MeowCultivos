@@ -11,6 +11,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     [SerializeField] bool OcupaPadre;
     [SerializeField] GameObject Padre;
     [SerializeField] private Sprite icono;
+    [SerializeField] private Sprite icono2;
     [SerializeField] private Sprite teclaIcono;
     [SerializeField] private float distancia;
     [SerializeField] private float velocidadGiro;
@@ -19,7 +20,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     [SerializeField] string Habilidad;
     [SerializeField] string Habilidad2;
     [SerializeField] float[] TiempoRespawn;
-
+    [SerializeField] bool TieneBatalla;
     [Header("Estado del spawner")]
     private Scr_CambiadorBatalla batalla;
     public bool TieneObjeto = true;
@@ -38,6 +39,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
 
     PlayerInput playerInput;
     private InputAction Recolectar;
+    private InputAction Interactuar;
     InputIconProvider IconProvider;
     private Sprite iconoActualSpawn = null;
     private string textoActualSpawn = "";
@@ -48,6 +50,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     private string KeyRespawnObjetivo => "Recolectable_RespawnObjetivo_" + gameObject.name;
 
 
+    Scr_ControladorMisiones Mis;
     void Start()
     {
         gata = GameObject.Find("Gata").transform;
@@ -55,6 +58,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
 
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         Recolectar = playerInput.actions["Recolectar"];
+        Interactuar = playerInput.actions["Interactuar"];
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
 
         // ================= ESTADO INICIAL REAL =================
@@ -130,6 +134,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
             }
         }
 
+        Mis = GameObject.Find("ControladorMisiones").GetComponent<Scr_ControladorMisiones>();
     }
 
 
@@ -157,9 +162,14 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
         if (TieneObjeto)
         {
             float distanciaGata = Vector3.Distance(gata.position, transform.position);
-
+            if (batalla != null)
+            {
+                if (Interactuar.IsPressed() && !batalla.escenaCargada && Mis.HayMisionRecolectar() && TieneBatalla)
+                    batalla.Iniciar();
+            }
             if (!recolectando)
             {
+                
                 // Activar UI si está cerca
                 if (distanciaGata < distancia)
                 {
@@ -319,9 +329,16 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
 
         gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = icono;
 
+        if (Mis.HayMisionRecolectar() && TieneBatalla)
+        {
+            gata.GetChild(3).GetChild(2).gameObject.SetActive(true);
+            gata.GetChild(3).GetChild(3).gameObject.SetActive(true);
 
-        gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
-        gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
+            gata.GetChild(3).GetChild(3).GetComponent<Image>().sprite = icono2;
+
+            gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(1, 0, 0);
+            gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(3, 0, 0);
+        }
         iconoActualSpawn = null;
         textoActualSpawn = "";
         IconProvider.ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(0), ref iconoActualSpawn, ref textoActualSpawn, true);
@@ -336,7 +353,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
         iconoActualSpawn = null;
         textoActualSpawn = "";
 
-        if (PlayerPrefs.GetString("TutorialPeleas", "NO") == "SI")
+        if (Mis.HayMisionRecolectar() && TieneBatalla)
         {
             gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
             gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
