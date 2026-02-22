@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class Tienda_3D : MonoBehaviour
 {
@@ -43,6 +44,9 @@ public class Tienda_3D : MonoBehaviour
     // Guarda las cantidades seleccionadas, por índice del inventario
     private Dictionary<int, int> cantidadesSeleccionadas = new Dictionary<int, int>();
 
+    ChecarInput Checar_input;
+    PlayerInput playerInput;
+    private InputAction Click;
     void Start()
     {
         Tiempo = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
@@ -92,6 +96,11 @@ public class Tienda_3D : MonoBehaviour
                 Debug.LogWarning($"Hijo 0 de {obj.name} no tiene collider.");
         }
 
+
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        Checar_input = GameObject.Find("Singleton").GetComponent<ChecarInput>();
+
+        Click = playerInput.actions["Click"];
         GenerarListaCompraDesdeInventario();
         ActualizarTextoDinero();
         ActualizarTextoDineroAPagar();
@@ -598,7 +607,7 @@ public class Tienda_3D : MonoBehaviour
         }
 
         // Click izquierdo
-        if (Input.GetMouseButtonDown(0) && spriteActualHover != null && CamaraTienda.gameObject.activeSelf)
+        if (Click.WasPressedThisFrame() && spriteActualHover != null && CamaraTienda.gameObject.activeSelf)
         {
             Debug.Log("entra2");
             //ApagarTodasLasCamarasDeVendedores();
