@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class Scr_ControladorIntro : MonoBehaviour
@@ -19,6 +21,12 @@ public class Scr_ControladorIntro : MonoBehaviour
     [SerializeField] GameObject PereodicoGrande;
     [SerializeField] GameObject PantallaNegra;
 
+    public GameObject BotonPeriodico;
+    PlayerInput playerInput;
+    private InputAction Interactuar;
+    InputIconProvider IconProvider;
+    private Sprite iconoActualInteractuar = null;
+    private string textoActualInteractuar = "";
 
     float cont1 = 0;
     float cont2 = 0;
@@ -40,7 +48,10 @@ public class Scr_ControladorIntro : MonoBehaviour
     void Start()
     {
         StartCoroutine(GetComponent<Scr_ControladorCinematica>().PrecargarEscena(2));
-        PantallaNegra.GetComponent<Animator>().Play("Aclarar");
+        PantallaNegra.GetComponent<Animator>().Play("Aclarar"); 
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Interactuar = playerInput.actions["Interactuar"];
     }
 
     void Update()
@@ -49,21 +60,23 @@ public class Scr_ControladorIntro : MonoBehaviour
         //Rutina();
         Pereodico();
 
-       
-
     }
 
 
     void Pereodico()
     {
-        if (PereodicoGrande.gameObject.activeSelf && Input.GetKeyDown("e"))
+        if(PereodicoGrande.gameObject.activeSelf)
         {
-            PereodicoGrande.SetActive(false);
-            Gata.transform.GetChild(0).gameObject.SetActive(false);
-            Dialogo.Leido = false;
-            cont9=-1;
+            IconProvider.ActualizarIconoUI(Interactuar, BotonPeriodico.transform, ref iconoActualInteractuar, ref textoActualInteractuar, false);
+            if (Interactuar.WasPressedThisFrame())
+            {
+                PereodicoGrande.SetActive(false);
+                Gata.transform.GetChild(0).gameObject.SetActive(false);
+                Dialogo.Leido = false;
+                cont9 = -1;
+            }
         }
-        if (Gata.transform.GetChild(0).gameObject.activeSelf && Input.GetKeyDown("e"))
+        if (Gata.transform.GetChild(0).gameObject.activeSelf && Interactuar.WasPressedThisFrame())
         {
             PereodicoGrande.SetActive(true);
             Gata.GetComponent<Animator>().Play("Posicion");

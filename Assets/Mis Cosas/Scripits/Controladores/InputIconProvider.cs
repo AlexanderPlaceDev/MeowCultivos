@@ -118,7 +118,7 @@ public class InputIconProvider : MonoBehaviour
 
         string path = control.path.ToLower();
         InputIconSet icons = IconSetActual;
-        Debug.LogWarning(path);
+        //Debug.LogWarning(path);
         if (path.Contains("buttonsouth")) return icons.buttonSouth;
         if (path.Contains("buttonnorth")) return icons.buttonNorth;
         if (path.Contains("buttoneast")) return icons.buttonEast;
@@ -273,6 +273,7 @@ public class InputIconProvider : MonoBehaviour
             }
         }
     }
+
 
     public string TeclasEspeciales(string tecla)
     {

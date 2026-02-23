@@ -182,17 +182,20 @@ public class Scr_Arbusto : MonoBehaviour
 
         gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = icono;
 
-
-        if (Mis.HayMisionRecolectar())
+        if (Mis != null)
         {
-            gata.GetChild(3).GetChild(2).gameObject.SetActive(true);
-            gata.GetChild(3).GetChild(3).gameObject.SetActive(true);
+            if (Mis.HayMisionRecolectar())
+            {
+                gata.GetChild(3).GetChild(2).gameObject.SetActive(true);
+                gata.GetChild(3).GetChild(3).gameObject.SetActive(true);
 
-            gata.GetChild(3).GetChild(3).GetComponent<Image>().sprite = icono2;
+                gata.GetChild(3).GetChild(3).GetComponent<Image>().sprite = icono2;
 
-            gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(1, 0, 0);
-            gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(3, 0, 0);
+                gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(1, 0, 0);
+                gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(3, 0, 0);
+            }
         }
+            
         // Actualizamos ambos botones
         //ActualizarIconosUI();
     }
@@ -209,10 +212,13 @@ public class Scr_Arbusto : MonoBehaviour
         textoActualInteractuar = "";
 
         //(PlayerPrefs.GetString("TutorialPeleas", "NO") == "SI")
-        if (Mis.HayMisionRecolectar())
+        if (Mis != null)
         {
-            gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
-            gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
+            if (Mis.HayMisionRecolectar())
+            {
+                gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
+                gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
+            }
         }
 
         gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);

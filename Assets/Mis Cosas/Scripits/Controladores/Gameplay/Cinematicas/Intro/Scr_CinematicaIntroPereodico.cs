@@ -1,17 +1,32 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Scr_CinematicaIntroPereodico : MonoBehaviour
 {
     [SerializeField] GameObject Iconos;
     [SerializeField] GameObject PereodicoGrande;
     [SerializeField] Scr_ControladorCinematica Cinematica;
+    public GameObject Boton;
     int cont = 0;
 
+
+    PlayerInput playerInput;
+    private InputAction Interactuar;
+    InputIconProvider IconProvider;
+    private Sprite iconoActualInteractuar = null;
+    private string textoActualInteractuar = "";
+    private void Start()
+    {
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Interactuar = playerInput.actions["Interactuar"];
+    }
     void Update()
     {
         if (Iconos.activeSelf)
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            IconProvider.ActualizarIconoUI(Interactuar, Boton.transform, ref iconoActualInteractuar, ref textoActualInteractuar, false);
+            if (Interactuar.WasPressedThisFrame())
             {
                 if (cont == 0)
                 {

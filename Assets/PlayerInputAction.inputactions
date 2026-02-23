@@ -1251,7 +1251,7 @@
                 {
                     "name": "",
                     "id": "5a33ce78-f16e-46cf-b8b3-b851d068be5c",
-                    "path": "<Gamepad>/buttonWest",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "Control",
@@ -1739,7 +1739,7 @@
                 {
                     "name": "",
                     "id": "65308c4f-ed35-40b4-ab68-4fbfadf15a71",
-                    "path": "<Gamepad>/buttonWest",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "Control",
@@ -1771,50 +1771,6 @@
                 },
                 {
                     "name": "",
-                    "id": "e55732ba-fd49-4841-a123-10fbf6696494",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyBoard-Mouse",
-                    "action": "DialogoUI",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "717448a3-95c5-466f-93b3-76a4066f879d",
-                    "path": "<Gamepad>/buttonWest",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Control",
-                    "action": "DialogoUI",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "efa4e713-35e0-4570-8934-3760253e24c3",
-                    "path": "<DualShockGamepad>/buttonWest",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PlayController",
-                    "action": "DialogoUI",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a2e66e89-d3b0-4770-bdbd-2db0f4c120c8",
-                    "path": "<DualSenseGamepadHID>/buttonWest",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PlayController",
-                    "action": "DialogoUI",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "8e89a2f4-246e-4001-bca9-1c6aba536598",
                     "path": "<DualShockGamepad>/touchpadButton",
                     "interactions": "",
@@ -1832,6 +1788,50 @@
                     "processors": "",
                     "groups": "PlayController",
                     "action": "Regresar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "219e51e3-e36f-4b8d-b009-03ee69d87c91",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoard-Mouse",
+                    "action": "DialogoUI",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c21d0749-960d-4546-9771-a636d9aaeed0",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Control",
+                    "action": "DialogoUI",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "70f2e361-5d54-4a1f-8434-ef5aee2cf7ef",
+                    "path": "<DualSenseGamepadHID>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayController",
+                    "action": "DialogoUI",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ee2d81d6-3328-43de-b2cd-302b4b39706e",
+                    "path": "<DualShockGamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayController",
+                    "action": "DialogoUI",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

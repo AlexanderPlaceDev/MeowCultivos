@@ -644,9 +644,12 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
     public bool HayMisionRecolectar()
     {
-        if (MisionPrincipal.Tipo == Scr_CreadorMisiones.Tipos.Recoleccion)
+        if (MisionPrincipal != null)
         {
-            return true;
+            if (MisionPrincipal.Tipo == Scr_CreadorMisiones.Tipos.Recoleccion)
+            {
+                return true;
+            }
         }
 
         for (int i = 0; i < MisionesSecundarias.Count; i++)
