@@ -295,11 +295,15 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
             DarObjeto();
             TieneObjeto = false;
 
+            DesactivarObjeto(); // ← AGREGAR ESTO AQUÍ
+
+            Tiempo = 0f;
+            TiempoRespawnAleatorio = Random.Range(TiempoRespawn[0], TiempoRespawn[1]);
+
             PlayerPrefs.SetInt(KeyTieneObjeto, 0);
             PlayerPrefs.SetFloat(KeyRespawn, Tiempo);
             PlayerPrefs.SetFloat(KeyRespawnObjetivo, TiempoRespawnAleatorio);
             PlayerPrefs.Save();
-
         }
 
     }

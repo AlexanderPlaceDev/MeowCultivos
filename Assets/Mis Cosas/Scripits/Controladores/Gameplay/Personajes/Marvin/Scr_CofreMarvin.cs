@@ -9,6 +9,9 @@ public class Scr_CofreMarvin : MonoBehaviour
     [SerializeField] int[] CantidadesNecesarias;
     [SerializeField] Image[] Items;
     [SerializeField] private bool BorrarInfo;
+    [SerializeField] GameObject Torre;
+    [SerializeField] GameObject CamaraTorre;
+    [SerializeField] GameObject Camara360;
     Scr_Inventario Inventario;
 
     // --- ROTACIÓN ---
@@ -25,6 +28,7 @@ public class Scr_CofreMarvin : MonoBehaviour
     Quaternion rotacionObjetivo;
     bool estabaActivo = false;
     bool rangoMostrado = false;
+    bool transicionRealizada = false;
 
 
     void Start()
@@ -42,6 +46,10 @@ public class Scr_CofreMarvin : MonoBehaviour
         if (PlayerPrefs.GetInt("Rango Barra Industrial4", 0) == 1)
         {
             Debug.Log("Desactiva start");
+
+            if (Torre != null)
+                Torre.SetActive(true); // Activar torre siempre que ya esté construido
+
             gameObject.SetActive(false);
             return;
         }
@@ -276,6 +284,12 @@ public class Scr_CofreMarvin : MonoBehaviour
         PlayerPrefs.SetInt("Rango Barra Industrial4", 1);
         PlayerPrefs.Save();
 
+
+        // Activar torre
+        if (Torre != null)
+            Torre.SetActive(true);
+
+
         var rangoUI = GameObject.Find("Canvas").transform.GetChild(10).GetComponent<Scr_NuevoRango>();
         rangoUI.gameObject.SetActive(true);
         rangoUI.MostrarRango("Industrial", 1);
@@ -296,10 +310,40 @@ public class Scr_CofreMarvin : MonoBehaviour
         }
     }
 
+    IEnumerator TransicionCamaraTorre()
+    {
+        if (Camara360 != null)
+            Camara360.SetActive(false);
+
+        if (CamaraTorre != null)
+            CamaraTorre.SetActive(true);
+
+        yield return new WaitForSeconds(4f);
+
+        if (CamaraTorre != null)
+            CamaraTorre.SetActive(false);
+
+        if (Camara360 != null)
+            Camara360.SetActive(true);
+    }
+
 
     IEnumerator Esperar()
     {
-        yield return new WaitForSeconds(2);
+        // Activar torre inmediatamente
+        if (Torre != null)
+            Torre.SetActive(true);
+
+        // Transición SOLO la primera vez
+        if (!transicionRealizada)
+        {
+            transicionRealizada = true;
+            yield return StartCoroutine(TransicionCamaraTorre());
+        }
+
+        // Espera pequeña solo si quieres suavizar antes de ocultar
+        yield return new WaitForSeconds(0.5f);
+
         gameObject.SetActive(false);
     }
 
