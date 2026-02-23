@@ -12,23 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea24d2bc748133d448a419af8bc82e61, type: 3}
   m_Name: CreartFogata
   m_EditorClassIdentifier: 
-  MisionName: 
-  Descripcion: 'Crea la foggata en el tablero azul '
-  DescripcionFinal: Regresa con Bony
+  TituloMision: 
+  LogoMision: {fileID: 0}
+  Descripcion: 'Crea la fogata en el tablero azul '
+  DescripcionCompleta: 
+  DialogoEnMision: {fileID: 0}
+  DialogoMisionCompleta: {fileID: 0}
   prioridad: 0
-  Tipo: 3
-  Objetivocaza: []
-  cantidad_caza: 
+  Tipo: 6
+  ObjetosNecesarios: []
+  CantidadesQuita: 
+  ObjetivosACazar: []
+  CantidadACazar: 
+  IconosACazar: []
+  DireccionesRequeridas: 
+  AccionMovimientoH: {fileID: 0}
+  AccionMovimientoV: {fileID: 0}
   Teclas: 
   EsContinua: 0
   QuitaObjetos: 0
   DaObjetos: 0
-  ObjetosNecesarios: []
-  ObjetosRecompensa: []
-  xpTotal: 0
-  CantidadesQuita: 
+  RecompensaDinero: 0
+  RecompensaXP: 0
+  ObjetosQueDa: []
   CantidadesDa: 
   objetosCostruir:
   - {fileID: 919132149155446097, guid: 28920e6db92b64e4abcc44cb7ebd8245, type: 3}
-  CambiaPrincipal: 0
   TargetExplorado: 
