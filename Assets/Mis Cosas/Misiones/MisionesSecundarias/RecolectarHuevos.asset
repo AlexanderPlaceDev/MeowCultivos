@@ -12,25 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea24d2bc748133d448a419af8bc82e61, type: 3}
   m_Name: RecolectarHuevos
   m_EditorClassIdentifier: 
-  MisionName: 3 huevos
+  TituloMision: 
+  LogoMision: {fileID: 21300000, guid: 2988c84eb1891ba47b21d1db94ea2774, type: 3}
   Descripcion: Recolecta 3 huevos
-  DescripcionFinal: Regresa con el alien
+  DescripcionCompleta: 
+  DialogoEnMision: {fileID: 0}
+  DialogoMisionCompleta: {fileID: 0}
   prioridad: 1
-  Tipo: 2
-  Objetivocaza: []
-  cantidad_caza: 
+  Tipo: 3
+  ObjetosNecesarios:
+  - {fileID: 11400000, guid: 0addce6000cff2f459b2151a8a308c97, type: 2}
+  CantidadesQuita: 0a000000
+  ObjetivosACazar: []
+  CantidadACazar: 
+  IconosACazar: []
+  DireccionesRequeridas: 
+  AccionMovimientoH: {fileID: 0}
+  AccionMovimientoV: {fileID: 0}
   Teclas: 
   EsContinua: 1
   QuitaObjetos: 1
   DaObjetos: 1
-  ObjetosNecesarios:
-  - {fileID: 11400000, guid: 0addce6000cff2f459b2151a8a308c97, type: 2}
-  ObjetosRecompensa:
-  - {fileID: 11400000, guid: d3a9af7a80512f746bb084bf15c13fc5, type: 2}
-  - {fileID: 11400000, guid: 74fd9c65dd328c3479841cf247f0e23d, type: 2}
-  xpTotal: 5
-  CantidadesQuita: 0a000000
+  RecompensaDinero: 0
+  RecompensaXP: 0
+  ObjetosQueDa: []
   CantidadesDa: 0100000001000000
-  objetoaCostruir: []
-  CambiaPrincipal: 0
+  objetosCostruir: []
   TargetExplorado: 

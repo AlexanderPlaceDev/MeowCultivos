@@ -12,24 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea24d2bc748133d448a419af8bc82e61, type: 3}
   m_Name: Prueba_construccion
   m_EditorClassIdentifier: 
-  MisionName: Una prueba
+  TituloMision: 
+  LogoMision: {fileID: 0}
   Descripcion: Se esta Probando la contruccion xd
-  DescripcionFinal: a
+  DescripcionCompleta: 
+  DialogoEnMision: {fileID: 0}
+  DialogoMisionCompleta: {fileID: 0}
   prioridad: 1
-  Tipo: 3
-  Objetivocaza: 
-  cantidad_caza: 
+  Tipo: 6
+  ObjetosNecesarios: []
+  CantidadesQuita: 
+  ObjetivosACazar: []
+  CantidadACazar: 
+  IconosACazar: []
+  DireccionesRequeridas: 
+  AccionMovimientoH: {fileID: 0}
+  AccionMovimientoV: {fileID: 0}
   Teclas: 
   EsContinua: 0
   QuitaObjetos: 0
   DaObjetos: 0
-  ObjetosNecesarios: []
-  ObjetosRecompensa: []
-  CantidadesQuita: 
+  RecompensaDinero: 0
+  RecompensaXP: 0
+  ObjetosQueDa: []
   CantidadesDa: 
-  objetoaCostruir:
-  - {fileID: 919132149155446097, guid: 28920e6db92b64e4abcc44cb7ebd8245, type: 3}
-  LugardeConstruccion:
-  - {x: -399.1, y: -204.3, z: 57.01}
-  CambiaPrincipal: 0
+  objetosCostruir: []
   TargetExplorado: 

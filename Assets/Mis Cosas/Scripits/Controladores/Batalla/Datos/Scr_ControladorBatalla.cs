@@ -648,10 +648,10 @@ public class Scr_ControladorBatalla : MonoBehaviour
         if (extra == null) return;
 
         if (dict.ContainsKey(extra))
-            dict[extra]++;
+            dict[extra]= dict[extra]+ controladorRecoleccion.CantFrutaRecolectadas;
         else
             dict.Add(extra, 1);
-        PlayerPrefs.SetInt("Dinero", PlayerPrefs.GetInt("Dinero", 0) + Random.Range(controladorRecoleccion.DineroMin, controladorRecoleccion.DineroMax));
+        //PlayerPrefs.SetInt("Dinero", PlayerPrefs.GetInt("Dinero", 0) + Random.Range(controladorRecoleccion.DineroMin, controladorRecoleccion.DineroMax));
     }
     private void RecopensaEnemigo(Dictionary<Scr_CreadorObjetos, int> dict)
     {

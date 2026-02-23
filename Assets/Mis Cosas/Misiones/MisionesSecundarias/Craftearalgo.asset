@@ -12,16 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea24d2bc748133d448a419af8bc82e61, type: 3}
   m_Name: Craftearalgo
   m_EditorClassIdentifier: 
-  MisionName: consigue carbon
+  TituloMision: 
+  LogoMision: {fileID: 0}
   Descripcion: Consigue carbon en la fogata
-  DescripcionFinal: Regresa con la coneja esa
+  DescripcionCompleta: 
+  DialogoEnMision: {fileID: 0}
+  DialogoMisionCompleta: {fileID: 0}
   prioridad: 0
   Tipo: 3
+  ObjetosNecesarios: []
+  CantidadesQuita: 
+  ObjetivosACazar: []
+  CantidadACazar: 
+  IconosACazar: []
+  DireccionesRequeridas: 
+  AccionMovimientoH: {fileID: 0}
+  AccionMovimientoV: {fileID: 0}
   Teclas: 
   EsContinua: 0
   QuitaObjetos: 0
   DaObjetos: 0
-  ObjetosNecesarios: []
-  ObjetosRecompensa: []
-  CantidadesQuita: 
+  RecompensaDinero: 0
+  RecompensaXP: 0
+  ObjetosQueDa: []
   CantidadesDa: 
+  objetosCostruir: []
+  TargetExplorado: 

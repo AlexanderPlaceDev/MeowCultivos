@@ -24,8 +24,12 @@ public class Scr_CreadorMisiones : ScriptableObject
         Exploracion,
         Teclas,
         Movimiento,
-        Recoleccion,
+        Recoleccion,//modo de recoleccion
+        Recolectar,// conseguir ciertos objetos
+        Defensa,
         Construccion,
+        Crafteo,
+        Pesca,
         Caza
     }
     public Tipos Tipo;
