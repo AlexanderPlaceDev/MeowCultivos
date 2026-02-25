@@ -57,6 +57,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     private string textoActualInteractuar = "";
     private Sprite iconoActualMisiones = null;
     private string textoActualMisiones = "";
+
+    ChecarInput Checar_input;
     //=====================
     //=== CINEMACHINE ===
     //=====================
@@ -80,6 +82,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         Interactuar = playerInput.actions["Interactuar"];
         Misiones = playerInput.actions["Misiones"];
+        Checar_input = GameObject.Find("Singleton").GetComponent<ChecarInput>();
     }
 
     //===================
@@ -180,7 +183,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
         // Mostrar iconos
         MostrarIconos();
-
+        Checar_input.CammbiarAction_Player();
     }
     //=================================
     //=== CONTROL DE DIÁLOGOS ===
@@ -210,6 +213,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         {
             PlayerPrefs.SetString("DialogoSirilo", "Si");
         }
+        Checar_input.CammbiarAction_UI();
     }
 
     private void ActivarDialogo(bool Principal)
@@ -409,6 +413,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
         PlayerPrefs.Save();
         ActualizarMisionActual();
+
+        Checar_input.CammbiarAction_UI();
     }
     private void Girar()
     {

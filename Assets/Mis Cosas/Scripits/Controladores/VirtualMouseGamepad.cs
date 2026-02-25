@@ -24,7 +24,8 @@ public class VirtualMouseGamepad : MonoBehaviour
     public Mouse virtualMouse;
     private Mouse currentMouse;
     private Camera mainCamera;
-
+    public bool ForzarGamepadCursor; 
+    private bool ultimoEstadoGamepad;
     private bool TieneControl;
 
     private string PreviousControlSheme = "";
@@ -74,18 +75,34 @@ public class VirtualMouseGamepad : MonoBehaviour
 
     private void Update()
     {
-        if (playerInput.currentActionMap.name == uiActionMap && Gamepad.current != null)
+        bool usandoGamepad = InputIconProvider.Instance != null &&
+                        InputIconProvider.Instance.UsandoGamepad();
+
+        // 🔄 Si cambió el tipo de control
+        if (usandoGamepad != ultimoEstadoGamepad)
         {
-            // Si no es el Action Map de UI, desactiva el cursor virtual
-            cursorTransform.gameObject.SetActive(true);
-            Cursor.visible = false;
+            if (usandoGamepad)
+            {
+                // 🎮 Pasamos de mouse a gamepad
+                // Mover cursor virtual a donde está el mouse real
+                Vector2 mousePos = Mouse.current.position.ReadValue();
+                InputState.Change(virtualMouse.position, mousePos);
+                AnchorCursor(mousePos);
+            }
+            else
+            {
+                // 🖱 Pasamos de gamepad a mouse
+                // Mover mouse real a donde está el virtual
+                Vector2 virtualPos = virtualMouse.position.ReadValue();
+                Mouse.current.WarpCursorPosition(virtualPos);
+            }
+
+            ultimoEstadoGamepad = usandoGamepad;
         }
-        else
-        {
-            // Si es el Action Map de UI, activa el cursor virtual
-            cursorTransform.gameObject.SetActive(false);
-            Cursor.visible = true;
-        }
+
+        // Mostrar/ocultar cursores
+        cursorTransform.gameObject.SetActive(usandoGamepad);
+        Cursor.visible = !usandoGamepad;
     }
 
     private void UpdateMotion()
@@ -94,6 +111,10 @@ public class VirtualMouseGamepad : MonoBehaviour
         if (virtualMouse == null || Gamepad.current == null || playerInput.currentActionMap.name != uiActionMap) { return; }
         // Lee el movimiento del stick izquierdo
         Vector2 DeltaValue = Gamepad.current.leftStick.ReadValue();
+        if (DeltaValue.sqrMagnitude > 0.01f)
+        {
+            ForzarGamepadCursor = true;
+        }
         DeltaValue *= cursorSpeed * Time.deltaTime;
 
         // Obtiene la posición actual del ratón y calcula la nueva posición
@@ -163,5 +184,14 @@ public class VirtualMouseGamepad : MonoBehaviour
             Debug.LogError("es play");
         }
     }
+    public Vector2 GetMouseScreenPosition()
+    {
+        if (InputIconProvider.Instance != null &&
+        InputIconProvider.Instance.UsandoGamepad())
+        {
+            return virtualMouse.position.ReadValue();
+        }
 
+        return Mouse.current.position.ReadValue();
+    }
 }

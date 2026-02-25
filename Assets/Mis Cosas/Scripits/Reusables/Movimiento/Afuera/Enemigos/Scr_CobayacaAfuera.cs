@@ -57,6 +57,22 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
         iniciado = true;
     }
 
+    private void OnEnable()
+    {
+        if (TryGetComponent(out NavMeshAgent nav) && nav.isOnNavMesh)
+        {
+            agente = nav;
+            agente.speed = Velocidad;
+            agente.isStopped = true;
+            agente.autoBraking = true;
+        }
+
+
+        CambiarAnimacion("Iddle1");
+        LanzarNuevoEstado();
+        iniciado = true;
+    }
+
     void Update()
     {
         if (corriendo && jaba == null)

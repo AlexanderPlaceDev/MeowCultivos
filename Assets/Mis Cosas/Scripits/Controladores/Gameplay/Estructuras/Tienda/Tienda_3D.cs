@@ -47,6 +47,7 @@ public class Tienda_3D : MonoBehaviour
     ChecarInput Checar_input;
     PlayerInput playerInput;
     private InputAction Click;
+    VirtualMouseGamepad mouseGamepad;
     void Start()
     {
         Tiempo = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
@@ -99,7 +100,7 @@ public class Tienda_3D : MonoBehaviour
 
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         Checar_input = GameObject.Find("Singleton").GetComponent<ChecarInput>();
-
+        mouseGamepad = GameObject.Find("EventSystem").GetComponent <VirtualMouseGamepad>();
         Click = playerInput.actions["Click"];
         GenerarListaCompraDesdeInventario();
         ActualizarTextoDinero();
@@ -503,9 +504,10 @@ public class Tienda_3D : MonoBehaviour
 
     private void DetectarCampanaHoverYClick()
     {
-        if (Camera.main == null) return;
-
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Camera.main == null) return; 
+        Vector2 mousePosition = mouseGamepad.GetMouseScreenPosition();
+        Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+        //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         bool sobreCampana = false;
 
         if (Physics.Raycast(ray, out RaycastHit hit))
@@ -513,7 +515,7 @@ public class Tienda_3D : MonoBehaviour
             if (hit.collider != null && Campana != null && (hit.collider.gameObject == Campana || hit.collider.transform.IsChildOf(Campana.transform)))
             {
                 sobreCampana = true;
-                if (Input.GetMouseButtonDown(0))
+                if (Click.WasPressedThisFrame())
                 {
                     if (CamaraTienda != null) CamaraTienda.SetActive(false);
                     if (CamaraVenta != null) CamaraVenta.SetActive(true);
@@ -551,12 +553,15 @@ public class Tienda_3D : MonoBehaviour
         if (ObjetosAvender == null || ObjetosAvender.Length == 0) return;
         if (Camera.main == null) return;
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Vector2 mousePosition = mouseGamepad.GetMouseScreenPosition();
+        Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+        //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Transform hitTransform3D = null;
         if (Physics.Raycast(ray, out RaycastHit hit3d))
             hitTransform3D = hit3d.collider != null ? hit3d.collider.transform : null;
 
-        Vector3 mouseWorld3 = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //Vector3 mouseWorld3 = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mouseWorld3 = Camera.main.ScreenToWorldPoint(mousePosition);
         Vector2 mouseWorld2 = new Vector2(mouseWorld3.x, mouseWorld3.y);
         Collider2D hit2d = Physics2D.OverlapPoint(mouseWorld2);
 
