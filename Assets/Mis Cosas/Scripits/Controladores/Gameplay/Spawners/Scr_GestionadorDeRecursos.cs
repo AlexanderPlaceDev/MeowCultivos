@@ -11,7 +11,6 @@ public class Scr_GestionadorDeRecursos : MonoBehaviour
     [Header("Interacción")]
     [SerializeField] private float radioInteraccion = 10f;
     [SerializeField] private float intervaloChequeo = 0.15f;
-    [SerializeField] private bool UsaHacha = true;
 
     private Transform gata;
     private GameObject herramienta;
