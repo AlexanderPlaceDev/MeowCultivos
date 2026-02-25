@@ -32,7 +32,6 @@ public class Scr_BloqueAgua : MonoBehaviour
     private GameObject CamaraDerecha;
     private GameObject CamaraPrincipal;
 
-    private bool EsperandoPicada;
     private bool VentanaActiva;
     bool usandoCamaraIzquierda;
     Scr_MiniJuegoPesca miniJuego;
@@ -264,7 +263,6 @@ public class Scr_BloqueAgua : MonoBehaviour
 
     IEnumerator EsperarPicada()
     {
-        EsperandoPicada = true;
 
         float tiempo = Random.Range(tiempoMinPicada, tiempoMaxPicada);
         yield return new WaitForSeconds(tiempo);
@@ -388,7 +386,6 @@ public class Scr_BloqueAgua : MonoBehaviour
         Recolectando = false;
         Pescando = false;
         PausandoPesca = false;
-        EsperandoPicada = false;
 
         // Reactivar movimiento
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
@@ -416,7 +413,6 @@ public class Scr_BloqueAgua : MonoBehaviour
         Recolectando = false;
         Pescando = false;
         PausandoPesca = false;
-        EsperandoPicada = false;
         VentanaActiva = false;
 
         // 🔹 Movimiento

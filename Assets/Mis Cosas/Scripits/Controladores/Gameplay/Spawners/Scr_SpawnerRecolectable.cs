@@ -33,7 +33,6 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
     [Header("Debug (solo lectura)")]
     [SerializeField] private float tiempoActualRespawn;
     [SerializeField] private float tiempoRestanteRespawn;
-    [SerializeField] private bool empiezaSinObjeto = false;
 
 
 
