@@ -19,7 +19,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     public bool estaAdentro = false;      // Si la gata está dentro del trigger del NPC
     private bool canvasActivo = false;     // Si el canvas de diálogo está activo
     private bool Hablando = false;         // Si el jugador está en un diálogo
-    private bool Comprando = false;        // Si selecciono comprar
+    public bool Comprando = false;        // Si selecciono comprar
     public bool ViendoMisiones = false;    // Si está viendo las misiones secundarias
     private bool ViendoTienda = false;     // Si ya está dentro de la tienda
 
@@ -184,6 +184,10 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         // Mostrar iconos
         MostrarIconos();
         Checar_input.CammbiarAction_Player();
+        if (EsTienda)
+        {
+            OcultarIconos();
+        }
     }
     //=================================
     //=== CONTROL DE DIÁLOGOS ===

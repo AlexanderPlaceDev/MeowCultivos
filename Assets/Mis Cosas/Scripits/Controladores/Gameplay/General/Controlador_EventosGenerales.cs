@@ -1,6 +1,7 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 [System.Serializable]
 public class EventoDiario
@@ -8,12 +9,17 @@ public class EventoDiario
     public string nombreEvento;
     public Sprite IconoRadio;
     public GameObject objeto;         // Ej: FoodTruck, NPC, etc.
+    public Animator animator;
     public GameObject mapaAsociado;   // El mapa donde está (puede estar desactivado)
     public string[] diasActivo;       // Ej: {"Martes", "Jueves"}
     public int horaInicio;            // Ej: 10
     public int minutoInicio;          // Ej: 0
     public int horaFin;               // Ej: 18
     public int minutoFin;             // Ej: 0
+    public bool tieneanimEntrada;
+    public bool tieneanimSalida;
+    public string nombreAnimEntrada;
+    public string nombreAnimSalida;
     public AudioClip sonidoEvento;    // Sonido asociado
     [HideInInspector] public bool sonidoReproducido = false;
 }
@@ -119,17 +125,32 @@ public class Controlador_EventosGenerales : MonoBehaviour
 
             if (e.objeto != null)
             {
-                if (esDiaActivo && dentroHorario && mapaActivo)
-                {
-                    if (!e.objeto.activeSelf)
-                        e.objeto.SetActive(true);
-                }
-                else
-                {
-                    if (e.objeto.activeSelf)
-                        e.objeto.SetActive(false);
+                bool debeEstarActivo = esDiaActivo && dentroHorario && mapaActivo;
 
-                    // Nada más aquí: el reset diario ya se maneja arriba
+                // ---- ENTRADA DEL EVENTO ----
+                if (debeEstarActivo && !e.objeto.activeSelf)
+                {
+                    if (e.tieneanimEntrada && e.animator != null)
+                    {
+                        ActivarAnimacionEntrada(e); // (realmente es animación de entrada)
+                    }
+                    else
+                    {
+                        e.objeto.SetActive(true);
+                    }
+                }
+
+                // ---- SALIDA DEL EVENTO ----
+                if (!debeEstarActivo && e.objeto.activeSelf)
+                {
+                    if (e.tieneanimSalida && e.animator != null)
+                    {
+                        DesactivarAnimacionSalida(e);
+                    }
+                    else
+                    {
+                        e.objeto.SetActive(false);
+                    }
                 }
             }
         }
@@ -184,5 +205,18 @@ public class Controlador_EventosGenerales : MonoBehaviour
         }
     }
 
+    public void ActivarAnimacionEntrada(EventoDiario evento)
+    {
+        evento.objeto.SetActive(true);
+        evento.animator.Play(evento.nombreAnimEntrada);
+    }
+    public void DesactivarAnimacionSalida(EventoDiario evento)
+    {
+        evento.animator.Play(evento.nombreAnimSalida);
+    }
 
+    public void desactivarobjeto(GameObject evento)
+    {
+        evento.SetActive(false);
+    }
 }

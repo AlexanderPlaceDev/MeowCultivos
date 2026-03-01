@@ -976,32 +976,18 @@ public class Scr_Taller : MonoBehaviour
     public void checar_armasActivas()
     {
         Ojetosint.Clear();
-        if (Datosarmas.ArmasDesbloqueadas.Length < 6)
+
+        escoonder_botones();
+        for (int i = 0; i < Datosarmas.ArmasDesbloqueadas.Length; i++)
         {
-            escoonder_botones();
-            for (int i = 0; i < Datosarmas.ArmasDesbloqueadas.Length; i++)
+            if (Datosarmas.ArmasDesbloqueadas[i])
             {
-                if (Datosarmas.ArmasDesbloqueadas[i])
+                if (i < 6)
                 {
                     OjetosSelec[i].SetActive(true);
                     OjetosSelec[i].GetComponent<Image>().sprite = Datosarmas.TodasLasArmas[i].Icono;
-                    Ojetosint.Add(i);
                 }
-            }
-        }
-        else
-        {
-            Aparecer_botones();
-            for (int i = 0; i < Datosarmas.ArmasDesbloqueadas.Length; i++)
-            {
-                if (Datosarmas.ArmasDesbloqueadas[i])
-                {
-                    if (i < 6)
-                    {
-                        OjetosSelec[i].GetComponent<Image>().sprite = Datosarmas.TodasLasArmas[i].Icono;
-                    }
-                    Ojetosint.Add(i);
-                }
+                Ojetosint.Add(i);
             }
         }
     }
