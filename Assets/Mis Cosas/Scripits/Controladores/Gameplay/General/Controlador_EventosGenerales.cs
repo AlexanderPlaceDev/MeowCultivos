@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 [System.Serializable]
@@ -213,10 +214,22 @@ public class Controlador_EventosGenerales : MonoBehaviour
     public void DesactivarAnimacionSalida(EventoDiario evento)
     {
         evento.animator.Play(evento.nombreAnimSalida);
+        StartCoroutine(desactivarobjeto(evento, 2.1f));
     }
 
-    public void desactivarobjeto(GameObject evento)
+
+    IEnumerator desactivarobjeto(EventoDiario evento, float segundos)
     {
-        evento.SetActive(false);
+        yield return new WaitForSeconds(segundos);
+        evento.objeto.SetActive(false);
+    }
+    float GetAnimationClipDuration(Animator animator, string clipName)
+    {
+        if (animator == null) return 0f;
+        foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
+        {
+            if (clip.name == clipName) return clip.length;
+        }
+        return 0f;
     }
 }

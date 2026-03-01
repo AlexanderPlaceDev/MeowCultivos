@@ -8,9 +8,9 @@ public class NPC_Salida : MonoBehaviour
     public BoxCollider box;
     public Scr_ControladorTiempo ControlT;
     public Scr_ActivadorDialogos dialogos;
-    public Scr_ControladorAnimacionesNPC npc;
-    public int HoraSalida = 19;
-    public int MinutoSalida = 5;
+    //public Scr_ControladorAnimacionesNPC npc;
+    public int HoraSalida = 22;
+    public int MinutoSalida = 0;
 
     private bool yaSeFue = false;
 
@@ -51,12 +51,12 @@ public class NPC_Salida : MonoBehaviour
 
     public void quitardialogo()
     {
-        if (dialogos != null && dialogos.Comprando)
+        if (dialogos.Comprando || dialogos.ViendoMisiones)
         {
-            dialogos.RegresarACamaraBase();
-            dialogos.estaAdentro=false;
+            dialogos.interrumpirNPC();
         }
-
+        dialogos.estaAdentro = false;
+        dialogos.OcultarIconos();
         quitarCollider();
     }
 
@@ -72,8 +72,8 @@ public class NPC_Salida : MonoBehaviour
             box.enabled = false;
     }
 
-    public void desactivarNPc()
+    public void desactivarNPc(GameObject obj)
     {
-        gameObject.SetActive(false);
+        obj.gameObject.SetActive(false);
     }
 }

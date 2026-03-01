@@ -18,10 +18,10 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     //=========================
     public bool estaAdentro = false;      // Si la gata está dentro del trigger del NPC
     private bool canvasActivo = false;     // Si el canvas de diálogo está activo
-    private bool Hablando = false;         // Si el jugador está en un diálogo
+    public bool Hablando = false;         // Si el jugador está en un diálogo
     public bool Comprando = false;        // Si selecciono comprar
     public bool ViendoMisiones = false;    // Si está viendo las misiones secundarias
-    private bool ViendoTienda = false;     // Si ya está dentro de la tienda
+    public bool ViendoTienda = false;     // Si ya está dentro de la tienda
 
     //===============================
     //=== CONFIGURACIÓN DEL NPC ===
@@ -57,8 +57,6 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     private string textoActualInteractuar = "";
     private Sprite iconoActualMisiones = null;
     private string textoActualMisiones = "";
-
-    ChecarInput Checar_input;
     //=====================
     //=== CINEMACHINE ===
     //=====================
@@ -82,7 +80,6 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         Interactuar = playerInput.actions["Interactuar"];
         Misiones = playerInput.actions["Misiones"];
-        Checar_input = GameObject.Find("Singleton").GetComponent<ChecarInput>();
     }
 
     //===================
@@ -183,11 +180,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
         // Mostrar iconos
         MostrarIconos();
-        Checar_input.CammbiarAction_Player();
-        if (EsTienda)
-        {
-            OcultarIconos();
-        }
+
     }
     //=================================
     //=== CONTROL DE DIÁLOGOS ===
@@ -207,6 +200,17 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         }
     }
 
+    public void interrumpirNPC()
+    {
+        if (sistemaDialogos.Leyendo)
+        {
+            sistemaDialogos.SiguienteLinea();
+        }
+        panelDialogo.SetActive(false);
+        MisionesSecundariasUI.SetActive(false);
+        RegresarACamaraBase();
+
+    }
     private IEnumerator EsperarYCambiarCamaraPrincipal()
     {
         CambiarACamaraDialogo();
@@ -217,7 +221,6 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         {
             PlayerPrefs.SetString("DialogoSirilo", "Si");
         }
-        Checar_input.CammbiarAction_UI();
     }
 
     private void ActivarDialogo(bool Principal)
@@ -417,8 +420,6 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
         PlayerPrefs.Save();
         ActualizarMisionActual();
-
-        Checar_input.CammbiarAction_UI();
     }
     private void Girar()
     {
@@ -472,7 +473,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         {
             foreach (var icono in iconos)
                 if (icono != null) icono.SetActive(true);
-            IconProvider.ActualizarIconoUI(Interactuar, iconos[1].transform, ref iconoActualInteractuar, ref textoActualInteractuar,false);
+            IconProvider.ActualizarIconoUI(Interactuar, iconos[1].transform, ref iconoActualInteractuar, ref textoActualInteractuar, false);
             IconProvider.ActualizarIconoUI(Misiones, iconos[3].transform, ref iconoActualMisiones, ref textoActualMisiones, false);
         }
         else
@@ -488,7 +489,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
                     iconos[i].SetActive(false);
             }
 
-            IconProvider.ActualizarIconoUI(Interactuar, iconos[1].transform, ref iconoActualInteractuar, ref textoActualInteractuar,false);
+            IconProvider.ActualizarIconoUI(Interactuar, iconos[1].transform, ref iconoActualInteractuar, ref textoActualInteractuar, false);
         }
     }
 
