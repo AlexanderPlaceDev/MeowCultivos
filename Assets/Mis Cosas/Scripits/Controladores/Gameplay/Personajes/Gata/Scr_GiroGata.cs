@@ -14,11 +14,18 @@ public class Scr_GiroGata : MonoBehaviour
     PlayerInput playerInput;
     private InputAction MoverHorizontal;
     private InputAction CambiarCamara;
+    InputIconProvider IconProvider;
+    private Sprite iconoActualCamara = null;
+    private string textoActualCamara = "";
+    public GameObject CamaraBoton;
+    public GameObject Camara;
+    public GameObject giro;
     private void OnEnable()
     {
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         MoverHorizontal = playerInput.actions["MoverHorizontal"];
         CambiarCamara = playerInput.actions["CamaraLibre"];
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         rb = GetComponent<Rigidbody>();
        
 
@@ -36,28 +43,25 @@ public class Scr_GiroGata : MonoBehaviour
 
     public void checar_Control()
     {
-        if (!CamFija)
-        {
-            GameObject.Find("Cosas Inutiles").transform.GetChild(2).GetComponent<CinemachineVirtualCamera>().Follow = Gata;
-            //GetComponent<Scr_Movimiento>().UsaEjeHorizontal = false;
-        }
-        else
-        {
-            GameObject.Find("Cosas Inutiles").transform.GetChild(2).GetComponent<CinemachineVirtualCamera>().Follow = CabezaGata;
-            //GetComponent<Scr_Movimiento>().UsaEjeHorizontal = false;
-        }
 
         if (CamFija)
         {
+            GameObject.Find("Cosas Inutiles").transform.GetChild(2).GetComponent<CinemachineVirtualCamera>().Follow = CabezaGata;
             PlayerPrefs.SetString("CamaraFija", "SI");
+            Camara.SetActive(true);
+            giro.SetActive(false);
         }
         else
         {
-            PlayerPrefs.SetString("CamaraFija", "NO");
+            GameObject.Find("Cosas Inutiles").transform.GetChild(2).GetComponent<CinemachineVirtualCamera>().Follow = Gata;
+            PlayerPrefs.SetString("CamaraFija", "NO"); 
+            Camara.SetActive(false);
+            giro.SetActive(true);
         }
     }
     private void Update()
     {
+        IconProvider.ActualizarIconoUI(CambiarCamara, CamaraBoton.transform, ref iconoActualCamara, ref textoActualCamara, false);
         if (CambiarCamara.WasPressedThisFrame())
         {
             if (CamFija)

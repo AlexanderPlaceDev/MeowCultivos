@@ -48,6 +48,8 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
     [SerializeField] private Sprite teclaIcono;
     [SerializeField] GameObject Mapa_;
+    [SerializeField] private Sprite[] PalancasIcono;
+    private bool ultimogamepad=false;
     PlayerInput playerInput;
     InputIconProvider IconProvider;
     private InputAction Mapa;
@@ -118,6 +120,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
             }
             else
             {
+                ChecarImagenMovimiento();
                 ProcesarMisionMovimiento();
                 BotonesUI.SetActive(!MisionActualCompleta);
             }
@@ -287,6 +290,38 @@ public class Scr_ControladorMisiones : MonoBehaviour
         {
             MisionActualCompleta = MisionPCompleta;
         }
+    }
+
+    private void ChecarImagenMovimiento()
+    {
+        if (IconProvider.UsandoGamepad() && !ultimogamepad)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                // Actualizar UI de progreso de teclas
+                Image Icono = BotonesUI.transform.GetChild(i).GetComponent<Image>();
+                Icono.sprite = PalancasIcono[i];
+
+                TextMeshProUGUI text = BotonesUI.transform.GetChild(i).GetChild(0).GetComponent<TextMeshProUGUI>();
+                text.text = "";
+                ultimogamepad=true;
+            }
+        }
+        else if (!IconProvider.UsandoGamepad() && ultimogamepad)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                // Actualizar UI de progreso de teclas
+                Image Icono = BotonesUI.transform.GetChild(i).GetComponent<Image>();
+                Icono.sprite = teclaIcono; 
+                
+                TextMeshProUGUI text = BotonesUI.transform.GetChild(i).GetChild(0).GetComponent<TextMeshProUGUI>();
+                text.text = MisionActual.Teclas[i].ToString();
+            }
+
+            ultimogamepad = false;
+        }
+        
     }
 
     private void ProcesarMisionMovimiento()

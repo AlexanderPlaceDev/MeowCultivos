@@ -13,7 +13,7 @@ public class Lugar_point : MonoBehaviour
 
 
     public float fadeDuration = 0.5f; 
-    private float ladoAnterior = 0f;
+    //private float ladoAnterior = 0f;
     private bool jugadorDentro;
     // Start is called before the first frame update
     void Start()
