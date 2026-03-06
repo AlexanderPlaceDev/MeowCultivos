@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6979b680b7088434e94c3d609389f3c7, type: 3}
+  m_Name: Bateria
+  m_EditorClassIdentifier: 
+  Nombre: Bateria
+  TipoPlanta: 
+  Descripcion: Es una buena manera de almacenar energia en pocas cantidades
+  Icono: {fileID: 21300000, guid: a12ae0b49f5660447ad65354db9f9bb8, type: 3}
+  IconoInventario: {fileID: 21300000, guid: 567a500bb5a4ae546b564842e3b54a59, type: 3}
+  MaterialesDeProduccion:
+  - {fileID: 11400000, guid: 74fd9c65dd328c3479841cf247f0e23d, type: 2}
+  - {fileID: 11400000, guid: e4c2fe2e0334ff04593e4de1253f6410, type: 2}
+  - {fileID: 11400000, guid: 5ba7d52a723e74c4686db45ccc9fa656, type: 2}
+  - {fileID: 0}
+  CantidadMaterialesDeProduccion: 010000000100000003000000
+  CantidadProducto: 1
+  TiempoDeProduccion: 20
+  ValorComposta: 0
+  MinimoMaximoSembradio: 
+  XPRecolecta: 12
+  CantidadVentaMinima: 6
+  ValorVentaIndividual: 15
