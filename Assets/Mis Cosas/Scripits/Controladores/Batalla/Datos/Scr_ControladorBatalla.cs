@@ -88,6 +88,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     private Scr_GirarCamaraBatalla CamaraBatalla;
     private Scr_ControladorOleadas controladorOleadas;
     private Scr_ControladorRecolleccion controladorRecoleccion;
+    private SCR_Controlador_Jefes Controlador_Jefes;
     private bool DioRecompensa = false;
     private int experiencia = 0;
     int Bonus=0;
@@ -120,6 +121,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     [SerializeField] private AudioClip SonidoReloj;
     [SerializeField] private AudioClip SonidoPelea; // el sonido que suena cuando dice "Pelea"
     private string ultimoTextoMostrado = "";
+    private bool Esjefe=false;
 
     Musica_pelea Musica;
     ChecarInput Checar_input;
@@ -130,6 +132,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
         armas= GetComponent<Scr_ControladorArmas>();
         controladorOleadas = GetComponent<Scr_ControladorOleadas>();
         controladorRecoleccion = GetComponent<Scr_ControladorRecolleccion>();
+        Controlador_Jefes = GetComponent<SCR_Controlador_Jefes>();
         Personaje = GameObject.Find("Personaje");
         CamaraBatalla = Personaje.transform.GetChild(0).gameObject.GetComponent<Scr_GirarCamaraBatalla>();
         Mision.text = Singleton.Mision;
@@ -177,6 +180,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
             case "Defensa":
                 controladorOleadas.enabled = true;
                 controladorRecoleccion.enabled = true;
+                Controlador_Jefes.enabled = false;
                 ContadorEnemigos.SetActive(true);
                 ContadorFruta.SetActive(true);
                 break;
@@ -184,17 +188,27 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 controladorOleadas.enabled = false;
                 controladorRecoleccion.enabled = true;
                 ContadorEnemigos.SetActive(false);
+                Controlador_Jefes.enabled = false;
                 ContadorFruta.SetActive(true);
                 break;
             case "Pelea":
                 controladorOleadas.enabled = true;
                 controladorRecoleccion.enabled = false;
+                Controlador_Jefes.enabled = false;
                 ContadorEnemigos.SetActive(true);
+                ContadorFruta.SetActive(false);
+                break;
+            case "Jefe":
+                controladorOleadas.enabled = false;
+                controladorRecoleccion.enabled = false;
+                Controlador_Jefes.enabled = true;
+                ContadorEnemigos.SetActive(false);
                 ContadorFruta.SetActive(false);
                 break;
             case "":
                 controladorOleadas.enabled = true;
                 controladorRecoleccion.enabled = false;
+                Controlador_Jefes.enabled = false;
                 ContadorEnemigos.SetActive(true);
                 ContadorFruta.SetActive(false);
                 break;
@@ -322,15 +336,19 @@ public class Scr_ControladorBatalla : MonoBehaviour
         }
         if (Singleton.ModoSeleccionado == Modo.Defensa)
         {
-            ComienzoDefensa();
+            ComienzoContador("¡Defiende!");
         }
         else if (Singleton.ModoSeleccionado == Modo.Recoleccion)
         {
-            ComienzoRecoleccion();
+            ComienzoContador("¡Recolecta!");
         }
         else if (Singleton.ModoSeleccionado == Modo.Pelea)
         {
-            ComienzoBatalla();
+            ComienzoContador("Pelea");
+        }
+        else if (Singleton.ModoSeleccionado == Modo.Jefe)
+        {
+            ComienzoContador("Explora?");
         }
 
     }
@@ -338,18 +356,45 @@ public class Scr_ControladorBatalla : MonoBehaviour
     {
         if (Singleton.ModoSeleccionado == Modo.Defensa)
         {
-            ComienzoDefensa();
+            ComienzoContador("¡Defiende!");
         }
         else if (Singleton.ModoSeleccionado == Modo.Recoleccion)
         {
-            ComienzoRecoleccion();
+            ComienzoContador("¡Recolecta!");
         }
         else if (Singleton.ModoSeleccionado == Modo.Pelea)
         {
-            ComienzoBatalla();
+            ComienzoContador("Pelea");
+        }
+        else if (Singleton.ModoSeleccionado == Modo.Jefe)
+        {
+            ComienzoContador("Explora?");
+            Esjefe = true;
         }
     }
-    private void ComienzoBatalla()
+    public void Controladores(string modo)
+    {
+        switch (modo)
+        {
+            case "Defensa":
+                controladorRecoleccion.IniciarRecoleccion();
+                controladorOleadas.IniciarPrimeraOleada();
+                break;
+            case "Recoleccion":
+                controladorRecoleccion.IniciarRecoleccion();
+                break;
+            case "Pelea":
+                controladorOleadas.IniciarPrimeraOleada();
+                break;
+            case "Jefe":
+                Controlador_Jefes.IniciarExploracion();
+                break;
+            case "":
+                controladorOleadas.IniciarPrimeraOleada();
+                break;
+        }
+    }
+    private void ComienzoContador(string mensaje)
     {
         if (ComenzarCuenta)
         {
@@ -362,7 +407,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
                     {
                         OrigenLuz.color = Singleton.Luz;
                         PrepararBatalla();
-                        controladorOleadas.IniciarPrimeraOleada();
+                        Controladores(Singleton.ModoSeleccionado.ToString());
                         PrimerSpawn = true;
                     }
                 }
@@ -371,13 +416,13 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 int numeroActual = Mathf.FloorToInt(Cuenta); // floor evita el salto del 1
                 if (numeroActual > 3) numeroActual = 3;      // nunca mostrar 4
 
-                string textoMostrado = numeroActual > 0 ? numeroActual.ToString() : "Pelea";
+                string textoMostrado = numeroActual > 0 ? numeroActual.ToString() : mensaje;
                 NumeroCuenta.text = textoMostrado;
 
                 // --- Cambiar sonido solo cuando cambia el número o pasa a "Pelea" ---
                 if (textoMostrado != ultimoTextoMostrado)
                 {
-                    if (textoMostrado == "Pelea")
+                    if (textoMostrado == mensaje)
                     {
                         audioSource.clip = SonidoPelea; // sonido especial
                     }
@@ -394,159 +439,12 @@ public class Scr_ControladorBatalla : MonoBehaviour
             }
             else
             {
+                Debug.Log(ComprobarEnemigos() + "/" + ComenzarCuenta);
                 // --- Fin de la cuenta atrás ---
-                if (controladorOleadas.enemigosOleada.Count > 0 && ComenzarCuenta)
+                if (ComprobarCantidadEnemigos() && ComenzarCuenta)
                 {
-                    foreach (GameObject Enemigo in controladorOleadas.enemigosOleada)
-                    {
-                        NavMeshAgent enenav = Enemigo.GetComponent<NavMeshAgent>();
-                        if (enenav != null)
-                        {
-                            NavMeshHit hit;
-                            bool enNavMesh = NavMesh.SamplePosition(Enemigo.transform.position, out hit, 1.5f, NavMesh.AllAreas);
-
-                            Debug.Log($"¿Está {Enemigo.name} sobre NavMesh? {enNavMesh}");
-                            enenav.enabled = true;
-                        }
-                        else
-                        {
-                            Debug.Log("No tiene el NavMeshAgent");
-                        }
-                    }
-                }
-
-                NumeroCuenta.gameObject.SetActive(false);
-                ComenzarCuenta = false;
-                Cuenta = 4;
-                ActivarControles(true);
-                ComenzoBatalla = true;
-            }
-        }
-    }
-    private void ComienzoRecoleccion()
-    {
-        if (ComenzarCuenta)
-        {
-            if (Cuenta > 0)
-            {
-                // --- Preparación al inicio ---
-                if (Cuenta == 4)
-                {
-                    if (!PrimerSpawn)
-                    {
-                        OrigenLuz.color = Singleton.Luz;
-                        PrepararBatalla();
-                        controladorRecoleccion.IniciarRecoleccion();
-                        PrimerSpawn = true;
-                    }
-                }
-
-                // --- Actualizar número visual ---
-                int numeroActual = Mathf.FloorToInt(Cuenta); // floor evita el salto del 1
-                if (numeroActual > 3) numeroActual = 3;      // nunca mostrar 4
-
-                string textoMostrado = numeroActual > 0 ? numeroActual.ToString() : "¡Recolecta!";
-                NumeroCuenta.text = textoMostrado;
-
-                // --- Cambiar sonido solo cuando cambia el número o pasa a "Pelea" ---
-                if (textoMostrado != ultimoTextoMostrado)
-                {
-                    if (textoMostrado == "¡Recolecta!")
-                    {
-                        audioSource.clip = SonidoPelea; // sonido especial
-                    }
-                    else
-                    {
-                        audioSource.clip = SonidoReloj; // sonido del reloj (3,2,1)
-                    }
-                    audioSource.Play();
-
-                    ultimoTextoMostrado = textoMostrado;
-                }
-
-                Cuenta -= Time.deltaTime;
-            }
-            else
-            {
-                // --- Fin de la cuenta atrás ---
-                if (controladorRecoleccion.enemigosOleada.Count > 0 && ComenzarCuenta)
-                {
-                    foreach (GameObject Enemigo in controladorRecoleccion.enemigosOleada)
-                    {
-                        NavMeshAgent enenav = Enemigo.GetComponent<NavMeshAgent>();
-                        if (enenav != null)
-                        {
-                            NavMeshHit hit;
-                            bool enNavMesh = NavMesh.SamplePosition(Enemigo.transform.position, out hit, 1.5f, NavMesh.AllAreas);
-
-                            Debug.Log($"¿Está {Enemigo.name} sobre NavMesh? {enNavMesh}");
-                            enenav.enabled = true;
-                        }
-                        else
-                        {
-                            Debug.Log("No tiene el NavMeshAgent");
-                        }
-                    }
-                }
-
-                NumeroCuenta.gameObject.SetActive(false);
-                ComenzarCuenta = false;
-                Cuenta = 4;
-                ActivarControles(true);
-                ComenzoBatalla = true;
-            }
-        }
-    }
-    private void ComienzoDefensa()
-    {
-        if (ComenzarCuenta)
-        {
-            if (Cuenta > 0)
-            {
-                // --- Preparación al inicio ---
-                if (Cuenta == 4)
-                {
-                    if (!PrimerSpawn)
-                    {
-                        OrigenLuz.color = Singleton.Luz;
-                        PrepararBatalla();
-                        controladorOleadas.IniciarPrimeraOleada();
-                        controladorRecoleccion.IniciarRecoleccion();
-                        PrimerSpawn = true;
-                    }
-                }
-
-                // --- Actualizar número visual ---
-                int numeroActual = Mathf.FloorToInt(Cuenta); // floor evita el salto del 1
-                if (numeroActual > 3) numeroActual = 3;      // nunca mostrar 4
-
-                string textoMostrado = numeroActual > 0 ? numeroActual.ToString() : "¡Defiende!";
-                NumeroCuenta.text = textoMostrado;
-
-                // --- Cambiar sonido solo cuando cambia el número o pasa a "Pelea" ---
-                if (textoMostrado != ultimoTextoMostrado)
-                {
-                    if (textoMostrado == "¡Defiende!")
-                    {
-                        audioSource.clip = SonidoPelea; // sonido especial
-                    }
-                    else
-                    {
-                        audioSource.clip = SonidoReloj; // sonido del reloj (3,2,1)
-                    }
-                    audioSource.Play();
-
-                    ultimoTextoMostrado = textoMostrado;
-                }
-
-                Cuenta -= Time.deltaTime;
-            }
-            else
-            {
-                // --- Fin de la cuenta atrás ---
-                if (controladorOleadas.enemigosOleada.Count > 0 && ComenzarCuenta)
-                {
-                    foreach (GameObject Enemigo in controladorOleadas.enemigosOleada)
+                    Debug.Log("aa");
+                    foreach (GameObject Enemigo in ComprobarEnemigos())
                     {
                         NavMeshAgent enenav = Enemigo.GetComponent<NavMeshAgent>();
                         if (enenav != null)
@@ -573,7 +471,70 @@ public class Scr_ControladorBatalla : MonoBehaviour
         }
     }
 
+    private bool ComprobarCantidadEnemigos()
+    {
+        if (Singleton.ModoSeleccionado == Modo.Defensa && controladorOleadas.enemigosOleada.Count>0)
+        {
+            return true;
+        }
+        else if (Singleton.ModoSeleccionado == Modo.Recoleccion && controladorRecoleccion.enemigosOleada.Count > 0)
+        {
+            return true;
+        }
+        else if (Singleton.ModoSeleccionado == Modo.Pelea && controladorOleadas.enemigosOleada.Count > 0)
+        {
+            return true;
+        }
+        else if (Singleton.ModoSeleccionado == Modo.Jefe)
+        {
+            GameObject[] enemigosActuales = GameObject.FindGameObjectsWithTag("Enemigo");
+            if (enemigosActuales.Length > 0)
+            {
 
+                return true;
+            }
+            return false;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    private List<GameObject> ComprobarEnemigos()
+    {
+        if (Singleton.ModoSeleccionado == Modo.Defensa )
+        {
+            return controladorOleadas.enemigosOleada;
+        }
+        else if (Singleton.ModoSeleccionado == Modo.Recoleccion)
+        {
+            return controladorRecoleccion.enemigosOleada;
+        }
+        else if (Singleton.ModoSeleccionado == Modo.Pelea)
+        {
+            return controladorOleadas.enemigosOleada;
+        }
+        else if (Singleton.ModoSeleccionado == Modo.Jefe)
+        {
+            GameObject[] enemigosActuales = GameObject.FindGameObjectsWithTag("Enemigo");
+
+            if (enemigosActuales.Length > 0)
+            {
+                List<GameObject> enemigos=new List<GameObject>();
+                for (int i = 0; i < enemigosActuales.Length; i++) 
+                {
+                    enemigos.Add(enemigosActuales[i]);
+                }
+
+                return enemigos;
+            }
+            return null;
+        }
+        else
+        {
+            return null;
+        }
+    }
     private void Terminar()
     {
         if (VidaActual <= 0)
@@ -582,7 +543,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
             ComenzoBatalla = false;
             FinalizarBatalla(false);
         }
-        else if (ComenzoBatalla)
+        else if (ComenzoBatalla && !Esjefe)
         {
             controladorOleadas.ComprobarOleada();
         }
@@ -635,7 +596,10 @@ public class Scr_ControladorBatalla : MonoBehaviour
         {
             RecopensaEnemigo(recompensasDict);
         }
-
+        else if (Singleton.ModoSeleccionado == Modo.Jefe)
+        {
+            //RecopensaEnemigo(recompensasDict);
+        }
         MostrarRecompensas(recompensasDict);
 
         PlayerPrefs.SetInt("XPActual", PlayerPrefs.GetInt("XPActual") + (experiencia + Bonus));

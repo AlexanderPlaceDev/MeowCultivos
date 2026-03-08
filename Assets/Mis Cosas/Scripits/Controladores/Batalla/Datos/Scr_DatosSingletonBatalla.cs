@@ -22,7 +22,7 @@ public class Scr_DatosSingletonBatalla : MonoBehaviour
     public Material SkyBoxDia;
     public Material SkyBoxNoche;
     public int Pista;
-    public enum Modo { Pelea, Recoleccion,  Defensa}
+    public enum Modo { Pelea, Recoleccion,  Defensa, Jefe}
     public Modo ModoSeleccionado;
     [Header("Recompensa")]
     public List<Scr_CreadorObjetos> ObjetosRecompensa = new List<Scr_CreadorObjetos>();
