@@ -49,7 +49,7 @@ public class Scr_ActivadorHabilidad : MonoBehaviour
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         Habilidad = playerInput.actions[Input.ToString()];
-        Debug.Log(Habilidad);
+        //Debug.Log(Habilidad);
     }
     private void OnEnable()
     {
@@ -66,7 +66,7 @@ public class Scr_ActivadorHabilidad : MonoBehaviour
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         Habilidad = playerInput.actions[Input.ToString()];
-        Debug.Log(Habilidad);
+        //Debug.Log(Habilidad);
     }
     void Update()
     {

@@ -609,7 +609,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     //
     private void checarIdle()
     {
-        Debug.Log(TodasLasArmas[ArmaActual].Nombre);
+        //Debug.Log(TodasLasArmas[ArmaActual].Nombre);
         switch (TodasLasArmas[ArmaActual].Nombre)
         {
             case "Platano":

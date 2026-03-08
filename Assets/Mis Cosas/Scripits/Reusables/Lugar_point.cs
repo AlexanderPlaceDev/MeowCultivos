@@ -31,7 +31,7 @@ public class Lugar_point : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (PlayerPrefs.GetString("TutorialPeleas", "NO") == "NO") return;
+        //if () return;
         if (!other.CompareTag("Gata") ||isshow == true) return;
         if (isshow) return;
 
@@ -48,7 +48,7 @@ public class Lugar_point : MonoBehaviour
         Debug.Log("Lado al entrar: " + lado);
 
         // Si entra por el frente
-        if (lado > 0)
+        if (lado > 0 && PlayerPrefs.GetString("TutorialPeleas", "NO") == "SI")
         {
             entornoUI.SetActive(true);
             StartCoroutine(Showtext(NombreLugar));
