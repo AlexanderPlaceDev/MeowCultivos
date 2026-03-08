@@ -40,6 +40,8 @@ public class Scr_Taller : MonoBehaviour
     [SerializeField] private TextMeshProUGUI NombreHabilidad;
     [SerializeField] private TextMeshProUGUI DescripcionHabilidad;
     [SerializeField] private GameObject MostarDescipcion;
+    private List<Scr_CreadorObjetos> objetos;
+
     private string htEnEspera;
     private int cantidadht;
     private string ht;
@@ -402,7 +404,7 @@ public class Scr_Taller : MonoBehaviour
                     break;
                 case 1:
                     // Aquí puedes agregar la lógica para herramientas si quieres
-                    OjetosSelec[i].GetComponent<Image>().sprite = Datosarmas.HabilidadesTemporales[Ojetosint[i]].Icono;
+                    OjetosSelec[i].GetComponent<Image>().sprite = HabilidadesTemporales[Ojetosint[i]].Icono;
                     break;
                 case 2:
                     OjetosSelec[i].GetComponent<Image>().sprite = Datosarmas.TodasLasArmas[Ojetosint[i]].Icono;
