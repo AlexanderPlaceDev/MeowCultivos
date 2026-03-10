@@ -139,12 +139,32 @@ public class SCR_Controlador_Jefes : MonoBehaviour
     }
     Vector3 ObtenerPosicionSpawn()
     {
-        if (puntosSpawn.Length == 0)
+        if (puntosSpawn.Length == 0 || jugador == null)
             return Vector3.zero;
 
-        int indice = Random.Range(0, puntosSpawn.Length);
+        List<Transform> spawnsValidos = new List<Transform>();
 
-        return puntosSpawn[indice].position;
+        foreach (Transform spawn in puntosSpawn)
+        {
+            float distancia = Vector3.Distance(jugador.position, spawn.position);
+
+            // rango natural de combate
+            if (distancia > 15f && distancia < 40f)
+            {
+                spawnsValidos.Add(spawn);
+            }
+        }
+
+        // si encontramos spawns en el rango
+        if (spawnsValidos.Count > 0)
+        {
+            int indice = Random.Range(0, spawnsValidos.Count);
+            return spawnsValidos[indice].position;
+        }
+
+        // fallback por si no hay ninguno
+        int random = Random.Range(0, puntosSpawn.Length);
+        return puntosSpawn[random].position;
     }
 
     public void DestruirTodosLosEnemigos()
