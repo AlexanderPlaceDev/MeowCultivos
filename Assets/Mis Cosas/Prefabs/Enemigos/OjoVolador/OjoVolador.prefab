@@ -5013,17 +5013,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 64eb18d1c730e6e46a8199013de634a0,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -8.427108
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 64eb18d1c730e6e46a8199013de634a0,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -1.1349271e-14
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 64eb18d1c730e6e46a8199013de634a0,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 2.2668941e-14
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 64eb18d1c730e6e46a8199013de634a0,
         type: 3}
@@ -5122,7 +5122,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 64eb18d1c730e6e46a8199013de634a0,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5591253160105435686}
+      addedObject: {fileID: 3591202924375434016}
   m_SourcePrefab: {fileID: 100100000, guid: 64eb18d1c730e6e46a8199013de634a0, type: 3}
 --- !u!1 &7277128848516291725 stripped
 GameObject:
@@ -5130,7 +5130,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 7511133297137852892}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &5591253160105435686
+--- !u!95 &3591202924375434016
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -5519,7 +5519,7 @@ MonoBehaviour:
   resistenciaEmpujar: 0.05
   resistenciaElectrificar: 0.25
   resistenciaExplotar: 0.4
-  Anim: {fileID: 5591253160105435686}
+  Anim: {fileID: 3591202924375434016}
   gata: {fileID: 0}
   VelocidadRotacion: 5
   AlturaPatrulla: 15

@@ -19,18 +19,15 @@ public class SCR_Controlador_Jefes : MonoBehaviour
     [Header("Enemigos Base")]
     [SerializeField] GameObject[] Enemigos;
     [SerializeField] int[] CantidadEnemigos;
-    
 
     [Header("Spawn")]
-    private Transform Spawn; // Padre que contiene todos los puntos de spawn
-    [SerializeField] float TiempoRevision = 2f;
+    private Transform Spawn;
+    [SerializeField] float TiempoRevision = 1.5f;
     private Transform[] puntosSpawn;
     public List<GameObject> enemigosOleada = new List<GameObject>();
 
-
     [Header("Recompensas")]
     [SerializeField] public Scr_CreadorObjetos[] Recompensa;
-
 
     private Scr_DatosSingletonBatalla singleton;
     public int CantidadPlantas = 0;
@@ -42,13 +39,15 @@ public class SCR_Controlador_Jefes : MonoBehaviour
     {
         ControladorBatalla = GetComponent<Scr_ControladorBatalla>();
         singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
-
-
     }
 
+    // ------------------------------------------------
+    // BUSCAR PUNTOS DE SPAWN
+    // ------------------------------------------------
     public void obtenerSpawns()
     {
         Transform mapa = GameObject.Find("Mapa").transform;
+
         foreach (Transform zona in mapa)
         {
             if (zona.name == singleton.NombreMapa)
@@ -66,7 +65,6 @@ public class SCR_Controlador_Jefes : MonoBehaviour
             }
         }
 
-        // Obtener todos los hijos del objeto Spawn como puntos de aparición
         puntosSpawn = new Transform[Spawn.childCount];
 
         for (int i = 0; i < Spawn.childCount; i++)
@@ -74,10 +72,14 @@ public class SCR_Controlador_Jefes : MonoBehaviour
             puntosSpawn[i] = Spawn.GetChild(i);
         }
     }
+
+    // ------------------------------------------------
+    // INICIAR SISTEMA
+    // ------------------------------------------------
     public void IniciarExploracion()
     {
         obtenerSpawns();
-        // Buscar jugador por tag
+
         GameObject objJugador = GameObject.FindGameObjectWithTag("Gata");
 
         if (objJugador != null)
@@ -86,34 +88,34 @@ public class SCR_Controlador_Jefes : MonoBehaviour
         StartCoroutine(ControlarEnemigos());
     }
 
+    // ------------------------------------------------
+    // CONTROLADOR DE SPAWN
+    // ------------------------------------------------
     IEnumerator ControlarEnemigos()
     {
         while (true)
         {
-            Debug.Log(Enemigos.Length);
-            for (int i = 0; i < Enemigos.Length; i++)
-            {
-                int faltan = CantidadEnemigos[i] - ContarEnemegigos(Enemigos[i]);
+            LimpiarLista();
 
-                if (faltan > 0)
+            int tipo = ObtenerTipoFaltante();
+
+            if (tipo != -1)
+            {
+                Vector3 posicionSpawn = ObtenerPosicionSpawn();
+
+                GameObject enemigo = Instantiate(Enemigos[tipo], posicionSpawn, Quaternion.identity);
+
+                enemigosOleada.Add(enemigo);
+
+                NavMeshAgent agent = enemigo.GetComponent<NavMeshAgent>();
+
+                if (agent != null && agent.isOnNavMesh)
                 {
-                    for (int j = 0; j < faltan; j++)
-                    {
-                        Vector3 posicionSpawn = ObtenerPosicionSpawn();
-                        // Instanciar enemigo
-                        GameObject enemigo = Instantiate(Enemigos[i], posicionSpawn, Quaternion.identity);
-                        enemigosOleada.Add(enemigo);
-                        // Verificar agente
-                        NavMeshAgent agent = enemigo.GetComponent<NavMeshAgent>();
-                        if (agent != null && agent.isOnNavMesh)
-                        {
-                            agent.enabled = false; // se activará después de la cuenta
-                        }
-                        else
-                        {
-                            Debug.LogWarning("El enemigo no está en el NavMesh.");
-                        }
-                    }
+                    agent.enabled = false;
+                }
+                else
+                {
+                    Debug.LogWarning("El enemigo no está en el NavMesh.");
                 }
             }
 
@@ -121,22 +123,62 @@ public class SCR_Controlador_Jefes : MonoBehaviour
         }
     }
 
-    private int ContarEnemegigos(GameObject ene)
+    // ------------------------------------------------
+    // ELEGIR TIPO DE ENEMIGO ALEATORIO QUE FALTE
+    // ------------------------------------------------
+    int ObtenerTipoFaltante()
+    {
+        List<int> disponibles = new List<int>();
+
+        for (int i = 0; i < Enemigos.Length; i++)
+        {
+            int faltan = CantidadEnemigos[i] - ContarEnemigos(Enemigos[i]);
+
+            if (faltan > 0)
+            {
+                disponibles.Add(i);
+            }
+        }
+
+        if (disponibles.Count == 0)
+            return -1;
+
+        return disponibles[Random.Range(0, disponibles.Count)];
+    }
+
+    // ------------------------------------------------
+    // CONTAR ENEMIGOS ACTIVOS
+    // ------------------------------------------------
+    private int ContarEnemigos(GameObject ene)
     {
         int cont = 0;
+
         for (int i = 0; i < enemigosOleada.Count; i++)
         {
-            if (enemigosOleada[i] == ene)
+            if (enemigosOleada[i] != null && enemigosOleada[i].CompareTag(ene.tag))
             {
                 cont++;
             }
-            if (enemigosOleada[i] == null)
-            {
-                enemigosOleada.Remove(enemigosOleada[i]);
-            }
         }
+
         return cont;
     }
+
+    // ------------------------------------------------
+    // LIMPIAR LISTA
+    // ------------------------------------------------
+    void LimpiarLista()
+    {
+        for (int i = enemigosOleada.Count - 1; i >= 0; i--)
+        {
+            if (enemigosOleada[i] == null)
+                enemigosOleada.RemoveAt(i);
+        }
+    }
+
+    // ------------------------------------------------
+    // OBTENER POSICION DE SPAWN
+    // ------------------------------------------------
     Vector3 ObtenerPosicionSpawn()
     {
         if (puntosSpawn.Length == 0 || jugador == null)
@@ -148,25 +190,25 @@ public class SCR_Controlador_Jefes : MonoBehaviour
         {
             float distancia = Vector3.Distance(jugador.position, spawn.position);
 
-            // rango natural de combate
             if (distancia > 15f && distancia < 40f)
             {
                 spawnsValidos.Add(spawn);
             }
         }
 
-        // si encontramos spawns en el rango
         if (spawnsValidos.Count > 0)
         {
             int indice = Random.Range(0, spawnsValidos.Count);
             return spawnsValidos[indice].position;
         }
 
-        // fallback por si no hay ninguno
         int random = Random.Range(0, puntosSpawn.Length);
         return puntosSpawn[random].position;
     }
 
+    // ------------------------------------------------
+    // DESTRUIR ENEMIGOS
+    // ------------------------------------------------
     public void DestruirTodosLosEnemigos()
     {
         for (int i = 0; i < Enemigos.Length; i++)
@@ -181,6 +223,7 @@ public class SCR_Controlador_Jefes : MonoBehaviour
 
         StartCoroutine(IniciarBarra());
     }
+
     IEnumerator IniciarBarra()
     {
         yield return new WaitForSeconds(3f);

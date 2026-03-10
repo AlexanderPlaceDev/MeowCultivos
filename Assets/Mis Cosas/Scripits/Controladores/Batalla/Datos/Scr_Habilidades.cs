@@ -100,7 +100,14 @@ public class Scr_Habilidades : MonoBehaviour
                     DuracionAtaqueInicial = enemigo.GetComponent<Scr_Enemigo>().DuracionDeAtaque;
                     enemigo.GetComponent<Scr_Enemigo>().DuracionDeAtaque = DuracionAtaqueInicial * 3f;
                     enemigo.GetComponent<Scr_Enemigo>().Velocidad = velocidadInicial / 3f;
-                    enemigo.GetComponent<Animator>().speed = 1 / 3f;
+                    if (enemigo.GetComponent<Animator>() != null)
+                    {
+                        enemigo.GetComponent<Animator>().speed = 1 / 3f;
+                    }
+                    else
+                    {
+                        enemigo.gameObject.transform.GetChild(0).gameObject.GetComponent<Animator>().speed = 1 / 3f;
+                    }
                     enemigo.GetComponent<NavMeshAgent>().speed = velocidadInicial / 3f;
 
                     StartCoroutine(RegresarVelocidad(5f, enemigo));
@@ -668,7 +675,14 @@ public class Scr_Habilidades : MonoBehaviour
 
             enemigo.GetComponent<Scr_Enemigo>().DuracionDeAtaque = DuracionAtaqueInicial;
             enemigo.GetComponent<Scr_Enemigo>().Velocidad = velocidadInicial;
-            enemigo.GetComponent<Animator>().speed = 1f;
+            if (enemigo.GetComponent<Animator>() != null)
+            {
+                enemigo.GetComponent<Animator>().speed = 1f;
+            }
+            else
+            {
+                enemigo.gameObject.transform.GetChild(0).gameObject.GetComponent<Animator>().speed = 1f;
+            }
             enemigo.GetComponent<NavMeshAgent>().speed = velocidadInicial;
         }
     }

@@ -20,7 +20,7 @@ Material:
   m_LightmapFlags: 6
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3001
+  m_CustomRenderQueue: 2001
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: _AmbientCol
@@ -146,6 +146,7 @@ Material:
     - _RecibeDa_o: 0
     - _RimStep: 0.65
     - _RimStepSmooth: 0.4
+    - _RotaLaTextura: 0
     - _Segmented: 1
     - _ShadowStep: 0.5
     - _ShadowStepSmooth: 0.04
@@ -171,6 +172,7 @@ Material:
     - _StpSmooth: 0.405
     - _Surface: 1
     - _UVSec: 0
+    - _VelocidadRotacion: 0
     - _Velocidad_Del_Viento: 1
     - _WorkflowMode: 0
     - _WriteMask: 255
@@ -186,8 +188,10 @@ Material:
     - _Escala_Ruido: {r: 0, g: 0, b: 0, a: 0}
     - _HDR: {r: 0, g: 0, b: 0, a: 0}
     - _Offset_Ruido: {r: 0, g: 0, b: 0, a: 0}
+    - _OrigenRotacion: {r: 0, g: 0, b: 0, a: 0}
     - _OtlColor: {r: 0, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Posicion_Imagen: {r: 1, g: 1, b: 0, a: 0}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _ShnColor: {r: 1, g: 1, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
