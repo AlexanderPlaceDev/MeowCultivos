@@ -116,12 +116,14 @@ public class Scr_MiniJuegoPesca : MonoBehaviour
         {
             rotacionPez = -RotacionMaxima;
             direccionPez = 1f;
+            ActualizarSpritePez();
         }
         else if (rotacionPez >= RotacionMaxima)
         {
             rotacionPez = RotacionMaxima;
             direccionPez = -1f;
-            // 🎯 Cambio de cámara con cooldown
+            ActualizarSpritePez();
+
             if (UnityEngine.Random.value < 0.5f)
                 SolicitarCambioCamaraSeguro();
         }
@@ -133,15 +135,17 @@ public class Scr_MiniJuegoPesca : MonoBehaviour
     void CambiarDireccionPez()
     {
         direccionPez = UnityEngine.Random.value < 0.5f ? -1f : 1f;
+        ActualizarSpritePez();
+    }
 
-        if(direccionPez == -1)
-        {
-            PivotePez.GetChild(1).GetComponent<RectTransform>().localRotation= Quaternion.Euler(0, -180, 0);
-        }
+    void ActualizarSpritePez()
+    {
+        RectTransform sprite = PivotePez.GetChild(1).GetComponent<RectTransform>();
+
+        if (direccionPez < 0)
+            sprite.localRotation = Quaternion.Euler(0, -180, 0);
         else
-        {
-            PivotePez.GetChild(1).GetComponent<RectTransform>().localRotation= Quaternion.Euler(0, 0, 0);
-        }
+            sprite.localRotation = Quaternion.Euler(0, 0, 0);
     }
 
     void IniciarPausa()
@@ -260,8 +264,9 @@ public class Scr_MiniJuegoPesca : MonoBehaviour
 
         // 🔹 🔥 CLAVE: reactivar input
         if (MoverHorizontal != null)
-            MoverHorizontal.Enable();
 
+            MoverHorizontal.Enable();
+        ActualizarSpritePez();
         enabled = true;
     }
 

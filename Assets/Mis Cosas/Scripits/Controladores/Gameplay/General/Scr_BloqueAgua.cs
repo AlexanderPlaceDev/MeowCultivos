@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -22,6 +20,7 @@ public class Scr_BloqueAgua : MonoBehaviour
     private Transform gata;
     private bool PausandoPesca;
     private Animator animatorGata;
+    [SerializeField] string PezQueDa;
 
     [Header("Pesca - Minijuego")]
     [SerializeField] private float tiempoMinPicada = 1f;
@@ -35,7 +34,7 @@ public class Scr_BloqueAgua : MonoBehaviour
     private bool VentanaActiva;
     bool usandoCamaraIzquierda;
     Scr_MiniJuegoPesca miniJuego;
-
+    static Scr_BloqueAgua bloqueActivo;
 
 
 
@@ -85,6 +84,11 @@ public class Scr_BloqueAgua : MonoBehaviour
 
     void Update()
     {
+        if (Pescando)
+        {
+            gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
+        }
+
         if (!Recolectando && !Pescando)
         {
             if (EstaDentro)
@@ -112,11 +116,19 @@ public class Scr_BloqueAgua : MonoBehaviour
                 if (puedeRegar)
                 {
                     gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRegar = true;
-                    gata.GetChild(3).GetChild(0).gameObject.SetActive(true);
+
+                    GameObject boton = gata.GetChild(3).GetChild(0).gameObject;
+                    GameObject icono = gata.GetChild(3).GetChild(1).gameObject;
+
+                    boton.SetActive(true);
+                    icono.SetActive(true);
+
+                    // 🔹 Aseguramos sprite correcto SIEMPRE
+                    icono.GetComponent<Image>().sprite = IconoAgua;
 
                     IconProvider.ActualizarIconoUI(
                         Regar,
-                        gata.GetChild(3).GetChild(0),
+                        boton.transform,
                         ref iconoActualRegar,
                         ref textoActualRegar,
                         true
@@ -198,6 +210,12 @@ public class Scr_BloqueAgua : MonoBehaviour
                     gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
                     gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeTalar = false;
 
+                    // 🔹 Activar caña visualmente
+                    Herramienta.SetActive(true);
+                    Herramienta.transform.GetChild(2).gameObject.SetActive(false); // cubeta
+                    Herramienta.transform.GetChild(3).gameObject.SetActive(false); // regadera
+                    Herramienta.transform.GetChild(4).gameObject.SetActive(true);  // caña
+
                     StartCoroutine(EsperarPesca());
                 }
 
@@ -277,21 +295,29 @@ public class Scr_BloqueAgua : MonoBehaviour
         // Activamos UI de pesca
         gata.GetChild(3).gameObject.SetActive(true);
         gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
+        gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
 
         iconoActualRegar = null;
         textoActualRegar = null;
-        gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
+
+        GameObject inputIcon = gata.GetChild(3).GetChild(0).gameObject;
+        GameObject iconoQTE = gata.GetChild(3).GetChild(1).gameObject;
+
+        // aseguramos que estén activos
+        inputIcon.SetActive(true);
+        iconoQTE.SetActive(true);
+
+        // actualizar icono del botón
         IconProvider.ActualizarIconoUI(
-                        Pescar,
-                        gata.GetChild(3).GetChild(0),
-                        ref iconoActualRegar,
-                        ref textoActualRegar,
-                        true
-                    );
+            Pescar,
+            inputIcon.transform,
+            ref iconoActualRegar,
+            ref textoActualRegar,
+            true
+        );
 
-
-        // Cambiar icono a exclamación
-        gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = IconoExclamacion;
+        // poner el !
+        iconoQTE.GetComponent<Image>().sprite = IconoExclamacion;
 
         // Centramos iconos
         gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
@@ -325,14 +351,15 @@ public class Scr_BloqueAgua : MonoBehaviour
 
     void EntrarMiniJuegoPesca()
     {
+        bloqueActivo = this;
+
         CamaraPrincipal.SetActive(false);
         GameObject contenedor = JuegoPesca.transform.GetChild(2).gameObject;
-        contenedor.SetActive(true);              // 🔹 PRIMERO activar
+        contenedor.SetActive(true);
 
         miniJuego = contenedor.GetComponent<Scr_MiniJuegoPesca>();
-        miniJuego.enabled = true;                // 🔹 luego habilitar script
-        miniJuego.Resetear();                    // 🔹 y recién resetear
-
+        miniJuego.enabled = true;
+        miniJuego.Resetear();
 
         AplicarCamara();
     }
@@ -390,6 +417,18 @@ public class Scr_BloqueAgua : MonoBehaviour
         // Reactivar movimiento
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
 
+        // Restaurar herramienta
+        Herramienta.transform.GetChild(4).gameObject.SetActive(false);
+
+        if (PlayerPrefs.GetString("Habilidad:Regadera", "No") == "Si")
+        {
+            Herramienta.transform.GetChild(3).gameObject.SetActive(true);
+        }
+        else if (PlayerPrefs.GetString("Habilidad:Cubeta", "No") == "Si")
+        {
+            Herramienta.transform.GetChild(2).gameObject.SetActive(true);
+        }
+
         // Restaurar icono de caña
         gata.GetChild(3).GetChild(3).GetComponent<Image>().sprite = IconoCaña;
 
@@ -399,6 +438,8 @@ public class Scr_BloqueAgua : MonoBehaviour
 
     void ResolverFinPesca(bool gano)
     {
+        if (bloqueActivo != this) return;
+        bloqueActivo = null;
         // 🔹 Cámara
         CamaraIzquierda.SetActive(false);
         CamaraDerecha.SetActive(false);
@@ -418,6 +459,18 @@ public class Scr_BloqueAgua : MonoBehaviour
         // 🔹 Movimiento
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
 
+        // Restaurar herramienta
+        Herramienta.transform.GetChild(4).gameObject.SetActive(false);
+
+        if (PlayerPrefs.GetString("Habilidad:Regadera", "No") == "Si")
+        {
+            Herramienta.transform.GetChild(3).gameObject.SetActive(true);
+        }
+        else if (PlayerPrefs.GetString("Habilidad:Cubeta", "No") == "Si")
+        {
+            Herramienta.transform.GetChild(2).gameObject.SetActive(true);
+        }
+
         // 🔹 UI
         DesactivarUI();
 
@@ -425,6 +478,7 @@ public class Scr_BloqueAgua : MonoBehaviour
 
         if (gano)
         {
+            gata.GetChild(7).GetComponent<Scr_Inventario>().AgregarObjeto(PezQueDa,1);
             Debug.Log("🎁 Dar recompensa (aquí agregas objeto)");
             // Aquí tú agregas el item
         }
@@ -494,9 +548,9 @@ public class Scr_BloqueAgua : MonoBehaviour
     {
         Herramienta.SetActive(true);
 
-        if (PlayerPrefs.GetString("Habilidad:Caña", "No") == "Si")
+        if (PlayerPrefs.GetString("Habilidad:Regadera", "No") == "Si")
         {
-            // Herramienta.transform.GetChild(3).gameObject.SetActive(true);
+            Herramienta.transform.GetChild(3).gameObject.SetActive(true);
         }
         else if (PlayerPrefs.GetString("Habilidad:Cubeta", "No") == "Si")
         {

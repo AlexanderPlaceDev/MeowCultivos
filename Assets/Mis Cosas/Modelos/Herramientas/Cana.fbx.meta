@@ -3,7 +3,22 @@ guid: b74943acca47d7749a74462774542d2e
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Color Negro
+    second: {fileID: 2100000, guid: 8b69197c9c4d18942adca04686425b41, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Herramientas Madera
+    second: {fileID: 2100000, guid: 58c78bc4955d6f24db344e1ef95c94e0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal
+    second: {fileID: 2100000, guid: ac653c13e6e2e864fb0ff6f052a8c936, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
