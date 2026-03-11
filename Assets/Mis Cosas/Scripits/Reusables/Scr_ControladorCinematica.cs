@@ -24,6 +24,7 @@ public class Scr_ControladorCinematica : MonoBehaviour
     [SerializeField] Collider ActivadorCinematicaSiguiente;
     [SerializeField] GameObject Enemigo;
     [SerializeField] int CantidadEnemigos;
+    [SerializeField] public string NombreMapa = "Batalla Base";
     [SerializeField] Animator[] Barras;
 
     private AsyncOperation Operacion;
@@ -161,6 +162,8 @@ public class Scr_ControladorCinematica : MonoBehaviour
         Singleton.Item = Enemigo.GetComponent<Scr_CambiadorBatalla>().Item;
         Singleton.ColorItem = Enemigo.GetComponent<Scr_CambiadorBatalla>().ColorItem;
         Singleton.Luz = GameObject.Find("Sol").GetComponent<Light>().color;
+        Singleton.ModoSeleccionado = Enemigo.GetComponent<Scr_CambiadorBatalla>().Modo;
+        Singleton.NombreMapa = NombreMapa;
     }
 
     public void GuardarCinematica(string Cinematica)

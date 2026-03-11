@@ -15,6 +15,7 @@ public class Scr_CambiadorBatalla : MonoBehaviour
     [SerializeField] public string Item;
     [SerializeField] public Color ColorItem;
 
+    [SerializeField] public string NombreMapa = "Batalla Base";
     [SerializeField] public Scr_DatosSingletonBatalla.Modo Modo;
     [SerializeField] public int Pista;
     public string Fruta;
@@ -163,6 +164,7 @@ public class Scr_CambiadorBatalla : MonoBehaviour
         singleton.ModoSeleccionado = Modo;
         singleton.Pista = Pista;
         singleton.NombreFruta = Fruta;
+        singleton.NombreMapa = NombreMapa;
         //Debug.Log("[CargarEscena] Valores básicos asignados.");
 
         var sol = GameObject.Find("Sol");
