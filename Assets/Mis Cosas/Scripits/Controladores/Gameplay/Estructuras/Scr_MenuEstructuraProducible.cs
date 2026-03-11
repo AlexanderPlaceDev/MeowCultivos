@@ -32,7 +32,7 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
     [SerializeField] private GameObject ObjetoCreado;
 
     [Header("En caso de tener varias estructuras")]
-    [SerializeField] string PlanoRequerido;
+    [SerializeField] private int estructuraRequerida;
     [SerializeField] GameObject BotonEstructuraPrimaria;
     [SerializeField] Sprite ImagenBotonEstructuraPrimaria;
     [SerializeField] Sprite ImagenIconoEstructuraPrimaria;
@@ -93,16 +93,15 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
         estructuraActual = 0;   // Fuerza estructura primaria al abrir
         ActualizarEstructura(); // Aplica el estado visual correcto
 
-        if (PlanoRequerido != "")
+        if (estructuraRequerida < 0) { return; }
+
+        if (PlayerPrefs.GetInt("Estructura" + estructuraRequerida, 0) == 1)
         {
-            if (PlayerPrefs.GetString("Habilidad:" + PlanoRequerido, "No") == "Si")
-            {
-                BotonEstructuraSecundaria.gameObject.SetActive(true);
-            }
-            else
-            {
-                BotonEstructuraSecundaria.gameObject.SetActive(false);
-            }
+            BotonEstructuraSecundaria.SetActive(true);
+        }
+        else
+        {
+            BotonEstructuraSecundaria.SetActive(false);
         }
     }
 
@@ -386,10 +385,10 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
         {
             if (BotonEstructuraPrimaria != null)
             {
-            BotonEstructuraPrimaria.GetComponent<Image>().sprite = ImagenBotonEstructuraPrimaria;
-            BotonEstructuraPrimaria.transform.GetChild(0).gameObject.SetActive(true);
-            BotonEstructuraSecundaria.GetComponent<Image>().sprite = ImagenIconoEstructuraSecundaria;
-            BotonEstructuraSecundaria.transform.GetChild(0).gameObject.SetActive(false);
+                BotonEstructuraPrimaria.GetComponent<Image>().sprite = ImagenBotonEstructuraPrimaria;
+                BotonEstructuraPrimaria.transform.GetChild(0).gameObject.SetActive(true);
+                BotonEstructuraSecundaria.GetComponent<Image>().sprite = ImagenIconoEstructuraSecundaria;
+                BotonEstructuraSecundaria.transform.GetChild(0).gameObject.SetActive(false);
             }
 
 
