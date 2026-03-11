@@ -150,6 +150,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         Gata.GetComponent<Scr_GiroGata>().enabled = true;
         transform.GetChild(0).gameObject.SetActive(false);
         BotonCerrar.GetComponent<Image>().color = ColorBotones[0];
+        if(CanvasMenu!=null) { CanvasMenu.SetActive(false); }
         if (BotonCerrar.transform.childCount>1)
         {
             BotonCerrar.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = ColorBotones[1];

@@ -16,6 +16,7 @@ public class Scr_Alcancia : MonoBehaviour
     public TextMeshProUGUI DineroActualTXT;
     public TextMeshProUGUI DineroaGuardarTXT;
 
+    [SerializeField]
     private Scr_ControladorTiempo tiempo;
 
     private const string KEY_DINERO_GUARDADO = "AlcanciaDinero";
@@ -24,7 +25,6 @@ public class Scr_Alcancia : MonoBehaviour
 
     void Start()
     {
-        tiempo = FindObjectOfType<Scr_ControladorTiempo>();
         ActualizarBanco();
     }
     private void OnEnable()

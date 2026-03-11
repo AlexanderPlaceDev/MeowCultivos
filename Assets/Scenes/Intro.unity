@@ -2829,7 +2829,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.17400002, y: 0, z: 0}
-  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1380228438}
@@ -4228,7 +4228,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &853184262
 Transform:
   m_ObjectHideFlags: 0
@@ -6525,6 +6525,7 @@ MonoBehaviour:
   canvasRectTransForm: {fileID: 1543378754}
   cursorSpeed: 1000
   padding: 35
+  ForzarGamepadCursor: 0
 --- !u!114 &1761311392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6709,7 +6710,7 @@ PlayableDirector:
   m_GameObject: {fileID: 1856795120}
   m_Enabled: 1
   serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: ff387d670e94e074cb9d1b0c91c5b158, type: 2}
+  m_PlayableAsset: {fileID: 11400000, guid: 81813f75fc0ebf943bcd2a2ffc812151, type: 2}
   m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
