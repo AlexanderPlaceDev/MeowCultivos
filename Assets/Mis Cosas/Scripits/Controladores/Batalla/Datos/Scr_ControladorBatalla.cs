@@ -72,6 +72,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
     public GameObject ContadorFruta;
     public GameObject ContadorEnemigos;
+    public GameObject BarraOleadas;
     public int FrutasRecolectadas;
     [Header("Barra Oleadas")]
     [SerializeField] Transform BarraSlider;
@@ -183,6 +184,8 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 Controlador_Jefes.enabled = false;
                 ContadorEnemigos.SetActive(true);
                 ContadorFruta.SetActive(true);
+                BarraOleadas.SetActive(true);
+                Controlador_Jefes.enabled = false;
                 break;
             case "Recoleccion":
                 controladorOleadas.enabled = false;
@@ -190,6 +193,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 ContadorEnemigos.SetActive(false);
                 Controlador_Jefes.enabled = false;
                 ContadorFruta.SetActive(true);
+                BarraOleadas.SetActive(false);
                 break;
             case "Pelea":
                 controladorOleadas.enabled = true;
@@ -197,6 +201,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 Controlador_Jefes.enabled = false;
                 ContadorEnemigos.SetActive(true);
                 ContadorFruta.SetActive(false);
+                BarraOleadas.SetActive(true);
                 break;
             case "Jefe":
                 controladorOleadas.enabled = false;
@@ -204,6 +209,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 Controlador_Jefes.enabled = true;
                 ContadorEnemigos.SetActive(false);
                 ContadorFruta.SetActive(false);
+                BarraOleadas.SetActive(false);
                 break;
             case "":
                 controladorOleadas.enabled = true;
@@ -546,6 +552,10 @@ public class Scr_ControladorBatalla : MonoBehaviour
         else if (ComenzoBatalla && !Esjefe)
         {
             controladorOleadas.ComprobarOleada();
+        }
+        else if (ComenzoBatalla && Esjefe)
+        {
+            Controlador_Jefes.IniciarAtaque();
         }
 
 
