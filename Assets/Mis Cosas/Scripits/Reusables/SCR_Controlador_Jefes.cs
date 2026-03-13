@@ -26,6 +26,9 @@ public class SCR_Controlador_Jefes : MonoBehaviour
     private Transform[] puntosSpawn;
     public List<GameObject> enemigosOleada = new List<GameObject>();
 
+    [Header("Control Distancia Enemigos")] // NUEVO
+    [SerializeField] float DistanciaMaximaJugador = 60f; // NUEVO: distancia máxima antes de teletransportar
+
     [Header("Recompensas")]
     [SerializeField] public Scr_CreadorObjetos[] Recompensa;
 
@@ -74,6 +77,23 @@ public class SCR_Controlador_Jefes : MonoBehaviour
     }
 
     // ------------------------------------------------
+    // ACTIVAR MOVIMIENTO DE LOS ENEMIGOS
+    // ------------------------------------------------
+    public void IniciarAtaque()
+    {
+        foreach (GameObject enemigoGO in enemigosOleada)
+        {
+            if (enemigoGO != null)
+            {
+                NavMeshAgent agent = enemigoGO.GetComponent<NavMeshAgent>();
+
+                if (agent != null)
+                    agent.enabled = true;
+            }
+        }
+    }
+
+    // ------------------------------------------------
     // INICIAR SISTEMA
     // ------------------------------------------------
     public void IniciarExploracion()
@@ -96,6 +116,8 @@ public class SCR_Controlador_Jefes : MonoBehaviour
         while (true)
         {
             LimpiarLista();
+
+            RevisarDistanciaEnemigos(); // NUEVO: evitar enemigos demasiado lejos
 
             int tipo = ObtenerTipoFaltante();
 
@@ -124,7 +146,34 @@ public class SCR_Controlador_Jefes : MonoBehaviour
     }
 
     // ------------------------------------------------
-    // ELEGIR TIPO DE ENEMIGO ALEATORIO QUE FALTE
+    // TELETRANSPORTAR ENEMIGOS LEJANOS
+    // ------------------------------------------------
+    void RevisarDistanciaEnemigos() // NUEVO
+    {
+        if (jugador == null) return;
+
+        foreach (GameObject enemigo in enemigosOleada)
+        {
+            if (enemigo == null) continue;
+
+            float distancia = Vector3.Distance(jugador.position, enemigo.transform.position);
+
+            if (distancia > DistanciaMaximaJugador)
+            {
+                NavMeshAgent agent = enemigo.GetComponent<NavMeshAgent>();
+
+                if (agent != null && agent.isOnNavMesh)
+                {
+                    Vector3 nuevaPos = ObtenerPosicionSpawn();
+
+                    agent.Warp(nuevaPos); // Forma segura de mover agentes NavMesh
+                }
+            }
+        }
+    }
+
+    // ------------------------------------------------
+    // ELEGIR TIPO DE ENEMIGO QUE FALTA
     // ------------------------------------------------
     int ObtenerTipoFaltante()
     {
