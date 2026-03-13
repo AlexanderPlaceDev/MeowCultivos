@@ -32,6 +32,7 @@ public class ObjetoCurador : MonoBehaviour
         if (other.gameObject.CompareTag("Gata"))
         {
             ControladorBatalla.Curar(vidaacurar);
+            Destroy(gameObject);
         }
     }
 }
