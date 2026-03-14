@@ -75,34 +75,42 @@ public class VirtualMouseGamepad : MonoBehaviour
 
     private void Update()
     {
-        bool usandoGamepad = InputIconProvider.Instance != null &&
-                        InputIconProvider.Instance.UsandoGamepad();
-
-        // 🔄 Si cambió el tipo de control
-        if (usandoGamepad != ultimoEstadoGamepad)
+        if(playerInput.currentActionMap.name == uiActionMap)
         {
-            if (usandoGamepad)
+            bool usandoGamepad = InputIconProvider.Instance != null &&
+                            InputIconProvider.Instance.UsandoGamepad();
+
+            // 🔄 Si cambió el tipo de control
+            if (usandoGamepad != ultimoEstadoGamepad)
             {
-                // 🎮 Pasamos de mouse a gamepad
-                // Mover cursor virtual a donde está el mouse real
-                Vector2 mousePos = Mouse.current.position.ReadValue();
-                InputState.Change(virtualMouse.position, mousePos);
-                AnchorCursor(mousePos);
-            }
-            else
-            {
-                // 🖱 Pasamos de gamepad a mouse
-                // Mover mouse real a donde está el virtual
-                Vector2 virtualPos = virtualMouse.position.ReadValue();
-                Mouse.current.WarpCursorPosition(virtualPos);
+                if (usandoGamepad)
+                {
+                    // 🎮 Pasamos de mouse a gamepad
+                    // Mover cursor virtual a donde está el mouse real
+                    Vector2 mousePos = Mouse.current.position.ReadValue();
+                    InputState.Change(virtualMouse.position, mousePos);
+                    AnchorCursor(mousePos);
+                }
+                else
+                {
+                    // 🖱 Pasamos de gamepad a mouse
+                    // Mover mouse real a donde está el virtual
+                    Vector2 virtualPos = virtualMouse.position.ReadValue();
+                    Mouse.current.WarpCursorPosition(virtualPos);
+                }
+
+                ultimoEstadoGamepad = usandoGamepad;
             }
 
-            ultimoEstadoGamepad = usandoGamepad;
+            // Mostrar/ocultar cursores
+            cursorTransform.gameObject.SetActive(usandoGamepad);
+            Cursor.visible = !usandoGamepad;
         }
-
-        // Mostrar/ocultar cursores
-        cursorTransform.gameObject.SetActive(usandoGamepad);
-        Cursor.visible = !usandoGamepad;
+        else
+        {
+            cursorTransform.gameObject.SetActive(false);
+            Cursor.visible = false;
+        }
     }
 
     private void UpdateMotion()
@@ -142,7 +150,6 @@ public class VirtualMouseGamepad : MonoBehaviour
         // Actualiza la posición del cursor en la UI
         AnchorCursor(newPostition);
     }
-
     private void AnchorCursor(Vector2 position)
     {
         // Convierte la posición de la pantalla a coordenadas locales de la UI

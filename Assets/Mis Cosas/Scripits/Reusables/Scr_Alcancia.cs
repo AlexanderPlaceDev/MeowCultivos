@@ -58,12 +58,12 @@ public class Scr_Alcancia : MonoBehaviour
         if (!int.TryParse(DineroaGuardarTXT.text, out int cantidad))
             return;
 
-        if (cantidad <= 0 || cantidad > dineroActual)
+        if (cantidad <= 0 || cantidad > PlayerPrefs.GetInt(KEY_DINERO_JUGADOR, 0))
             return;
 
         dineroGuardado += cantidad;
-        dineroActual -= cantidad;
 
+        dineroActual = PlayerPrefs.GetInt(KEY_DINERO_JUGADOR, 0) - cantidad;
         PlayerPrefs.SetInt(KEY_DINERO_JUGADOR, dineroActual);
 
         DineroaGuardarTXT.text = "0";
@@ -125,13 +125,17 @@ public class Scr_Alcancia : MonoBehaviour
 
     public void Dar_Mitad()
     {
-        int cantidad = dineroActual / 2;
+        int cantidad = PlayerPrefs.GetInt(KEY_DINERO_JUGADOR, 0) / 2;
+        dineroActual = PlayerPrefs.GetInt(KEY_DINERO_JUGADOR, 0) - cantidad;
         DineroaGuardarTXT.text = cantidad.ToString();
+        ActualizarUI();
     }
 
     public void Dar_Maximo()
     {
-        DineroaGuardarTXT.text = dineroActual.ToString();
+        DineroaGuardarTXT.text = PlayerPrefs.GetInt(KEY_DINERO_JUGADOR, 0).ToString();
+        dineroActual = 0;
+        ActualizarUI();
     }
 
     public void Dar_Uno()
@@ -171,7 +175,7 @@ public class Scr_Alcancia : MonoBehaviour
     void GuardarDatos()
     {
         PlayerPrefs.SetString(KEY_DINERO_GUARDADO, dineroGuardado.ToString());
-        PlayerPrefs.SetInt(KEY_DINERO_JUGADOR, dineroActual);
+        //PlayerPrefs.SetInt(KEY_DINERO_JUGADOR, dineroActual);
         PlayerPrefs.Save();
     }
 
