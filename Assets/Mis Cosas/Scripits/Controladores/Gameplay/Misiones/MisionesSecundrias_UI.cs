@@ -29,11 +29,13 @@ public class MisionesSecundrias_UI : MonoBehaviour
 
     private Scr_ControladorMisiones ControladorMisiones;
     private Scr_CreadorMisiones MisionActual;
+    ChecarInput checarInput;
     void Start()
     {
         Gata = GameObject.Find("Gata").gameObject;
         ControladorMisiones = Gata.transform.GetChild(4).GetComponent<Scr_ControladorMisiones>();
 
+        checarInput = GameObject.Find("Singleton").GetComponent<ChecarInput>();
         if (activadorActual != null)
         {
             for (int i = 0; i < activadorActual.MisionesSecundarias.Count; i++)
@@ -58,6 +60,7 @@ public class MisionesSecundrias_UI : MonoBehaviour
     public void cerrar()
     {
         if (!gameObject.activeSelf) return; // 🔥 Evita doble cierre
+        
 
         if (activadorActual != null)
         {
@@ -69,6 +72,7 @@ public class MisionesSecundrias_UI : MonoBehaviour
 
         EventSystem.current.SetSelectedGameObject(null);
         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
+        checarInput.CammbiarAction_Player();
         gameObject.SetActive(false);
     }
 

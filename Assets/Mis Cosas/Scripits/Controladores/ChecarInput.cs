@@ -34,7 +34,12 @@ public class ChecarInput : MonoBehaviour
         {
             playerInput = GetComponent<PlayerInput>();
         }
-        playerInput.SwitchCurrentActionMap("UI");
+
+        if (playerInput.currentActionMap.name != "UI")
+        {
+
+            playerInput.SwitchCurrentActionMap("UI");
+        }
         
     }
     public void CammbiarAction_Player()
@@ -43,7 +48,11 @@ public class ChecarInput : MonoBehaviour
         {
             playerInput = GetComponent<PlayerInput>();
         }
-        playerInput.SwitchCurrentActionMap("Player");
+
+        if (playerInput.currentActionMap.name != "Player")
+        {
+            playerInput.SwitchCurrentActionMap("Player");
+        }
     }
 
 }

@@ -608,7 +608,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
         }
         else if (Singleton.ModoSeleccionado == Modo.Jefe)
         {
-            //RecopensaEnemigo(recompensasDict);
+            RecopensaEnemigo(recompensasDict);
         }
         MostrarRecompensas(recompensasDict);
 

@@ -50,6 +50,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     private Transform Gata;
 
     PlayerInput playerInput;
+    ChecarInput checarInput;
     InputIconProvider IconProvider;
     private InputAction Interactuar;
     private InputAction Misiones;
@@ -78,6 +79,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         controladorMisiones = Gata.GetChild(4).GetComponent<Scr_ControladorMisiones>();
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+
+        checarInput = GameObject.Find("Singleton").GetComponent<ChecarInput>();
         Interactuar = playerInput.actions["Interactuar"];
         Misiones = playerInput.actions["Misiones"];
     }
@@ -180,6 +183,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
         // Mostrar iconos
         MostrarIconos();
+        checarInput.CammbiarAction_Player();
 
     }
     //=================================
@@ -208,6 +212,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         }
         panelDialogo.SetActive(false);
         MisionesSecundariasUI.SetActive(false);
+        checarInput.CammbiarAction_Player();
         RegresarACamaraBase();
 
     }
@@ -251,6 +256,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         {
             MisionesSecundariasUI.GetComponent<MisionesSecundrias_UI>().SeleccionarMision(MisionesSecundarias[0]);
             MisionesSecundariasUI.SetActive(true);
+            checarInput.CammbiarAction_UI();
         }
         else if (ViendoTienda)
         {
@@ -268,6 +274,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     private void ManejarUIVenta()
     {
         ViendoTienda = true;
+
+        checarInput.CammbiarAction_UI();
         Debug.Log("🛍️ Iniciando interacción con tienda...");
 
         if (panelDialogo.activeSelf)
@@ -419,6 +427,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         }
 
         PlayerPrefs.Save();
+        controladorMisiones.GuardarMisiones();
         ActualizarMisionActual();
     }
     private void Girar()

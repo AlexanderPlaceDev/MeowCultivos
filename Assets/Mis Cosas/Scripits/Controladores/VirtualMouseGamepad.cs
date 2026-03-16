@@ -75,6 +75,7 @@ public class VirtualMouseGamepad : MonoBehaviour
 
     private void Update()
     {
+        //Debug.LogWarning(playerInput.currentActionMap.name);
         if(playerInput.currentActionMap.name == uiActionMap)
         {
             bool usandoGamepad = InputIconProvider.Instance != null &&

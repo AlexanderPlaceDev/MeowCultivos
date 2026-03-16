@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static Scr_DatosSingletonBatalla;
 
 public class Scr_ControladorCinematica : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class Scr_ControladorCinematica : MonoBehaviour
     [SerializeField] GameObject Enemigo;
     [SerializeField] int CantidadEnemigos;
     [SerializeField] public string NombreMapa = "Batalla Base";
+    [SerializeField] public Modo modo= Modo.Pelea;
     [SerializeField] Animator[] Barras;
 
     private AsyncOperation Operacion;
@@ -163,7 +165,9 @@ public class Scr_ControladorCinematica : MonoBehaviour
         Singleton.ColorItem = Enemigo.GetComponent<Scr_CambiadorBatalla>().ColorItem;
         Singleton.Luz = GameObject.Find("Sol").GetComponent<Light>().color;
         Singleton.ModoSeleccionado = Enemigo.GetComponent<Scr_CambiadorBatalla>().Modo;
+        Singleton.CantidadEnemigosPorOleada = CantidadEnemigos;
         Singleton.NombreMapa = NombreMapa;
+        Singleton.ModoSeleccionado= modo;
     }
 
     public void GuardarCinematica(string Cinematica)
