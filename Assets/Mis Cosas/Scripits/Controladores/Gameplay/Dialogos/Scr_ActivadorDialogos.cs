@@ -427,8 +427,9 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         }
 
         PlayerPrefs.Save();
-        controladorMisiones.GuardarMisiones();
         ActualizarMisionActual();
+        //Este era el error de que las misiones no se guardaban
+        controladorMisiones.GuardarMisiones();
     }
     private void Girar()
     {
