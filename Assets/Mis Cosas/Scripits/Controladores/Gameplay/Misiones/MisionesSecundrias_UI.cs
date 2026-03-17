@@ -168,6 +168,6 @@ public class MisionesSecundrias_UI : MonoBehaviour
             ControladorMisiones.MisionActual = MisionActual;
             if (MisionActual.Tipo == Scr_CreadorMisiones.Tipos.Caza) { ControladorMisiones.CantidadCazados.Add(0); }
         }
-
+        ControladorMisiones.GuardarMisiones();
     }
 }

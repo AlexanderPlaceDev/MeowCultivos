@@ -681,7 +681,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
     {
         if (MisionPrincipal != null)
         {
-            if (MisionPrincipal.Tipo == Scr_CreadorMisiones.Tipos.Recoleccion)
+            if (MisionPrincipal.Tipo == Scr_CreadorMisiones.Tipos.Recolectar)
             {
                 return true;
             }
