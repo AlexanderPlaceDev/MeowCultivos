@@ -161,7 +161,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
         if (TieneObjeto)
         {
             float distanciaGata = Vector3.Distance(gata.position, transform.position);
-            if (batalla != null)
+            if (batalla != null && distanciaGata < distancia)
             {
                 if (Interactuar.IsPressed() && !batalla.escenaCargada && Mis.HayMisionRecolectar() && TieneBatalla)
                     batalla.Iniciar();

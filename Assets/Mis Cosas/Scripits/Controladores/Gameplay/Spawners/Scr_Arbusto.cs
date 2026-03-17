@@ -21,7 +21,7 @@ public class Scr_Arbusto : MonoBehaviour
     [SerializeField] Scr_CreadorObjetos Rama;
 
     [Header("Estado del Arbusto")]
-    private Scr_CambiadorBatalla batalla;
+    public Scr_CambiadorBatalla batalla;
     private int tipoActual = 0;
     private bool recolectando;
     private bool tieneMoras;
@@ -50,9 +50,9 @@ public class Scr_Arbusto : MonoBehaviour
         GetComponent<MeshRenderer>().material = tipos[tipoActual];
         tieneMoras = (tipoActual > 0);
         batalla = GetComponent<Scr_CambiadorBatalla>();
+
         batalla.Fruta = objetosQueDa[tipoActual].Nombre;
         batalla.Item = objetosQueDa[tipoActual].Nombre;
-
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
 
@@ -83,7 +83,11 @@ public class Scr_Arbusto : MonoBehaviour
 
                 // Detectar interacción
                 if (Interactuar.IsPressed() && !batalla.escenaCargada && Mis.HayMisionRecolectar())
+                {
+                    batalla.Fruta = objetosQueDa[tipoActual].Nombre;
+                    batalla.Item = objetosQueDa[tipoActual].Nombre;
                     batalla.Iniciar();
+                }
 
                 if (gata.GetComponent<Animator>().GetBool("Recolectando"))
                 {
