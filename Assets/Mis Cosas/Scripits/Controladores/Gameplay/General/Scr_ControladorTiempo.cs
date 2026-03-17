@@ -34,7 +34,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
 
     public int DineroRecompensa; //Dinero a entregar por la caja de venta
 
-    Scr_controladorClima Clima;
+    public Scr_controladorClima Clima;
     public enum climas
     {
         Soleado,
@@ -59,7 +59,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
         HoraActual = PlayerPrefs.GetInt("HoraActual", 11);
         MinutoActual = PlayerPrefs.GetFloat("MinutoActual", 0);
         DineroRecompensa = PlayerPrefs.GetInt("DineroCajaVenta", 0);
-        Clima = GameObject.Find("Clima").GetComponent<Scr_controladorClima>();
+        //Clima = GameObject.Find("Clima").GetComponent<Scr_controladorClima>();
         ActualizarTextoFecha();
         ActualizarTextoHora();
 
