@@ -30,11 +30,15 @@ public class OjoBoss : Scr_Enemigo
             agente.isStopped = true;
 
         // animación de aparición
-        Anim.Play(NombreAnimacionAparecer);
-        float duracion = Anim.GetCurrentAnimatorStateInfo(0).length;
-        StartCoroutine(EsperarAparicion(duracion));
+        Anim.SetBool("Dormido", true);
     }
 
+
+    public void Despertar()
+    {
+        Anim.SetBool("Dormido", false);
+        StartCoroutine(EsperarAparicion(1.3f));
+    }
     // espera hasta terminar animación de spawn
     IEnumerator EsperarAparicion(float duracion)
     {
@@ -58,7 +62,10 @@ public class OjoBoss : Scr_Enemigo
             Anim.Play("Idle");
             return;
         }
-
+        if (agente.isOnNavMesh)
+        {
+            Anim.SetBool("Moviendo", agente.isStopped);
+        }
         // Movimiento normal si no ataca o espera
         if (!Atacando && !esperando)
             Mover();
@@ -104,16 +111,8 @@ public class OjoBoss : Scr_Enemigo
             // si pierde objetivo, reasignarlo
             if (agente.isOnNavMesh)
             {
-                if (Fruta && Vida > (VidaMaxima * .5f))
-                {
-                    Objetivo = BuscarPlanta("Planta").transform;
-                    AtacandoFruta = true;
-                }
-                else
-                {
-                    Objetivo = Gata.transform;
-                    AtacandoFruta = false;
-                }
+                Objetivo = Gata.transform;
+                AtacandoFruta = false;
                 agente.SetDestination(Objetivo.position);
             }
         }
@@ -124,20 +123,12 @@ public class OjoBoss : Scr_Enemigo
         if (!agente.isActiveAndEnabled || !agente.isOnNavMesh) return;
         if (estaEmpujado) return; // evita que el empujón se anule
 
-        if (!Anim.GetCurrentAnimatorStateInfo(0).IsName("Mover"))
-            Anim.Play("Mover");
+        
 
         agente.isStopped = false;
-        if (Fruta && Vida > (VidaMaxima * .5f))
-        {
-            Objetivo = BuscarPlanta("Planta").transform;
-            AtacandoFruta = true;
-        }
-        else
-        {
-            Objetivo = Gata.transform;
-            AtacandoFruta = false;
-        }
+
+        Objetivo = Gata.transform;
+        AtacandoFruta = false;
 
         // rotación suave hacia el jugador
         Vector3 dir = (Objetivo.position - transform.position).normalized;
@@ -195,30 +186,22 @@ public class OjoBoss : Scr_Enemigo
         // animación aleatoria
         if (Random.Range(0, 2) == 1)
         {
-            Anim.Play("Ataque1");
-            DuracionDeAtaque = 2.917f;
+            Anim.Play("ataque1");
+            DuracionDeAtaque = Anim.GetCurrentAnimatorClipInfo(0).Length;
         }
         else
         {
-            Anim.Play("Ataque2");
-            DuracionDeAtaque = 1.042f;
+            Anim.Play("ataque2");
+            DuracionDeAtaque = Anim.GetCurrentAnimatorClipInfo(0).Length;
         }
-        if (AtacandoFruta)
-        {
-            GameObject plant = BuscarPlanta("Planta");
-            plant.GetComponent<Aparecer_Fruta>().RecibirDaño(DañoMelee);
-        }
-        else
-        {
 
-            // efectos del ataque
-            Tween.ShakeCamera(Camera.main, 3);
+        // efectos del ataque
+        Tween.ShakeCamera(Camera.main, 3);
 
-            Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
+        Scr_ControladorBatalla batalla = Controlador.GetComponent<Scr_ControladorBatalla>();
 
-            base.source.PlayOneShot(base.Golpe);
-            batalla.RecibirDaño(DañoMelee);
-            batalla.RecibirEfecto(base.Efecto.ToString());
-        }
+        base.source.PlayOneShot(base.Golpe);
+        batalla.RecibirDaño(DañoMelee);
+        batalla.RecibirEfecto(base.Efecto.ToString());
     }
 }

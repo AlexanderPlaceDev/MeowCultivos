@@ -38,6 +38,7 @@ public class SCR_Controlador_Jefes : MonoBehaviour
     private Scr_ControladorBatalla ControladorBatalla;
     private Transform jugador;
 
+    private Coroutine detector_Enemigos;
     void Start()
     {
         ControladorBatalla = GetComponent<Scr_ControladorBatalla>();
@@ -105,7 +106,7 @@ public class SCR_Controlador_Jefes : MonoBehaviour
         if (objJugador != null)
             jugador = objJugador.transform;
 
-        StartCoroutine(ControlarEnemigos());
+        detector_Enemigos= StartCoroutine(ControlarEnemigos());
     }
 
     // ------------------------------------------------
@@ -269,6 +270,7 @@ public class SCR_Controlador_Jefes : MonoBehaviour
                 Destroy(e);
             }
         }
+        StopCoroutine(detector_Enemigos);
 
         StartCoroutine(IniciarBarra());
     }
