@@ -5462,6 +5462,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NombreEnemigo: Jaba
   Vida: 20
+  VidaMaxima: 0
   Velocidad: 7
   "Da\xF1oMelee": 2
   "Da\xF1oDistancia": 0
@@ -5495,6 +5496,7 @@ MonoBehaviour:
   Objetivo: {fileID: 0}
   ColorHerido: {r: 1, g: 0.5803922, b: 0.5803922, a: 1}
   DuracionCambioColor: 0.5
+  cambiandoColor: 0
   tipoenemigo: 0
   tipocomportamiento: 0
   Fruta: 0
