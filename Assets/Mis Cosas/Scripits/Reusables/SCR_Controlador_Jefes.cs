@@ -272,9 +272,13 @@ public class SCR_Controlador_Jefes : MonoBehaviour
         }
         StopCoroutine(detector_Enemigos);
 
-        StartCoroutine(IniciarBarra());
     }
 
+
+    public void DespertoJefe()
+    {
+        StartCoroutine(IniciarBarra());
+    }
     IEnumerator IniciarBarra()
     {
         yield return new WaitForSeconds(3f);

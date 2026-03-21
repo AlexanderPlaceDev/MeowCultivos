@@ -20,10 +20,19 @@ public class Scr_Activador_boss : MonoBehaviour
     public void detectaron()
     {
         intentos--;
+        if(intentos <= 0)
+        {
+            ojazo.Despertar();
+            Destroy(gameObject);
+        }
     }
     private void OnTriggerEnter(Collider other)
     {
-        ojazo.Despertar();
-        Destroy(gameObject);
+
+        if (other.name == "Personaje" || other.CompareTag("Gata"))
+        {
+            ojazo.Despertar();
+            Destroy(gameObject);
+        }
     }
 }
