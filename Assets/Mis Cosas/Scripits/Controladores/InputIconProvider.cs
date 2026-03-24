@@ -282,7 +282,7 @@ public class InputIconProvider : MonoBehaviour
             case "Tabulacion":
                 return "TAB";
             case "Barra Espaciadora":
-                return "Space";
+                return "Espacio";
             case "Escape":
                 return "Esc";
             default:

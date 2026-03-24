@@ -103,6 +103,9 @@ public class Scr_ControladorArmas : MonoBehaviour
     private Fruta_drop.EstadoFruta estadoActual;
     private Renderer rendererFruta;
 
+    [Header("Interactuar")]
+    bool PuedeInteractuar=false;
+
     PlayerInput playerInput;
     InputIconProvider IconProvider;
     private InputAction Dispara;
@@ -220,6 +223,7 @@ public class Scr_ControladorArmas : MonoBehaviour
 
         RecolectarFruta();
         checar_estadoFruta();
+        Checar_crizalida();
         // Disparo basado en el modo seleccionado (automático o semiautomático)
         if (Tipo != "Automatica")
         {
@@ -777,7 +781,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     }
     void RecolectarFruta()
     {
-        if(Fruta!=null && Recolectar.IsPressed() && !TieneFruta)
+        if(Fruta!=null && Recolectar.IsPressed() && !PuedeInteractuar && !TieneFruta)
         {
             TieneFruta = true;
             for (int i = 0; i < ObjetoArmas_reales.Length; i++)
@@ -850,6 +854,17 @@ public class Scr_ControladorArmas : MonoBehaviour
         // Muerte
         if (tiempoActualFruta >= vidaTotal)
             DestruirFruta();
+    }
+
+    private void Checar_crizalida()
+    {
+        if(PuedeInteractuar && Recolectar.IsPressed())
+        {
+            Criszalida criz= Fruta.gameObject.GetComponent<Criszalida>();
+            criz.quitarvida();
+            PuedeInteractuar=false;
+            Fruta = null;
+        }
     }
     void CambiarEstadoFruta(EstadoFruta nuevoEstado)
     {
@@ -979,15 +994,24 @@ public class Scr_ControladorArmas : MonoBehaviour
             }
             else if (hit.collider.CompareTag("Fruta"))
             {
-                Mira.GetComponent<Image>().color = ColoresMirillas[1];
+                Mira.GetComponent<Image>().color = ColoresMirillas[2];
                 Mira.GetComponent<Image>().sprite = Mirillas[1];
                 Fruta=hit.collider.gameObject;
                 FrutaNombre= Fruta.GetComponent<Fruta_drop>().Nombre;
                 return;
             }
+            else if (hit.collider.CompareTag("Crizalida"))
+            {
+                Mira.GetComponent<Image>().color = ColoresMirillas[2];
+                Mira.GetComponent<Image>().sprite = Mirillas[1];
+                PuedeInteractuar = true;
+                Fruta = hit.collider.gameObject;
+                return;
+            }
         }
         // Si no golpeó enemigo o no golpeó nada
         Fruta=null;
+        PuedeInteractuar = false;
         if (!TieneFruta)
         {
             FrutaNombre = "";

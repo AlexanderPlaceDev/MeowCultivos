@@ -32,6 +32,11 @@ public class ObjetoCurador : MonoBehaviour
         if (other.gameObject.CompareTag("Gata"))
         {
             ControladorBatalla.Curar(vidaacurar);
+            if (vidaCompleta)
+            {
+                SCR_Controlador_Jefes jefe = GameObject.Find("Controlador").GetComponent<SCR_Controlador_Jefes>();
+                jefe.DestruirTodosLosEnemigos();
+            }
             Destroy(gameObject);
         }
     }
