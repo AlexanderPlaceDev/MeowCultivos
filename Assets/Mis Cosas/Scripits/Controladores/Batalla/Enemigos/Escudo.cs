@@ -15,6 +15,8 @@ public class Escudo : MonoBehaviour
         Controlador = GameObject.Find("Controlador"); 
         if (enemy == null)
             enemy = GetComponentInParent<Scr_Enemigo>();
+
+        enemy.FueBloqueado = true;
     }
 
     // Update is called once per frame

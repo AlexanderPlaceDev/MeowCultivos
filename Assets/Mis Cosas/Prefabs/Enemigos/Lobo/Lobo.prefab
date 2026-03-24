@@ -5311,7 +5311,7 @@ NavMeshAgent:
   m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.85
-  m_Speed: 10
+  m_Speed: 20
   m_Acceleration: 300
   avoidancePriority: 50
   m_AngularSpeed: 300
@@ -5336,10 +5336,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NombreEnemigo: Lobo
-  Vida: 10
+  Vida: 13
   VidaMaxima: 0
-  Velocidad: 10
-  "Da\xF1oMelee": 1
+  Velocidad: 20
+  "Da\xF1oMelee": 18
   "Da\xF1oDistancia": 0
   DistanciaDeAtaque: 0
   DuracionDeAtaque: 0.875

@@ -210,7 +210,7 @@ public class Scr_Enemigo : MonoBehaviour
         Scr_ControladorArmas arma= GameObject.Find("Controlador").GetComponent<Scr_ControladorArmas>();
         if (other.gameObject.tag == "Golpe")
         {
-            arma.hizoHit = true;
+            arma.hizoHit = true; 
             arma.golpe();
             /*
             // Verifica que las posiciones inicial y final estén asignadas
@@ -232,7 +232,6 @@ public class Scr_Enemigo : MonoBehaviour
             }*/
             // Instanciar el CanvasDaño en la posición inicial
             //Debug.LogError(FueBloqueado);
-            if (FueBloqueado) return;
             int Daño = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño;
 
             // Desactivar el golpe para evitar múltiples activaciones
@@ -245,8 +244,10 @@ public class Scr_Enemigo : MonoBehaviour
                 GetComponent<Rigidbody>().AddForce(-transform.forward.normalized, ForceMode.Impulse);
             }
 
-
-            realizardaño(Daño, arma.EfectoTemp, arma.EfectoHab);
+            if (!FueBloqueado)
+            {
+                realizardaño(Daño, arma.EfectoTemp, arma.EfectoHab);
+            }
             StartCoroutine(GolpePaticula(other.transform));
             // Lógica de daño
             /*Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
@@ -256,7 +257,6 @@ public class Scr_Enemigo : MonoBehaviour
         }
         else if (other.gameObject.tag == "Bala")
         {
-            if (FueBloqueado) return;
             // Instanciar el CanvasDaño en la posición inicial
             int Daño = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño;
             /*
@@ -278,7 +278,10 @@ public class Scr_Enemigo : MonoBehaviour
                 StartCoroutine(MoverCanvas(canvasInstanciado, PosInicialDaño.position, PosFinalDaño.position, 1f));
             }*/
             // Lógica de daño
-            realizardaño(Daño, arma.EfectoTemp, arma.EfectoHab);
+            if (!FueBloqueado)
+            {
+                realizardaño(Daño, arma.EfectoTemp, arma.EfectoHab);
+            }
             StartCoroutine(GolpePaticula(other.transform));
             /*Controlador.GetComponent<Scr_ControladorBatalla>().PuntosActualesHabilidad +=
                 GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].PuntosXGolpe;
