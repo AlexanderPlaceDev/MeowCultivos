@@ -5018,7 +5018,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cc23686a75a88e045b240a2381ca3f9f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7721754965930637957}
   m_SourcePrefab: {fileID: 100100000, guid: cc23686a75a88e045b240a2381ca3f9f, type: 3}
 --- !u!1 &5017851773229083398 stripped
 GameObject:
@@ -5026,6 +5030,27 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 5288233441516525143}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &7721754965930637957
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5017851773229083398}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3c417b3e42b54fe4ab9680e5dab7f821, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &5686125716703441340 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: cc23686a75a88e045b240a2381ca3f9f,
@@ -5113,7 +5138,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 6ce1986922dd10542b8084a299567b99,
         type: 3}
       propertyPath: m_Name
-      value: OjoVolador
+      value: OjoVoladorMedio
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6ce1986922dd10542b8084a299567b99,
         type: 3}
@@ -5345,7 +5370,7 @@ MonoBehaviour:
   Velocidad: 6
   "Da\xF1oMelee": 9
   "Da\xF1oDistancia": 5
-  DistanciaDeAtaque: 40
+  DistanciaDeAtaque: 70
   DuracionDeAtaque: 1
   SaleDelArea: 1
   NombreAnimacionAparecer: 
@@ -5386,7 +5411,7 @@ MonoBehaviour:
   source: {fileID: 0}
   Golpe: {fileID: 0}
   FueBloqueado: 0
-  Efecto: 0
+  Efecto: 2
   resistenciaStunear: 0.1
   resistenciaQuemar: 0.2
   resistenciaVeneno: 0.3
@@ -5394,7 +5419,7 @@ MonoBehaviour:
   resistenciaEmpujar: 0.05
   resistenciaElectrificar: 0.25
   resistenciaExplotar: 0.4
-  Anim: {fileID: 0}
+  Anim: {fileID: 7721754965930637957}
   gata: {fileID: 0}
   VelocidadRotacion: 5
   AlturaPatrulla: 15

@@ -49,7 +49,7 @@ public class Scr_Enemigo_OjoVolador : Scr_Enemigo
 
         SetNewPatrolPoint();
 
-        Anim.Play(NombreAnimacionAparecer);
+        //Anim.Play(NombreAnimacionAparecer);
         StartCoroutine(EsperarAparicion(4f));
     }
 

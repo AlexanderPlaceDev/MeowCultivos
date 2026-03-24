@@ -39,12 +39,22 @@ public class SCR_Controlador_Jefes : MonoBehaviour
     private Transform jugador;
 
     private Coroutine detector_Enemigos;
+
+    [SerializeField] GameObject Boos;
+    bool hayboss=false;
     void Start()
     {
         ControladorBatalla = GetComponent<Scr_ControladorBatalla>();
         singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
-    }
 
+    }
+    private void Update()
+    {
+        if (Boos == null && ControladorBatalla.ComenzoBatalla && hayboss)
+        {
+            ControladorBatalla.FinalizarBatalla(true);
+        }
+    }
     // ------------------------------------------------
     // BUSCAR PUNTOS DE SPAWN
     // ------------------------------------------------
@@ -82,6 +92,8 @@ public class SCR_Controlador_Jefes : MonoBehaviour
     // ------------------------------------------------
     public void IniciarAtaque()
     {
+        Boos = GameObject.FindWithTag("Boss");
+        if (Boos != null) { hayboss = true; }
         foreach (GameObject enemigoGO in enemigosOleada)
         {
             if (enemigoGO != null)
@@ -264,10 +276,12 @@ public class SCR_Controlador_Jefes : MonoBehaviour
         for (int i = 0; i < Enemigos.Length; i++)
         {
             GameObject[] enemigos = GameObject.FindGameObjectsWithTag(Enemigos[i].tag);
-
             foreach (GameObject e in enemigos)
             {
-                Destroy(e);
+                if(e.name!= "OjoBoss")
+                {
+                    Destroy(e);
+                }
             }
         }
         StopCoroutine(detector_Enemigos);

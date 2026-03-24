@@ -410,6 +410,11 @@ public class Scr_Enemigo : MonoBehaviour
                 break;
         }
     }
+
+    public void parar()
+    {
+        StartCoroutine(EstadoStuneado(3f, 1));
+    }
     private IEnumerator MoverCanvas(GameObject canvas, Vector3 inicio, Vector3 fin, float duracion)
     {
         float tiempo = 0f;

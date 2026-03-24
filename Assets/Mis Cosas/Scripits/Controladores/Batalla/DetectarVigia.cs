@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DetectarVigia : MonoBehaviour
 {
+    [SerializeField] OjoVigilante vigia;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +20,14 @@ public class DetectarVigia : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Gata"))
         {
-            Debug.Log("Hola");
+            quitarIntento();
         }
+    }
+
+    public void quitarIntento()
+    {
+        Scr_Activador_boss boss = GameObject.Find("Activador_BOSS").GetComponent<Scr_Activador_boss>();
+        boss.detectaron(true);
+        vigia.Dormir();
     }
 }
