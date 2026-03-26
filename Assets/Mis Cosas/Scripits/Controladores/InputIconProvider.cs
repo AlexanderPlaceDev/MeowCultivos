@@ -277,17 +277,20 @@ public class InputIconProvider : MonoBehaviour
 
     public string TeclasEspeciales(string tecla)
     {
-        switch (tecla) 
+        switch (tecla)
         {
+            case "Tab":
             case "Tabulacion":
                 return "TAB";
-            case "Barra Espaciadora":
-                return "Space";
+
+            case "Space":
+                return "Espacio";
+
             case "Escape":
                 return "Esc";
+
             default:
                 return tecla;
-                    
         }
     }
 }
