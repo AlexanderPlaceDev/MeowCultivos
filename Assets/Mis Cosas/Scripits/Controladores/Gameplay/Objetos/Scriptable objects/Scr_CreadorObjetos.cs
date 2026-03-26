@@ -9,6 +9,7 @@ public class Scr_CreadorObjetos : ScriptableObject
 {
     public string Nombre;
     public string TipoPlanta;
+    public string TipoMaterial;
     [SerializeField, TextArea(4, 6)] public string Descripcion;
     public Sprite Icono;
     public Sprite IconoInventario;
