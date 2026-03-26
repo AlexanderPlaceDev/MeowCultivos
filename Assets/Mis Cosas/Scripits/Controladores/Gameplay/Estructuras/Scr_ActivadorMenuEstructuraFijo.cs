@@ -29,7 +29,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
     InputIconProvider IconProvider;
     private Sprite iconoActualInteractuar = null;
     private string textoActualInteractuar = "";
-    void Start()
+    void Awake()
     {
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
         Camara360 = GameObject.Find("Camara 360");
@@ -54,6 +54,10 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
                 CanvasMenu.SetActive(true);
             }
             EstaDentro = true;
+            if (Camara360 == null)
+            {
+                Camara360 = GameObject.Find("Camara 360");
+            }
             Camara360.SetActive(false);
             Gata.GetChild(2).gameObject.SetActive(false);
             Gata.GetChild(3).gameObject.SetActive(false);

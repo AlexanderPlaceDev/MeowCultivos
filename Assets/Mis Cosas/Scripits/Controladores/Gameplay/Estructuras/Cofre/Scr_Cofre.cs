@@ -54,7 +54,7 @@ public class Scr_Cofre : MonoBehaviour
         ActualizarTodo();
     }
 
-    void Start()
+    void Awake()
     {
         Gata = GameObject.Find("Gata");
         Inventario = Gata.transform.GetChild(7).GetComponent<Scr_Inventario>();
@@ -123,8 +123,12 @@ public class Scr_Cofre : MonoBehaviour
 
     private void ActualizarInventarioMochila()
     {
-        ObjetosEnMochila.Clear();
-        CantidadesEnMochila.Clear();
+        if (ObjetosEnMochila.Count > 0)
+        {
+            ObjetosEnMochila.Clear();
+            CantidadesEnMochila.Clear();
+        }
+
 
         for (int i = 0; i < Inventario.Objetos.Length; i++)
         {
