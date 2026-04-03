@@ -20129,9 +20129,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NombreEnemigo: 
   Vida: 1
+  VidaMaxima: 0
   Velocidad: 0
   "Da\xF1oMelee": 0
-  "Da\xF1oDistancia": 6
+  "Da\xF1oDistancia": 8
   DistanciaDeAtaque: 0
   DuracionDeAtaque: 1
   SaleDelArea: 0
@@ -20142,7 +20143,7 @@ MonoBehaviour:
   SpawnLejos: 0
   SpawnDistancia: 0
   CantidadDeOleadas: 2
-  CantidadEnemigosPorOleada: 16
+  CantidadEnemigosPorOleada: 3
   DificultadInicial: 1
   PuntoDeHuida: 2
   EstaMuerto: 0
@@ -20161,11 +20162,14 @@ MonoBehaviour:
   Objetivo: {fileID: 0}
   ColorHerido: {r: 1, g: 0.5803922, b: 0.5803922, a: 1}
   DuracionCambioColor: 0.5
+  cambiandoColor: 0
   tipoenemigo: 0
   tipocomportamiento: 0
+  Fruta: 0
   Controlador: {fileID: 0}
   estaStuneado: 0
   estaCongelado: 0
+  estaEmpujado: 0
   "CanvasDa\xF1o": {fileID: 8855847776912535175, guid: c2c9e7e03a15dbc42b7d969aee7d9fbc,
     type: 3}
   "PosInicialDa\xF1o": {fileID: 3291653688874047590}
@@ -20183,7 +20187,7 @@ MonoBehaviour:
   resistenciaExplotar: 0.4
   VelocidadBala: 600
   OffsetBala: -1
-  TiempoEntreDisparos: 6
+  TiempoEntreDisparos: 3
   Particulas: {fileID: 2360181152276693450}
 --- !u!195 &2142559892219681974
 NavMeshAgent:
