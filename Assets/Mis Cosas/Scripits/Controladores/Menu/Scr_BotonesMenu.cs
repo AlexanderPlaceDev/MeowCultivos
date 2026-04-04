@@ -85,9 +85,24 @@ public class Scr_BotonesMenu : MonoBehaviour
         {
             Checar_input.CammbiarAction_Player();
             Tween.Color(GameObject.Find("Pantalla").GetComponent<SpriteRenderer>(), Color.black, 4, Ease.Default, cycles: 1);
+            PlayerPrefs.SetString("Partida", "SI");
+            PlayerPrefs.Save();
             StartCoroutine(CambiarEscena());
         }
 
+    }
+
+    public void NuevaPartida()
+    {
+        if (!Controlador.EstaEnOpciones)
+        {
+            Checar_input.CammbiarAction_Player();
+            // Borrar todos los datos guardados
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.SetString("Partida", "SI");
+            PlayerPrefs.Save();
+            StartCoroutine(CambiarEscena());
+        }
     }
     IEnumerator CambiarEscena()
     {

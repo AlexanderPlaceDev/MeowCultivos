@@ -41,6 +41,7 @@ public class Scr_ControladorMenu : MonoBehaviour
     [SerializeField] Ease Forma;
     [HideInInspector] public bool EstaEnOpciones = false;
     Tween tween;
+    [SerializeField] GameObject NuevaPartida;
 
     [Header("Skybox")]
     [SerializeField] float velocidadRotacion = 1.0f;
@@ -88,6 +89,15 @@ public class Scr_ControladorMenu : MonoBehaviour
         if (PlayerPrefs.HasKey("Brillo"))
         {
             SliderBrillo.value = PlayerPrefs.GetInt("Brillo", 50);
+        }
+
+        if(PlayerPrefs.GetString("Partida", "SI") == "SI")
+        {
+            NuevaPartida.SetActive(true);
+        }
+        else
+        {
+            NuevaPartida.SetActive(false);
         }
     }
 

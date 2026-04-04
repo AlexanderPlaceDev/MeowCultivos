@@ -55,11 +55,11 @@ public class Scr_ActivadorPociones : MonoBehaviour
         DatosArmas = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>();
         // Buscar el script Scr_Habilidades en el mismo objeto o en otro específico
         Pociones = GetComponent<Scr_ControladorPociones>();
-        ObtenerPocion(); 
         Pociones = GetComponent<Scr_ControladorPociones>(); playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         Pocion = playerInput.actions["Pocion"];
+        ObtenerPocion(); 
     }
     void Update()
     {

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.20422114, g: 0.036994975, b: 0.116158225, a: 1}
+  m_IndirectSpecularColor: {r: 0.20425552, g: 0.036997102, b: 0.11616221, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -160,7 +160,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: -21.76}
-  m_SizeDelta: {x: 1120.7349, y: 238.2423}
+  m_SizeDelta: {x: 700, y: 238.2423}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &31022918
 MonoBehaviour:
@@ -226,7 +226,19 @@ MonoBehaviour:
   - eventID: 2
     callback:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 31022918}
+          m_TargetAssemblyTypeName: Scr_BotonesMenu, Assembly-CSharp
+          m_MethodName: NuevaPartida
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &31022920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3785,6 +3797,7 @@ MonoBehaviour:
   canvasRectTransForm: {fileID: 1483977871}
   cursorSpeed: 1000
   padding: 35
+  ForzarGamepadCursor: 0
 --- !u!114 &739972098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7181,6 +7194,7 @@ MonoBehaviour:
   UsaFormaEspecifica: 0
   Forma: 0
   EstaEnOpciones: 0
+  NuevaPartida: {fileID: 31022916}
   velocidadRotacion: 2
   FuerzaShake: 0.3
   Version: {fileID: 899068889}
