@@ -97,9 +97,22 @@ public class Scr_BotonesMenu : MonoBehaviour
         if (!Controlador.EstaEnOpciones)
         {
             Checar_input.CammbiarAction_Player();
+            int Vol = PlayerPrefs.GetInt("Volumen", 70);
+            int VolM = PlayerPrefs.GetInt("Volumen_Musica", 70);
+            int VolA = PlayerPrefs.GetInt("Volumen_Ambiente", 70);
+            int VolC = PlayerPrefs.GetInt("Volumen_Combate", 70);
+            int Brillo = PlayerPrefs.GetInt("Brillo", 70);
             // Borrar todos los datos guardados
             PlayerPrefs.DeleteAll();
             PlayerPrefs.SetString("Partida", "SI");
+
+
+            PlayerPrefs.SetInt("Volumen", Vol);
+            PlayerPrefs.SetInt("Volumen_Musica", VolM);
+            PlayerPrefs.SetInt("Volumen_Ambiente", VolA);
+            PlayerPrefs.SetInt("Volumen_Combate", VolC);
+            PlayerPrefs.SetInt("Brillo", Brillo);
+
             PlayerPrefs.Save();
             StartCoroutine(CambiarEscena());
         }
