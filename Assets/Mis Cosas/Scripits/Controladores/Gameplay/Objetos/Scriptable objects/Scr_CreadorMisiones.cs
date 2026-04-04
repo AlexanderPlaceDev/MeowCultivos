@@ -10,7 +10,6 @@ public class Scr_CreadorMisiones : ScriptableObject
     public string TituloMision;
     public Sprite LogoMision;
     public string Descripcion;
-    public string DescripcionCompleta;
     public Scr_CreadorDialogos DialogoEnMision;
     public Scr_CreadorDialogos DialogoMisionCompleta;
     public enum prioridadM
@@ -18,33 +17,21 @@ public class Scr_CreadorMisiones : ScriptableObject
         Principal,
         Secundaria
     }
+    public string Faccion;
     public prioridadM prioridad;
     public enum Tipos
     {
         Exploracion,
-        Teclas,
         Movimiento,
+        Teclas,
         Recoleccion,// conseguir ciertos objetos
         Recolectar,//modo de recoleccion
         Defensa,
         Construccion,
-        Crafteo,
-        Pesca,
         Caza
     }
-    public Tipos Tipo;
 
-    public enum cazarenemigo
-    {
-        jaba,
-        gallina,
-        lobo
-    }
-    public Scr_CreadorObjetos[] ObjetosNecesarios;
-    public int[] CantidadesQuita;
-    public string[] ObjetivosACazar;
-    public int[] CantidadACazar;
-    public Sprite[] IconosACazar;
+    public Tipos Tipo;
     public enum DireccionMovimiento
     {
         Arriba,
@@ -54,17 +41,19 @@ public class Scr_CreadorMisiones : ScriptableObject
     }
 
     public DireccionMovimiento[] DireccionesRequeridas;
-    public InputActionReference AccionMovimientoH;
-    public InputActionReference AccionMovimientoV;
     public KeyCode[] Teclas;
-    public bool EsContinua;
+    public Scr_CreadorObjetos[] ObjetosNecesarios;
+    public int[] CantidadesQuita;
+    public string[] ObjetivosACazar;
+    public int[] CantidadACazar;
+    public Sprite[] IconosACazar;
+
+    
     public bool QuitaObjetos;
     public bool DaObjetos;
     public int RecompensaDinero;
     public int RecompensaXP;
     public Scr_CreadorObjetos[] ObjetosQueDa;
     public int[] CantidadesDa;
-    public GameObject[] objetosCostruir;
-    public string TargetExplorado;
 }
 

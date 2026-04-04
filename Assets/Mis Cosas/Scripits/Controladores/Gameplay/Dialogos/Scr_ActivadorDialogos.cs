@@ -193,7 +193,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     {
         if (panelDialogo.activeSelf)
         {
-            VerificarMisionPrincipal();
+            //VerificarMisionPrincipal();
             ActivarDialogo(true);
         }
         else
@@ -220,7 +220,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     {
         CambiarACamaraDialogo();
         yield return new WaitForSeconds(transicionDuracion);
-        VerificarMisionPrincipal();
+        //VerificarMisionPrincipal();
         ActivarDialogo(true);
         if (camaraTienda != null)
         {
@@ -330,15 +330,15 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         // =========================
         // REVISAR MISIONES
         // =========================
-        for (int i = 0; i < controladorMisiones.MisionesSecundarias.Count; i++)
+        for (int i = 0; i < controladorMisiones.Misiones.Count; i++)
         {
-            var mision = controladorMisiones.MisionesSecundarias[i];
+            var mision = controladorMisiones.Misiones[i];
 
             bool esMisionDelActivador = MisionesSecundarias
                 .Any(m => m.TituloMision == mision.TituloMision);
 
             if (!esMisionDelActivador ||
-                !controladorMisiones.MisionesScompletas[i])
+                !controladorMisiones.MisionesCompletas[i])
                 continue;
 
             misionesAEliminar.Add(i);
@@ -411,7 +411,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         for (int i = misionesAEliminar.Count - 1; i >= 0; i--)
         {
             int idx = misionesAEliminar[i];
-            var m = controladorMisiones.MisionesSecundarias[idx];
+            var m = controladorMisiones.Misiones[idx];
 
             if (m.ObjetivosACazar != null)
             {
@@ -422,8 +422,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
                 }
             }
 
-            controladorMisiones.MisionesSecundarias.RemoveAt(idx);
-            controladorMisiones.MisionesScompletas.RemoveAt(idx);
+            controladorMisiones.Misiones.RemoveAt(idx);
+            controladorMisiones.MisionesCompletas.RemoveAt(idx);
         }
 
         PlayerPrefs.Save();
@@ -436,10 +436,10 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         Quaternion objetivo = Quaternion.LookRotation(new Vector3(transform.position.x, Gata.position.y, transform.position.z) - Gata.position);
         Gata.rotation = Quaternion.RotateTowards(Gata.rotation, objetivo, 200 * Time.deltaTime);
     }
-    private void VerificarMisionPrincipal()
+    /*private void VerificarMisionPrincipal()
     {
         if (controladorMisiones.MisionPrincipal == null) return;
-        controladorMisiones.RevisarMisionPrincipal();
+        controladorMisiones.RevisarMisiones();
 
         if (controladorMisiones.MisionPCompleta)
         {
@@ -451,17 +451,17 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             sistemaDialogos.Leido = false;
             sistemaDialogos.DialogoActual++;
         }
-    }
+    }*/
 
     private void ActualizarMisionActual()
     {
-        if (controladorMisiones.MisionPrincipal != null)
+        /*if (controladorMisiones.MisionPrincipal != null)
             controladorMisiones.MisionActual = controladorMisiones.MisionPrincipal;
-        else if (controladorMisiones.MisionesSecundarias.Count > 0)
-            controladorMisiones.MisionActual = controladorMisiones.MisionesSecundarias[0];
+        else if (controladorMisiones.Misiones.Count > 0)
+            controladorMisiones.MisionActual = controladorMisiones.Misiones[0];
         else
             controladorMisiones.MisionActual = null;
-
+        */
         controladorMisiones.ActualizarUI();
     }
 

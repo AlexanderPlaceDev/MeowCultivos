@@ -157,7 +157,7 @@ public class MisionesSecundrias_UI : MonoBehaviour
     public void AceptarMision()
     {
         bool Encontro = false;
-        foreach (Scr_CreadorMisiones MisionSecundaria in ControladorMisiones.MisionesSecundarias)
+        foreach (Scr_CreadorMisiones MisionSecundaria in ControladorMisiones.Misiones)
         {
             if (MisionActual != null && MisionActual.TituloMision == MisionSecundaria.TituloMision)
             {
@@ -167,8 +167,8 @@ public class MisionesSecundrias_UI : MonoBehaviour
         }
         if (!Encontro)
         {
-            ControladorMisiones.MisionesSecundarias.Add(MisionActual);
-            ControladorMisiones.MisionesScompletas.Add(false);
+            ControladorMisiones.Misiones.Add(MisionActual);
+            ControladorMisiones.MisionesCompletas.Add(false);
             ControladorMisiones.MisionActual = MisionActual;
             if (MisionActual.Tipo == Scr_CreadorMisiones.Tipos.Caza) { ControladorMisiones.CantidadCazados.Add(0); }
         }
