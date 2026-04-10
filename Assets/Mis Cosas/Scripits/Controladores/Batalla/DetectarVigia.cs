@@ -5,6 +5,7 @@ using UnityEngine;
 public class DetectarVigia : MonoBehaviour
 {
     [SerializeField] OjoVigilante vigia;
+    [SerializeField] GameObject PuntoVigia;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +21,28 @@ public class DetectarVigia : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Gata"))
         {
-            quitarIntento();
+            Vector3 origen = PuntoVigia.transform.position;
+            Vector3 direccion = (other.transform.position - origen).normalized;
+            float distancia = Vector3.Distance(origen, other.transform.position);
+
+            RaycastHit hit;
+
+            if (Physics.Raycast(origen, direccion, out hit, distancia))
+            {
+                // Si el primer objeto que golpea es una estatua, no hacer nada
+                if (hit.collider.CompareTag("Estatua"))
+                {
+                    Debug.Log("Hay una estatua bloqueando la vista");
+                    return;
+                }
+
+                // Si golpea directamente al jugador
+                if (hit.collider.CompareTag("Gata"))
+                {
+                    Debug.Log("No Hay una estatua bloqueando la vista");
+                    quitarIntento();
+                }
+            }
         }
     }
 

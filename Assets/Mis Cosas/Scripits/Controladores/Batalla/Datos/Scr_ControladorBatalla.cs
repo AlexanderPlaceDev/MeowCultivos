@@ -449,7 +449,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 // --- Fin de la cuenta atrás ---
                 if (ComprobarCantidadEnemigos() && ComenzarCuenta)
                 {
-                    Debug.Log("aa");
+                    //Debug.Log("aa");
                     foreach (GameObject Enemigo in ComprobarEnemigos())
                     {
                         NavMeshAgent enenav = Enemigo.GetComponent<NavMeshAgent>();
