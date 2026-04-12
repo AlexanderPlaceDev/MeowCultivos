@@ -1,3 +1,4 @@
+using PrimeTween;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,10 +7,12 @@ public class DetectarVigia : MonoBehaviour
 {
     [SerializeField] OjoVigilante vigia;
     [SerializeField] GameObject PuntoVigia;
+    [SerializeField] Scr_Enemigo.TipoEfecfto efecfto;
+    Scr_ControladorBatalla controlador;
     // Start is called before the first frame update
     void Start()
     {
-        
+        controlador = GameObject.Find("Controlador").GetComponent<Scr_ControladorBatalla>();
     }
 
     // Update is called once per frame
@@ -48,6 +51,10 @@ public class DetectarVigia : MonoBehaviour
 
     public void quitarIntento()
     {
+
+        controlador.RecibirEfecto(efecfto.ToString());
+        // efectos del ataque
+        Tween.ShakeCamera(Camera.main, 3);
         Scr_Activador_boss boss = GameObject.Find("Activador_BOSS").GetComponent<Scr_Activador_boss>();
         boss.detectaron(true);
         vigia.Dormir();

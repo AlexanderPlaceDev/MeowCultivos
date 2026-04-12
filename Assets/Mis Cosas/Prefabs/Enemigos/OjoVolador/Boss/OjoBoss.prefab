@@ -167,9 +167,7 @@ GameObject:
   - component: {fileID: 748211726142072595}
   - component: {fileID: 2196782764903513519}
   - component: {fileID: 417653924679906269}
-  - component: {fileID: 7008476389523812070}
   - component: {fileID: 1560289086051861210}
-  - component: {fileID: 5211186913369959761}
   - component: {fileID: 1335627669386462800}
   m_Layer: 0
   m_Name: OjoBoss
@@ -271,24 +269,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &7008476389523812070
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8068086268413983701}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b42132e2543310740b92c355691d0a5e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sonidoespecial: {fileID: 0}
-  caminar_sonido: []
-  correr_sonido: []
-  recoger_sonido: []
-  talar_sonido: []
-  picar_sonido: []
 --- !u!82 &1560289086051861210
 AudioSource:
   m_ObjectHideFlags: 0
@@ -385,19 +365,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &5211186913369959761
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8068086268413983701}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d5364f17fb28794e90a6af4d8f0bf2b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  categoria: 3
 --- !u!114 &1335627669386462800
 MonoBehaviour:
   m_ObjectHideFlags: 0
