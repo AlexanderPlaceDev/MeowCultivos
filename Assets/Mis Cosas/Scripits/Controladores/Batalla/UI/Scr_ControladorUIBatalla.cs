@@ -287,6 +287,9 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
 
     public void AceptarBatalla()
     {
+        Debug.Log(Tutopeleas.gameObject.activeInHierarchy);
+        Debug.Log(Tutopeleas.enabled);
+        if (!Tutopeleas.PuedeComenzar && Tutopeleas.isActiveAndEnabled) return;
         EsconderFlechasHabilidades();
         checarUsosHabilidad();
         CanvasSeleccionDeArmas.SetActive(false);

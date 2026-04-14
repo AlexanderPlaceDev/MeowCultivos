@@ -569,8 +569,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
             DioRecompensa = true;
             DarRecompensa();
         }
-
-        PlayerPrefs.SetString("TutorialPeleas", "SI");
+        ChecarInputTutos();
 
         if (PlayerPrefs.GetInt("XPActual", 0) >= PlayerPrefs.GetInt("XPSiguiente", 10))
         {
@@ -589,6 +588,21 @@ public class Scr_ControladorBatalla : MonoBehaviour
         Checar_input.CammbiarAction_UI();
     }
 
+    private void ChecarInputTutos()
+    {
+        if (PlayerPrefs.GetString("TutorialPeleas", "NO") == "NO" && Singleton.ModoSeleccionado == Modo.Pelea)
+        {
+            PlayerPrefs.SetString("TutorialPeleas", "SI");
+        }
+        else if (PlayerPrefs.GetString("TutorialRecolleccion", "NO") == "NO" && Singleton.ModoSeleccionado == Modo.Recoleccion)
+        {
+            PlayerPrefs.SetString("TutorialRecolleccion", "SI");
+        }
+        else if (PlayerPrefs.GetString("TutorialDefensa", "NO") == "NO" && Singleton.ModoSeleccionado == Modo.Defensa)
+        {
+            PlayerPrefs.SetString("TutorialDefensa", "SI");
+        }
+    }
 
     private void DarRecompensa()
     {

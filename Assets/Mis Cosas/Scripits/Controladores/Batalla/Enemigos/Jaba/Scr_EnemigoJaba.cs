@@ -106,6 +106,10 @@ public class Scr_EnemigoJaba : Scr_Enemigo
                 if (Fruta && Vida > (VidaMaxima * .5f))
                 {
                     Objetivo = BuscarPlanta("Planta").transform;
+                    if (Objetivo == null)
+                    {
+                        Objetivo = Gata.transform;
+                    }
                     AtacandoFruta = true;
                 }
                 else

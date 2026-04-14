@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,24 +27,51 @@ public class Tutorial_peleas : MonoBehaviour
     public Color ColorAceptarNormal;
     public GameObject[] Botones;
     Scr_ControladorBatalla ControladorBatalla;
+    Scr_ControladorUIBatalla ControladorUIBatalla;
+    public bool PuedeComenzar=false;
+    private int Tuto = 0;
 
     public GameObject[] BotonesPelea;
     public float interval = 0.5f;
     private float timer = 0f;
     private Coroutine parpadeo;
+
+
     // Start is called before the first frame update
     void Start()
     {
         sistemaDialogos = GetComponent<Scr_SistemaDialogos>();
-        if (PlayerPrefs.GetString("TutorialPeleas", "NO")=="SI")
+        ControladorBatalla = GameObject.Find("Controlador").GetComponent<Scr_ControladorBatalla>();
+        ControladorUIBatalla = GameObject.Find("Controlador").GetComponent<Scr_ControladorUIBatalla>();
+        Scr_DatosSingletonBatalla datosbatalla= GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
+
+        if (PlayerPrefs.GetString("TutorialPeleas", "NO") == "NO" && datosbatalla.ModoSeleccionado == Scr_DatosSingletonBatalla.Modo.Pelea)
         {
-            gameObject.SetActive(false);
-            Fondo.SetActive(false);
+            Tuto = 0;
+            IniciarDialogo();
+        }
+        else if (PlayerPrefs.GetString("TutorialRecolleccion", "NO") == "NO" && datosbatalla.ModoSeleccionado== Scr_DatosSingletonBatalla.Modo.Recoleccion)
+        {
+            Tuto = 1;
+            sistemaDialogos.DialogoActual = 5;
+            sistemaDialogos.LineaActual = 0;
+            sistemaDialogos.DialogoArecibir = sistemaDialogos.Dialogos[5];
+
+            Debug.Log(sistemaDialogos.DialogoArecibir.name);
+            IniciarDialogo();
+        }
+        else if (PlayerPrefs.GetString("TutorialDefensa", "NO") == "NO" && datosbatalla.ModoSeleccionado == Scr_DatosSingletonBatalla.Modo.Defensa)
+        {
+            Tuto = 2;
+            sistemaDialogos.DialogoActual = 8;
+            sistemaDialogos.LineaActual = 0;
+            sistemaDialogos.DialogoArecibir = sistemaDialogos.Dialogos[8];
+            IniciarDialogo();
         }
         else
         {
-            IniciarDialogo();
-            ControladorBatalla = GameObject.Find("Controlador").GetComponent<Scr_ControladorBatalla>();
+            gameObject.SetActive(false);
+            Fondo.SetActive(false);
         }
 
     }
@@ -57,21 +85,43 @@ public class Tutorial_peleas : MonoBehaviour
             Dialogo.SetActive(true);
             Fondo.SetActive(true);
         }
-        else if (sistemaDialogos.DialogoActual == 3)
+        else if (sistemaDialogos.DialogoActual == 3 )
         {
             if (!Peleas.activeSelf)
             {
                 sistemaDialogos.DialogoActual = 2;
             }
         }
-        else if(sistemaDialogos.DialogoActual == 4)
+        else if(sistemaDialogos.DialogoActual == 4 && Tuto==0)
         {
             Dialogo.SetActive(false);
             ControladorBatalla.IniciarCuentaRegresiva(true);
             gameObject.SetActive(false);
             return;
         }
-
+        else if (sistemaDialogos.DialogoActual == 7 && Tuto == 1)
+        {
+            if (!Peleas.activeSelf)
+            {
+                sistemaDialogos.DialogoActual = 6;
+                PuedeComenzar = true;
+            }
+            
+        }
+        else if(sistemaDialogos.DialogoActual == 9 && Tuto == 1)
+        {
+            Dialogo.SetActive(false);
+            ControladorBatalla.IniciarCuentaRegresiva(true);
+            gameObject.SetActive(false);
+            return;
+        }
+        else if (sistemaDialogos.DialogoActual == 10 && Tuto == 2)
+        {
+            Dialogo.SetActive(false);
+            ControladorBatalla.IniciarCuentaRegresiva(true);
+            gameObject.SetActive(false);
+            return;
+        }
         // Si el panel está cerrado, pausamos el sistema de diálogo
         if (sistemaDialogos != null && !Dialogo.activeSelf)
             sistemaDialogos.EnPausa = true;
@@ -83,9 +133,28 @@ public class Tutorial_peleas : MonoBehaviour
 
     public void ComenzarPelea()
     {
-        sistemaDialogos.DialogoActual = 3;
-        sistemaDialogos.LineaActual = 0;
-        sistemaDialogos.DialogoArecibir = sistemaDialogos.Dialogos[3];
+        switch (Tuto)
+        {
+            case 0:
+
+                sistemaDialogos.DialogoActual = 3;
+                sistemaDialogos.LineaActual = 0;
+                sistemaDialogos.DialogoArecibir = sistemaDialogos.Dialogos[3];
+                break;
+            case 1:
+                sistemaDialogos.DialogoActual = 7;
+                sistemaDialogos.LineaActual = 0;
+                sistemaDialogos.DialogoArecibir = sistemaDialogos.Dialogos[7];
+                break;
+            case 2:
+                Dialogo.SetActive(false);
+                ControladorBatalla.IniciarCuentaRegresiva(true);
+                Destroy(gameObject);
+                break;
+            default:
+
+                break;
+        }
         IniciarDialogo();
     }
     // Update is called once per frame
@@ -100,6 +169,26 @@ public class Tutorial_peleas : MonoBehaviour
     }
     //Si se cambia el dilogo se tiene que cambiar el orden si o todo esta funcion
     public void ChecarDialogo()
+    {
+        switch (Tuto)
+        {
+            case 0:
+                DialogoPeleas();
+                break;
+            case 1:
+                DialogoRecolleccion();
+                break;
+            case 2:
+                DialogoDefensa();
+                break;
+            default:
+
+                break;
+        }
+    }
+
+
+    public void DialogoPeleas()
     {
         if (sistemaDialogos.DialogoActual > 0)
         {
@@ -152,11 +241,13 @@ public class Tutorial_peleas : MonoBehaviour
         else if (sistemaDialogos.DialogoActual == 2 && sistemaDialogos.LineaActual == 0)
         {
             Botones[0].SetActive(false);
+            PuedeComenzar = true;
             ParpadearBotonAceptar(Botones[6].GetComponent<Image>());
             DejarBotonHabilidades(Botones[5].GetComponent<Image>());
         }
         else if (sistemaDialogos.DialogoActual == 3 && sistemaDialogos.LineaActual == 0)
         {
+            PuedeComenzar = false;
             PrenderBoton(BotonesPelea[0]);
         }
         else if (sistemaDialogos.DialogoActual == 3 && sistemaDialogos.LineaActual == 1)
@@ -222,6 +313,43 @@ public class Tutorial_peleas : MonoBehaviour
         }
     }
 
+    public void DialogoRecolleccion()
+    {
+        if (sistemaDialogos.DialogoActual == 6 && sistemaDialogos.LineaActual == 0)
+        {
+            Botones[0].SetActive(false);
+            PuedeComenzar = true;
+            ParpadearBotonAceptar(Botones[6].GetComponent<Image>());
+            DejarBotonHabilidades(Botones[5].GetComponent<Image>());
+        }
+        else if (sistemaDialogos.DialogoActual == 7 && sistemaDialogos.LineaActual == 0)
+        {
+            PuedeComenzar = false;
+            BotonesPelea[12].SetActive(true);
+        }
+        else if (sistemaDialogos.DialogoActual == 7 && sistemaDialogos.LineaActual == 1)
+        {
+            PrenderBoton(BotonesPelea[12]);
+        }
+        else if (sistemaDialogos.DialogoActual == 8 && sistemaDialogos.LineaActual == 0)
+        {
+            PuedeComenzar = false; 
+            DejarBotonON(BotonesPelea[12]);
+            BotonesPelea[12].SetActive(false);
+        }
+    }
+    public void DialogoDefensa()
+    {
+        if (sistemaDialogos.DialogoActual == 8 && sistemaDialogos.LineaActual == 3)
+        {
+            PuedeComenzar = true;
+        }
+        else if (sistemaDialogos.DialogoActual == 9 && sistemaDialogos.LineaActual == 3)
+        {
+            PuedeComenzar = true;
+            ControladorUIBatalla.AceptarBatalla();
+        }
+    }
     public void ApagarBotonesHabilidades()
     {
         if (!ColorNormal) return;
