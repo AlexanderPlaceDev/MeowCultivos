@@ -9,8 +9,8 @@ public class Scr_CreadorMisiones : ScriptableObject
 {
     public string TituloMision;
     public Sprite LogoMision;
-    public string Descripcion;
-    public string DescripcionCompleta;
+    public string DescripcionEnMision;
+    public string DescripcionMisionCompleta;
     public Scr_CreadorDialogos DialogoEnMision;
     public Scr_CreadorDialogos DialogoMisionCompleta;
     public enum prioridadM
@@ -18,33 +18,22 @@ public class Scr_CreadorMisiones : ScriptableObject
         Principal,
         Secundaria
     }
+    public string Personaje;
+    public string LugarMision;
     public prioridadM prioridad;
     public enum Tipos
     {
         Exploracion,
-        Teclas,
         Movimiento,
+        Teclas,
         Recoleccion,// conseguir ciertos objetos
-        Recolectar,//modo de recoleccion
         Defensa,
         Construccion,
-        Crafteo,
-        Pesca,
         Caza
     }
-    public Tipos Tipo;
 
-    public enum cazarenemigo
-    {
-        jaba,
-        gallina,
-        lobo
-    }
-    public Scr_CreadorObjetos[] ObjetosNecesarios;
-    public int[] CantidadesQuita;
-    public string[] ObjetivosACazar;
-    public int[] CantidadACazar;
-    public Sprite[] IconosACazar;
+    public Tipos Tipo;
+    public string LugarObjetivoExploracion;
     public enum DireccionMovimiento
     {
         Arriba,
@@ -54,17 +43,21 @@ public class Scr_CreadorMisiones : ScriptableObject
     }
 
     public DireccionMovimiento[] DireccionesRequeridas;
-    public InputActionReference AccionMovimientoH;
-    public InputActionReference AccionMovimientoV;
     public KeyCode[] Teclas;
-    public bool EsContinua;
-    public bool QuitaObjetos;
-    public bool DaObjetos;
+    public Scr_CreadorObjetos[] ObjetosNecesarios;
+    public int[] CantidadesQuita;
+    public string[] ObjetivosACazar;
+    public int[] CantidadACazar;
+    public Sprite[] IconosACazar;
+    public string[] EstructurasRequeridas;
+    
     public int RecompensaDinero;
     public int RecompensaXP;
     public Scr_CreadorObjetos[] ObjetosQueDa;
-    public int[] CantidadesDa;
-    public GameObject[] objetosCostruir;
-    public string TargetExplorado;
+    public int[] CantidadesQueDa;
+    public Scr_CreadorObjetos[] ObjetosQueQuita;
+    public int[] CantidadesQueQuita;
+    public bool QuitaObjetosDesdeSignal;
+    public Scr_CreadorMisiones MisionAnterior;
 }
 

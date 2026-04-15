@@ -26,6 +26,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     //===============================
     //=== CONFIGURACIÓN DEL NPC ===
     //===============================
+    [SerializeField] string NombreNPC;
     [SerializeField] private bool autoIniciarDialogo = false;  // Si el diálogo se inicia automáticamente al entrar
     [SerializeField] private bool EsTienda;                    // Si este NPC es una tienda
     [SerializeField] private bool UsaMisionesSecundarias = true;
@@ -67,7 +68,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     //====================
     //=== INICIALIZACIÓN ===
     //====================
-    private void Start()
+    private void Awake()
     {
         Gata = GameObject.Find("Gata").transform;
         brain = Camera.main.GetComponent<CinemachineBrain>();
@@ -95,6 +96,8 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         // Si el panel está cerrado, pausamos el sistema de diálogo
         if (sistemaDialogos != null && !panelDialogo.activeSelf)
             sistemaDialogos.EnPausa = true;
+
+
         if (panelDialogo.activeSelf)
         {
             Girar();
@@ -191,9 +194,28 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     //=================================
     private void ManejarDialogoPrincipal()
     {
+        Hablando = true;
+        Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
+
+        // 🔥 VERIFICAR MISIÓN ANTES DE TODO
+        bool misionCompletada = VerificarMisionPrincipal();
+
+        // 🔥 FORZAR CAMBIO DE DIÁLOGO ANTES DE INICIAR
+        if (misionCompletada)
+        {
+            Debug.Log("🚀 Cambiando a diálogo siguiente antes de iniciar");
+
+            sistemaDialogos.CambiarDialogo(sistemaDialogos.DialogoActual + 1);
+        }
+
+        // 🔥 RESET TOTAL DEL SISTEMA (CLAVE)
+        sistemaDialogos.LineaActual = 0;
+        sistemaDialogos.Leido = false;
+        sistemaDialogos.EnPausa = true;
+
+        // 🔥 INICIAR NORMAL
         if (panelDialogo.activeSelf)
         {
-            VerificarMisionPrincipal();
             ActivarDialogo(true);
         }
         else
@@ -202,6 +224,61 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             controladorMisiones.EstaEnDialogo = true;
             StartCoroutine(EsperarYCambiarCamaraPrincipal());
         }
+    }
+
+    private bool VerificarMisionPrincipal()
+    {
+        if (controladorMisiones == null) return false;
+
+        int total = Mathf.Min(
+            controladorMisiones.Misiones.Count,
+            controladorMisiones.MisionesCompletas.Count);
+
+        for (int i = 0; i < total; i++)
+        {
+            var m = controladorMisiones.Misiones[i];
+
+            if (m.prioridad == Scr_CreadorMisiones.prioridadM.Principal &&
+                m.Personaje == NombreNPC)
+            {
+                if (controladorMisiones.MisionesCompletas[i])
+                {
+                    Debug.Log("✅ Misión completada ANTES del diálogo");
+
+                    // 🔥 ELIMINAR MISIÓN
+                    controladorMisiones.Misiones.RemoveAt(i);
+                    controladorMisiones.MisionesCompletas.RemoveAt(i);
+                    controladorMisiones.MisionesVistas.RemoveAt(i);
+
+                    // 🔥 AJUSTAR PAGINA
+                    if (controladorMisiones.Misiones.Count == 0)
+                    {
+                        controladorMisiones.MisionActual = null;
+                        controladorMisiones.PaginaActual = 0;
+                    }
+                    else
+                    {
+                        // Ajustar índice si se salió del rango
+                        controladorMisiones.PaginaActual = Mathf.Clamp(
+                            controladorMisiones.PaginaActual,
+                            0,
+                            controladorMisiones.Misiones.Count - 1
+                        );
+
+                        // 🔥 REASIGNAR MISIÓN ACTUAL
+                        controladorMisiones.MisionActual =
+                            controladorMisiones.Misiones[controladorMisiones.PaginaActual];
+                    }
+
+                    controladorMisiones.ActualizarUI();
+                    controladorMisiones.GuardarMisiones();
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public void interrumpirNPC()
@@ -216,17 +293,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         RegresarACamaraBase();
 
     }
-    private IEnumerator EsperarYCambiarCamaraPrincipal()
-    {
-        CambiarACamaraDialogo();
-        yield return new WaitForSeconds(transicionDuracion);
-        VerificarMisionPrincipal();
-        ActivarDialogo(true);
-        if (camaraTienda != null)
-        {
-            PlayerPrefs.SetString("DialogoSirilo", "Si");
-        }
-    }
+
 
     private void ActivarDialogo(bool Principal)
     {
@@ -249,6 +316,10 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
     public void DesactivarDialogo()
     {
+
+        // 🔥 NUEVO: asignar misión al terminar diálogo
+        ProcesarMisionDelDialogo();
+        EvaluarProgresoDialogo();
         GuardarNPC();
         Hablando = false;
 
@@ -303,19 +374,84 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         }
     }
 
-    private IEnumerator EsperarYCambiarCamaraTienda()
-    {
-        CambiarACamaraTienda();
-        yield return new WaitForSeconds(transicionDuracion);
-        camaraTienda?.SetActive(true);
-        Debug.Log("🔓 Cámara y UI de tienda activadas");
-    }
-
     //=================================
     //=== CONTROL DE MISIONES ===
     //=================================
+
+    private void EvaluarProgresoDialogo()
+    {
+        if (sistemaDialogos.Dialogos == null || sistemaDialogos.Dialogos.Length == 0)
+        {
+            Debug.LogError("❌ No hay diálogos en " + NombreNPC);
+            return;
+        }
+
+        if (sistemaDialogos.DialogoActual >= sistemaDialogos.Dialogos.Length)
+        {
+            Debug.LogError($"❌ DialogoActual fuera de rango en {NombreNPC}: {sistemaDialogos.DialogoActual}/{sistemaDialogos.Dialogos.Length}");
+            sistemaDialogos.DialogoActual = sistemaDialogos.Dialogos.Length - 1;
+            return;
+        }
+
+        var dialogo = sistemaDialogos.Dialogos[sistemaDialogos.DialogoActual];
+
+        if (dialogo == null)
+        {
+            Debug.LogError("❌ Dialogo NULL en índice " + sistemaDialogos.DialogoActual);
+            return;
+        }
+
+        // 🔹 Caso A
+        if (dialogo.RequiereMisionCompleta)
+            return;
+
+        // 🔹 Caso B
+        if (dialogo.EsUnico && sistemaDialogos.Leido)
+        {
+            if (sistemaDialogos.DialogoActual + 1 < sistemaDialogos.Dialogos.Length)
+            {
+                sistemaDialogos.DialogoActual++;
+            }
+            return;
+        }
+    }
+    private void ProcesarMisionDelDialogo()
+    {
+        var dialogo = sistemaDialogos.DialogoArecibir;
+
+        if (dialogo == null) return;
+
+        // 🔥 SOLO si el diálogo tiene misión
+        if (dialogo.EsMisionPrincipal && dialogo.Mision != null)
+        {
+            // 🔥 EVITAR DUPLICADOS
+            bool yaExiste = controladorMisiones.Misiones
+                .Any(m => m.name == dialogo.Mision.name);
+
+            if (!yaExiste)
+            {
+                Debug.Log("📌 Asignando misión desde Activador");
+
+                if (controladorMisiones.MisionActual == null)
+                {
+                    controladorMisiones.MisionActual = dialogo.Mision;
+                }
+
+                controladorMisiones.Misiones.Add(dialogo.Mision);
+                controladorMisiones.MisionesCompletas.Add(false);
+                controladorMisiones.MisionesVistas.Add(false);
+                if (dialogo.EsUnico)
+                {
+                    sistemaDialogos.DialogoActual++;
+                }
+                controladorMisiones.ActualizarUI();
+                controladorMisiones.GuardarMisiones();
+            }
+        }
+    }
     private void ManejarMisionesSecundarias()
     {
+        controladorMisiones.RevisarProgresoMisiones();
         List<int> misionesAEliminar = new List<int>();
 
         var objetosAgregados = GameObject.Find("ObjetosAgregados")
@@ -330,15 +466,15 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         // =========================
         // REVISAR MISIONES
         // =========================
-        for (int i = 0; i < controladorMisiones.MisionesSecundarias.Count; i++)
+        for (int i = 0; i < controladorMisiones.Misiones.Count; i++)
         {
-            var mision = controladorMisiones.MisionesSecundarias[i];
+            var mision = controladorMisiones.Misiones[i];
 
             bool esMisionDelActivador = MisionesSecundarias
                 .Any(m => m.TituloMision == mision.TituloMision);
 
             if (!esMisionDelActivador ||
-                !controladorMisiones.MisionesScompletas[i])
+                !controladorMisiones.MisionesCompletas[i])
                 continue;
 
             misionesAEliminar.Add(i);
@@ -355,7 +491,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             for (int j = 0; j < mision.ObjetosQueDa.Length; j++)
             {
                 var objeto = mision.ObjetosQueDa[j];
-                int cantidad = mision.CantidadesDa[j];
+                int cantidad = mision.CantidadesQueDa[j];
 
                 if (objeto == null || cantidad <= 0)
                     continue;
@@ -400,68 +536,15 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     }
 
 
-    private IEnumerator EsperarYCambiarCamaraSecundaria(List<int> misionesAEliminar)
-    {
-        CambiarACamaraDialogo();
-        yield return new WaitForSeconds(transicionDuracion);
-        ActivarDialogo(false);
-        yield return new WaitUntil(() => !panelDialogo.activeSelf);
-
-        // Eliminar misiones completadas
-        for (int i = misionesAEliminar.Count - 1; i >= 0; i--)
-        {
-            int idx = misionesAEliminar[i];
-            var m = controladorMisiones.MisionesSecundarias[idx];
-
-            if (m.ObjetivosACazar != null)
-            {
-                for (int j = 0; j < m.ObjetivosACazar.Length; j++)
-                {
-                    string clave = $"{m.name}_CantidadCazados_{j}";
-                    if (PlayerPrefs.HasKey(clave)) PlayerPrefs.DeleteKey(clave);
-                }
-            }
-
-            controladorMisiones.MisionesSecundarias.RemoveAt(idx);
-            controladorMisiones.MisionesScompletas.RemoveAt(idx);
-        }
-
-        PlayerPrefs.Save();
-        ActualizarMisionActual();
-        //Este era el error de que las misiones no se guardaban
-        controladorMisiones.GuardarMisiones();
-    }
-    private void Girar()
-    {
-        Quaternion objetivo = Quaternion.LookRotation(new Vector3(transform.position.x, Gata.position.y, transform.position.z) - Gata.position);
-        Gata.rotation = Quaternion.RotateTowards(Gata.rotation, objetivo, 200 * Time.deltaTime);
-    }
-    private void VerificarMisionPrincipal()
-    {
-        if (controladorMisiones.MisionPrincipal == null) return;
-        controladorMisiones.RevisarMisionPrincipal();
-
-        if (controladorMisiones.MisionPCompleta)
-        {
-            controladorMisiones.MisionPCompleta = false;
-            controladorMisiones.MisionPrincipal = null;
-            controladorMisiones.MisionActualCompleta = false;
-            ActualizarMisionActual();
-            sistemaDialogos.LineaActual = 0;
-            sistemaDialogos.Leido = false;
-            sistemaDialogos.DialogoActual++;
-        }
-    }
-
     private void ActualizarMisionActual()
     {
-        if (controladorMisiones.MisionPrincipal != null)
+        /*if (controladorMisiones.MisionPrincipal != null)
             controladorMisiones.MisionActual = controladorMisiones.MisionPrincipal;
-        else if (controladorMisiones.MisionesSecundarias.Count > 0)
-            controladorMisiones.MisionActual = controladorMisiones.MisionesSecundarias[0];
+        else if (controladorMisiones.Misiones.Count > 0)
+            controladorMisiones.MisionActual = controladorMisiones.Misiones[0];
         else
             controladorMisiones.MisionActual = null;
-
+        */
         controladorMisiones.ActualizarUI();
     }
 
@@ -483,6 +566,14 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         {
             foreach (var icono in iconos)
                 if (icono != null) icono.SetActive(true);
+            if (IconProvider == null)
+            {
+                Debug.Log("no encontro");
+            }
+            if (Interactuar == null)
+            {
+                Debug.Log("Interactuar falso");
+            }
             IconProvider.ActualizarIconoUI(Interactuar, iconos[1].transform, ref iconoActualInteractuar, ref textoActualInteractuar, false);
             IconProvider.ActualizarIconoUI(Misiones, iconos[3].transform, ref iconoActualMisiones, ref textoActualMisiones, false);
         }
@@ -502,8 +593,85 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             IconProvider.ActualizarIconoUI(Interactuar, iconos[1].transform, ref iconoActualInteractuar, ref textoActualInteractuar, false);
         }
     }
+    private IEnumerator EsperarYCambiarCamaraPrincipal()
+    {
+        CambiarACamaraDialogo();
+        yield return new WaitForSeconds(transicionDuracion);
+
+        // 🔥 IMPORTANTE: reiniciar estado antes de iniciar diálogo
+        sistemaDialogos.LineaActual = 0;
+        sistemaDialogos.Leido = false;
+
+        ActivarDialogo(true);
+
+        if (camaraTienda != null)
+        {
+            PlayerPrefs.SetString("DialogoSirilo", "Si");
+        }
+    }
+    private IEnumerator EsperarYCambiarCamaraTienda()
+    {
+        CambiarACamaraTienda();
+        yield return new WaitForSeconds(transicionDuracion);
+        camaraTienda?.SetActive(true);
+        Debug.Log("🔓 Cámara y UI de tienda activadas");
+    }
+    private IEnumerator EsperarYCambiarCamaraSecundaria(List<int> misionesAEliminar)
+    {
+        CambiarACamaraDialogo();
+        yield return new WaitForSeconds(transicionDuracion);
+        ActivarDialogo(false);
+        yield return new WaitUntil(() => !panelDialogo.activeSelf);
+
+        // Eliminar misiones completadas
+        for (int i = misionesAEliminar.Count - 1; i >= 0; i--)
+        {
+            int idx = misionesAEliminar[i];
+            var m = controladorMisiones.Misiones[idx];
+
+            if (m.ObjetivosACazar != null)
+            {
+                for (int j = 0; j < m.ObjetivosACazar.Length; j++)
+                {
+                    string clave = $"{m.name}_CantidadCazados_{j}";
+                    if (PlayerPrefs.HasKey(clave)) PlayerPrefs.DeleteKey(clave);
+                }
+            }
+
+            controladorMisiones.Misiones.RemoveAt(idx);
+            controladorMisiones.MisionesCompletas.RemoveAt(idx);
+            controladorMisiones.MisionesVistas.RemoveAt(idx);
+        }
+
+        // =========================
+        // 🔥 AJUSTAR PAGINA Y MISION ACTUAL
+        // =========================
+
+        // Si ya no hay misiones
+        if (controladorMisiones.Misiones.Count == 0)
+        {
+            controladorMisiones.MisionActual = null;
+            controladorMisiones.PaginaActual = 0;
+        }
+        else
+        {
+            // Clamp para evitar índices inválidos
+            controladorMisiones.PaginaActual = Mathf.Clamp(
+                controladorMisiones.PaginaActual,
+                0,
+                controladorMisiones.Misiones.Count - 1
+            );
+
+            controladorMisiones.MisionActual =
+                controladorMisiones.Misiones[controladorMisiones.PaginaActual];
+        }
 
 
+        PlayerPrefs.Save();
+        ActualizarMisionActual();
+        //Este era el error de que las misiones no se guardaban
+        controladorMisiones.GuardarMisiones();
+    }
     public void GuardarNPC()
     {
         var eventosGuardado = GetComponent<Scr_EventosGuardado>();
@@ -528,7 +696,11 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         }
     }
 
-
+    private void Girar()
+    {
+        Quaternion objetivo = Quaternion.LookRotation(new Vector3(transform.position.x, Gata.position.y, transform.position.z) - Gata.position);
+        Gata.rotation = Quaternion.RotateTowards(Gata.rotation, objetivo, 200 * Time.deltaTime);
+    }
 
     private void OnTriggerExit(Collider other)
     {

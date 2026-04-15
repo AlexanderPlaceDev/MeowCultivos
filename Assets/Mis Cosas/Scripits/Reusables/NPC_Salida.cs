@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,7 +41,7 @@ public class NPC_Salida : MonoBehaviour
             quitardialogo();
         }
 
-        // Si todav�a no es hora de salida
+        // Si todavía no es hora de salida
         if (horaActual < horaSalida && yaSeFue)
         {
             yaSeFue = false;

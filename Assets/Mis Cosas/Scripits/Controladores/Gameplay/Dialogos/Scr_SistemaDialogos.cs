@@ -145,15 +145,15 @@ public class Scr_SistemaDialogos : MonoBehaviour
 
             List<Scr_CreadorMisiones> misionesCompletasDelNPC = new List<Scr_CreadorMisiones>();
 
-            for (int i = 0; i < ControladorMisiones.MisionesSecundarias.Count; i++)
+            for (int i = 0; i < ControladorMisiones.Misiones.Count; i++)
             {
-                var misionJugador = ControladorMisiones.MisionesSecundarias[i];
+                var misionJugador = ControladorMisiones.Misiones[i];
                 bool esDelNPC = activadorDialogos.MisionesSecundarias
                     .Any(m => m.TituloMision == misionJugador.TituloMision);
 
                 if (!esDelNPC) continue;
 
-                if (ControladorMisiones.MisionesScompletas[i])
+                if (ControladorMisiones.MisionesCompletas[i])
                     misionesCompletasDelNPC.Add(misionJugador);
             }
 
@@ -166,9 +166,9 @@ public class Scr_SistemaDialogos : MonoBehaviour
             {
                 List<Scr_CreadorMisiones> misionesActivas = new List<Scr_CreadorMisiones>();
 
-                for (int i = 0; i < ControladorMisiones.MisionesSecundarias.Count; i++)
+                for (int i = 0; i < ControladorMisiones.Misiones.Count; i++)
                 {
-                    var m = ControladorMisiones.MisionesSecundarias[i];
+                    var m = ControladorMisiones.Misiones[i];
                     bool esDelNPC = activadorDialogos.MisionesSecundarias
                         .Any(s => s.TituloMision == m.TituloMision);
 
@@ -308,25 +308,9 @@ public class Scr_SistemaDialogos : MonoBehaviour
                     if (activadorDialogos != null)
                         activadorDialogos.DesactivarDialogo();
 
-                    //===========================================================
-                    // 🚀 MEJORA: SI TIENE MISIÓN PRINCIPAL, SE ASIGNA SIEMPRE
-                    //===========================================================
-                    if (DialogoArecibir.EsMisionPrincipal && DialogoArecibir.Mision != null)
-                    {
-                        ControladorMisiones.MisionActual = DialogoArecibir.Mision;
-                        ControladorMisiones.MisionPrincipal = DialogoArecibir.Mision;
-                        ControladorMisiones.GuardarMisiones();
-
-                        if (DialogoArecibir.Mision.EsContinua)
-                            DialogoActual++;
-                    }
-                    else
-                    {
-                        if (!DialogoArecibir.EsUnico && DialogoActual < Dialogos.Length - 1)
-                            DialogoActual++;
-                    }
-
-
+                    //=========================
+                    //=== CERRAR UI ===
+                    //=========================
                     if (Tutopeleas == null)
                     {
                         Texto.transform.parent.gameObject.SetActive(false);

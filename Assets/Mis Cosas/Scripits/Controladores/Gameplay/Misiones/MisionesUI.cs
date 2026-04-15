@@ -59,16 +59,16 @@ public class MisionesUI : MonoBehaviour
         MisionesenCursoCompletadas.Clear();
         //ControladorMisiones.revisarMisionPrincipal();
         //ControladorMisiones.RevisarTodasLasMisionesSecundarias();
-        if (ControladorMisiones.MisionPrincipal != null)
+        /*if (ControladorMisiones.MisionPrincipal != null)
         {
             MisionesenCurso.Add(ControladorMisiones.MisionPrincipal);
             MisionesenCursoCompletadas.Add(ControladorMisiones.MisionPCompleta);
         }
-
-        for (int i = 0; i < ControladorMisiones.MisionesSecundarias.Count; i++)
+        */
+        for (int i = 0; i < ControladorMisiones.Misiones.Count; i++)
         {
-            MisionesenCurso.Add(ControladorMisiones.MisionesSecundarias[i]);
-            MisionesenCursoCompletadas.Add(ControladorMisiones.MisionesScompletas[i]);
+            MisionesenCurso.Add(ControladorMisiones.Misiones[i]);
+            MisionesenCursoCompletadas.Add(ControladorMisiones.MisionesCompletas[i]);
         }
         Debug.Log("Revisado");
     }
@@ -107,14 +107,14 @@ public class MisionesUI : MonoBehaviour
         //comprueba si ya esta completa o no para poder elejir la descripcion
         if (ControladorMisiones.MisionActual!= null)
         {
-            if (!ControladorMisiones.MisionActualCompleta)
+            /*if (!ControladorMisiones.MisionActualCompleta)
             {
                 texto2.text = $"{ControladorMisiones.MisionActual.Descripcion}";
             }
             else
             {
-                texto2.text = $"{ControladorMisiones.MisionActual.DescripcionCompleta}";
-            }
+                texto2.text = "Cambiando...";
+            }*/
             texto1.text = $"{ControladorMisiones.MisionActual.name}";
         }
         else
@@ -172,11 +172,11 @@ public class MisionesUI : MonoBehaviour
             if (!MisionesenCursoCompletadas[i])
             {
 
-                texto2.text = $"{instance.Descripcion}";
+                texto2.text = $"{instance.DescripcionEnMision}";
             }
             else
             {
-                texto2.text = $"{instance.DescripcionCompleta}";
+                texto2.text = "Cambiando 2...";
             }
             TextMeshProUGUI Textbut= boton.GetComponentInChildren<TextMeshProUGUI>();
             Textbut.text = "Seguir";

@@ -35,7 +35,7 @@ public class Scr_EventosGuardado : MonoBehaviour
                     {
                         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
                     }
-                    if (UltimoDialogo == 1)
+                    if (UltimoDialogo == 2)
                     {
                         Debug.Log("Se guardo el movimiento");
                         PlayerPrefs.SetString("Movimiento", "Si");

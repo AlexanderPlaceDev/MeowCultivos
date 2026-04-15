@@ -66,8 +66,8 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
             transform.GetChild(0).gameObject.SetActive(true);
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), -200, 1);
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 230, 1);
-            Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(), -810, 1);
-            Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(3).GetComponent<RectTransform>(), 180, 1);
+            Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(), -800, 1);
+            Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(3).GetComponent<RectTransform>(), -800, 1);
             Checar_input.CammbiarAction_UI();
         }
         else
@@ -155,14 +155,14 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         Gata.GetComponent<Scr_GiroGata>().enabled = true;
         transform.GetChild(0).gameObject.SetActive(false);
         BotonCerrar.GetComponent<Image>().color = ColorBotones[0];
-        if(CanvasMenu!=null) { CanvasMenu.SetActive(false); }
-        if (BotonCerrar.transform.childCount>1)
+        if (CanvasMenu != null) { CanvasMenu.SetActive(false); }
+        if (BotonCerrar.transform.childCount > 1)
         {
             BotonCerrar.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = ColorBotones[1];
         }
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), 0, 1);
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 0, 1);
-        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(),-610, 1);
-        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(3).GetComponent<RectTransform>(), -50, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(), 22.5f, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(3).GetComponent<RectTransform>(), -12.5f, 1);
     }
 }
