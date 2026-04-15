@@ -28,23 +28,35 @@ public class DetectarVigia : MonoBehaviour
             Vector3 direccion = (other.transform.position - origen).normalized;
             float distancia = Vector3.Distance(origen, other.transform.position);
 
-            RaycastHit hit;
 
-            if (Physics.Raycast(origen, direccion, out hit, distancia))
+            RaycastHit[] hits = Physics.RaycastAll(origen, direccion, distancia);
+
+            bool hayEstatua = false;
+            bool vioJugador = false;
+
+            foreach (RaycastHit h in hits)
             {
-                // Si el primer objeto que golpea es una estatua, no hacer nada
-                if (hit.collider.CompareTag("Estatua"))
+                if (h.collider.CompareTag("Estatua"))
                 {
-                    Debug.Log("Hay una estatua bloqueando la vista");
-                    return;
+                    hayEstatua = true;
                 }
 
-                // Si golpea directamente al jugador
-                if (hit.collider.CompareTag("Gata"))
+                if (h.collider.CompareTag("Gata"))
                 {
-                    Debug.Log("No Hay una estatua bloqueando la vista");
-                    quitarIntento();
+                    vioJugador = true;
                 }
+            }
+
+            if (hayEstatua)
+            {
+                Debug.Log("Hay una estatua bloqueando la vista");
+                return;
+            }
+
+            if (vioJugador && !hayEstatua)
+            {
+                Debug.Log("No hay estatua bloqueando la vista");
+                quitarIntento();
             }
         }
     }

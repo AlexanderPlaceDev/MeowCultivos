@@ -108,7 +108,7 @@ public class Tutorial_peleas : MonoBehaviour
             }
             
         }
-        else if(sistemaDialogos.DialogoActual == 9 && Tuto == 1)
+        else if(sistemaDialogos.DialogoActual == 8 && Tuto == 1)
         {
             Dialogo.SetActive(false);
             ControladorBatalla.IniciarCuentaRegresiva(true);

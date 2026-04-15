@@ -323,15 +323,21 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         {
             IconoHabilidadE.transform.GetChild(1).gameObject.SetActive(false);
         }
-        if (Tutopeleas != null && Tutopeleas.isActiveAndEnabled)
-        {
-            Tutopeleas.ComenzarPelea();
-        }
+        
         if (newTem)
         {
             datos.UsosHabilidadesT[datos.BuscarUSoHabilidadTemporalPorNombre(ht)] -= 1;
         }
-        ControladorBatalla.IniciarCuentaRegresiva(false);
+        if (Tutopeleas != null && Tutopeleas.isActiveAndEnabled)
+        {
+            Tutopeleas.ComenzarPelea();
+        }
+        else
+        {
+
+            ControladorBatalla.IniciarCuentaRegresiva(false);
+        }
+
         ControladorBatalla.ArmaActual = Armas[ArmaActual];
         ControladorBatalla.PrepararBatalla();
         GetComponent<Scr_ControladorArmas>().ArmaActual = ArmaActual;

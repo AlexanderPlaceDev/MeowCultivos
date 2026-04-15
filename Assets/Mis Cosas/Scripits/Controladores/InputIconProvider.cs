@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -280,8 +281,13 @@ public class InputIconProvider : MonoBehaviour
         switch (tecla)
         {
             case "Tab":
+                return "TAB";
+
             case "Tabulacion":
                 return "TAB";
+                
+            case "Barra Espaciadora":
+                return "Espacio";
 
             case "Space":
                 return "Espacio";

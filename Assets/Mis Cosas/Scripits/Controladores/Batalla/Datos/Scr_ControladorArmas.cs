@@ -781,7 +781,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     }
     void RecolectarFruta()
     {
-        if(Fruta!=null && Recolectar.IsPressed() && !PuedeInteractuar && !TieneFruta)
+        if(Fruta!=null && Recolectar.WasPressedThisFrame() && !PuedeInteractuar && !TieneFruta)
         {
             TieneFruta = true;
             for (int i = 0; i < ObjetoArmas_reales.Length; i++)
@@ -833,7 +833,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             Anim.Play("FrutaAgarrada");
             Destroy(Fruta);
         }
-        else if (/*Recolectar.IsPressed() ||*/ Dispara.IsPressed() && TieneFruta)
+        else if (Recolectar.WasPressedThisFrame() || Dispara.IsPressed() && TieneFruta)
         {
             DestruirFruta();
         }
@@ -994,16 +994,18 @@ public class Scr_ControladorArmas : MonoBehaviour
             }
             else if (hit.collider.CompareTag("Fruta"))
             {
-                Mira.GetComponent<Image>().color = ColoresMirillas[2];
-                Mira.GetComponent<Image>().sprite = Mirillas[1];
-                Fruta=hit.collider.gameObject;
+                Mira.GetComponent<Image>().color = ColoresMirillas[0];
+                Mira.GetComponent<Image>().sprite = Mirillas[2];
+                Mira.transform.localScale = new Vector3(3,3,3);
+                Fruta =hit.collider.gameObject;
                 FrutaNombre= Fruta.GetComponent<Fruta_drop>().Nombre;
                 return;
             }
             else if (hit.collider.CompareTag("Crizalida"))
             {
-                Mira.GetComponent<Image>().color = ColoresMirillas[2];
-                Mira.GetComponent<Image>().sprite = Mirillas[1];
+                Mira.GetComponent<Image>().color = ColoresMirillas[0];
+                Mira.GetComponent<Image>().sprite = Mirillas[2];
+                Mira.transform.localScale = new Vector3(3, 3, 3);
                 PuedeInteractuar = true;
                 Fruta = hit.collider.gameObject;
                 return;
@@ -1018,6 +1020,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         }
         Mira.GetComponent<Image>().color = ColoresMirillas[0];
         Mira.GetComponent<Image>().sprite = Mirillas[0];
+        Mira.transform.localScale = new Vector3(1, 1, 1);
     }
     
     private void ChecarTemporal()

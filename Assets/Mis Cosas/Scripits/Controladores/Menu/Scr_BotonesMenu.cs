@@ -87,7 +87,7 @@ public class Scr_BotonesMenu : MonoBehaviour
             Tween.Color(GameObject.Find("Pantalla").GetComponent<SpriteRenderer>(), Color.black, 4, Ease.Default, cycles: 1);
             PlayerPrefs.SetString("Partida", "SI");
             PlayerPrefs.Save();
-            StartCoroutine(CambiarEscena());
+            StartCoroutine(CambiarEscena(5));
         }
 
     }
@@ -96,7 +96,7 @@ public class Scr_BotonesMenu : MonoBehaviour
     {
         if (!Controlador.EstaEnOpciones)
         {
-            Checar_input.CammbiarAction_Player();
+            
             int Vol = PlayerPrefs.GetInt("Volumen", 70);
             int VolM = PlayerPrefs.GetInt("Volumen_Musica", 70);
             int VolA = PlayerPrefs.GetInt("Volumen_Ambiente", 70);
@@ -112,14 +112,15 @@ public class Scr_BotonesMenu : MonoBehaviour
             PlayerPrefs.SetInt("Volumen_Ambiente", VolA);
             PlayerPrefs.SetInt("Volumen_Combate", VolC);
             PlayerPrefs.SetInt("Brillo", Brillo);
-
-            PlayerPrefs.Save();
-            StartCoroutine(CambiarEscena());
+            Tween.Color(GameObject.Find("Pantalla").GetComponent<SpriteRenderer>(), Color.black, 4, Ease.Default, cycles: 1);
+            PlayerPrefs.Save(); 
+            Checar_input.CammbiarAction_Player();
+            StartCoroutine(CambiarEscena(2));
         }
     }
-    IEnumerator CambiarEscena()
+    IEnumerator CambiarEscena(float esperar)
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(esperar);
         SceneManager.LoadScene(1);
     }
 

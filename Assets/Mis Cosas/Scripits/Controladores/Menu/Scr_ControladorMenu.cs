@@ -33,7 +33,8 @@ public class Scr_ControladorMenu : MonoBehaviour
     [SerializeField] Slider SliderVolumen_Combate;
     [SerializeField] TextMeshProUGUI TextoBrillo;
     [SerializeField] Slider SliderBrillo;
-
+    [Header("Nueva Partida")]
+    [SerializeField] GameObject opcioensNuevaPartida;
     [Header("Titulo")]
     [SerializeField] GameObject Titulo;
     [SerializeField] float TiempoRebote;
@@ -389,6 +390,13 @@ public class Scr_ControladorMenu : MonoBehaviour
         }
     }
 
+    public void MostarNuevaPatida()
+    {
+        opcioensNuevaPartida.SetActive(true);
+    }
 
-
+    public void EsconderNuevaPatida()
+    {
+        opcioensNuevaPartida.SetActive(false);
+    }
 }

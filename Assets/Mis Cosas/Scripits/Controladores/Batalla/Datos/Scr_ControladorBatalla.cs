@@ -340,6 +340,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
             NumeroCuenta.gameObject.SetActive(true);
             ComenzarCuenta = true;
         }
+
         if (Singleton.ModoSeleccionado == Modo.Defensa)
         {
             ComienzoContador("¡Defiende!");
@@ -356,7 +357,6 @@ public class Scr_ControladorBatalla : MonoBehaviour
         {
             ComienzoContador("Explora?");
         }
-
     }
     private void Comienzo()
     {
