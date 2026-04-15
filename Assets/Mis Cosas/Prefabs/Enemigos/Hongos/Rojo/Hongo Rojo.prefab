@@ -5527,8 +5527,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cec5f89194b62b44ea90a458ddaa18b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NombreEnemigo: 
+  NombreEnemigo: Hongo Rojo
   Vida: 10
+  VidaMaxima: 0
   Velocidad: 1
   "Da\xF1oMelee": 0
   "Da\xF1oDistancia": 0
@@ -5560,6 +5561,7 @@ MonoBehaviour:
   Objetivo: {fileID: 0}
   ColorHerido: {r: 1, g: 0.5803922, b: 0.5803922, a: 1}
   DuracionCambioColor: 0.5
+  cambiandoColor: 0
   tipoenemigo: 0
   tipocomportamiento: 1
   Fruta: 0

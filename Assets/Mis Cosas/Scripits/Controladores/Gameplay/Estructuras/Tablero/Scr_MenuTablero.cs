@@ -34,6 +34,7 @@ public class Scr_MenuTablero : MonoBehaviour
 
     [Header("Inventario")]
     [SerializeField] private Scr_Inventario Inventario;
+    [SerializeField] private Scr_ControladorMisiones ControladorMisiones;
 
     public int EstructuraActual = 0;
 
@@ -46,7 +47,7 @@ public class Scr_MenuTablero : MonoBehaviour
         [SerializeField] public GameObject[] ObjetosEstructura;
     }
 
-    private void Start()
+    private void Awake()
     {
         ActualizarEstructurasFiltradas();
 
@@ -291,6 +292,8 @@ public class Scr_MenuTablero : MonoBehaviour
             StartCoroutine(EsperarCamara());
             ActualizarEstructura();
             ActivarEstructuras();
+            ControladorMisiones.RevisarProgresoMisiones();
+            
         }
     }
 

@@ -172,7 +172,7 @@ public class MisionesUI : MonoBehaviour
             if (!MisionesenCursoCompletadas[i])
             {
 
-                texto2.text = $"{instance.Descripcion}";
+                texto2.text = $"{instance.DescripcionEnMision}";
             }
             else
             {

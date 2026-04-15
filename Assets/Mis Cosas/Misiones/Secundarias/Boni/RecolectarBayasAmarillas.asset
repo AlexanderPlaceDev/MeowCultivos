@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea24d2bc748133d448a419af8bc82e61, type: 3}
+  m_Name: RecolectarBayasAmarillas
+  m_EditorClassIdentifier: 
+  TituloMision: Bayas acidas
+  LogoMision: {fileID: 21300000, guid: 76ea9672ca424734e8855d4280e2caa5, type: 3}
+  DescripcionEnMision: Recolecta bayas amarillas
+  DescripcionMisionCompleta: Entrega las bayas a Boni
+  DialogoEnMision: {fileID: 11400000, guid: 68ae8abf4bbfd414eb07bb4bcd46391e, type: 2}
+  DialogoMisionCompleta: {fileID: 11400000, guid: c07a955dabebcca44b12582ecdca48fc,
+    type: 2}
+  Personaje: Bony
+  LugarMision: Campamento
+  prioridad: 1
+  Tipo: 3
+  LugarObjetivoExploracion: 
+  DireccionesRequeridas: 
+  Teclas: 
+  ObjetosNecesarios:
+  - {fileID: 11400000, guid: d1948edb1dc783b48b1886c7863253be, type: 2}
+  CantidadesQuita: 0a000000
+  ObjetivosACazar: []
+  CantidadACazar: 
+  IconosACazar: []
+  EstructurasRequeridas: []
+  RecompensaDinero: 100
+  RecompensaXP: 50
+  ObjetosQueDa: []
+  CantidadesQueDa: 
+  ObjetosQueQuita: []
+  CantidadesQueQuita: 
+  QuitaObjetosDesdeSignal: 0
+  MisionAnterior: {fileID: 0}

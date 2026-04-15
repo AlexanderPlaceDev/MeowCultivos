@@ -8,6 +8,7 @@ public class Scr_CreadorDialogos : ScriptableObject
 {
     public bool EsUnico;
     public bool EsMisionPrincipal;
+    public bool RequiereMisionCompleta;
     public Scr_CreadorMisiones Mision;
     [SerializeField,TextArea(4,6)] public string[] Lineas;
 }

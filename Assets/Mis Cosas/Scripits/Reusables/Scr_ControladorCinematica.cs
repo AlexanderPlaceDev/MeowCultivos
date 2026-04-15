@@ -1,6 +1,7 @@
 ﻿using Cinemachine;
 using PrimeTween;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -15,6 +16,7 @@ public class Scr_ControladorCinematica : MonoBehaviour
 
     [SerializeField] PlayableDirector Director;
     [SerializeField] PlayableAsset[] Timelines;
+    [SerializeField] private List<Scr_SistemaDialogos> NPCsDeLaCinematica;
     [SerializeField] GameObject Panel;
     [SerializeField] bool[] Easy;
     [SerializeField] float[] Tiempos;
@@ -224,7 +226,8 @@ public class Scr_ControladorCinematica : MonoBehaviour
         Reloj.SetActive(true);
         Tween.UIAnchoredPositionY(Reloj.transform.GetChild(0).GetComponent<RectTransform>(), 15, 0.5f, Ease.Default);
         Tween.UIAnchoredPositionX(Reloj.transform.GetChild(1).GetComponent<RectTransform>(), 0, 0.5f, Ease.Default);
-        Tween.UIAnchoredPositionX(Reloj.transform.GetChild(2).GetComponent<RectTransform>(), -610, 0.5f, Ease.Default);
+        Tween.UIAnchoredPositionX(Reloj.transform.GetChild(2).GetComponent<RectTransform>(), 22.5f, 0.5f, Ease.Default);
+        Tween.UIAnchoredPositionX(Reloj.transform.GetChild(3).GetComponent<RectTransform>(), -12.5f, 0.5f, Ease.Default);
 
     }
 
@@ -235,6 +238,7 @@ public class Scr_ControladorCinematica : MonoBehaviour
         Tween.UIAnchoredPositionY(Reloj.transform.GetChild(0).GetComponent<RectTransform>(), -100, 0.5f, Ease.Default);
         Tween.UIAnchoredPositionX(Reloj.transform.GetChild(1).GetComponent<RectTransform>(), 226, 0.5f, Ease.Default);
         Tween.UIAnchoredPositionX(Reloj.transform.GetChild(2).GetComponent<RectTransform>(), -800, 0.5f, Ease.Default);
+        Tween.UIAnchoredPositionX(Reloj.transform.GetChild(3).GetComponent<RectTransform>(), -800, 0.5f, Ease.Default);
         StartCoroutine(EsperarReloj(Reloj));
     }
 
@@ -267,4 +271,19 @@ public class Scr_ControladorCinematica : MonoBehaviour
             );
     }
 
+    public void AumentarDialogoNPC(int index)
+    {
+        if (index < 0 || index >= NPCsDeLaCinematica.Count)
+        {
+            Debug.LogWarning("Índice fuera de rango en NPCsDeLaCinematica");
+            return;
+        }
+
+        var npc = NPCsDeLaCinematica[index];
+
+        if (npc != null)
+        {
+            npc.AumentarDialogo();
+        }
+    }
 }

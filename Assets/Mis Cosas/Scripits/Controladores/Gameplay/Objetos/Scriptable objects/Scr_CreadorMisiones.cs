@@ -9,7 +9,8 @@ public class Scr_CreadorMisiones : ScriptableObject
 {
     public string TituloMision;
     public Sprite LogoMision;
-    public string Descripcion;
+    public string DescripcionEnMision;
+    public string DescripcionMisionCompleta;
     public Scr_CreadorDialogos DialogoEnMision;
     public Scr_CreadorDialogos DialogoMisionCompleta;
     public enum prioridadM
@@ -17,7 +18,8 @@ public class Scr_CreadorMisiones : ScriptableObject
         Principal,
         Secundaria
     }
-    public string Faccion;
+    public string Personaje;
+    public string LugarMision;
     public prioridadM prioridad;
     public enum Tipos
     {
@@ -25,13 +27,13 @@ public class Scr_CreadorMisiones : ScriptableObject
         Movimiento,
         Teclas,
         Recoleccion,// conseguir ciertos objetos
-        Recolectar,//modo de recoleccion
         Defensa,
         Construccion,
         Caza
     }
 
     public Tipos Tipo;
+    public string LugarObjetivoExploracion;
     public enum DireccionMovimiento
     {
         Arriba,
@@ -47,13 +49,15 @@ public class Scr_CreadorMisiones : ScriptableObject
     public string[] ObjetivosACazar;
     public int[] CantidadACazar;
     public Sprite[] IconosACazar;
-
+    public string[] EstructurasRequeridas;
     
-    public bool QuitaObjetos;
-    public bool DaObjetos;
     public int RecompensaDinero;
     public int RecompensaXP;
     public Scr_CreadorObjetos[] ObjetosQueDa;
-    public int[] CantidadesDa;
+    public int[] CantidadesQueDa;
+    public Scr_CreadorObjetos[] ObjetosQueQuita;
+    public int[] CantidadesQueQuita;
+    public bool QuitaObjetosDesdeSignal;
+    public Scr_CreadorMisiones MisionAnterior;
 }
 

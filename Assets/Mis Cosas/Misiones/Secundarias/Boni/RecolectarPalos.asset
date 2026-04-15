@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea24d2bc748133d448a419af8bc82e61, type: 3}
+  m_Name: RecolectarPalos
+  m_EditorClassIdentifier: 
+  TituloMision: Juntar ramas
+  LogoMision: {fileID: 21300000, guid: 252c0dc60c25925458706e0141863a5e, type: 3}
+  DescripcionEnMision: Recolecta algunas ramas para Boni
+  DescripcionMisionCompleta: lleva las ramas a Boni
+  DialogoEnMision: {fileID: 11400000, guid: 31a9c07c72f462142984a344222013de, type: 2}
+  DialogoMisionCompleta: {fileID: 11400000, guid: f76fe13b57d8d0645a1018ed5b60f746,
+    type: 2}
+  Personaje: Bony
+  LugarMision: Campamento
+  prioridad: 1
+  Tipo: 3
+  LugarObjetivoExploracion: 
+  DireccionesRequeridas: 
+  Teclas: 
+  ObjetosNecesarios:
+  - {fileID: 11400000, guid: 16d59de0d61659641a6f7c640e284942, type: 2}
+  CantidadesQuita: 14000000
+  ObjetivosACazar: []
+  CantidadACazar: 
+  IconosACazar: []
+  EstructurasRequeridas: []
+  RecompensaDinero: 25
+  RecompensaXP: 25
+  ObjetosQueDa:
+  - {fileID: 11400000, guid: a65042bb6b4ceef4894cfce6610315ea, type: 2}
+  - {fileID: 11400000, guid: 98057a97554cd0a4ba29639b7360daad, type: 2}
+  CantidadesQueDa: 010000000a000000
+  ObjetosQueQuita: []
+  CantidadesQueQuita: 
+  QuitaObjetosDesdeSignal: 0
+  MisionAnterior: {fileID: 0}

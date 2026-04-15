@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea24d2bc748133d448a419af8bc82e61, type: 3}
+  m_Name: RecolectarPlatanos
+  m_EditorClassIdentifier: 
+  TituloMision: Consigue potasio
+  LogoMision: {fileID: 21300000, guid: 6871223e131788e45949f9c852d5126c, type: 3}
+  DescripcionEnMision: Recoge platanos cerca del puente
+  DescripcionMisionCompleta: Lleva los platanos a Boni
+  DialogoEnMision: {fileID: 11400000, guid: f9ca77b7ef5e5e04b8fa8be61ce7524d, type: 2}
+  DialogoMisionCompleta: {fileID: 11400000, guid: 2eb11a56f1fc8fd458de059a272c2d79,
+    type: 2}
+  Personaje: Bony
+  LugarMision: Campamento
+  prioridad: 1
+  Tipo: 3
+  LugarObjetivoExploracion: 
+  DireccionesRequeridas: 
+  Teclas: 
+  ObjetosNecesarios:
+  - {fileID: 11400000, guid: d3a9af7a80512f746bb084bf15c13fc5, type: 2}
+  CantidadesQuita: 0f000000
+  ObjetivosACazar: []
+  CantidadACazar: 
+  IconosACazar: []
+  EstructurasRequeridas: []
+  RecompensaDinero: 150
+  RecompensaXP: 15
+  ObjetosQueDa:
+  - {fileID: 11400000, guid: e9bc53ed753ca3d49a96f76d01685c82, type: 2}
+  CantidadesQueDa: 01000000
+  ObjetosQueQuita: []
+  CantidadesQueQuita: 
+  QuitaObjetosDesdeSignal: 0
+  MisionAnterior: {fileID: 0}

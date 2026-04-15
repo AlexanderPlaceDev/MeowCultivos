@@ -308,25 +308,9 @@ public class Scr_SistemaDialogos : MonoBehaviour
                     if (activadorDialogos != null)
                         activadorDialogos.DesactivarDialogo();
 
-                    //===========================================================
-                    // 🚀 MEJORA: SI TIENE MISIÓN PRINCIPAL, SE ASIGNA SIEMPRE
-                    //===========================================================
-                    if (DialogoArecibir.EsMisionPrincipal && DialogoArecibir.Mision != null)
-                    {
-                        ControladorMisiones.MisionActual = DialogoArecibir.Mision;
-                        //ControladorMisiones.MisionPrincipal = DialogoArecibir.Mision;
-                        ControladorMisiones.GuardarMisiones();
-
-                        //if (DialogoArecibir.Mision.EsContinua)  CAMBIANDO...
-                          //  DialogoActual++;
-                    }
-                    else
-                    {
-                        if (!DialogoArecibir.EsUnico && DialogoActual < Dialogos.Length - 1)
-                            DialogoActual++;
-                    }
-
-
+                    //=========================
+                    //=== CERRAR UI ===
+                    //=========================
                     if (Tutopeleas == null)
                     {
                         Texto.transform.parent.gameObject.SetActive(false);

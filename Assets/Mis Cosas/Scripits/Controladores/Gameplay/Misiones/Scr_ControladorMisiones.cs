@@ -1,5 +1,6 @@
 ﻿using PrimeTween;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -9,56 +10,71 @@ using static Scr_CreadorMisiones;
 
 public class Scr_ControladorMisiones : MonoBehaviour
 {
-    // ================================
-    // === REFERENCIAS PRINCIPALES ===
-    // ================================
+    [Header("UI Misiones")]
+    [SerializeField] private GameObject UIBase;
+    [SerializeField] private Sprite[] IconosUIBase;
+    private GameObject UIForma2;
+    private GameObject UIForma3;
+    private int FormaActual = 1;
+    private int FormaAnterior = 2;
+    private bool CambiandoDeForma = false;
+    [SerializeField] private Image ImagenIconoMision;
+    [SerializeField] private TextMeshProUGUI DescripcionForma2;
+    [SerializeField] private Color[] ColoresDrescripcionForma2;
+    [SerializeField] private TextMeshProUGUI DescripcionForma3;
+    [SerializeField] private TextMeshProUGUI DescripcionForma3Falsa;
+    [SerializeField] private TextMeshProUGUI TextoPagina;
+    [SerializeField] private GameObject Basura;
+    [SerializeField] private GameObject Estrella;
+    [SerializeField] private float velocidadParpadeo = 2f;
+    [SerializeField] private GameObject Cambio;
+    [SerializeField] private GameObject IconoProgreso;
+    [SerializeField] private TextMeshProUGUI TextoPersonaje;
+    [SerializeField] private TextMeshProUGUI TextoLugar;
+    [SerializeField] private TextMeshProUGUI TextoNombreMision;
+    [SerializeField] private GameObject TextoNoAplica;
+
+    [Header("Estados de las misiones")]
     public Scr_CreadorMisiones MisionActual;          // Misión que se está mostrando actualmente en el panel
     public List<Scr_CreadorMisiones> Misiones;   // Lista de misiones activas
+    public List<bool> MisionesCompletas;       // Estado de todas las misiones
+    public List<bool> MisionesVistas; // false = nueva, true = ya vista
     public Scr_CreadorMisiones[] TodasLasMisiones;    // Todas las misiones posibles en el juego
 
-    // ================================
-    // === ESTADO DE LAS MISIONES ===
-    // ================================
-    public List<bool> MisionesCompletas;       // Estado de todas las misiones
-    public bool EstaEnDialogo = false;         
 
-    // ================================
-    // === CONTROL DE OBJETOS ===
-    // ================================
+
+    public bool EstaEnDialogo = false;
+
+    [Space, Header("Control de objetos")]
+    [SerializeField] private GameObject BotonesUI;
+    [SerializeField] private GameObject ObjetosRecoleccion;
     private Scr_Inventario Inventario;
     private Transform Gata;
-    private bool EstadoPanelMisiones;
-    [SerializeField] private GameObject BotonesUI;
-    [SerializeField] private GameObject PanelMisiones;
-    [SerializeField] private TextMeshProUGUI TextoDescripcion;
-    [SerializeField] private TextMeshProUGUI TextoPagina;
-    [SerializeField] private GameObject ObjetosRecoleccion;
+    public int PaginaActual = 0;
 
-    // ================================
-    // === CONTROL DE PÁGINAS Y TECLAS ===
-    // ================================
+    [Space, Header("Teclas")]
+    [SerializeField] GameObject TeclaMisiones;
+    [SerializeField] private Sprite IconoTeclaMisiones;
+    [SerializeField] private Sprite[] PalancasIcono;
+
     private bool[] TeclasPresionadas;
     private float[] TiempoTeclas;
 
-    [SerializeField] private Sprite teclaIcono;
-    [SerializeField] GameObject Mapa_;
-    [SerializeField] private Sprite[] PalancasIcono;
-    private bool ultimogamepad=false;
+    private bool ultimogamepad = false;
     PlayerInput playerInput;
     InputIconProvider IconProvider;
     private InputAction InputTeclaMisiones;
-    private Sprite iconoActualMapa = null;
-    private string textoActualMapa = "";
-    // ================================
-    // === TRACKING DE PROGRESO ===
-    // ================================
+    private InputAction InputTeclaBorrarMision;
+    private InputAction InputTeclaCambiarMision;
+    private string TextoTeclaMisiones = "";
+
+
+    [Space, Header("Progresos")]
     public List<string> EnemigosCazados;      // Nombres de los enemigos eliminados
     public List<int> CantidadCazados;         // Cantidad cazada de cada enemigo
     public List<string> LugaresExplorados;    // Lista de lugares explorados
 
-    // ================================
-    // === OBJETOS DE ESCENA ===
-    // ================================
+    [Space, Header("Objetos de misiones para construccion")]
     public GameObject[] TodasLasConstrucciones;
 
     // ================================
@@ -66,8 +82,12 @@ public class Scr_ControladorMisiones : MonoBehaviour
     // ================================
     private InputAction MoverHorizontal;
     private InputAction MoverVertical;
-    private bool[] direccionesCompletadas;
+    private bool[] DireccionesCompletadas;
 
+    //Rutinas
+    private Coroutine rutinaTextoNuevo;
+    private Coroutine rutinaIconoBase;
+    private Coroutine rutinaParpadeo;
 
     void Awake()
     {
@@ -77,16 +97,29 @@ public class Scr_ControladorMisiones : MonoBehaviour
         Inventario.OnInventarioActualizado += OnInventarioCambiado;
         TodasLasConstrucciones = Buscartag.BuscarObjetosConTagInclusoInactivos("Construcciones");
 
+        //Inputs (Teclado y control)
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
-
         MoverHorizontal = playerInput.actions["MoverHorizontal"];
         MoverVertical = playerInput.actions["MoverVertical"];
         InputTeclaMisiones = playerInput.actions["Mapa"];
-        // Cargar datos guardados
-        CargarMisiones();
-        ActualizarUI();
+        InputTeclaCambiarMision = playerInput.actions["CambiarMision"];
+        InputTeclaBorrarMision = playerInput.actions["BorrarMision"];
 
+        //asignamos las formas
+        UIForma2 = UIBase.transform.GetChild(0).gameObject;
+        UIForma3 = UIBase.transform.GetChild(1).gameObject;
+
+        CargarMisiones();
+        ProcesarEnemigosDelSingleton();
+
+
+    }
+
+    private void Start()
+    {
+        RevisarProgresoMisiones();
+        ActualizarUI();
     }
 
     private void OnInventarioCambiado()
@@ -106,13 +139,84 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
     void Update()
     {
-
-        if (InputTeclaMisiones.WasPressedThisFrame())
+        //Cambiar forma UI
+        if (InputTeclaMisiones.WasPressedThisFrame() && CambiandoDeForma == false)
         {
-            CambiarForma();
+
+            StartCoroutine(CambiarForma());
         }
 
+        //Control Parpadeo
+        ControlParpadeoEstrella();
 
+        //Control Cambio
+        if (FormaActual == 3 && Misiones.Count > 1)
+        {
+            Cambio.SetActive(true);
+        }
+        else
+        {
+            Cambio.SetActive(false);
+        }
+
+        //Aqui va el codigo para borrar la mision secundaria
+        if (FormaActual == 3 && InputTeclaBorrarMision.WasPerformedThisFrame() && !CambiandoDeForma)
+        {
+            if (MisionActual != null && MisionActual.prioridad == prioridadM.Secundaria)
+            {
+                int index = Misiones.IndexOf(MisionActual);
+
+                if (index >= 0)
+                {
+                    // 🔥 BORRAR PROGRESO DE CAZA
+                    if (MisionActual.ObjetivosACazar != null)
+                    {
+                        for (int i = 0; i < MisionActual.ObjetivosACazar.Length; i++)
+                        {
+                            string clave = $"{MisionActual.name}_CantidadCazados_{i}";
+                            if (PlayerPrefs.HasKey(clave))
+                            {
+                                PlayerPrefs.DeleteKey(clave);
+                            }
+                        }
+                    }
+
+                    Misiones.RemoveAt(index);
+                    MisionesCompletas.RemoveAt(index);
+                    MisionesVistas.RemoveAt(index);
+
+                    if (Misiones.Count > 0)
+                    {
+                        PaginaActual = Mathf.Clamp(index, 0, Misiones.Count - 1);
+                        MisionActual = Misiones[PaginaActual];
+                    }
+                    else
+                    {
+                        MisionActual = null;
+                        PaginaActual = 0;
+                    }
+
+                    ActualizarUI();
+                }
+            }
+        }
+        //Aqui va el codigo para cambiar de mision
+        if (FormaActual == 3 && InputTeclaCambiarMision.WasPerformedThisFrame() && !CambiandoDeForma)
+        {
+            if (Misiones.Count > 1)
+            {
+                PaginaActual++;
+
+                if (PaginaActual >= Misiones.Count)
+                    PaginaActual = 0;
+
+                MisionActual = Misiones[PaginaActual];
+
+                ActualizarUI();
+            }
+        }
+
+        //[AQUI SE DEBE COMBINAR LAS MISIONES DE TECLAS Y MOVIMIENTO EN UNA SOLA]
         if (MisionActual != null && MisionActual.Tipo == Tipos.Movimiento)
         {
             if (EstaEnDialogo)
@@ -123,7 +227,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
             {
                 ChecarImagenMovimiento();
                 ProcesarMisionMovimiento();
-                //BotonesUI.SetActive(!MisionActualCompleta);
+                BotonesUI.SetActive(!MisionesCompletas[PaginaActual]);
             }
         }
         else if (MisionActual != null && MisionActual.Tipo == Tipos.Teclas)
@@ -135,64 +239,263 @@ public class Scr_ControladorMisiones : MonoBehaviour
             else
             {
                 ProcesarMisionTeclas();
-                //BotonesUI.SetActive(!MisionActualCompleta);
+                BotonesUI.SetActive(!MisionesCompletas[PaginaActual]);
             }
         }
 
-        if (MisionActual != null)
-        {
-            RevisarMisionesSecundarias();
+        IconProvider.ActualizarIconoUI(InputTeclaMisiones, TeclaMisiones.transform, ref IconoTeclaMisiones, ref TextoTeclaMisiones, false);
+    }
 
-            /*string nuevaDescripcion = MisionActualCompleta ? "Cambiando 3..." : MisionActual.Descripcion;
-            if (nuevaDescripcion != ultimaDescripcion)
-            {
+
+
+    IEnumerator CambiarForma()
+    {
+        DetenerEfectosUI();
+        CambiandoDeForma = true;
+
+        switch (FormaActual)
+        {
+            case 1:
+                FormaActual = 2;
+                FormaAnterior = 1;
                 ActualizarUI();
-                ultimaDescripcion = nuevaDescripcion;
-            }
-            */
-            InputPanelMisiones();
+                Tween.LocalScale(UIBase.transform, Vector3.zero, 0.2f);
+                yield return new WaitForSeconds(0.2f);
+                UIBase.GetComponent<Image>().enabled = false;
+                Tween.LocalScale(UIBase.transform, Vector3.one * 5, 0.01f);
+                Tween.LocalScale(UIForma2.transform, Vector3.one, 0.2f);
+                yield return new WaitForSeconds(0.2f);
+                break;
+
+            case 2:
+
+
+                if (FormaAnterior == 1)
+                {
+                    FormaActual = 3;
+                    FormaAnterior = 2;
+                    ActualizarUI();
+                    UIForma2.SetActive(false);
+                    UIForma3.SetActive(true);
+                    UIForma3.transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = UIForma2.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text;
+                    Tween.LocalScaleY(UIForma3.transform.GetChild(2), 0, 0.3f);
+                    yield return new WaitForSeconds(0.3f);
+                    Tween.LocalScaleY(UIForma3.transform.GetChild(3), 1, 0.4f);
+                    Tween.UIAnchoredPositionY(UIForma3.transform.GetChild(1).GetComponent<RectTransform>(), -157, 0.4f);
+                    yield return new WaitForSeconds(0.4f);
+                    break;
+                }
+                else
+                {
+                    FormaActual = 1;
+                    FormaAnterior = 2;
+                    ActualizarUI();
+                    Tween.LocalScale(UIForma2.transform, Vector3.zero, 0.2f);
+                    Tween.LocalScale(UIBase.transform, Vector3.zero, 0.2f);
+                    yield return new WaitForSeconds(0.2f);
+                    UIBase.GetComponent<Image>().enabled = true;
+                    Tween.LocalScale(UIBase.transform, Vector3.one * 5, 0.2f);
+                    yield return new WaitForSeconds(0.2f);
+                    break;
+                }
+
+
+
+            case 3:
+                FormaActual = 2;
+                FormaAnterior = 3;
+
+                // 🔥 FORZAR TEXTO ANTES DE ANIMAR
+                if (MisionActual != null)
+                {
+                    string texto = MisionesCompletas[PaginaActual]
+                        ? MisionActual.DescripcionMisionCompleta
+                        : MisionActual.DescripcionEnMision;
+                    Debug.Log("Cambia 1");
+                    DescripcionForma2.text = texto;
+                    DescripcionForma3Falsa.text = texto;
+                }
+
+                // 🔥 OPCIONAL: detener cualquier coroutine que esté tocando texto
+                DetenerEfectosUI();
+
+                Tween.LocalScaleY(UIForma3.transform.GetChild(3), 0, 0.4f);
+                Tween.UIAnchoredPositionY(UIForma3.transform.GetChild(1).GetComponent<RectTransform>(), -6, 0.4f);
+                yield return new WaitForSeconds(0.4f);
+
+                Tween.LocalScaleY(UIForma3.transform.GetChild(2), 1, 0.3f);
+                yield return new WaitForSeconds(0.3f);
+
+                UIForma2.SetActive(true);
+                UIForma3.SetActive(false);
+
+                ActualizarUI();
+                break;
         }
-        IconProvider.ActualizarIconoUI(InputTeclaMisiones, Mapa_.transform, ref iconoActualMapa, ref textoActualMapa,false);
+
+        CambiandoDeForma = false;
     }
 
-
-    private void CambiarForma()
-    {
-
-    }
-
-    private void InputPanelMisiones()
-    {
-        if (InputTeclaMisiones.WasPressedThisFrame())
-        {
-            if (EstadoPanelMisiones)
-            {
-                Tween.PositionX(PanelMisiones.GetComponent<RectTransform>(), -610, 0.5f, Ease.Default);
-                EstadoPanelMisiones = false;
-            }
-            else
-            {
-                Tween.PositionX(PanelMisiones.GetComponent<RectTransform>(), 0, 0.5f, Ease.Default);
-                EstadoPanelMisiones = true;
-            }
-        }
-    }
 
     // ================================
     // === MÉTODOS DE LA UI ===
     // ================================
     public void ActualizarUI()
     {
-        if (TextoDescripcion == null || TextoPagina == null) return;
 
         if (MisionActual != null)
         {
-            //TextoPagina.text = $"{PaginaActual}/{(totalPaginas > 0 ? totalPaginas : 1)}";
+            DetenerEfectosUI();
+
+            //Forzar sincronizacion
+            int indexReal = Misiones.IndexOf(MisionActual);
+            if (indexReal != -1)
+            {
+                PaginaActual = indexReal;
+            }
+
+
+            switch (FormaActual)
+            {
+                case 1:
+                    {
+                        if (HayMisionesNoVistas())
+                        {
+                            if (rutinaIconoBase == null)
+                                rutinaIconoBase = StartCoroutine(IntercalarIconoBase());
+                        }
+                        else
+                        {
+                            if (rutinaIconoBase != null)
+                            {
+                                StopCoroutine(rutinaIconoBase);
+                                rutinaIconoBase = null;
+                            }
+
+                            UIBase.GetComponent<Image>().sprite = IconosUIBase[0];
+                        }
+                        break;
+                    }
+                case 2:
+                    {
+                        bool hayNueva = MisionesVistas.Contains(false);
+
+                        // 🔥 limpiar siempre
+                        if (rutinaTextoNuevo != null)
+                        {
+                            StopCoroutine(rutinaTextoNuevo);
+                            rutinaTextoNuevo = null;
+                        }
+
+                        if (hayNueva)
+                        {
+                            rutinaTextoNuevo = StartCoroutine(IntercalarTextoNueva());
+                        }
+                        else
+                        {
+                            DescripcionForma2.color = ColoresDrescripcionForma2[0];
+
+                            Debug.Log("Cambia 2");
+                            DescripcionForma2.text = MisionesCompletas[PaginaActual]
+                                ? MisionActual.DescripcionMisionCompleta
+                                : MisionActual.DescripcionEnMision;
+
+                            DescripcionForma3Falsa.text = MisionesCompletas[PaginaActual]
+                                ? MisionActual.DescripcionMisionCompleta
+                                : MisionActual.DescripcionEnMision;
+                        }
+                        break;
+                    }
+                case 3:
+                    {
+
+                        // 🔥 ICONO PROGRESO (Forma 3)
+
+                        bool MostrarIcono = false;
+
+                        Debug.Log("cant misiones:" + Misiones.Count);
+                        if (Misiones.Count > 1)
+                        {
+                            for (int i = 0; i < MisionesVistas.Count; i++)
+                            {
+                                // Si hay una misión NO vista y NO es la actual
+                                if (!MisionesVistas[i] && i != PaginaActual)
+                                {
+                                    MostrarIcono = true;
+                                    break;
+                                }
+                            }
+                        }
+                        IconoProgreso.SetActive(MostrarIcono);
+
+                        // Marcar como vista
+                        if (!MisionesVistas[PaginaActual])
+                        {
+                            MisionesVistas[PaginaActual] = true;
+                            GuardarMisiones();
+
+                            // 🔥 DETENER EFECTOS DE "NUEVA"
+                            if (rutinaTextoNuevo != null)
+                            {
+                                StopCoroutine(rutinaTextoNuevo);
+                                rutinaTextoNuevo = null;
+                            }
+
+                            if (rutinaIconoBase != null)
+                            {
+                                StopCoroutine(rutinaIconoBase);
+                                rutinaIconoBase = null;
+                            }
+
+                            // Reset visual inmediato
+                            UIBase.GetComponent<Image>().sprite = IconosUIBase[0];
+                            Debug.Log("Cambia 3");
+                            DescripcionForma2.color = ColoresDrescripcionForma2[0];
+                            DescripcionForma2.text = MisionesCompletas[PaginaActual]
+                                ? MisionActual.DescripcionMisionCompleta
+                                : MisionActual.DescripcionEnMision;
+
+                            DescripcionForma3Falsa.text = MisionesCompletas[PaginaActual]
+                                ? MisionActual.DescripcionMisionCompleta
+                                : MisionActual.DescripcionEnMision;
+                        }
+
+                        ImagenIconoMision.sprite = MisionActual.LogoMision;
+                        if (MisionActual.prioridad == prioridadM.Principal)
+                        {
+                            Estrella.SetActive(true);
+                            Basura.SetActive(false);
+                        }
+                        else
+                        {
+                            Estrella.SetActive(false);
+                            Basura.SetActive(true);
+                        }
+                        TextoPersonaje.text = MisionActual.Personaje;
+                        TextoLugar.text = MisionActual.LugarMision;
+                        TextoPagina.text = (PaginaActual + 1) + "/" + Misiones.Count;
+                        TextoNombreMision.text = MisionActual.TituloMision;
+
+                        if (MisionesCompletas[PaginaActual])
+                        {
+                            DescripcionForma3.text = MisionActual.DescripcionMisionCompleta;
+                        }
+                        else
+                        {
+                            DescripcionForma3.text = MisionActual.DescripcionEnMision;
+                        }
+                        break;
+                    }
+
+            }
+
+
 
             // Oculta el panel si no es caza ni recolección
             if (MisionActual.Tipo != Tipos.Caza && MisionActual.Tipo != Tipos.Recoleccion)
             {
                 ObjetosRecoleccion.SetActive(false);
+                TextoNoAplica.SetActive(true);
                 return; // Ya que no hay más que mostrar
             }
 
@@ -201,6 +504,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
                 ObjetosRecoleccion.transform.GetChild(i).gameObject.SetActive(false);
 
             ObjetosRecoleccion.SetActive(true);
+            TextoNoAplica.SetActive(false);
 
             int N = 0;
 
@@ -248,18 +552,171 @@ public class Scr_ControladorMisiones : MonoBehaviour
                 }
             }
         }
-        else
-        {
-            TextoDescripcion.text = "Sin objetivo...";
-            TextoPagina.text = "...";
-            if (ObjetosRecoleccion != null)
-                ObjetosRecoleccion.SetActive(false);
-        }
 
-        GuardarMisiones();
     }
 
+    void ControlParpadeoEstrella()
+    {
+        bool debeParpadear = FormaActual == 3
+            && MisionActual != null
+            && MisionActual.prioridad == prioridadM.Principal;
 
+        if (debeParpadear && rutinaParpadeo == null)
+        {
+            rutinaParpadeo = StartCoroutine(ParpadeoEstrella());
+        }
+        else if (!debeParpadear && rutinaParpadeo != null)
+        {
+            StopCoroutine(rutinaParpadeo);
+            rutinaParpadeo = null;
+
+            ResetAlphaEstrella();
+        }
+    }
+
+    IEnumerator ParpadeoEstrella()
+    {
+        Image img = Estrella.GetComponent<Image>();
+        TextMeshProUGUI tmp = Estrella.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+
+        float t = 0f;
+
+        while (true)
+        {
+            t += Time.deltaTime * velocidadParpadeo;
+
+            float alpha = Mathf.PingPong(t, 1f); // 0 → 1 → 0 → 1...
+
+            if (img != null)
+            {
+                Color c = img.color;
+                c.a = alpha;
+                img.color = c;
+            }
+
+            if (tmp != null)
+            {
+                Color c = tmp.color;
+                c.a = alpha;
+                tmp.color = c;
+            }
+
+            yield return null;
+        }
+    }
+
+    void ResetAlphaEstrella()
+    {
+        Image img = Estrella.GetComponent<Image>();
+        TextMeshProUGUI tmp = Estrella.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+
+        if (img != null)
+        {
+            Color c = img.color;
+            c.a = 1f;
+            img.color = c;
+        }
+
+        if (tmp != null)
+        {
+            Color c = tmp.color;
+            c.a = 1f;
+            tmp.color = c;
+        }
+    }
+
+    bool HayMisionesNoVistas()
+    {
+        for (int i = 0; i < MisionesVistas.Count; i++)
+        {
+            if (!MisionesVistas[i])
+                return true;
+        }
+        return false;
+    }
+
+    IEnumerator IntercalarTextoNueva()
+    {
+        while (true)
+        {
+            // 🔥 Si ya no hay nuevas → salir
+            if (!MisionesVistas.Contains(false))
+            {
+                rutinaTextoNuevo = null;
+                yield break;
+            }
+
+            // 🔥 Si ya no estamos en forma 2 → salir
+            if (FormaActual != 2)
+            {
+                rutinaTextoNuevo = null;
+                yield break;
+            }
+
+            // 🔁 Mostrar "Nueva Misión"
+            DescripcionForma2.color = ColoresDrescripcionForma2[1];
+            DescripcionForma2.text = "Nueva Mision";
+            yield return new WaitForSeconds(1f);
+
+            // 🔁 Mostrar descripción de la MISIÓN ACTUAL (no otra)
+            DescripcionForma2.color = ColoresDrescripcionForma2[0];
+
+            Debug.Log("Cambia 4");
+            DescripcionForma2.text = MisionesCompletas[PaginaActual]
+                ? MisionActual.DescripcionMisionCompleta
+                : MisionActual.DescripcionEnMision;
+
+            DescripcionForma3Falsa.text = MisionesCompletas[PaginaActual]
+                ? MisionActual.DescripcionMisionCompleta
+                : MisionActual.DescripcionEnMision;
+
+            yield return new WaitForSeconds(1f);
+        }
+    }
+
+    IEnumerator IntercalarIconoBase()
+    {
+        Image img = UIBase.GetComponent<Image>();
+
+        while (true)
+        {
+            img.sprite = IconosUIBase[1]; // nueva
+            yield return new WaitForSeconds(0.8f);
+
+            img.sprite = IconosUIBase[0]; // normal
+            yield return new WaitForSeconds(0.8f);
+        }
+    }
+
+    void DetenerEfectosUI()
+    {
+        if (rutinaTextoNuevo != null)
+        {
+            StopCoroutine(rutinaTextoNuevo);
+            rutinaTextoNuevo = null;
+        }
+
+        if (rutinaIconoBase != null)
+        {
+            StopCoroutine(rutinaIconoBase);
+            rutinaIconoBase = null;
+        }
+
+        // 🔥 FIX: restaurar texto inmediatamente
+        if (MisionActual != null)
+        {
+            Debug.Log("Cambia 5");
+            DescripcionForma2.text = MisionesCompletas[PaginaActual]
+                ? MisionActual.DescripcionMisionCompleta
+                : MisionActual.DescripcionEnMision;
+
+            DescripcionForma3Falsa.text = MisionesCompletas[PaginaActual]
+                ? MisionActual.DescripcionMisionCompleta
+                : MisionActual.DescripcionEnMision;
+
+            DescripcionForma2.color = ColoresDrescripcionForma2[0];
+        }
+    }
 
     // ================================
     // === MISIONES DE TIPO TECLAS ===
@@ -290,12 +747,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
         }
 
         // Verificar si todas las teclas fueron presionadas correctamente
-        /*MisionPCompleta = System.Array.TrueForAll(TeclasPresionadas, t => t);
-        if (MisionPrincipal == MisionActual)
-        {
-            MisionActualCompleta = MisionPCompleta;
-        }
-        */
+        MisionesCompletas[PaginaActual] = System.Array.TrueForAll(TeclasPresionadas, t => t);
     }
 
     private void ChecarImagenMovimiento()
@@ -310,7 +762,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
                 TextMeshProUGUI text = BotonesUI.transform.GetChild(i).GetChild(0).GetComponent<TextMeshProUGUI>();
                 text.text = "";
-                ultimogamepad=true;
+                ultimogamepad = true;
             }
         }
         else if (!IconProvider.UsandoGamepad() && ultimogamepad)
@@ -319,23 +771,23 @@ public class Scr_ControladorMisiones : MonoBehaviour
             {
                 // Actualizar UI de progreso de teclas
                 Image Icono = BotonesUI.transform.GetChild(i).GetComponent<Image>();
-                Icono.sprite = teclaIcono; 
-                
+                Icono.sprite = IconoTeclaMisiones;
+
                 TextMeshProUGUI text = BotonesUI.transform.GetChild(i).GetChild(0).GetComponent<TextMeshProUGUI>();
                 text.text = MisionActual.Teclas[i].ToString();
             }
 
             ultimogamepad = false;
         }
-        
+
     }
 
     private void ProcesarMisionMovimiento()
     {
-        if (direccionesCompletadas == null ||
-            direccionesCompletadas.Length != MisionActual.DireccionesRequeridas.Length)
+        if (DireccionesCompletadas == null ||
+            DireccionesCompletadas.Length != MisionActual.DireccionesRequeridas.Length)
         {
-            direccionesCompletadas = new bool[MisionActual.DireccionesRequeridas.Length];
+            DireccionesCompletadas = new bool[MisionActual.DireccionesRequeridas.Length];
             TiempoTeclas = new float[MisionActual.DireccionesRequeridas.Length];
         }
 
@@ -367,7 +819,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
             if (TiempoTeclas[i] >= 1f)
             {
-                direccionesCompletadas[i] = true;
+                DireccionesCompletadas[i] = true;
             }
             else
             {
@@ -382,27 +834,26 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
             fillImage.fillAmount = TiempoTeclas[i];
         }
-        bool completa = System.Array.TrueForAll(direccionesCompletadas, d => d);
+        bool completa = System.Array.TrueForAll(DireccionesCompletadas, d => d);
 
-    }
-
-    private void ResetearMisionMovimiento()
-    {
-        direccionesCompletadas = null;
     }
 
     // ================================
     // === PROGRESO Y VALIDACIÓN ===
     // ================================
-    public void MarcarLugarExplorado(string lugar)
+    public void RevisarLugarExplorado(string lugar)
     {
-        if (!LugaresExplorados.Contains(lugar))
-        {
-            LugaresExplorados.Add(lugar);
-            Debug.Log($"Se agregó {lugar} a LugaresExplorados");
-        }
 
-        RevisarProgresoMisiones();
+        for (int i = 0; i < Misiones.Count; i++)
+        {
+            if (Misiones[i].Tipo == Tipos.Exploracion)
+            {
+                if (Misiones[i].LugarObjetivoExploracion == lugar)
+                {
+                    MisionesCompletas[i] = true;
+                }
+            }
+        }
     }
 
     public void RevisarProgresoMisiones()
@@ -411,23 +862,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
         ActualizarUI();
     }
 
-    public void RevisarMisiones()
-    {
-            bool completada = false;
-
-            // Revisar según el tipo de misión
-            
-
-
-            // En caso de tener completa
-            if (completada)
-            {
-
-                // Guarda el progreso
-                GuardarMisiones();
-            }
-    }
-    private void RevisarMisionesSecundarias()
+    private void RevisarMisiones()
     {
         for (int i = 0; i < Misiones.Count; i++)
         {
@@ -438,7 +873,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
                 if (mision.Tipo == Tipos.Construccion)
                 {
-                    completada = ConstruccionesCompletadas();
+                    completada = ConstruccionesCompletadas(mision);
                 }
                 else if (mision.Tipo == Tipos.Caza)
                 {
@@ -460,65 +895,16 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
     private bool RevisarMisionCaza(Scr_CreadorMisiones mision)
     {
-        Scr_DatosSingletonBatalla Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
-
-        if (Singleton.EnemigosCazados.Count > 0)
-        {
-            // Recorrer cada enemigo cazado en el Singleton
-            for (int j = 0; j < Singleton.EnemigosCazados.Count; j++)
-            {
-                string enemigoCazado = Singleton.EnemigosCazados[j];
-                int cantidadCazada = Singleton.CantidadCazados[j];
-
-                // Revisar si esta misión requiere ese enemigo
-                for (int i = 0; i < mision.ObjetivosACazar.Length; i++)
-                {
-                    if (mision.ObjetivosACazar[i] == enemigoCazado)
-                    {
-                        // Construir la clave de PlayerPrefs para esta misión y enemigo
-                        string clave = $"{mision.name}_CantidadCazados_{i}";
-
-                        // Obtener la cantidad actual guardada y la cantidad que falta
-                        int cantidadActual = PlayerPrefs.GetInt(clave, 0);
-                        int cantidadObjetivo = mision.CantidadACazar[i];
-                        int cantidadFaltante = cantidadObjetivo - cantidadActual;
-
-                        if (cantidadFaltante > 0)
-                        {
-                            // Sumar solo lo necesario para no pasar la cantidad objetivo
-                            int cantidadASumar = Mathf.Min(cantidadCazada, cantidadFaltante);
-                            int nuevoTotal = cantidadActual + cantidadASumar;
-
-                            PlayerPrefs.SetInt(clave, nuevoTotal);
-                            PlayerPrefs.Save();
-
-                            Debug.Log($"✅ Misión '{mision.name}': Enemigo '{enemigoCazado}' actualizado. Sumado: {cantidadASumar}, Total: {nuevoTotal}/{cantidadObjetivo}");
-                        }
-                        else
-                        {
-                            Debug.Log($"🎯 Misión '{mision.name}': Enemigo '{enemigoCazado}' ya completo ({cantidadActual}/{cantidadObjetivo}). No se suma más.");
-                        }
-                    }
-                }
-            }
-        }
-
-        // Vaciar las listas del Singleton después de procesar
-        Singleton.EnemigosCazados.Clear();
-        Singleton.CantidadCazados.Clear();
-
-        // Revisar si la misión está completa
         for (int i = 0; i < mision.ObjetivosACazar.Length; i++)
         {
             string clave = $"{mision.name}_CantidadCazados_{i}";
             int cazados = PlayerPrefs.GetInt(clave, 0);
+
             if (cazados < mision.CantidadACazar[i])
-            {
-                return false; // Aún no se ha cazado la cantidad necesaria para al menos un enemigo
-            }
+                return false;
         }
 
-        return true; // Todos los enemigos cazados en la cantidad necesaria
+        return true;
     }
 
     private bool RevisarMisionRecoleccion(Scr_CreadorMisiones mision)
@@ -546,22 +932,94 @@ public class Scr_ControladorMisiones : MonoBehaviour
     // ================================
     // === GUARDAR Y CARGAR DATOS ===
     // ================================
-    public void GuardarMisiones()
-    {
 
-        // Guardar misiones secundarias
-        for (int i = 0; i < Misiones.Count; i++)
+    private void ProcesarEnemigosDelSingleton()
+    {
+        Scr_DatosSingletonBatalla singleton = GameObject.Find("Singleton")
+            .GetComponent<Scr_DatosSingletonBatalla>();
+
+        if (singleton.EnemigosCazados.Count == 0)
+            return;
+
+        List<string> enemigosRestantes = new List<string>();
+        List<int> cantidadesRestantes = new List<int>();
+
+        for (int j = 0; j < singleton.EnemigosCazados.Count; j++)
         {
-            PlayerPrefs.SetString("MisionSecundaria_" + i, Misiones[i].name);
-            PlayerPrefs.SetInt("MisionSecundariaCompleta_" + i, MisionesCompletas[i] ? 1 : 0);
+            string enemigo = singleton.EnemigosCazados[j];
+            int cantidad = singleton.CantidadCazados[j];
+
+            bool usadoEnAlgunaMision = false;
+
+            // 🔍 Buscar en TODAS las misiones activas
+            for (int m = 0; m < Misiones.Count; m++)
+            {
+                var mision = Misiones[m];
+
+                if (mision.Tipo != Tipos.Caza)
+                    continue;
+
+                for (int i = 0; i < mision.ObjetivosACazar.Length; i++)
+                {
+                    if (mision.ObjetivosACazar[i] == enemigo)
+                    {
+                        string clave = $"{mision.name}_CantidadCazados_{i}";
+
+                        int actual = PlayerPrefs.GetInt(clave, 0);
+                        int objetivo = mision.CantidadACazar[i];
+                        int faltante = objetivo - actual;
+
+                        if (faltante > 0)
+                        {
+                            int sumar = Mathf.Min(cantidad, faltante);
+                            PlayerPrefs.SetInt(clave, actual + sumar);
+                            PlayerPrefs.Save();
+
+                            Debug.Log($"✅ {enemigo} aplicado a misión {mision.name}");
+                        }
+
+                        usadoEnAlgunaMision = true;
+                    }
+                }
+            }
+
+            // ❌ Si NO pertenece a ninguna misión → se elimina
+            if (!usadoEnAlgunaMision)
+            {
+                Debug.Log($"🗑️ {enemigo} eliminado del singleton (no pertenece a ninguna misión)");
+            }
+            else
+            {
+                // (Opcional) mantener si quieres debug o reprocesar
+                // enemigosRestantes.Add(enemigo);
+                // cantidadesRestantes.Add(cantidad);
+            }
         }
 
-        PlayerPrefs.SetInt("CantidadMisionesSecundarias", Misiones.Count);
+        // 🔥 LIMPIAR TODO (porque ya procesaste correctamente)
+        singleton.EnemigosCazados.Clear();
+        singleton.CantidadCazados.Clear();
+    }
+
+    public void GuardarMisiones()
+    {
+        for (int i = 0; i < Misiones.Count; i++)
+        {
+            PlayerPrefs.SetString("Mision" + i, Misiones[i].name);
+            PlayerPrefs.SetInt("MisionCompleta" + i, MisionesCompletas[i] ? 1 : 0);
+            PlayerPrefs.SetInt("MisionVista" + i, MisionesVistas[i] ? 1 : 0);
+        }
+
+        PlayerPrefs.SetInt("CantidadMisiones", Misiones.Count);
 
         // Guardar misión actual
         if (MisionActual != null)
         {
+            PlayerPrefs.SetString("MisionActual", MisionActual.name);
         }
+
+        // Guardar página
+        PlayerPrefs.SetInt("PaginaActual", PaginaActual);
 
         // Guardar progreso de caza
         PlayerPrefs.SetInt("CantidadEnemigosCazados", EnemigosCazados.Count);
@@ -571,56 +1029,230 @@ public class Scr_ControladorMisiones : MonoBehaviour
             PlayerPrefs.SetInt("CantidadCazada_" + i, CantidadCazados[i]);
         }
 
-        // Guardar lugares explorados
-        PlayerPrefs.SetInt("CantidadLugaresExplorados", LugaresExplorados.Count);
-        for (int i = 0; i < LugaresExplorados.Count; i++)
-        {
-            PlayerPrefs.SetString("LugarExplorado_" + i, LugaresExplorados[i]);
-        }
-
         PlayerPrefs.Save(); // Asegúrate de guardar todos los cambios
     }
 
-
     public void CargarMisiones()
     {
-        
-    }
+        Misiones.Clear();
+        MisionesCompletas.Clear();
+        MisionesVistas.Clear();
 
+        int cantidad = PlayerPrefs.GetInt("CantidadMisiones", 0);
 
-    private Scr_CreadorMisiones BuscarMisionPorNombre(string nombre)
-    {
-        foreach (var mision in TodasLasMisiones)
+        for (int i = 0; i < cantidad; i++)
         {
-            if (mision.name == nombre)
+            string nombre = PlayerPrefs.GetString("Mision" + i, "");
+
+            // Buscar en todas las misiones disponibles
+            foreach (var mision in TodasLasMisiones)
             {
-                return mision;
+                if (mision.name == nombre)
+                {
+                    Misiones.Add(mision);
+
+                    bool completa = PlayerPrefs.GetInt("MisionCompleta" + i, 0) == 1;
+                    MisionesCompletas.Add(completa);
+
+                    bool vista = PlayerPrefs.GetInt("MisionVista" + i, 0) == 1;
+                    MisionesVistas.Add(vista);
+                    break;
+                }
             }
         }
-        return null;
+
+        // Cargar página actual
+        PaginaActual = PlayerPrefs.GetInt("PaginaActual", 0);
+
+        // Seguridad
+        if (PaginaActual >= Misiones.Count)
+            PaginaActual = 0;
+
+        // Cargar misión actual
+        string nombreActual = PlayerPrefs.GetString("MisionActual", "");
+
+        foreach (var mision in Misiones)
+        {
+            if (mision.name == nombreActual)
+            {
+                MisionActual = mision;
+                break;
+            }
+        }
+
+        // Fallback
+        if (MisionActual == null && Misiones.Count > 0)
+            MisionActual = Misiones[PaginaActual];
+
+        // Cargar progreso de caza (opcional)
+        EnemigosCazados.Clear();
+        CantidadCazados.Clear();
+
+        int cant = PlayerPrefs.GetInt("CantidadEnemigosCazados", 0);
+
+        for (int i = 0; i < cant; i++)
+        {
+            EnemigosCazados.Add(PlayerPrefs.GetString("EnemigoCazado_" + i));
+            CantidadCazados.Add(PlayerPrefs.GetInt("CantidadCazada_" + i));
+        }
+
+        ActualizarUI();
     }
 
-    private bool ConstruccionesCompletadas()
+    private bool ConstruccionesCompletadas(Scr_CreadorMisiones mision)
     {
-        foreach (GameObject construccion in TodasLasConstrucciones)
+        foreach (string nombre in mision.EstructurasRequeridas)
         {
-            if (!construccion.activeInHierarchy)
-                return false; // Falta al menos una construcción
+            foreach (GameObject construccion in TodasLasConstrucciones)
+            {
+                Debug.Log("La construccion:" + construccion.name + " esta:" + construccion.activeInHierarchy);
+                if (construccion.name == nombre && construccion.activeInHierarchy)
+                {
+                    return true; // 🔥 con una basta
+                }
+            }
         }
-        return true; // Todas las construcciones están listas
+
+        return false;
     }
 
     public bool HayMisionRecolectar()
     {
         for (int i = 0; i < Misiones.Count; i++)
         {
-            if (Misiones[i].Tipo == Scr_CreadorMisiones.Tipos.Recolectar)
+            if (Misiones[i].Tipo == Scr_CreadorMisiones.Tipos.Recoleccion)
             {
                 return true;
             }
         }
 
         return false;
+    }
+
+    public void AsignarMisionDesdeSignal(Scr_CreadorMisiones nuevaMision)
+    {
+        if (nuevaMision == null)
+        {
+            Debug.LogWarning("⚠️ Intentaste asignar una misión nula desde signal.");
+            return;
+        }
+
+        // Evitar duplicados
+        if (Misiones.Contains(nuevaMision))
+        {
+            Debug.Log($"ℹ️ La misión '{nuevaMision.name}' ya está activa.");
+            return;
+        }
+
+        // Agregar misión
+        Misiones.Add(nuevaMision);
+        MisionesCompletas.Add(false);
+        MisionesVistas.Add(false);
+
+        if (MisionActual == null)
+        {
+            PaginaActual = Misiones.Count - 1;
+            MisionActual = nuevaMision;
+        }
+
+
+        Debug.Log($"🆕 Misión '{nuevaMision.name}' asignada desde signal.");
+
+        // Actualizar UI y guardar
+        ActualizarUI();
+        GuardarMisiones();
+    }
+
+    public void SustituirMisionDesdeSingleton(Scr_CreadorMisiones nuevaMision)
+    {
+        if (nuevaMision == null)
+        {
+            Debug.LogWarning("⚠️ Nueva misión null.");
+            return;
+        }
+
+        if (nuevaMision.MisionAnterior == null)
+        {
+            Debug.LogWarning("⚠️ No tiene MisionAnterior.");
+            return;
+        }
+
+        int index = Misiones.IndexOf(nuevaMision.MisionAnterior);
+
+        if (index == -1)
+        {
+            Debug.LogWarning($"⚠️ No se encontró '{nuevaMision.MisionAnterior.name}'.");
+            return;
+        }
+
+        var misionAnterior = Misiones[index];
+
+        // =========================================
+        // 🔥 1. BORRAR PROGRESO DE CAZA (OBLIGATORIO)
+        // =========================================
+        if (misionAnterior.ObjetivosACazar != null)
+        {
+            for (int i = 0; i < misionAnterior.ObjetivosACazar.Length; i++)
+            {
+                string clave = $"{misionAnterior.name}_CantidadCazados_{i}";
+
+                if (PlayerPrefs.HasKey(clave))
+                {
+                    PlayerPrefs.DeleteKey(clave);
+                }
+            }
+
+            Debug.Log($"🧹 Progreso de caza eliminado de '{misionAnterior.name}'");
+        }
+
+        // =========================================
+        // 📦 2. QUITAR OBJETOS (SI APLICA)
+        // =========================================
+        if (nuevaMision.QuitaObjetosDesdeSignal &&
+            nuevaMision.Tipo == Tipos.Recoleccion &&
+            nuevaMision.ObjetosNecesarios != null)
+        {
+            for (int i = 0; i < nuevaMision.ObjetosNecesarios.Length; i++)
+            {
+                var objeto = nuevaMision.ObjetosNecesarios[i];
+                int cantidadAQuitar = nuevaMision.CantidadesQuita[i];
+
+                Inventario.QuitarObjeto(
+                    objeto.Nombre,
+                    cantidadAQuitar,
+                    false
+                );
+            }
+
+            Debug.Log($"📦 Objetos removidos por '{nuevaMision.name}'");
+        }
+
+        // =========================================
+        // 🔄 3. REEMPLAZAR MISIÓN
+        // =========================================
+        Misiones[index] = nuevaMision;
+
+        // ⚠️ NO asumimos nada → siempre reinicia estado
+        MisionesCompletas[index] = false;
+
+        MisionesVistas[index] = false; //
+
+        // =========================================
+        // 🎯 4. ACTUALIZAR MISIÓN ACTUAL
+        // =========================================
+        if (MisionActual == misionAnterior)
+        {
+            MisionActual = nuevaMision;
+            PaginaActual = index;
+        }
+
+        Debug.Log($"🔄 '{misionAnterior.name}' → '{nuevaMision.name}'");
+
+        // =========================================
+        // 💾 5. REFRESCAR
+        // =========================================
+        ActualizarUI();
+        GuardarMisiones();
     }
 
 }
