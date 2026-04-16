@@ -14,6 +14,7 @@ public class Scr_ConsolaComandos : MonoBehaviour
     TextMeshProUGUI Texto;
 
     [SerializeField] Scr_CreadorObjetos[] TodosLosObjetos;
+    [SerializeField] Scr_Inventario Inventario;
     void Start()
     {
         Texto = transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
@@ -149,7 +150,7 @@ public class Scr_ConsolaComandos : MonoBehaviour
                     break;
                 }
 
-            case "+10":
+            case "+3":
                 {
                     Debug.Log("Puntos Adquiridos");
                     PlayerPrefs.SetInt("PuntosDeHabilidad", PlayerPrefs.GetInt("PuntosDeHabilidad",0)+3);
@@ -166,6 +167,77 @@ public class Scr_ConsolaComandos : MonoBehaviour
                 {
                     Debug.Log("Agrega Agua");
                     PlayerPrefs.SetInt("CantidadAgua", 10);
+                    break;
+                }
+            case "rico":
+                {
+                    for(int i = 0; i < Inventario.Cantidades.Length; i++)
+                    {
+                        Inventario.Cantidades[i] = 100;
+                    }
+                    break;
+                }
+            case "azar":
+                {
+                    for (int i = 0; i < Inventario.Cantidades.Length; i++)
+                    {
+                        Inventario.Cantidades[i] = Random.Range(1,21);
+                    }
+                    break;
+                }
+            case "t8":
+                {
+                    GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().HoraActual = 8;
+                    break;
+                }
+            case "t12":
+                {
+                    GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().HoraActual = 12;
+                    break;
+                }
+            case "t18":
+                {
+                    GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().HoraActual = 18;
+                    break;
+                }
+            case "t22":
+                {
+                    GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().HoraActual = 22;
+                    break;
+                }
+            case "d1":
+                {
+                    GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().DiaActual="LUN";
+                    break;
+                }
+            case "d2":
+                {
+                    GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().DiaActual = "MAR";
+                    break;
+                }
+            case "d3":
+                {
+                    GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().DiaActual = "MIE";
+                    break;
+                }
+            case "d4":
+                {
+                    GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().DiaActual = "JUE";
+                    break;
+                }
+            case "d5":
+                {
+                    GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().DiaActual = "VIE";
+                    break;
+                }
+            case "d6":
+                {
+                    GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().DiaActual = "SAB";
+                    break;
+                }
+            case "d7":
+                {
+                    GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().DiaActual = "DOM";
                     break;
                 }
             default:
