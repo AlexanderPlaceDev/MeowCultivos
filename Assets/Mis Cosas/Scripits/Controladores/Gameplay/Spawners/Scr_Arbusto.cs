@@ -86,7 +86,7 @@ public class Scr_Arbusto : MonoBehaviour
                 {
                     batalla.Fruta = objetosQueDa[tipoActual].Nombre;
                     batalla.Item = objetosQueDa[tipoActual].Nombre;
-                    batalla.Iniciar();
+                    batalla.Iniciar(gameObject);
                 }
 
                 if (gata.GetComponent<Animator>().GetBool("Recolectando"))

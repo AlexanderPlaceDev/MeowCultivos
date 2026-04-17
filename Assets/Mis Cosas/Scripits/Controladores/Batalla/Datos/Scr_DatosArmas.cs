@@ -20,6 +20,13 @@ public class Scr_DatosArmas : MonoBehaviour
 
     void Start()
     {
+        ActualizarArmas();
+
+        ActualizarHabilidades();
+    }
+
+    public void ActualizarArmas()
+    {
         for (int i = 1; i < TodasLasArmas.Length; i++)
         {
             if (PlayerPrefs.GetString("Arma" + TodasLasArmas[i].Nombre, "No") == "Si")
@@ -32,7 +39,10 @@ public class Scr_DatosArmas : MonoBehaviour
                 ArmasDesbloqueadas[i] = false;
             }
         }
+    }
 
+    public void ActualizarHabilidades()
+    {
         int gad = 0;
         for (int i = 0; i < HabilidadesTemporales.Length; i++)
         {
@@ -53,7 +63,7 @@ public class Scr_DatosArmas : MonoBehaviour
             UsosHabilidadesT[i] = PlayerPrefs.GetInt("UsoTemporal" + HabilidadesTemporales[i].Nombre, 0);
         }
 
-        if (gad<=0)
+        if (gad <= 0)
         {
             ChecarGagetsIniciales();
         }
@@ -76,7 +86,6 @@ public class Scr_DatosArmas : MonoBehaviour
             CantidadPociones[i] = PlayerPrefs.GetInt("Pociones" + Pociones[i].Nombre, 1);
         }
     }
-
     public void DesbloquearArma(string Nombre)
     {
         PlayerPrefs.SetString("Arma" + Nombre, "Si");

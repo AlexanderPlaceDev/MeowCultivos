@@ -6,16 +6,18 @@ using UnityEngine.UI;
 
 public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
 {
-    bool EstaEnRango;
+    public bool EstaEnRango;
     [SerializeField] float Duracion;
     [SerializeField] Sprite Icono;
     [SerializeField] Sprite IconoTecla;
+    [SerializeField] private Sprite icono2;
     [SerializeField] string Letra;
     [SerializeField] Sprite Tecla;
     [SerializeField] GameObject BotonCerrar;
     [SerializeField] Color[] ColorBotones;
     [SerializeField] GameObject CanvasMenu;
 
+    [SerializeField] bool TieneBatalla;
 
     Transform Gata;
     float Tiempo = 0;
@@ -26,9 +28,18 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
     PlayerInput playerInput;
     private InputAction Interactuar;
     private InputAction Cerrar;
+    private InputAction Recolectar;
     InputIconProvider IconProvider;
+    Scr_ControladorMisiones Mis;
+    // Variables por botón para evitar parpadeo
+    private Sprite iconoActualRecolectar = null;
+    private string textoActualRecolectar = "";
     private Sprite iconoActualInteractuar = null;
     private string textoActualInteractuar = "";
+
+    private Scr_CambiadorBatalla batalla;
+    Scr_ControladorSembradioUI SembradioUI;
+
     void Awake()
     {
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
@@ -39,6 +50,14 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         Interactuar = playerInput.actions["Interactuar"];
         Cerrar = playerInput.actions["Cerrar"];
+        Recolectar = playerInput.actions["Recolectar"];
+
+        Mis = GameObject.Find("ControladorMisiones").GetComponent<Scr_ControladorMisiones>();
+        if (TieneBatalla)
+        {
+            batalla = GetComponent<Scr_CambiadorBatalla>();
+            SembradioUI = GetComponent<Scr_ControladorSembradioUI>();
+        }
     }
 
     void Update()
@@ -46,6 +65,10 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         if (EstaEnRango)
         {
             IconProvider.ActualizarIconoUI(Interactuar, Gata.GetChild(3).GetChild(0), ref iconoActualInteractuar, ref textoActualInteractuar, true);
+            if (TieneBatalla && Mis.HayMisionDefensa() && SembradioUI.SemillaPlantada != null && TieneBatalla)
+            {
+                IconProvider.ActualizarIconoUI(Recolectar, Gata.GetChild(3).GetChild(2), ref iconoActualRecolectar, ref textoActualRecolectar, true);
+            }
         }
         if (Interactuar.WasPressedThisFrame() && EstaEnRango && !EstaDentro)
         {
@@ -82,7 +105,11 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
             }
 
         }
-
+        if (Recolectar.WasPressedThisFrame() && EstaEnRango && !EstaDentro && Mis.HayMisionDefensa() && SembradioUI.SemillaPlantada != null && !batalla.escenaCargada && TieneBatalla) 
+        {
+            batalla.Iniciar(gameObject);
+        }
+        
         if (EstaDentro && Tiempo < Duracion)
         {
             Gata.GetChild(1).GetComponent<SkinnedMeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -117,6 +144,18 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
             Gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = Icono;
 
             IconProvider.ActualizarIconoUI(Interactuar, Gata.GetChild(3).GetChild(0), ref iconoActualInteractuar, ref textoActualInteractuar, true);
+
+            if (Mis.HayMisionDefensa() && TieneBatalla && SembradioUI.SemillaPlantada != null )
+            {
+                Gata.GetChild(3).GetChild(2).gameObject.SetActive(true);
+                Gata.GetChild(3).GetChild(3).gameObject.SetActive(true);
+
+                Gata.GetChild(3).GetChild(3).GetComponent<Image>().sprite = icono2;
+                batalla.Fruta = SembradioUI.SemillaPlantada.Nombre;
+                batalla.Item = SembradioUI.SemillaPlantada.Nombre;
+                Gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(1, 0, 0);
+                Gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(3, 0, 0);
+            }
         }
     }
 
@@ -128,6 +167,16 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
             Gata.GetChild(3).gameObject.SetActive(false);
             iconoActualInteractuar = null;
             textoActualInteractuar = "";
+            Gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
+            Gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
+            iconoActualInteractuar = null;
+            textoActualRecolectar = "";
+
+
+
+            Gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
+            Gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
+
         }
     }
 

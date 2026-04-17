@@ -1,6 +1,7 @@
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Scr_ControladorSembradioUI : MonoBehaviour
@@ -27,13 +28,18 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
     int DiasPlantado = 0;
     string diaAnterior = "";
     Sprite Vacio;
+
+    
+
+    
     void Start()
     {
         Vacio = Producto.GetComponent<Image>().sprite;
         Inventario = GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>();
         DiasPlantado = PlayerPrefs.GetInt("DiasPlantado:" + ID, 0);
         diaAnterior = PlayerPrefs.GetString("DiaAnterior:" + ID, "LUN");
-        
+
+
         if (PlayerPrefs.GetString("Plantado" + ID, "No") == "Si")
         {
             SemillaActual = PlayerPrefs.GetInt("SemillaPlantada" + ID, 0);
@@ -170,6 +176,9 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
             transform.GetChild(1).GetChild(9).gameObject.SetActive(true);
             transform.GetChild(1).GetChild(10).gameObject.SetActive(true);
 
+
+
+            
         }
         else
         {
@@ -187,6 +196,7 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
             }
         }
 
+        
         ActualizarPlanta();
     }
 
