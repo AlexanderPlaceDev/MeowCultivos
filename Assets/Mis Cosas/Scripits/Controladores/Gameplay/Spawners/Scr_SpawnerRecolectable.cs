@@ -164,7 +164,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
             if (batalla != null && distanciaGata < distancia)
             {
                 if (Interactuar.IsPressed() && !batalla.escenaCargada && Mis.HayMisionRecolectar() && TieneBatalla)
-                    batalla.Iniciar();
+                    batalla.Iniciar(gameObject);
             }
             if (!recolectando)
             {

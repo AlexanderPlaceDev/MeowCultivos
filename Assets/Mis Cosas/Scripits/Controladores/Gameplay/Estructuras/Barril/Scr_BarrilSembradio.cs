@@ -24,11 +24,15 @@ public class Scr_BarrilSembradio : MonoBehaviour
     private bool recolectando;
     private bool estaLejos;
 
-    private Scr_CambiadorBatalla batalla;
     private Transform gata;
 
     PlayerInput playerInput;
-    private InputAction Interactuar;
+    private InputAction Recolectar;
+    InputIconProvider IconProvider;
+
+
+    private Sprite iconoActualRecolectar = null;
+    private string textoActualRecolectar = "";
     void Start()
     {
         gata = GameObject.Find("Gata").GetComponent<Transform>();
@@ -41,11 +45,11 @@ public class Scr_BarrilSembradio : MonoBehaviour
             }
         }
 
-        batalla = GetComponent<Scr_CambiadorBatalla>();
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Recolectar = playerInput.actions["Recolectar"];
         Cantidad = PlayerPrefs.GetInt("BarrilSembradio Cantidad:" + ID, 0);
 
-        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
-        Interactuar = playerInput.actions["Interactuar"];
     }
 
     void Update()
@@ -58,8 +62,7 @@ public class Scr_BarrilSembradio : MonoBehaviour
                 PlayerPrefs.SetInt("BarrilSembradio Cantidad:" + ID, Cantidad);
             }
 
-            batalla.Fruta = TipoFruta.Nombre;
-            batalla.Item = TipoFruta.Nombre;
+            
             transform.GetChild(0).gameObject.SetActive(true);
             transform.GetChild(0).GetChild(1).GetComponent<Image>().sprite = TipoFruta.Icono;
             transform.GetChild(0).GetChild(2).GetComponent<TextMeshProUGUI>().text = Cantidad.ToString();
@@ -80,10 +83,6 @@ public class Scr_BarrilSembradio : MonoBehaviour
                 {
                     estaLejos = false;
                     ActivarUI(); 
-                    if (Interactuar.IsPressed() && !batalla.escenaCargada)
-                    {
-                        batalla.Iniciar();
-                    }
                     if (gata.GetComponent<Animator>().GetBool("Recolectando"))
                     {
                         gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = true;
@@ -165,24 +164,19 @@ public class Scr_BarrilSembradio : MonoBehaviour
     {
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = true;
         gata.GetChild(3).gameObject.SetActive(true);
-        gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
-        gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = teclaIcono;
+        //gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
+        //gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = teclaIcono;
         gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = icono;
         GameObject ui = gata.GetChild(3).GetChild(2).gameObject;
-        GameObject ui2 = gata.GetChild(3).GetChild(3).gameObject;
 
         if (!ui.activeSelf)
         {
             ui.SetActive(true);
         }
-        if (!ui2.activeSelf)
-        {
-            ui2.SetActive(true);
-        }
-
-        gata.GetChild(3).GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = "E";
-        gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(1, 0, 0);
-        gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(3, 0, 0);
+        IconProvider.ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(0), ref iconoActualRecolectar, ref textoActualRecolectar, true);
+        //gata.GetChild(3).GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = "E";
+        //gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(1, 0, 0);
+        //gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(3, 0, 0);
     }
     void DesactivarUI()
     {
@@ -190,8 +184,11 @@ public class Scr_BarrilSembradio : MonoBehaviour
         gata.GetChild(3).gameObject.SetActive(false);
         gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
         gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
-        gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
-        gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
+        //gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
+        //gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
+
+        iconoActualRecolectar = null;
+        textoActualRecolectar = "";
     }
 
     public void ColocarIconoPanel(bool EnAlerta)

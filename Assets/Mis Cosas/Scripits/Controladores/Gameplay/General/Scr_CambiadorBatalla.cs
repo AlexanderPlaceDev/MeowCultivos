@@ -90,8 +90,9 @@ public class Scr_CambiadorBatalla : MonoBehaviour
         StartCoroutine(CargarEscena());
     }
 
-    public void Iniciar()
+    public void Iniciar(GameObject caller)
     {
+        Debug.Log("Me llamó: " + caller.name);
         bool puedeCaminar = Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar;
         //Debug.Log($"[Trigger] PuedeCaminar = {puedeCaminar}");
 

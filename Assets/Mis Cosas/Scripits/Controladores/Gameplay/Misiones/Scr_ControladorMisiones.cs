@@ -1128,7 +1128,18 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
         return false;
     }
+    public bool HayMisionDefensa()
+    {
+        for (int i = 0; i < Misiones.Count; i++)
+        {
+            if (Misiones[i].Tipo == Scr_CreadorMisiones.Tipos.Defensa)
+            {
+                return true;
+            }
+        }
 
+        return false;
+    }
     public void AsignarMisionDesdeSignal(Scr_CreadorMisiones nuevaMision)
     {
         if (nuevaMision == null)

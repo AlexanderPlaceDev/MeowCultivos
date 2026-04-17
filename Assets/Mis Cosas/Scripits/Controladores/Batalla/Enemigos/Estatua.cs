@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Estatua : MonoBehaviour
 {
+
+    public ParticleSystem ParticulasMuerte;
+    public CapsuleCollider Collider;
+    public MeshRenderer MeshRenderer;
     // Start is called before the first frame update
     void Start()
     {
@@ -12,7 +16,9 @@ public class Estatua : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        ParticulasMuerte= gameObject.transform.GetChild(0).GetComponent<ParticleSystem>();
+        Collider= gameObject.GetComponent<CapsuleCollider>();
+        MeshRenderer = gameObject.GetComponent<MeshRenderer>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -24,7 +30,17 @@ public class Estatua : MonoBehaviour
             {
                 ojo.Play_picar();
             }
-            Destroy(gameObject);
+
+            ParticulasMuerte.Play();
+            StartCoroutine(EsperarMuerte());
         }
+    }
+
+    IEnumerator EsperarMuerte()
+    {
+        Collider.enabled = false;
+        MeshRenderer.enabled = false;
+        yield return new WaitForSeconds(ParticulasMuerte.main.duration);
+        Destroy(gameObject);
     }
 }

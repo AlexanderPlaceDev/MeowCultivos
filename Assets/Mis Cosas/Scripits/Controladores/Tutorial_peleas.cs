@@ -56,9 +56,10 @@ public class Tutorial_peleas : MonoBehaviour
             sistemaDialogos.DialogoActual = 5;
             sistemaDialogos.LineaActual = 0;
             sistemaDialogos.DialogoArecibir = sistemaDialogos.Dialogos[5];
-
+            
             Debug.Log(sistemaDialogos.DialogoArecibir.name);
             IniciarDialogo();
+            CambiarNPC(1);
         }
         else if (PlayerPrefs.GetString("TutorialDefensa", "NO") == "NO" && datosbatalla.ModoSeleccionado == Scr_DatosSingletonBatalla.Modo.Defensa)
         {
@@ -67,6 +68,8 @@ public class Tutorial_peleas : MonoBehaviour
             sistemaDialogos.LineaActual = 0;
             sistemaDialogos.DialogoArecibir = sistemaDialogos.Dialogos[8];
             IniciarDialogo();
+
+            CambiarNPC(1);
         }
         else
         {
