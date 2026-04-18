@@ -285,9 +285,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
   m_Name: Signal Emitter
   m_EditorClassIdentifier: 
-  m_Time: 0.05
-  m_Retroactive: 0
-  m_EmitOnce: 0
+  m_Time: 0
+  m_Retroactive: 1
+  m_EmitOnce: 1
   m_Asset: {fileID: 11400000, guid: 366571fb55d3b764a90112247aea65e2, type: 2}
 --- !u!114 &3340042817358600980
 MonoBehaviour:
@@ -412,7 +412,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
   m_Name: Signal Emitter
   m_EditorClassIdentifier: 
-  m_Time: 0.05
-  m_Retroactive: 0
-  m_EmitOnce: 0
+  m_Time: 0
+  m_Retroactive: 1
+  m_EmitOnce: 1
   m_Asset: {fileID: 11400000, guid: af9c2144394f2134cb67c44ae7297273, type: 2}

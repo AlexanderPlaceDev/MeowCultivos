@@ -86,9 +86,13 @@ public class Scr_DatosArmas : MonoBehaviour
             CantidadPociones[i] = PlayerPrefs.GetInt("Pociones" + Pociones[i].Nombre, 1);
         }
     }
+
+    //Esta funcion se usa tambien en el controlador de cinematicas
     public void DesbloquearArma(string Nombre)
     {
+        Debug.Log("Se esta guardando el arma: " + Nombre);
         PlayerPrefs.SetString("Arma" + Nombre, "Si");
+        PlayerPrefs.Save();
 
         for (int i = 1; i < TodasLasArmas.Length; i++)
         {
@@ -103,6 +107,7 @@ public class Scr_DatosArmas : MonoBehaviour
     {
         guardarHabilidadesTemporales();
         guardarHabilidadesPermanentes();
+        PlayerPrefs.Save();
     }
     public void guardarHabilidadesTemporales()
     {

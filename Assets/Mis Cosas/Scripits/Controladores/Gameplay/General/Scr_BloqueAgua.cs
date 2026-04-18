@@ -37,7 +37,6 @@ public class Scr_BloqueAgua : MonoBehaviour
     Scr_MiniJuegoPesca miniJuego;
     static Scr_BloqueAgua bloqueActivo;
 
-    private bool ShakeCamara = false;
 
     PlayerInput playerInput;
     private InputAction Regar;
@@ -249,8 +248,6 @@ public class Scr_BloqueAgua : MonoBehaviour
 
     IEnumerator ShakearCamara()
     {
-        ShakeCamara = true;
-
         while (VentanaActiva)
         {
             Cinemachine.CinemachineVirtualCamera vcam = null;
@@ -276,7 +273,6 @@ public class Scr_BloqueAgua : MonoBehaviour
         }
 
         ApagarShake(); // ✅ importantísimo
-        ShakeCamara = false;
     }
 
     void ApagarShake()
@@ -342,6 +338,7 @@ public class Scr_BloqueAgua : MonoBehaviour
     IEnumerator VentanaDePesca()
     {
         VentanaActiva = true;
+        ShakearCamara();
 
         // Activamos UI de pesca
         gata.GetChild(3).gameObject.SetActive(true);

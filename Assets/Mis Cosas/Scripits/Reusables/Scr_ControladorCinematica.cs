@@ -6,7 +6,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using UnityEngine.Timeline;
+using UnityEngine.Events;
+using System.Reflection;
 using static Scr_DatosSingletonBatalla;
 
 public class Scr_ControladorCinematica : MonoBehaviour
@@ -30,8 +32,14 @@ public class Scr_ControladorCinematica : MonoBehaviour
     [SerializeField] public string NombreMapa = "Batalla Base";
     [SerializeField] public Modo modo= Modo.Pelea;
     [SerializeField] Animator[] Barras;
+    public Scr_CreadorArmas[] TodasLasArmas;
 
     private AsyncOperation Operacion;
+
+    private void Start()
+    {
+        ValidarSignals();
+    }
 
     public void Update()
     {
@@ -113,6 +121,115 @@ public class Scr_ControladorCinematica : MonoBehaviour
 
             Escena = 0; // Reinicia solo una vez
         }
+    }
+
+    public void DesbloquearArma(string Nombre)
+    {
+        Debug.Log("Se esta guardando el arma: " + Nombre);
+        PlayerPrefs.SetString("Arma" + Nombre, "Si");
+        PlayerPrefs.Save();
+
+        for (int i = 1; i < TodasLasArmas.Length; i++)
+        {
+            if (TodasLasArmas[i].Nombre == Nombre)
+            {
+                GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>(). ArmasDesbloqueadas[i] = true;
+            }
+        }
+    }
+
+    void ValidarSignals()
+    {
+        Debug.Log("=== VALIDANDO SIGNALS ===");
+
+        var receivers = FindObjectsOfType<SignalReceiver>();
+
+        foreach (var timeline in Timelines)
+        {
+            if (timeline == null) continue;
+
+            var tl = timeline as TimelineAsset;
+            if (tl == null) continue;
+
+            foreach (var track in tl.GetOutputTracks())
+            {
+                if (!(track is SignalTrack signalTrack)) continue;
+
+                foreach (var clip in signalTrack.GetClips())
+                {
+                    var emitter = clip.asset as SignalEmitter;
+                    if (emitter == null) continue;
+
+                    string signalName = emitter.asset != null ? emitter.asset.name : "NULL_SIGNAL";
+
+                    // 🔴 Signal sin asset
+                    if (emitter.asset == null)
+                    {
+                        Debug.LogError($"[Signal ERROR] Sin asset | Timeline: {timeline.name} | Tiempo: {clip.start}");
+                        continue;
+                    }
+
+                    bool tieneEvento = false;
+
+                    foreach (var receiver in receivers)
+                    {
+                        // 🔥 Reflection aquí
+                        var field = typeof(SignalReceiver).GetField("m_Events", BindingFlags.NonPublic | BindingFlags.Instance);
+
+                        if (field == null)
+                        {
+                            Debug.LogError("No se pudo acceder a m_Events");
+                            return;
+                        }
+
+                        var dict = field.GetValue(receiver) as IDictionary;
+
+                        if (dict == null) continue;
+
+                        foreach (DictionaryEntry entry in dict)
+                        {
+                            var signalAsset = entry.Key as SignalAsset;
+                            var unityEvent = entry.Value as UnityEvent;
+
+                            if (signalAsset == emitter.asset)
+                            {
+                                if (unityEvent == null || unityEvent.GetPersistentEventCount() == 0)
+                                {
+                                    Debug.LogError($"[Signal ERROR] Sin función asignada | Signal: {signalName} | Timeline: {timeline.name} | Tiempo: {clip.start}");
+                                }
+                                else
+                                {
+                                    for (int i = 0; i < unityEvent.GetPersistentEventCount(); i++)
+                                    {
+                                        var target = unityEvent.GetPersistentTarget(i);
+                                        var method = unityEvent.GetPersistentMethodName(i);
+
+                                        if (target == null)
+                                        {
+                                            Debug.LogError($"[Signal ERROR] Target NULL | Signal: {signalName} | Timeline: {timeline.name}");
+                                        }
+
+                                        if (string.IsNullOrEmpty(method))
+                                        {
+                                            Debug.LogError($"[Signal ERROR] Método vacío | Signal: {signalName} | Timeline: {timeline.name}");
+                                        }
+                                    }
+
+                                    tieneEvento = true;
+                                }
+                            }
+                        }
+                    }
+
+                    if (!tieneEvento)
+                    {
+                        Debug.LogError($"[Signal ERROR] No hay receiver para este signal | Signal: {signalName} | Timeline: {timeline.name} | Tiempo: {clip.start}");
+                    }
+                }
+            }
+        }
+
+        Debug.Log("=== FIN VALIDACIÓN SIGNALS ===");
     }
 
     private IEnumerator EsperarInicioReproduccion()
