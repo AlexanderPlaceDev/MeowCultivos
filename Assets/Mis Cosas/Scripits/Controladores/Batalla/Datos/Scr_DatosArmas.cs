@@ -86,6 +86,10 @@ public class Scr_DatosArmas : MonoBehaviour
             CantidadPociones[i] = PlayerPrefs.GetInt("Pociones" + Pociones[i].Nombre, 1);
         }
     }
+    public void hola()
+    {
+        Debug.LogError("ey bor");
+    }
     public void DesbloquearArma(string Nombre)
     {
         PlayerPrefs.SetString("Arma" + Nombre, "Si");
