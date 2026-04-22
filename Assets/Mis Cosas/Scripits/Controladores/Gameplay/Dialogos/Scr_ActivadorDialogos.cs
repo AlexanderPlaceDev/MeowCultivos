@@ -105,7 +105,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         if (!autoIniciarDialogo)
         {
             // Iniciar diálogo (E)
-            if (Interactuar.IsPressed() && !ViendoMisiones && !Comprando)
+            if (Interactuar.WasPressedThisFrame() && !ViendoMisiones && !Comprando && !Hablando)
             {
                 if (EsTienda)
                 {

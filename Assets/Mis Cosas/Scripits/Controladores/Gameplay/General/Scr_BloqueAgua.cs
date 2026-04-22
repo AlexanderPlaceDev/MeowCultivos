@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using PrimeTween;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -35,7 +36,6 @@ public class Scr_BloqueAgua : MonoBehaviour
     bool usandoCamaraIzquierda;
     Scr_MiniJuegoPesca miniJuego;
     static Scr_BloqueAgua bloqueActivo;
-
 
 
     PlayerInput playerInput;
@@ -243,6 +243,53 @@ public class Scr_BloqueAgua : MonoBehaviour
                 velocidadGiro * Time.deltaTime
             );
         }
+
+    }
+
+    IEnumerator ShakearCamara()
+    {
+        while (VentanaActiva)
+        {
+            Cinemachine.CinemachineVirtualCamera vcam = null;
+
+            if (CamaraIzquierda.activeInHierarchy)
+                vcam = CamaraIzquierda.GetComponent<Cinemachine.CinemachineVirtualCamera>();
+            else if (CamaraDerecha.activeInHierarchy)
+                vcam = CamaraDerecha.GetComponent<Cinemachine.CinemachineVirtualCamera>();
+
+            if (vcam != null)
+            {
+                var noise = vcam.GetCinemachineComponent<Cinemachine.CinemachineBasicMultiChannelPerlin>();
+
+                if (noise != null)
+                {
+                    // 🔥 Shake continuo
+                    noise.m_AmplitudeGain = 3f;
+                    noise.m_FrequencyGain = 2f;
+                }
+            }
+
+            yield return null;
+        }
+
+        ApagarShake(); // ✅ importantísimo
+    }
+
+    void ApagarShake()
+    {
+        var cams = new GameObject[] { CamaraIzquierda, CamaraDerecha };
+
+        foreach (var cam in cams)
+        {
+            var vcam = cam.GetComponent<Cinemachine.CinemachineVirtualCamera>();
+            if (vcam == null) continue;
+
+            var noise = vcam.GetCinemachineComponent<Cinemachine.CinemachineBasicMultiChannelPerlin>();
+            if (noise != null)
+            {
+                noise.m_AmplitudeGain = 0f;
+            }
+        }
     }
 
     IEnumerator Esperar()
@@ -291,6 +338,7 @@ public class Scr_BloqueAgua : MonoBehaviour
     IEnumerator VentanaDePesca()
     {
         VentanaActiva = true;
+        ShakearCamara();
 
         // Activamos UI de pesca
         gata.GetChild(3).gameObject.SetActive(true);
@@ -455,6 +503,7 @@ public class Scr_BloqueAgua : MonoBehaviour
         Pescando = false;
         PausandoPesca = false;
         VentanaActiva = false;
+        ApagarShake();
 
         // 🔹 Movimiento
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
@@ -478,7 +527,7 @@ public class Scr_BloqueAgua : MonoBehaviour
 
         if (gano)
         {
-            gata.GetChild(7).GetComponent<Scr_Inventario>().AgregarObjeto(PezQueDa,1);
+            gata.GetChild(7).GetComponent<Scr_Inventario>().AgregarObjeto(PezQueDa, 1);
             Debug.Log("🎁 Dar recompensa (aquí agregas objeto)");
             // Aquí tú agregas el item
         }
