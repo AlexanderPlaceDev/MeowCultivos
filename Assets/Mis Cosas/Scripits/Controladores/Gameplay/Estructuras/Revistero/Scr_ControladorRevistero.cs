@@ -29,18 +29,8 @@ public class Scr_ControladorRevistero : MonoBehaviour
 
         int maxComprable = ObtenerMaximoComprable();
         int rangoInterno = PlayerPrefs.GetInt("Rango Barra Tecnica6", 0);
-
-        if (rangoInterno < maxComprable)
-        {
-            ActualizarDineroYPrecio();
-        }
-        else
-        {
-            TextoDinero.gameObject.SetActive(false);
-            TextoInserta.gameObject.SetActive(false);
-            TextoDescripcion.text = "Ya no quedan libros utiles";
-            BotonAceptar.SetActive(false);
-        }
+        ActualizarDineroYPrecio();
+        
 
         if (Input.GetKeyDown(KeyCode.D))
         {
@@ -86,6 +76,7 @@ public class Scr_ControladorRevistero : MonoBehaviour
         GameObject.Find("Canvas").transform.GetChild(10)
             .GetComponent<Scr_NuevoRango>()
             .MostrarRango("Tecnica", rangoInterno + 1);
+
     }
 
     void ActualizarDineroYPrecio()
@@ -97,12 +88,20 @@ public class Scr_ControladorRevistero : MonoBehaviour
         TextoTuDinero.text = "$" + dinero;
 
         if (rangoInterno >= maxComprable)
-            return;
+        {
+            TextoDinero.gameObject.SetActive(false);
+            TextoInserta.gameObject.SetActive(false);
+            TextoDescripcion.text = "Ya no quedan libros utiles";
+            BotonAceptar.SetActive(false);
+        }
 
-        int precio = PrecioDeRangos[rangoInterno];
+        else
+        {
+            int precio = PrecioDeRangos[rangoInterno];
 
-        TextoDinero.text = "$" + precio;
-        BotonAceptar.SetActive(dinero >= precio);
+            TextoDinero.text = "$" + precio;
+            BotonAceptar.SetActive(dinero >= precio);
+        }
     }
 
     // NUEVO: calcula cuántas revistas se pueden comprar

@@ -44,8 +44,12 @@ public class Tutorial_peleas : MonoBehaviour
         ControladorBatalla = GameObject.Find("Controlador").GetComponent<Scr_ControladorBatalla>();
         ControladorUIBatalla = GameObject.Find("Controlador").GetComponent<Scr_ControladorUIBatalla>();
         Scr_DatosSingletonBatalla datosbatalla= GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
-
-        if (PlayerPrefs.GetString("TutorialPeleas", "NO") == "NO" && datosbatalla.ModoSeleccionado == Scr_DatosSingletonBatalla.Modo.Pelea)
+        if (datosbatalla.ModoSeleccionado == Scr_DatosSingletonBatalla.Modo.Jefe)
+        {
+            gameObject.SetActive(false);
+            Fondo.SetActive(false);
+        }
+        else if (PlayerPrefs.GetString("TutorialPeleas", "NO") == "NO" && datosbatalla.ModoSeleccionado == Scr_DatosSingletonBatalla.Modo.Pelea)
         {
             Tuto = 0;
             IniciarDialogo();
