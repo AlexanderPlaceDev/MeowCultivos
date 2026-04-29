@@ -95,7 +95,13 @@ public class Scr_GestionadorDeRecursos : MonoBehaviour
             if (arbol.etapaActual <= 0)
                 continue;
 
+            // 🔴 FILTRO CLAVE: solo recursos utilizables
+            string habilidad = arbol.GetHabilidadRequerida();
+            if (!JugadorTieneHabilidad(habilidad))
+                continue;
+
             float sqrDist = (arbol.transform.position - posGata).sqrMagnitude;
+
             if (sqrDist <= distMin)
             {
                 distMin = sqrDist;
