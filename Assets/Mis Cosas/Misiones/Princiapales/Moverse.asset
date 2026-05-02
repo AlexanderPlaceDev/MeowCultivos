@@ -21,7 +21,8 @@ MonoBehaviour:
   Personaje: Miguel
   LugarMision: Tunel
   prioridad: 0
-  Tipo: 2
+  Tipo: 1
+  LugarObjetivoExploracion: 
   DireccionesRequeridas: 02000000000000000100000003000000
   Teclas: 61000000770000007300000064000000
   ObjetosNecesarios: []
@@ -29,9 +30,12 @@ MonoBehaviour:
   ObjetivosACazar: []
   CantidadACazar: 
   IconosACazar: []
+  EstructurasRequeridas: []
   RecompensaDinero: 0
   RecompensaXP: 0
   ObjetosQueDa: []
   CantidadesQueDa: 
   ObjetosQueQuita: []
   CantidadesQueQuita: 
+  QuitaObjetosDesdeSignal: 0
+  MisionAnterior: {fileID: 0}

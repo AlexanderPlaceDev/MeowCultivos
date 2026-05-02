@@ -54,7 +54,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
     [Space, Header("Teclas")]
     [SerializeField] GameObject TeclaMisiones;
-    [SerializeField] private Sprite IconoTeclaMisiones;
+    [SerializeField] private Sprite IconoTecla;
     [SerializeField] private Sprite[] PalancasIcono;
 
     private bool[] TeclasPresionadas;
@@ -68,6 +68,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
     private InputAction InputTeclaCambiarMision;
     private string TextoTeclaMisiones = "";
 
+    private Sprite IconoTeclaMisiones;
 
     [Space, Header("Progresos")]
     public List<string> EnemigosCazados;      // Nombres de los enemigos eliminados
@@ -771,7 +772,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
             {
                 // Actualizar UI de progreso de teclas
                 Image Icono = BotonesUI.transform.GetChild(i).GetComponent<Image>();
-                Icono.sprite = IconoTeclaMisiones;
+                Icono.sprite = IconoTecla;
 
                 TextMeshProUGUI text = BotonesUI.transform.GetChild(i).GetChild(0).GetComponent<TextMeshProUGUI>();
                 text.text = MisionActual.Teclas[i].ToString();
@@ -834,7 +835,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
             fillImage.fillAmount = TiempoTeclas[i];
         }
-        bool completa = System.Array.TrueForAll(DireccionesCompletadas, d => d);
+        MisionesCompletas[PaginaActual] = System.Array.TrueForAll(DireccionesCompletadas, d => d);
 
     }
 

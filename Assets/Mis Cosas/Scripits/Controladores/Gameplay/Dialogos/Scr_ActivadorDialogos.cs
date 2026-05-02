@@ -555,6 +555,11 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     {
         foreach (var icono in iconos)
             if (icono != null) icono.SetActive(false);
+
+        iconoActualInteractuar=null;
+        iconoActualMisiones = null;
+        textoActualInteractuar = "";
+        textoActualMisiones = "";
     }
 
     public void MostrarIconos()
