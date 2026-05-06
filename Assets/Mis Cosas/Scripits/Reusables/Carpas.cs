@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -57,7 +58,7 @@ public class Carpas : MonoBehaviour
         {
             Actualizar_icono();
         }
-        if (Interactuar.IsPressed() && !openUI && EstaEnRango)
+        if (Interactuar.IsPressed() && !openUI && EstaEnRango && !carpaUI.activeSelf)
         {
             StartCoroutine(AparecerUI(1f));
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
@@ -102,6 +103,7 @@ public class Carpas : MonoBehaviour
         cam.carpa = this;
         cam.cabTiempo();
         cam.cabRadio();
+        cam.Si_Dormir();
         openUI = true;
     }
     IEnumerator EsconderUI(float dur)
@@ -194,6 +196,11 @@ public class Carpas : MonoBehaviour
                 EstaEnRango = true;
                 Gata.GetChild(3).gameObject.SetActive(true);
             }
+            else
+            {
+                carpaUI.SetActive(true);
+                cam.No_Dormir();
+            }
         }
     }
 
@@ -205,6 +212,7 @@ public class Carpas : MonoBehaviour
             Gata.GetChild(3).gameObject.SetActive(false);
             iconoActualInteractuar = null;
             textoActualInteractuar = "";
+            carpaUI.SetActive(false);
         }
     }
 }

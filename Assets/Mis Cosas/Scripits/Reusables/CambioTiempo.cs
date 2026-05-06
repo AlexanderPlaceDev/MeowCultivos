@@ -42,6 +42,8 @@ public class CambioTiempo : MonoBehaviour
     PlayerInput playerInput;
     private InputAction Cerrar;
     ChecarInput Checar_input;
+
+    public GameObject[] Botones;
     // Start is called before the first frame update
     void Start()
     {
@@ -52,10 +54,27 @@ public class CambioTiempo : MonoBehaviour
         Gata = GameObject.Find("Gata").GetComponent<Transform>();
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         Cerrar = playerInput.actions["Cerrar"];
+    }
+
+
+    public void No_Dormir()
+    {
+        Botones[0].SetActive(true);
+        for (int i = 1; i < Botones.Length; i++) 
+        {
+            Botones[i].SetActive(false);
+        }
+    }
+    public void Si_Dormir()
+    {
+        Botones[0].SetActive(false);
+        for (int i = 1; i < Botones.Length; i++)
+        {
+            Botones[i].SetActive(true);
+        }
         cabRadio();
         activarDespetador();
     }
-
     private void activarRadio()
     {
         //PlayerPrefs.GetString("Habilidad:" + "Radio", "No") == "Si"
