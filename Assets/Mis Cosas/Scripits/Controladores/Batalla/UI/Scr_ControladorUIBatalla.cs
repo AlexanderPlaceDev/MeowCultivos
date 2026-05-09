@@ -27,6 +27,8 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     [SerializeField] TextMeshProUGUI BarraHabilidadTemporal;
     public bool newTem=false;
     public bool PuedeSeleccionarH = false;
+    private bool TieneHabTemporal = false;
+    private bool TieneFlechas = false;
     [Header("Alerta")]
     [SerializeField] GameObject Alerta;
     [SerializeField] GameObject PanelAlerta;
@@ -196,12 +198,14 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         {
             HabilidadTemporal.transform.GetChild(2).gameObject.SetActive(false);
             BarraHabilidadTemporal.text = "";
+            TieneHabTemporal = false;
         }
         else
         {
             HabilidadTemporal.transform.GetChild(2).gameObject.SetActive(true);
             HabilidadTemporal.transform.GetChild(2).gameObject.GetComponent<Image>().sprite = HabT.Icono;
             BarraHabilidadTemporal.text = $"< {us}/ {HabT.Usos}";
+            TieneHabTemporal = true;
         }
         Habilidad1.transform.GetChild(2).gameObject.GetComponent<Image>().sprite = Hab1.Icono;
         Habilidad1.transform.GetChild(3).gameObject.GetComponent<TextMeshProUGUI>().text = Hab1.Nombre;
@@ -538,21 +542,25 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         EsconderFlechasHabilidades();
         HabilidadesMostrar.Clear();
         if (!PuedeSeleccionarH) return;
-        if (HabilidadTemporal.transform.GetChild(2).gameObject.activeSelf) return;
-        int habActual = 0;
-        for (int i = 0; i < datos.HabilidadesTemporales.Length; i++)
+        if (TieneHabTemporal) return;
+
+        if (TieneFlechas)
         {
-            if (i == 0)
+            HabilidadesUI[3].transform.GetChild(0).gameObject.SetActive(false);
+            HabilidadesUI[3].transform.GetChild(1).gameObject.SetActive(false);
+            HabilidadesUI[3].transform.GetChild(3).gameObject.SetActive(true);
+            HabilidadesUI[4].transform.GetChild(1).gameObject.SetActive(true);
+            Debug.LogWarning("aaa");
+            TieneFlechas=false;
+        }
+        else
+        {
+
+            Debug.LogWarning("ffff");
+            int habActual = 0;
+            for (int i = 0; i < datos.HabilidadesTemporales.Length; i++)
             {
-                HabilidadesMostrar.Add(datos.HabilidadesTemporales[i]); 
-                if (datos.HabilidadesTemporales[i] == HabilidadTemporal)
-                {
-                    habActual = HabilidadesMostrar.Count - 1;
-                }
-            }
-            else if (datos.HabilidatTDesbloqueadas[i] && datos.UsosHabilidadesT.Length>0)
-            {
-                if (datos.HabilidadesTemporales[i].Arma == DatosArma.Nombre || datos.HabilidadesTemporales[i].Arma == "Todos")
+                if (i == 0)
                 {
                     HabilidadesMostrar.Add(datos.HabilidadesTemporales[i]);
                     if (datos.HabilidadesTemporales[i] == HabilidadTemporal)
@@ -560,22 +568,34 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
                         habActual = HabilidadesMostrar.Count - 1;
                     }
                 }
+                else if (datos.HabilidatTDesbloqueadas[i] && datos.UsosHabilidadesT.Length > 0)
+                {
+                    if (datos.HabilidadesTemporales[i].Arma == DatosArma.Nombre || datos.HabilidadesTemporales[i].Arma == "Todos")
+                    {
+                        HabilidadesMostrar.Add(datos.HabilidadesTemporales[i]);
+                        if (datos.HabilidadesTemporales[i] == HabilidadTemporal)
+                        {
+                            habActual = HabilidadesMostrar.Count - 1;
+                        }
+                    }
+                }
             }
-        }
-        if (HabilidadTemporal.transform.GetChild(2).gameObject.activeSelf)
-        {
-            Habmostrar = habActual;
-        }
-        else
-        {
-            Habmostrar = 0;
-        }
-        if (HabilidadesMostrar.Count > 1)
-        {
-            HabilidadesUI[3].transform.GetChild(0).gameObject.SetActive(true);
-            HabilidadesUI[3].transform.GetChild(1).gameObject.SetActive(true);
-            HabilidadesUI[3].transform.GetChild(3).gameObject.SetActive(false);
-            HabilidadesUI[4].transform.GetChild(1).gameObject.SetActive(false);
+            if (HabilidadTemporal.transform.GetChild(2).gameObject.activeSelf)
+            {
+                Habmostrar = habActual;
+            }
+            else
+            {
+                Habmostrar = 0;
+            }
+            if (HabilidadesMostrar.Count > 1)
+            {
+                HabilidadesUI[3].transform.GetChild(0).gameObject.SetActive(true);
+                HabilidadesUI[3].transform.GetChild(1).gameObject.SetActive(true);
+                HabilidadesUI[3].transform.GetChild(3).gameObject.SetActive(false);
+                HabilidadesUI[4].transform.GetChild(1).gameObject.SetActive(false);
+                TieneFlechas = true;
+            }
         }
     }
 
