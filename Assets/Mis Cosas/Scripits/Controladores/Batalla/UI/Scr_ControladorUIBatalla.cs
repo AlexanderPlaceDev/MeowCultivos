@@ -538,10 +538,14 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         EsconderFlechasHabilidades();
         HabilidadesMostrar.Clear();
         if (!PuedeSeleccionarH) return;
-        if (HabilidadTemporal.transform.GetChild(2).gameObject.activeSelf) return;
+        if (HabilidadTemporal.transform.GetChild(2).gameObject.activeSelf)
+        {
+            Debug.Log("Tiene gadget seleccionado");
+        };
         int habActual = 0;
         for (int i = 0; i < datos.HabilidadesTemporales.Length; i++)
         {
+            /*
             if (i == 0)
             {
                 HabilidadesMostrar.Add(datos.HabilidadesTemporales[i]); 
@@ -561,6 +565,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
                     }
                 }
             }
+            */
         }
         if (HabilidadTemporal.transform.GetChild(2).gameObject.activeSelf)
         {
