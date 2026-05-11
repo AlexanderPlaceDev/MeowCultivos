@@ -24,49 +24,38 @@ public class Scr_CambiadorBatalla : MonoBehaviour
     GameObject Carga;
     GameObject Reloj;
 
+    Scr_Inventario Inventario;
+    Scr_DatosArmas DatosArmas;
     public bool escenaCargada = false;
 
     void Start()
     {
-        //Debug.Log($"[Start] 🟦 Iniciando {gameObject.name}");
-
         escenaCargada = false;
-        //Debug.Log("[Start] escenaCargada = FALSE");
 
         Reloj = GameObject.Find("Canvas")?.transform.GetChild(2).gameObject;
-        //Debug.Log($"[Start] Reloj encontrado: {Reloj != null}");
 
         Carga = GameObject.Find("Canvas")?.transform.GetChild(6).gameObject;
-        //Debug.Log($"[Start] Carga encontrada: {Carga != null}");
 
         Gata = GameObject.Find("Gata")?.GetComponent<Transform>();
-        //Debug.Log($"[Start] Gata encontrada: {Gata != null}");
 
-        if (Gata == null)
-        {
-            //Debug.LogError("❌ No se encontró el objeto 'Gata' en la escena.");
-        }
+        Inventario=Gata.transform.GetChild(7).GetComponent<Scr_Inventario>();
+
+        DatosArmas= GameObject.Find("Singleton")?.GetComponent<Scr_DatosArmas>();
+
+
     }
-
-    // ⛔ YA NO USAMOS DISTANCIA / UPDATE / FIXEDUPDATE
-    // SOLO DETECTAMOS MEDIANTE TRIGGER
 
     private void OnTriggerEnter(Collider other)
     {
         if (EsPlanta) return;
-        //Debug.Log($"[Trigger] Algo entró en el trigger de {gameObject.name}: {other.name}");
 
         if (!other.CompareTag("Gata"))
         {
-            //Debug.Log("[Trigger] ❌ El objeto NO es la Gata. Ignorado.");
             return;
         }
 
-        //Debug.Log("[Trigger] ✔ Es la Gata.");
-
         if (escenaCargada)
         {
-            //Debug.Log("[Trigger] ❌ escenaCargada ya era TRUE. No repetimos.");
             return;
         }
 
@@ -166,7 +155,12 @@ public class Scr_CambiadorBatalla : MonoBehaviour
         singleton.Pista = Pista;
         singleton.NombreFruta = Fruta;
         singleton.NombreMapa = NombreMapa;
-        //Debug.Log("[CargarEscena] Valores básicos asignados.");
+
+
+        if (DatosArmas != null && Inventario != null)
+        {
+            DatosArmas.SincronizarHabilidadesDesdeInventario(Inventario);
+        }
 
         var sol = GameObject.Find("Sol");
         //Debug.Log($"[CargarEscena] Sol encontrado: {sol != null}");

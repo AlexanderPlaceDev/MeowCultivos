@@ -571,13 +571,15 @@ public class Scr_Taller : MonoBehaviour
         switch (lugar)
         {
             case 0:
+                Debug.Log("Lugar0");
                 quitarobjetos();
                 inventario.AgregarObjeto(htEnEspera, 1);
                 mostraRecursosOBJ();
                 break;
             case 1:
-                Datosarmas.AgregarUsosTemporales(htEnEspera);
+                Debug.Log("1");
                 quitarobjetos();
+                inventario.AgregarObjeto(htEnEspera, 1);
                 mostraRecursosTemp();
                 break;
         }
@@ -724,10 +726,11 @@ public class Scr_Taller : MonoBehaviour
         HabilidadesTemporales.Clear();
         for (int i = 0; i < Datosarmas.HabilidadesTemporales.Length; i++)
         {
-            if (Datosarmas.HabilidatTDesbloqueadas[i])
+            /*if (Datosarmas.HabilidatTDesbloqueadas[i])
             {
                 HabilidadesTemporales.Add(Datosarmas.HabilidadesTemporales[i]);
             }
+            */
         }
     }
     //muestra las habilidades permanentes que deben de mostrar
