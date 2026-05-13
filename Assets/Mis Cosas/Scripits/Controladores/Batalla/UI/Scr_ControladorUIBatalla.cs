@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -25,7 +26,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     [SerializeField] GameObject Habilidad2;
     [SerializeField] GameObject HabilidadEspecial;
     [SerializeField] TextMeshProUGUI BarraHabilidadTemporal;
-    public bool newTem=false;
+    public bool newTem = false;
     public bool PuedeSeleccionarH = false;
     private bool TieneHabTemporal = false;
     private bool TieneFlechas = false;
@@ -64,10 +65,10 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     public int Habmostrar = 0;
     public GameObject[] HabilidadesUI;
     public GameObject[] Secciones;
-    public bool PocionSelec=false;
+    public bool PocionSelec = false;
     public GameObject PocionIcono;
     public Sprite PocionVacio;
-    public int NoPocion=-2;
+    public int NoPocion = -2;
 
     private Tutorial_peleas Tutopeleas;
     void Start()
@@ -153,8 +154,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         Tipotxt.text = DatosArma.Tipo;
 
 
-        //MostrarHabilidad();
-
         //Actualizar Imagen
         if (!Armas[ArmaActual].activeSelf)
         {
@@ -186,7 +185,13 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         string h1 = ControladorBatalla.Habilidad1;
         string h2 = ControladorBatalla.Habilidad2;
         string hE = ControladorBatalla.HabilidadEspecial;
-        int us = ControladorBatalla.usosHabilidad;
+        int us = 0;
+
+        if (ht != "Nada")
+        {
+            int index = datos.BuscarUSoHabilidadTemporalPorNombre(ht);
+            us = datos.UsosHabilidadesT[index];
+        }
         // Buscar habilidades usando el script de datos
         HabT = datos.BuscarHabilidadTemporalPorNombre(ht);
         Hab1 = datos.BuscarHabilidadPermanentePorNombre(h1);
@@ -296,7 +301,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         //if (!Tutopeleas.PuedeComenzar && Tutopeleas.isActiveAndEnabled) return;
 
         EsconderFlechasHabilidades();
-        checarUsosHabilidad();
         CanvasSeleccionDeArmas.SetActive(false);
         CanvasGameplay.SetActive(true);
         ObjetosArmas.SetActive(true);
@@ -328,10 +332,18 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         {
             IconoHabilidadE.transform.GetChild(1).gameObject.SetActive(false);
         }
-        
+
         if (newTem)
         {
-            datos.UsosHabilidadesT[datos.BuscarUSoHabilidadTemporalPorNombre(ht)] -= 1;
+            //Aqui debo ajustar las cantidades de gadgets en el singleton
+            datos.QuitarUsosTemporales(ht);
+
+            int index = datos.BuscarUSoHabilidadTemporalPorNombre(ht);
+
+            if (datos.UsosHabilidadesT[index] <= 0)
+            {
+                ControladorBatalla.HabilidadT = "Nada";
+            }
         }
         if (Tutopeleas != null && Tutopeleas.isActiveAndEnabled)
         {
@@ -352,7 +364,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     public void AceptarRecolecion()
     {
         EsconderFlechasHabilidades();
-        checarUsosHabilidad();
         CanvasSeleccionDeArmas.SetActive(false);
         CanvasGameplay.SetActive(true);
         ObjetosArmas.SetActive(true);
@@ -390,7 +401,14 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         }
         if (newTem)
         {
-            datos.UsosHabilidadesT[datos.BuscarUSoHabilidadTemporalPorNombre(ht)] -= 1;
+            datos.QuitarUsosTemporales(ht);
+
+            int index = datos.BuscarUSoHabilidadTemporalPorNombre(ht);
+
+            if (datos.UsosHabilidadesT[index] <= 0)
+            {
+                ControladorBatalla.HabilidadT = "Nada";
+            }
         }
         ControladorBatalla.IniciarCuentaRegresiva(false);
         ControladorBatalla.ArmaActual = Armas[ArmaActual];
@@ -399,21 +417,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    public void checarUsosHabilidad()
-    {
-        //Debug.LogError(ControladorBatalla.usosHabilidad);
-        int resultado = ControladorBatalla.usosHabilidad - 1; 
-        ControladorBatalla.usosHabilidad = resultado;
-        /*if (resultado <= 0)
-        {
-            ControladorBatalla.HabilidadT = "Nada";
-            ControladorBatalla.usosHabilidad = 0;
-        }
-        else
-        {
-            
-        }*/
-    }
     public void CambiarColorBotonAceptar(bool Entra)
     {
         if (Entra)
@@ -469,7 +472,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
                 }
             }
         }
-        if (HabilidadesMostrar.Count>1)
+        if (HabilidadesMostrar.Count > 1)
         {
             HabilidadesUI[0].transform.GetChild(0).gameObject.SetActive(true);
             HabilidadesUI[0].transform.GetChild(1).gameObject.SetActive(true);
@@ -551,7 +554,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             HabilidadesUI[3].transform.GetChild(3).gameObject.SetActive(true);
             HabilidadesUI[4].transform.GetChild(1).gameObject.SetActive(true);
             Debug.LogWarning("aaa");
-            TieneFlechas=false;
+            TieneFlechas = false;
         }
         else
         {
@@ -568,9 +571,9 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
                         habActual = HabilidadesMostrar.Count - 1;
                     }
                 }
-                else if (datos.HabilidatTDesbloqueadas[i] && datos.UsosHabilidadesT.Length > 0)
+                else if (datos.UsosHabilidadesT[i] > 0)
                 {
-                    if (datos.HabilidadesTemporales[i].Arma == DatosArma.Nombre || datos.HabilidadesTemporales[i].Arma == "Todos")
+                    if (datos.HabilidadesTemporales[i].Arma.Contains(DatosArma.Nombre) || datos.HabilidadesTemporales[i].Arma == "Todos")
                     {
                         HabilidadesMostrar.Add(datos.HabilidadesTemporales[i]);
                         if (datos.HabilidadesTemporales[i] == HabilidadTemporal)
@@ -605,7 +608,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         Habmostrar--;
         if (Habmostrar < 0)
         {
-            Habmostrar= HabilidadesMostrar.Count - 1;
+            Habmostrar = HabilidadesMostrar.Count - 1;
         }
 
         checarHabilidad(Seccion);
@@ -614,7 +617,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     public void cambiarHabilidadDer(int Seccion)
     {
         Habmostrar++;
-        if (Habmostrar > (HabilidadesMostrar.Count-1))
+        if (Habmostrar > (HabilidadesMostrar.Count - 1))
         {
             Habmostrar = 0;
         }
@@ -645,10 +648,11 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             case 3:
                 HabilidadTemporal.transform.GetChild(2).gameObject.SetActive(true);
                 HabilidadTemporal.transform.GetChild(2).gameObject.GetComponent<Image>().sprite = HabilidadesMostrar[Habmostrar].Icono;
-                BarraHabilidadTemporal.text = $"< {HabilidadesMostrar[Habmostrar].Usos} / {HabilidadesMostrar[Habmostrar].Usos}";
+                int index = datos.BuscarUSoHabilidadTemporalPorNombre(HabilidadesMostrar[Habmostrar].Nombre);
+                int usosActuales = datos.UsosHabilidadesT[index];
+                BarraHabilidadTemporal.text =$"< {usosActuales} / {HabilidadesMostrar[Habmostrar].Usos}";
                 HabT = HabilidadesMostrar[Habmostrar];
                 ControladorBatalla.HabilidadT = HabilidadesMostrar[Habmostrar].Nombre;
-                ControladorBatalla.usosHabilidad = HabilidadesMostrar[Habmostrar].Usos;
                 newTem = true;
                 break;
         }
@@ -715,13 +719,13 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             {
                 bot.Boton_Exit();
             }
-            
+
         }
     }
     public void MostrarPocion(int No)
     {
         MostrarDescipcion();
-        if (No>=0)
+        if (No >= 0)
         {
             Secciones[2].transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = datos.Pociones[No].Nombre;
             Secciones[2].transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = datos.Pociones[No].Descripcion;
@@ -735,7 +739,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
 
     public void IconoConsumible()
     {
-        if(NoPocion >= 0)
+        if (NoPocion >= 0)
         {
             PocionIcono.SetActive(true);
             PocionIcono.GetComponent<Image>().sprite = datos.Pociones[NoPocion].Icono;

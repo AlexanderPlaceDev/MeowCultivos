@@ -2,26 +2,45 @@
 using System.Collections.Generic;
 using TMPro;
 using Unity.AI.Navigation;
-
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static Scr_DatosSingletonBatalla;
 
+
+/// <summary>
+/// - Inicio y finalización de combate
+/// - Vida del jugador
+/// - Recompensas
+/// - Estados alterados
+/// - Controladores de modos
+/// - Cuenta regresiva
+/// - Rangos y mejoras de armas
+/// </summary>
+
 public class Scr_ControladorBatalla : MonoBehaviour
 {
-    [Header("Panel Final")]
-    [SerializeField] Color[] ColoresBoton;
-    [SerializeField] TextMeshProUGUI TextoNivel;
-    [SerializeField] TextMeshProUGUI TextoSiguienteNivel;
-    [SerializeField] Image Barra;
+    [Header("Vida")]
+    public float VidaAnterior = 3;
+    public float VidaActual = 3;
+    [SerializeField] GameObject Vidas;
+    [SerializeField] GameObject BarraVidaImage;
+    [SerializeField] TextMeshProUGUI TextoVidas;
+    [SerializeField] public float VidaMaxima;
+    [SerializeField] Slider BarraVida;
 
-    public GameObject ArmaActual;
+    [Header("Cuenta atras")]
+    [SerializeField] public TextMeshProUGUI NumeroCuenta;
+    private float Cuenta = 4;
+    private bool ComenzarCuenta = false;
+    public bool ComenzoBatalla = false;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip SonidoReloj;
+    [SerializeField] private AudioClip SonidoPelea; // el sonido que suena cuando dice "Pelea"
 
     [Header("Habilidades")]
-
-    public int usosHabilidad;
+    public GameObject ArmaActual;
     public string HabilidadT;
     public string Habilidad1;
     public string Habilidad2;
@@ -39,69 +58,15 @@ public class Scr_ControladorBatalla : MonoBehaviour
     public float PocionDuracion;
     public float PocionUsos;
     public string Resistencia;
-    [Header("Cuenta")]
 
-    [SerializeField] public TextMeshProUGUI NumeroCuenta;
+    [Header("Efectos")]
+    private Color ColorPrincipal = new Color(0, 0, 0);
 
-    private float Cuenta = 4;
-    private bool ComenzarCuenta = false;
-    public bool ComenzoBatalla = false;
-
-    [SerializeField] private GameObject PanelFinal;
-    [SerializeField] Animator[] BarrasNegras;
-    [SerializeField] GameObject CirculoCarga;
-
-    [Header("Vida")]
-    [SerializeField] GameObject Vidas;
-    [SerializeField] GameObject BarraVidaImage;
-    [SerializeField] TextMeshProUGUI TextoVidas;
-    [SerializeField] public float VidaMaxima;
     public float PorcentajeQuitar = 1;
-    public float VidaAnterior = 3;
-    public float VidaActual = 3;
     public bool Stuneado = false;
     public bool Congelado = false;
     public float acumularCura = 0;
     public float menosDaño = 0;
-    [SerializeField] Slider BarraVida;
-
-    [Header("Objetivo")]
-    [SerializeField] TextMeshProUGUI Mision;
-    [SerializeField] TextMeshProUGUI Complemento;
-    [SerializeField] TextMeshProUGUI Item;
-
-    public GameObject ContadorFruta;
-    public GameObject ContadorEnemigos;
-    public GameObject BarraOleadas;
-    public int FrutasRecolectadas;
-    [Header("Barra Oleadas")]
-    [SerializeField] Transform BarraSlider;
-    [SerializeField] float TiempoEntreOleadas;
-    float ContTiempoEntreOleadas;
-    private bool PrimerSpawn = false;
-
-
-    [Header("Otros")]
-    [SerializeField] Light OrigenLuz;
-    private Scr_DatosSingletonBatalla Singleton;
-    Scr_DatosArmas Datosarmas;
-    private GameObject Personaje;
-    private Scr_GirarCamaraBatalla CamaraBatalla;
-    private Scr_ControladorOleadas controladorOleadas;
-    private Scr_ControladorRecolleccion controladorRecoleccion;
-    private SCR_Controlador_Jefes Controlador_Jefes;
-    private bool DioRecompensa = false;
-    private int experiencia = 0;
-    int Bonus=0;
-    [SerializeField] public GameObject particulaElectrica;
-    [SerializeField] public GameObject particulaQuemado;
-    [SerializeField] public GameObject particulaCongelado;
-    [SerializeField] public GameObject particulaEnvenado;
-    [SerializeField] public GameObject ParticulaGolpe;
-
-    Scr_ControladorArmas armas;
-    [Header("Efectos")]
-    private Color ColorPrincipal = new Color(0, 0, 0);
 
     private Color dañado = new Color(1f, 0f, 0f);      // Rojo
     private Color quemado = new Color(1f, 0.365f, 0.133f);  // Naranja
@@ -117,20 +82,58 @@ public class Scr_ControladorBatalla : MonoBehaviour
     public float resistenciaElectrificar = 0.25f; // 25% de probabilidad de resistir el Electrificar
     public float resistenciaExplotar = 0.4f; // 40% de probabilidad de resistir la Explotación
 
-    [Header("Cuenta Atras")]
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip SonidoReloj;
-    [SerializeField] private AudioClip SonidoPelea; // el sonido que suena cuando dice "Pelea"
-    private string ultimoTextoMostrado = "";
-    private bool Esjefe=false;
+    [SerializeField] public GameObject particulaElectrica;
+    [SerializeField] public GameObject particulaQuemado;
+    [SerializeField] public GameObject particulaCongelado;
+    [SerializeField] public GameObject particulaEnvenado;
+    [SerializeField] public GameObject ParticulaGolpe;
 
+    [Header("Objetivo")]
+    [SerializeField] TextMeshProUGUI Mision;
+    [SerializeField] TextMeshProUGUI Complemento;
+    [SerializeField] TextMeshProUGUI Item;
+    public GameObject ContadorFruta;
+    public int FrutasRecolectadas;
+    public GameObject ContadorEnemigos;
+
+    [Header("Barra Oleadas")]
+    public GameObject BarraOleadas;
+    [SerializeField] Transform BarraSlider;
+    [SerializeField] float TiempoEntreOleadas;
+    private bool PrimerSpawn = false;
+
+    [Header("Panel Final")]
+    [SerializeField] Color[] ColoresBoton;
+    [SerializeField] TextMeshProUGUI TextoNivel;
+    [SerializeField] TextMeshProUGUI TextoSiguienteNivel;
+    [SerializeField] Image Barra;
+    [SerializeField] private GameObject PanelFinal;
+    [SerializeField] Animator[] BarrasNegras;
+    [SerializeField] GameObject CirculoCarga;
+
+    [Header("Otros")]
+    [SerializeField] Light OrigenLuz;
+    private Scr_DatosSingletonBatalla Singleton;
+    Scr_DatosArmas Datosarmas;
+    private GameObject Personaje;
+    private Scr_GirarCamaraBatalla CamaraBatalla;
+    private Scr_ControladorOleadas controladorOleadas;
+    private Scr_ControladorRecolleccion controladorRecoleccion;
+    private SCR_Controlador_Jefes Controlador_Jefes;
+    private bool DioRecompensa = false;
+    private int experiencia = 0;
+    int Bonus = 0;
+    Scr_ControladorArmas armas;
+    private string ultimoTextoMostrado = "";
+    private bool Esjefe = false;
     Musica_pelea Musica;
     ChecarInput Checar_input;
     void Start()
     {
+        //Asignacion de valores
         Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
         Datosarmas = Singleton.GetComponent<Scr_DatosArmas>();
-        armas= GetComponent<Scr_ControladorArmas>();
+        armas = GetComponent<Scr_ControladorArmas>();
         controladorOleadas = GetComponent<Scr_ControladorOleadas>();
         controladorRecoleccion = GetComponent<Scr_ControladorRecolleccion>();
         Controlador_Jefes = GetComponent<SCR_Controlador_Jefes>();
@@ -141,12 +144,8 @@ public class Scr_ControladorBatalla : MonoBehaviour
         Complemento.text = Singleton.Complemento;
         Item.text = Singleton.Item;
         Item.color = Singleton.ColorItem;
-        /*
-        Habilidad1 = PlayerPrefs.GetString("Habilidad1", "Ojo");
-        Habilidad2 = PlayerPrefs.GetString("Habilidad2", "Rugido");
-        HabilidadEspecial = PlayerPrefs.GetString("HabilidadEspecial", "Garras");*/
-
         ColorPrincipal = BarraVidaImage.GetComponent<Image>().color;
+        Musica = GameObject.Find("Musica").GetComponent<Musica_pelea>();
 
         TextoVidas.text = VidaMaxima + "/" + VidaMaxima;
         if (Singleton.HoraActual > 7 && Singleton.HoraActual < 19)
@@ -157,16 +156,18 @@ public class Scr_ControladorBatalla : MonoBehaviour
         {
             RenderSettings.skybox = Singleton.SkyBoxNoche;
         }
-        ActivarControladores();
-        Musica = GameObject.Find("Musica").GetComponent<Musica_pelea>();
 
+        //Deteccion de mando
         Checar_input = GameObject.Find("Singleton").GetComponent<ChecarInput>();
         Checar_input.CammbiarAction_UI();
+        ActivarControladores();
     }
 
     void Update()
     {
+        //Comando para borrar datos
         if (Input.GetKeyDown(KeyCode.F12)) PlayerPrefs.DeleteAll();
+
 
         Comienzo();
         ActualizarVida();
@@ -290,8 +291,17 @@ public class Scr_ControladorBatalla : MonoBehaviour
     public void ConseguirHabilidadesArma(string arma)
     {
         CehcarHabilidadDefault(arma);
-        usosHabilidad = PlayerPrefs.GetInt(arma + "Usos", 0);
         HabilidadT = PlayerPrefs.GetString(arma + "HT", HabilidadTDefault);
+
+        if (HabilidadT != "Nada")
+        {
+            int index = Datosarmas.BuscarUSoHabilidadTemporalPorNombre(HabilidadT);
+
+            if (Datosarmas.UsosHabilidadesT[index] <= 0)
+            {
+                HabilidadT = "Nada";
+            }
+        }
         Habilidad1 = PlayerPrefs.GetString(arma + "H1", Habilidad1Default);
         Habilidad2 = PlayerPrefs.GetString(arma + "H2", Habilidad2Default);
         HabilidadEspecial = PlayerPrefs.GetString(arma + "HE", HabilidadEspecialDefault);
@@ -301,15 +311,22 @@ public class Scr_ControladorBatalla : MonoBehaviour
         PlayerPrefs.SetString(arma + "H1", Habilidad1);
         PlayerPrefs.SetString(arma + "H2", Habilidad2);
         PlayerPrefs.SetString(arma + "HE", HabilidadEspecial);
-        if (usosHabilidad > 0)
+        if (HabilidadT != "Nada")
         {
-            PlayerPrefs.SetString(arma + "HT", HabilidadT);
-            PlayerPrefs.SetInt(arma + "Usos", usosHabilidad);
+            int index = Datosarmas.BuscarUSoHabilidadTemporalPorNombre(HabilidadT);
+
+            if (Datosarmas.UsosHabilidadesT[index] > 0)
+            {
+                PlayerPrefs.SetString(arma + "HT", HabilidadT);
+            }
+            else
+            {
+                PlayerPrefs.SetString(arma + "HT", "Nada");
+            }
         }
         else
         {
             PlayerPrefs.SetString(arma + "HT", "Nada");
-            PlayerPrefs.SetInt(arma + "Usos", 0);
         }
         PlayerPrefs.Save();
         Datosarmas.guardarHabilidades();
@@ -479,7 +496,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
     private bool ComprobarCantidadEnemigos()
     {
-        if (Singleton.ModoSeleccionado == Modo.Defensa && controladorOleadas.enemigosOleada.Count>0)
+        if (Singleton.ModoSeleccionado == Modo.Defensa && controladorOleadas.enemigosOleada.Count > 0)
         {
             return true;
         }
@@ -508,7 +525,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
     }
     private List<GameObject> ComprobarEnemigos()
     {
-        if (Singleton.ModoSeleccionado == Modo.Defensa )
+        if (Singleton.ModoSeleccionado == Modo.Defensa)
         {
             return controladorOleadas.enemigosOleada;
         }
@@ -526,8 +543,8 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
             if (enemigosActuales.Length > 0)
             {
-                List<GameObject> enemigos=new List<GameObject>();
-                for (int i = 0; i < enemigosActuales.Length; i++) 
+                List<GameObject> enemigos = new List<GameObject>();
+                for (int i = 0; i < enemigosActuales.Length; i++)
                 {
                     enemigos.Add(enemigosActuales[i]);
                 }
@@ -636,7 +653,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
         if (extra == null) return;
 
         if (dict.ContainsKey(extra))
-            dict[extra]= dict[extra]+ controladorRecoleccion.CantFrutaRecolectadas;
+            dict[extra] = dict[extra] + controladorRecoleccion.CantFrutaRecolectadas;
         else
             dict.Add(extra, controladorRecoleccion.CantFrutaRecolectadas);
         //PlayerPrefs.SetInt("Dinero", PlayerPrefs.GetInt("Dinero", 0) + Random.Range(controladorRecoleccion.DineroMin, controladorRecoleccion.DineroMax));
@@ -802,7 +819,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
                     string[] dias = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
                     int diaActualIndex = System.Array.IndexOf(dias, PlayerPrefs.GetString("DiaActual", "LUN"));
                     int diaclim = PlayerPrefs.GetInt("Clima" + diaActualIndex, 0);
-                    if (Clim != null && diaclim>0)
+                    if (Clim != null && diaclim > 0)
                     {
                         //Clim.gameObject.SetActive(true);
                         Clim.GetChild(diaclim).gameObject.SetActive(true);
@@ -1062,7 +1079,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
         Vector3 direccion = -Personaje.transform.forward; // dirección hacia atrás del personaje
         rb.AddForce(direccion * fuerza, ForceMode.Force);
         Vector3 arriba = Personaje.transform.up; // dirección hacia atrás del personaje
-        rb.AddForce(arriba * (fuerza*.7f), ForceMode.Force);
+        rb.AddForce(arriba * (fuerza * .7f), ForceMode.Force);
         Debug.Log("Empujado");
         yield return null;
     }
@@ -1139,7 +1156,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
     public void AumentarVelocidad(float plus)
     {
-        Scr_Movimiento mov=Personaje.GetComponent<Scr_Movimiento>();
+        Scr_Movimiento mov = Personaje.GetComponent<Scr_Movimiento>();
         mov.VelAgachado = mov.VelAgachado + (mov.VelAgachado * plus);
         mov.VelCaminar = mov.VelCaminar + (mov.VelCaminar * plus);
         mov.VelCorrer = mov.VelCorrer + (mov.VelCorrer * plus);
@@ -1366,4 +1383,5 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 break;
         }
     }
+
 }

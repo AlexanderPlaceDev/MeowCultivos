@@ -68,11 +68,11 @@ public class Scr_ControladorArmas : MonoBehaviour
     public float MenosCadencia = 1;
 
     public bool minLimit = false;
-    
+
     public string Tipo = "";
     public float alcance;
     public float area;
-    public float TamaProyectil=1;
+    public float TamaProyectil = 1;
 
     public bool ModoAutomático = false;
     GameObject Gata;
@@ -104,7 +104,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     private Renderer rendererFruta;
 
     [Header("Interactuar")]
-    bool PuedeInteractuar=false;
+    bool PuedeInteractuar = false;
 
     PlayerInput playerInput;
     InputIconProvider IconProvider;
@@ -344,7 +344,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             if (ene != null)
             {
                 ene.RecibirDaño(daño, Color.red);
-                ene.realizardaño(daño, EfectoTemp,EfectoHab);
+                ene.realizardaño(daño, EfectoTemp, EfectoHab);
             }
         }
         // Debug
@@ -781,7 +781,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     }
     void RecolectarFruta()
     {
-        if(Fruta!=null && Recolectar.WasPressedThisFrame() && !PuedeInteractuar && !TieneFruta)
+        if (Fruta != null && Recolectar.WasPressedThisFrame() && !PuedeInteractuar && !TieneFruta)
         {
             TieneFruta = true;
             for (int i = 0; i < ObjetoArmas_reales.Length; i++)
@@ -795,7 +795,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             tiempoPudrirse = drop.tiempoPudrirse;
             vidaTotal = drop.vidaTotal;
             FrutaNombre = drop.Nombre;
-            colorNormal= drop.colorNormal;
+            colorNormal = drop.colorNormal;
             colorPodrido = drop.colorPodrido;
             colorPudriendose = drop.colorPudriendose;
 
@@ -805,7 +805,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             {
                 case "Baya Azul":
                     FrutaMano[0].SetActive(true);
-                    rendererFruta= FrutaMano[0].GetComponent<Renderer>();
+                    rendererFruta = FrutaMano[0].GetComponent<Renderer>();
                     puntoFruta = FrutaMano[0].transform;
                     break;
                 case "Baya Amarillo":
@@ -858,11 +858,11 @@ public class Scr_ControladorArmas : MonoBehaviour
 
     private void Checar_crizalida()
     {
-        if(PuedeInteractuar && Recolectar.IsPressed())
+        if (PuedeInteractuar && Recolectar.IsPressed())
         {
-            Criszalida criz= Fruta.gameObject.GetComponent<Criszalida>();
+            Criszalida criz = Fruta.gameObject.GetComponent<Criszalida>();
             criz.quitarvida();
-            PuedeInteractuar=false;
+            PuedeInteractuar = false;
             Fruta = null;
         }
     }
@@ -922,7 +922,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     }
     void DispararFruta()
     {
-        GameObject Frut= null;
+        GameObject Frut = null;
         Anim.Play("Brazos_ NormalIddle");
         switch (FrutaNombre)
         {
@@ -947,9 +947,9 @@ public class Scr_ControladorArmas : MonoBehaviour
             Fruta_drop drop = Frut.GetComponent<Fruta_drop>();
             drop.estadoActual = estadoActual;
             drop.tiempoActual = tiempoActualFruta;
-            drop.tiempoPodrido=tiempoPodrido;
-            drop.tiempoPudrirse=tiempoPudrirse;
-            drop.vidaTotal= vidaTotal;
+            drop.tiempoPodrido = tiempoPodrido;
+            drop.tiempoPudrirse = tiempoPudrirse;
+            drop.vidaTotal = vidaTotal;
             Vector3 direccionBase = camara.transform.forward;
             Vector3 direccionConDispersion = DireccionConDispersion(direccionBase, Random.Range(0, dispersion));
             Frut.GetComponent<Rigidbody>().AddForce((direccionConDispersion * fuerzaDisparo) / 3, ForceMode.Impulse);
@@ -959,7 +959,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     {
         for (int i = 0; i < FrutaMano.Length; i++)
         {
-            FrutaMano [i].SetActive(false);
+            FrutaMano[i].SetActive(false);
         }
         if (ArmaActual != 0)
         {
@@ -996,9 +996,9 @@ public class Scr_ControladorArmas : MonoBehaviour
             {
                 Mira.GetComponent<Image>().color = ColoresMirillas[0];
                 Mira.GetComponent<Image>().sprite = Mirillas[2];
-                Mira.transform.localScale = new Vector3(3,3,3);
-                Fruta =hit.collider.gameObject;
-                FrutaNombre= Fruta.GetComponent<Fruta_drop>().Nombre;
+                Mira.transform.localScale = new Vector3(3, 3, 3);
+                Fruta = hit.collider.gameObject;
+                FrutaNombre = Fruta.GetComponent<Fruta_drop>().Nombre;
                 return;
             }
             else if (hit.collider.CompareTag("Crizalida"))
@@ -1012,7 +1012,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             }
         }
         // Si no golpeó enemigo o no golpeó nada
-        Fruta=null;
+        Fruta = null;
         PuedeInteractuar = false;
         if (!TieneFruta)
         {
@@ -1022,7 +1022,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         Mira.GetComponent<Image>().sprite = Mirillas[0];
         Mira.transform.localScale = new Vector3(1, 1, 1);
     }
-    
+
     private void ChecarTemporal()
     {
         switch (GetComponent<Scr_ControladorBatalla>().HabilidadT)
@@ -1031,40 +1031,50 @@ public class Scr_ControladorArmas : MonoBehaviour
                 EfectoTemp = "";
                 break;
 
-            case "Aturdimiento":
-                EfectoTemp = "Stunear";
-                break;
-
-            case "Bala Incendiaria":
-                EfectoTemp = "Quemar";
-                break;
-
-            case "Boca Venenosa":
+            case "Bayas Podridas":
                 EfectoTemp = "Veneno";
                 break;
 
-            case "Cañon Congelante":
+            case "Electro Banana":
+                EfectoTemp = "Electrificar";
+                break;
+
+            case "Amplificador":
+                MasDistancia = 15;
+                break;
+
+            case "Paleta De Sandia":
                 EfectoTemp = "Congelar";
                 break;
 
+            case "Aceite De Coco":
+                MenosCadencia = .6f;
+                break;
+
+            case "Chile Picante":
+                EfectoTemp = "Quemar";
+                break;
+
+            case "Mango Pesado":
+                EfectoTemp = "Empujar";
+                break;
+
+            case "Papapum":
+                EfectoTemp = "Explotar";
+                break;
+
+            case "Red De Espinas":
+                EfectoTemp = "Stunear";
+                break;
+
+
+                //Habilidades sobrantes
             case "Disparo rebote":
                 EfectoTemp = "Rebotar";
                 break;
 
-            case "Empuje":
-                EfectoTemp = "Empujar";
-                break;
-
-            case "Golpe con mas area":
-                MasDistancia = 15;
-                break;
-
             case "Golpe de fuego":
                 EfectoTemp = "Quemar";
-                break;
-
-            case "Puño Relampago":
-                EfectoTemp = "Electrificar";
                 break;
 
             case "Puño Veneno":
@@ -1079,20 +1089,12 @@ public class Scr_ControladorArmas : MonoBehaviour
                 EfectoTemp = "Rebotar";
                 break;
 
-            case "Tiro Explosivo":
-                EfectoTemp = "Explotar";
-                break;
-
             case "Tiro fantasma":
                 EfectoTemp = "Fantasma";
                 break;
 
             case "Tiro Paralizante":
                 EfectoTemp = "Electrificar";
-                break;
-
-            case "Velocidad mordida":
-                MenosCadencia = .6f;
                 break;
         }
     }
