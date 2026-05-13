@@ -70,11 +70,17 @@ public class Scr_ControladorIntro : MonoBehaviour
             IconProvider.ActualizarIconoUI(Interactuar, BotonPeriodico.transform, ref iconoActualInteractuar, ref textoActualInteractuar, false);
             if (Interactuar.WasPressedThisFrame())
             {
+                Debug.Log("EEEe");
                 PereodicoGrande.SetActive(false);
                 Gata.transform.GetChild(0).gameObject.SetActive(false);
                 Dialogo.Leido = false;
                 cont9 = -1;
             }
+        }
+        else
+        {
+            iconoActualInteractuar =null;
+            textoActualInteractuar = "";
         }
         if (Gata.transform.GetChild(0).gameObject.activeSelf && Interactuar.WasPressedThisFrame())
         {

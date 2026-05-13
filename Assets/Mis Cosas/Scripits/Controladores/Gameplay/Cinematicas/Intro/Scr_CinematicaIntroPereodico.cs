@@ -7,6 +7,7 @@ public class Scr_CinematicaIntroPereodico : MonoBehaviour
     [SerializeField] GameObject PereodicoGrande;
     [SerializeField] Scr_ControladorCinematica Cinematica;
     public GameObject Boton;
+    public GameObject BotonPeriodico;
     int cont = 0;
 
 
@@ -25,13 +26,22 @@ public class Scr_CinematicaIntroPereodico : MonoBehaviour
     {
         if (Iconos.activeSelf)
         {
-            IconProvider.ActualizarIconoUI(Interactuar, Boton.transform, ref iconoActualInteractuar, ref textoActualInteractuar, false);
+            if (cont == 0) 
+            {
+                IconProvider.ActualizarIconoUI(Interactuar, Boton.transform, ref iconoActualInteractuar, ref textoActualInteractuar, false);
+            }
+            else
+            {
+                IconProvider.ActualizarIconoUI(Interactuar, BotonPeriodico.transform, ref iconoActualInteractuar, ref textoActualInteractuar, false);
+            }
             if (Interactuar.WasPressedThisFrame())
             {
                 if (cont == 0)
                 {
                     cont = 1;
                     PereodicoGrande.SetActive(true);
+                    iconoActualInteractuar= null;
+                    textoActualInteractuar = "";
                 }
                 else
                 {
