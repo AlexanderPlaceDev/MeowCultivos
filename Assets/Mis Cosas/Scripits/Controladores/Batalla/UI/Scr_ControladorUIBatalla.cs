@@ -25,14 +25,12 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     [SerializeField] GameObject Habilidad1;
     [SerializeField] GameObject Habilidad2;
     [SerializeField] GameObject HabilidadEspecial;
-    [SerializeField] TextMeshProUGUI BarraHabilidadTemporal;
     public bool newTem = false;
     public bool PuedeSeleccionarH = false;
     private bool TieneHabTemporal = false;
     private bool TieneFlechas = false;
-    [Header("Alerta")]
-    [SerializeField] GameObject Alerta;
-    [SerializeField] GameObject PanelAlerta;
+    private bool TieneFlechasPociones = false;
+    private int PocionMostrar = 0;
     [Header("Espacios Armas")]
     [SerializeField] GameObject[] EspaciosArmas;
     public List<Scr_CreadorHabilidadesBatalla> HabilidadesMostrar;
@@ -69,6 +67,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     public GameObject PocionIcono;
     public Sprite PocionVacio;
     public int NoPocion = -2;
+    private int GadgetMostrar = -1;
 
     private Tutorial_peleas Tutopeleas;
     void Start()
@@ -97,6 +96,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
 
         datos = Singleton.GetComponent<Scr_DatosArmas>();
         MostrarHabilidadGuardada();
+        CargarSeleccionGuardada();
     }
 
     private void ActualizarArma()
@@ -202,14 +202,16 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         if (ht == "Nada")
         {
             HabilidadTemporal.transform.GetChild(2).gameObject.SetActive(false);
-            BarraHabilidadTemporal.text = "";
+            HabilidadesUI[3].transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = "";
             TieneHabTemporal = false;
         }
         else
         {
             HabilidadTemporal.transform.GetChild(2).gameObject.SetActive(true);
             HabilidadTemporal.transform.GetChild(2).gameObject.GetComponent<Image>().sprite = HabT.Icono;
-            BarraHabilidadTemporal.text = $"< {us}/ {HabT.Usos}";
+            HabilidadesUI[3].transform.GetChild(3)
+            .GetComponent<TextMeshProUGUI>().text =
+             $"< {us} / 99";
             TieneHabTemporal = true;
         }
         Habilidad1.transform.GetChild(2).gameObject.GetComponent<Image>().sprite = Hab1.Icono;
@@ -333,6 +335,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             IconoHabilidadE.transform.GetChild(1).gameObject.SetActive(false);
         }
 
+        //Descontar Habilidades en el singleton
         if (newTem)
         {
             //Aqui debo ajustar las cantidades de gadgets en el singleton
@@ -345,6 +348,21 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
                 ControladorBatalla.HabilidadT = "Nada";
             }
         }
+        //Descontar pociones en el singleton
+        if (NoPocion >= 0)
+        {
+            datos.CantidadPociones[NoPocion]--;
+
+            if (datos.CantidadPociones[NoPocion] <= 0)
+            {
+                ControladorBatalla.Pocion = "";
+
+                PlayerPrefs.SetString(
+                    "PocionSeleccionada",
+                    "");
+            }
+        }
+
         if (Tutopeleas != null && Tutopeleas.isActiveAndEnabled)
         {
             Tutopeleas.ComenzarPelea();
@@ -399,6 +417,7 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         {
             Tutopeleas.ComenzarPelea();
         }
+        //Descontar habilidades en el singleton
         if (newTem)
         {
             datos.QuitarUsosTemporales(ht);
@@ -408,6 +427,20 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             if (datos.UsosHabilidadesT[index] <= 0)
             {
                 ControladorBatalla.HabilidadT = "Nada";
+            }
+        }
+        //Descontar pociones en el singleton
+        if (NoPocion >= 0)
+        {
+            datos.CantidadPociones[NoPocion]--;
+
+            if (datos.CantidadPociones[NoPocion] <= 0)
+            {
+                ControladorBatalla.Pocion = "";
+
+                PlayerPrefs.SetString(
+                    "PocionSeleccionada",
+                    "");
             }
         }
         ControladorBatalla.IniciarCuentaRegresiva(false);
@@ -438,17 +471,18 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
 
     //Cosigue las habilidades Disponibles Siempre Y cuando este habilitado
 
+
+
     public void EsconderFlechasHabilidades()
     {
-        for (int i = 0; i < 4; i++)
-        {
-            HabilidadesUI[i].transform.GetChild(0).gameObject.SetActive(false);
-            HabilidadesUI[i].transform.GetChild(1).gameObject.SetActive(false);
-        }
+        TieneFlechas = false;
+        TieneFlechasPociones = false;
 
-        HabilidadesUI[3].transform.GetChild(3).gameObject.SetActive(true);
-        HabilidadesUI[4].transform.GetChild(1).gameObject.SetActive(true);
+        ActualizarUIFlechas();
     }
+
+
+
     //Cosigue las habilidades Normales en Habilidad1
     public void checarHabilidades1()
     {
@@ -542,71 +576,103 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     //Cosigue las habilidades Normales en Gadgets
     public void checarHabilidadesTemporales()
     {
-        EsconderFlechasHabilidades();
-        HabilidadesMostrar.Clear();
-        if (!PuedeSeleccionarH) return;
-        if (TieneHabTemporal) return;
+        Debug.Log("Entró gadgets");
 
+        HabilidadesMostrar.Clear();
+
+        if (!PuedeSeleccionarH)
+            return;
+
+        // TOGGLE OFF
         if (TieneFlechas)
         {
-            HabilidadesUI[3].transform.GetChild(0).gameObject.SetActive(false);
-            HabilidadesUI[3].transform.GetChild(1).gameObject.SetActive(false);
-            HabilidadesUI[3].transform.GetChild(3).gameObject.SetActive(true);
-            HabilidadesUI[4].transform.GetChild(1).gameObject.SetActive(true);
-            Debug.LogWarning("aaa");
             TieneFlechas = false;
+
+            ActualizarUIFlechas();
+
+            return;
+        }
+
+        // CERRAR POCIONES
+        TieneFlechasPociones = false;
+
+        for (int i = 0; i < datos.HabilidadesTemporales.Length; i++)
+        {
+            if (datos.UsosHabilidadesT[i] <= 0)
+                continue;
+
+            string armaHab =
+                datos.HabilidadesTemporales[i]
+                .Arma
+                .Trim()
+                .ToLower();
+
+            bool compatible =
+                armaHab.Contains(DatosArma.Nombre.ToLower())
+                || armaHab == "todas";
+
+            if (compatible)
+            {
+                HabilidadesMostrar.Add(
+                    datos.HabilidadesTemporales[i]);
+            }
+        }
+
+        Debug.Log("Total gadgets: " + HabilidadesMostrar.Count);
+
+        // =========================
+        // SINCRONIZAR CON GADGET ACTUAL
+        // =========================
+
+        Habmostrar = -1;
+
+        if (TieneHabTemporal)
+        {
+            for (int i = 0; i < HabilidadesMostrar.Count; i++)
+            {
+                if (HabilidadesMostrar[i].Nombre ==
+                    ControladorBatalla.HabilidadT)
+                {
+                    Habmostrar = i;
+                    GadgetMostrar = i;
+                    break;
+                }
+            }
         }
         else
         {
-
-            Debug.LogWarning("ffff");
-            int habActual = 0;
-            for (int i = 0; i < datos.HabilidadesTemporales.Length; i++)
-            {
-                if (i == 0)
-                {
-                    HabilidadesMostrar.Add(datos.HabilidadesTemporales[i]);
-                    if (datos.HabilidadesTemporales[i] == HabilidadTemporal)
-                    {
-                        habActual = HabilidadesMostrar.Count - 1;
-                    }
-                }
-                else if (datos.UsosHabilidadesT[i] > 0)
-                {
-                    if (datos.HabilidadesTemporales[i].Arma.Contains(DatosArma.Nombre) || datos.HabilidadesTemporales[i].Arma == "Todos")
-                    {
-                        HabilidadesMostrar.Add(datos.HabilidadesTemporales[i]);
-                        if (datos.HabilidadesTemporales[i] == HabilidadTemporal)
-                        {
-                            habActual = HabilidadesMostrar.Count - 1;
-                        }
-                    }
-                }
-            }
-            if (HabilidadTemporal.transform.GetChild(2).gameObject.activeSelf)
-            {
-                Habmostrar = habActual;
-            }
-            else
-            {
-                Habmostrar = 0;
-            }
-            if (HabilidadesMostrar.Count > 1)
-            {
-                HabilidadesUI[3].transform.GetChild(0).gameObject.SetActive(true);
-                HabilidadesUI[3].transform.GetChild(1).gameObject.SetActive(true);
-                HabilidadesUI[3].transform.GetChild(3).gameObject.SetActive(false);
-                HabilidadesUI[4].transform.GetChild(1).gameObject.SetActive(false);
-                TieneFlechas = true;
-            }
+            GadgetMostrar = -1;
         }
+
+        if (HabilidadesMostrar.Count >= 1)
+        {
+            TieneFlechas = true;
+        }
+
+        ActualizarUIFlechas();
     }
 
     //cambia de seccion de lado Izquierda
     public void cambiarHabilidadIzq(int Seccion)
     {
+        if (Seccion != 3)
+        {
+            Habmostrar--;
+
+            if (Habmostrar < 0)
+            {
+                Habmostrar = HabilidadesMostrar.Count - 1;
+            }
+
+            checarHabilidad(Seccion);
+            return;
+        }
+
+        // GADGETS
+
         Habmostrar--;
-        if (Habmostrar < 0)
+
+        if (Habmostrar < -1)
         {
             Habmostrar = HabilidadesMostrar.Count - 1;
         }
@@ -616,11 +682,28 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     //cambia de seccion de lado derecha
     public void cambiarHabilidadDer(int Seccion)
     {
-        Habmostrar++;
-        if (Habmostrar > (HabilidadesMostrar.Count - 1))
+        if (Seccion != 3)
         {
-            Habmostrar = 0;
+            Habmostrar++;
+
+            if (Habmostrar > (HabilidadesMostrar.Count - 1))
+            {
+                Habmostrar = 0;
+            }
+
+            checarHabilidad(Seccion);
+            return;
         }
+
+        // GADGETS
+
+        Habmostrar++;
+
+        if (Habmostrar > HabilidadesMostrar.Count - 1)
+        {
+            Habmostrar = -1;
+        }
+
         checarHabilidad(Seccion);
     }
     public void checarHabilidad(int Seccion)
@@ -645,15 +728,70 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
                 HabE = HabilidadesMostrar[Habmostrar];
                 ControladorBatalla.HabilidadEspecial = HabilidadesMostrar[Habmostrar].Nombre;
                 break;
+
             case 3:
-                HabilidadTemporal.transform.GetChild(2).gameObject.SetActive(true);
-                HabilidadTemporal.transform.GetChild(2).gameObject.GetComponent<Image>().sprite = HabilidadesMostrar[Habmostrar].Icono;
-                int index = datos.BuscarUSoHabilidadTemporalPorNombre(HabilidadesMostrar[Habmostrar].Nombre);
+
+                // =========================
+                // NINGÚN GADGET
+                // =========================
+
+                if (Habmostrar == -1)
+                {
+                    HabilidadTemporal.transform.GetChild(2)
+                        .gameObject.SetActive(false);
+
+                    HabilidadesUI[3].transform.GetChild(3)
+                        .GetComponent<TextMeshProUGUI>().text = "";
+
+                    ControladorBatalla.HabilidadT = "Nada";
+
+                    TieneHabTemporal = false;
+
+                    GadgetMostrar = -1;
+
+                    newTem = false;
+
+                    GuardarSeleccionActual();
+
+                    EsconderDescipcion();
+
+                    ActualizarUIFlechas();
+
+                    return;
+                }
+
+                // =========================
+                // GADGET VÁLIDO
+                // =========================
+
+                HabilidadTemporal.transform.GetChild(2)
+                    .gameObject.SetActive(true);
+
+                HabilidadTemporal.transform.GetChild(2)
+                    .GetComponent<Image>().sprite =
+                    HabilidadesMostrar[Habmostrar].Icono;
+
+                int index = datos.BuscarUSoHabilidadTemporalPorNombre(
+                    HabilidadesMostrar[Habmostrar].Nombre);
+
                 int usosActuales = datos.UsosHabilidadesT[index];
-                BarraHabilidadTemporal.text =$"< {usosActuales} / {HabilidadesMostrar[Habmostrar].Usos}";
+
+                HabilidadesUI[3].transform.GetChild(3)
+                    .GetComponent<TextMeshProUGUI>().text =
+                    $"< {usosActuales} / 99";
+
                 HabT = HabilidadesMostrar[Habmostrar];
-                ControladorBatalla.HabilidadT = HabilidadesMostrar[Habmostrar].Nombre;
+
+                ControladorBatalla.HabilidadT =
+                    HabilidadesMostrar[Habmostrar].Nombre;
+
+                TieneHabTemporal = true;
+
                 newTem = true;
+
+                GadgetMostrar = Habmostrar;
+                GuardarSeleccionActual();
+
                 break;
         }
         MostrarHabilidadSeleccionada(Seccion);
@@ -675,40 +813,99 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         //MostrarHabilidadLocal();
 
     }
-    public void MostrarPanelSeccion()
-    {
-        Secciones[0].SetActive(false);
-        Secciones[1].SetActive(true);
-        Secciones[2].SetActive(false);
-        ChecarPociones();
-    }
 
     public void ChecarPociones()
     {
-        PocionIcono.GetComponent<Image>().sprite = null;
-        ControladorBatalla.Pocion = "";
-        foreach (Transform child in contentPanel)
-            Destroy(child.gameObject);
-        crearVacio();
-        for (int i = 0; i < datos.Pociones.Length; i++)
+        // TOGGLE OFF
+        if (TieneFlechasPociones)
         {
-            if (datos.CantidadPociones[i] > 0)
+            TieneFlechasPociones = false;
+
+            ActualizarUIFlechas();
+
+            return;
+        }
+
+        // CERRAR GADGETS
+        TieneFlechas = false;
+
+        List<int> disponibles =
+            ObtenerPocionesDisponibles();
+
+        // =========================
+        // SINCRONIZAR INDICE ACTUAL
+        // =========================
+
+        if (NoPocion == -1)
+        {
+            PocionMostrar = 0;
+        }
+        else
+        {
+            int indexActual =
+                disponibles.IndexOf(NoPocion);
+
+            if (indexActual >= 0)
             {
-                GameObject obj = Instantiate(BotonPocion, contentPanel);
-                obj.GetComponent<Image>().sprite = datos.Pociones[i].Icono;
-                Boton_pocion poc = obj.GetComponent<Boton_pocion>();
-                //poc.NombrePocion= datos.Pociones[i].Tipo.ToString();
-                poc.No = i;
+                PocionMostrar = indexActual;
+            }
+            else
+            {
+                PocionMostrar = 0;
             }
         }
+
+        if (disponibles.Count > 1)
+        {
+            TieneFlechasPociones = true;
+        }
+
+        ActualizarUIFlechas();
     }
-    private void crearVacio()
+
+    private void ActualizarUIFlechas()
     {
-        GameObject obj = Instantiate(BotonPocion, contentPanel);
-        obj.GetComponent<Image>().sprite = PocionVacio;
-        Boton_pocion poc = obj.GetComponent<Boton_pocion>();
-        //poc.NombrePocion= datos.Pociones[i].Tipo.ToString();
-        poc.No = -1;
+        bool algunaSeleccionAbierta =
+            TieneFlechas || TieneFlechasPociones;
+
+        // =========================
+        // GADGETS
+        // =========================
+
+        Transform gadget = HabilidadesUI[3].transform;
+
+        // Flechas
+        gadget.GetChild(0).gameObject.SetActive(TieneFlechas);
+        gadget.GetChild(1).gameObject.SetActive(TieneFlechas);
+
+        // Texto cantidad
+        bool mostrarTextoGadget =
+            TieneHabTemporal &&
+            !algunaSeleccionAbierta;
+
+        gadget.GetChild(3).gameObject.SetActive(
+            mostrarTextoGadget);
+
+        // =========================
+        // POCIONES
+        // =========================
+
+        Transform pocion = HabilidadesUI[4].transform;
+
+        // Flechas
+        pocion.GetChild(0).gameObject.SetActive(
+            TieneFlechasPociones);
+
+        pocion.GetChild(1).gameObject.SetActive(
+            TieneFlechasPociones);
+
+        // Texto cantidad
+        bool mostrarTextoPocion =
+            NoPocion >= 0 &&
+            !algunaSeleccionAbierta;
+
+        pocion.GetChild(3).gameObject.SetActive(
+            mostrarTextoPocion);
     }
     public void ChecarPocionActual()
     {
@@ -721,6 +918,112 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             }
 
         }
+    }
+
+    private void SeleccionarPocion(int index)
+    {
+        NoPocion = index;
+
+        // NADA
+        if (index == -1)
+        {
+            HabilidadesUI[4].transform.GetChild(2)
+                .GetComponent<Image>().sprite = PocionVacio;
+
+            HabilidadesUI[4].transform.GetChild(3)
+                .GetComponent<TextMeshProUGUI>().text =
+                "";
+
+            PocionIcono.SetActive(false);
+            PocionIcono.GetComponent<Image>().sprite = null;
+
+            ControladorBatalla.Pocion = "";
+
+            GuardarSeleccionActual();
+
+            Secciones[2].transform.GetChild(0)
+                .GetComponent<TextMeshProUGUI>().text = "Nada";
+
+            Secciones[2].transform.GetChild(1)
+                .GetComponent<TextMeshProUGUI>().text =
+                "Ninguna Pocion";
+
+            return;
+        }
+
+        // ICONO UI
+        HabilidadesUI[4].transform.GetChild(2)
+            .GetComponent<Image>().sprite =
+            datos.Pociones[index].Icono;
+
+        // TEXTO UI
+        HabilidadesUI[4].transform.GetChild(3)
+            .GetComponent<TextMeshProUGUI>().text =
+            $" {datos.CantidadPociones[index]} / 99 >";
+
+        // ICONO GAMEPLAY
+        PocionIcono.SetActive(true);
+
+        PocionIcono.GetComponent<Image>().sprite =
+            datos.Pociones[index].Icono;
+
+        ControladorBatalla.Pocion =
+            datos.Pociones[index].Nombre;
+
+        // DESCRIPCION
+        Secciones[2].transform.GetChild(0)
+            .GetComponent<TextMeshProUGUI>().text =
+            datos.Pociones[index].Nombre;
+
+        Secciones[2].transform.GetChild(1)
+            .GetComponent<TextMeshProUGUI>().text =
+            datos.Pociones[index].Descripcion;
+        GuardarSeleccionActual();
+    }
+
+    public void CambiarPocionIzq()
+    {
+        List<int> disponibles = ObtenerPocionesDisponibles();
+
+        PocionMostrar--;
+
+        if (PocionMostrar < 0)
+        {
+            PocionMostrar = disponibles.Count - 1;
+        }
+
+        SeleccionarPocion(disponibles[PocionMostrar]);
+    }
+
+    private List<int> ObtenerPocionesDisponibles()
+    {
+        List<int> disponibles = new List<int>();
+
+        disponibles.Add(-1); // VACÍO
+
+        for (int i = 0; i < datos.Pociones.Length; i++)
+        {
+            if (datos.CantidadPociones[i] > 0)
+            {
+                disponibles.Add(i);
+            }
+        }
+
+        return disponibles;
+    }
+
+    public void CambiarPocionDer()
+    {
+        List<int> disponibles = ObtenerPocionesDisponibles();
+
+        PocionMostrar++;
+
+        if (PocionMostrar >= disponibles.Count)
+        {
+            PocionMostrar = 0;
+        }
+
+        SeleccionarPocion(disponibles[PocionMostrar]);
     }
     public void MostrarPocion(int No)
     {
@@ -802,5 +1105,164 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
     {
         IconoConsumible();
         MostrarHabilidades();
+    }
+
+    private void GuardarSeleccionActual()
+    {
+        // =========================
+        // GADGET
+        // =========================
+
+        PlayerPrefs.SetString(
+            "GadgetSeleccionado",
+            ControladorBatalla.HabilidadT);
+
+        // =========================
+        // POCION
+        // =========================
+
+        PlayerPrefs.SetString(
+         "PocionSeleccionada",
+         string.IsNullOrEmpty(ControladorBatalla.Pocion)
+          ? "Nada"
+          : ControladorBatalla.Pocion);
+
+        PlayerPrefs.Save();
+    }
+
+    private void CargarSeleccionGuardada()
+    {
+        // =========================
+        // GADGET
+        // =========================
+
+        string gadgetGuardado =
+            PlayerPrefs.GetString(
+                "GadgetSeleccionado",
+                "Nada");
+
+        // RECONSTRUIR LISTA DE GADGETS
+        HabilidadesMostrar.Clear();
+
+        for (int i = 0; i < datos.HabilidadesTemporales.Length; i++)
+        {
+            if (datos.UsosHabilidadesT[i] <= 0)
+                continue;
+
+            string armaHab =
+                datos.HabilidadesTemporales[i]
+                .Arma
+                .Trim()
+                .ToLower();
+
+            bool compatible =
+                armaHab.Contains(DatosArma.Nombre.ToLower())
+                || armaHab == "todas";
+
+            if (compatible)
+            {
+                HabilidadesMostrar.Add(
+                    datos.HabilidadesTemporales[i]);
+            }
+        }
+
+        if (gadgetGuardado != "Nada")
+        {
+            int index =
+                datos.BuscarUSoHabilidadTemporalPorNombre(
+                    gadgetGuardado);
+
+            // EXISTE Y TIENE USOS
+            if (index >= 0 &&
+                datos.UsosHabilidadesT[index] > 0)
+            {
+                HabT =
+                    datos.BuscarHabilidadTemporalPorNombre(
+                        gadgetGuardado);
+
+                if (HabT != null)
+                {
+                    HabilidadTemporal.transform
+                        .GetChild(2).gameObject.SetActive(true);
+
+                    HabilidadTemporal.transform
+                        .GetChild(2)
+                        .GetComponent<Image>().sprite =
+                        HabT.Icono;
+
+                    HabilidadesUI[3].transform.GetChild(3)
+                        .GetComponent<TextMeshProUGUI>().text =
+                        $"< {datos.UsosHabilidadesT[index]} / 99";
+
+                    TieneHabTemporal = true;
+
+                    ControladorBatalla.HabilidadT =
+                        gadgetGuardado;
+
+                    // =========================
+                    // SINCRONIZAR INDICES
+                    // =========================
+
+                    for (int j = 0; j < HabilidadesMostrar.Count; j++)
+                    {
+                        if (HabilidadesMostrar[j].Nombre ==
+                            gadgetGuardado)
+                        {
+                            GadgetMostrar = j;
+                            Habmostrar = j;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            GadgetMostrar = -1;
+            Habmostrar = -1;
+        }
+
+        // =========================
+        // POCION
+        // =========================
+
+        string pocionGuardada =
+            PlayerPrefs.GetString(
+                "PocionSeleccionada",
+                "Nada");
+
+        if (pocionGuardada != "Nada")
+        {
+            for (int i = 0; i < datos.Pociones.Length; i++)
+            {
+                if (datos.Pociones[i].Nombre ==
+                    pocionGuardada)
+                {
+                    if (datos.CantidadPociones[i] > 0)
+                    {
+                        SeleccionarPocion(i);
+
+                        // =========================
+                        // SINCRONIZAR INDICE
+                        // =========================
+
+                        List<int> disponibles =
+                            ObtenerPocionesDisponibles();
+
+                        PocionMostrar =
+                            disponibles.IndexOf(i);
+                    }
+
+                    break;
+                }
+            }
+        }
+        else
+        {
+            PocionMostrar = 0;
+            NoPocion = -1;
+        }
+
+        ActualizarUIFlechas();
     }
 }

@@ -54,11 +54,6 @@ public class Scr_DatosArmas : MonoBehaviour
                 HabilidatPDesbloqueadas[i] = false;
             }
         }
-
-        for (int i = 0; i < Pociones.Length; i++)
-        {
-            CantidadPociones[i] = PlayerPrefs.GetInt("Pociones" + Pociones[i].Nombre, 1);
-        }
     }
 
     //Esta funcion se usa tambien en el controlador de cinematicas
@@ -99,13 +94,6 @@ public class Scr_DatosArmas : MonoBehaviour
         }
     }
 
-    public void guardarHabilidadesPociones()
-    {
-        for (int i = 0; i < Pociones.Length; i++)
-        {
-            PlayerPrefs.SetInt("Pociones" + Pociones[i].Nombre, CantidadPociones[i]);
-        }
-    }
     public void AgregarUsosTemporales(string Nombre)
     {
 
@@ -141,7 +129,6 @@ public class Scr_DatosArmas : MonoBehaviour
                 break;
             }
         }
-        guardarHabilidadesPociones();
     }
     //encuentra la habilidar por nombre
     public Scr_CreadorHabilidadesBatalla BuscarHabilidadTemporalPorNombre(string nombre)
