@@ -141,10 +141,6 @@ public class Scr_ControladorArmas : MonoBehaviour
             PuntodeArma = Hijo.transform.GetChild(0);
         }
         ChecarTemporal();
-        if (EfectoTemp == "" && TodasLasArmas[ArmaActual].Nombre == "Chilenon")
-        {
-            EfectoHab = "Quemar";
-        }
         Tipo = TodasLasArmas[ArmaActual].Tipo;
         Gata = GameObject.Find("Personaje");
         CantBalasActual = TodasLasArmas[ArmaActual].Capacidad;
@@ -152,8 +148,6 @@ public class Scr_ControladorArmas : MonoBehaviour
         alcance = TodasLasArmas[ArmaActual].Alcance;
         Physics.IgnoreLayerCollision(7, 8);
         checarIdle();
-        //"Rango" + Nombre del arma
-        //PlayerPrefs.GetInt("Rango " + Datosarmas.TodasLasArmas[objShow].Nombre, 1)-1
     }
     //activa el arma pero si es cuerpo a cuerpo no la toma en cuenta
     void OnEnable()

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.Intrinsics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Scr_DatosArmas : MonoBehaviour
 {
@@ -20,8 +21,37 @@ public class Scr_DatosArmas : MonoBehaviour
     public int[] UsosHabilidadesTInicial;
     public int[] CantidadPocionesInicial;
 
+    // =====================================================
+    // START
+    // =====================================================
+
     void Start()
     {
+        ActualizarArmas();
+
+        ActualizarHabilidades();
+
+        VerificarConsumosBatalla();
+    }
+
+    // =====================================================
+    // ESCUCHADOR DE ESCENAS
+    // =====================================================
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += AlCargarEscena;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= AlCargarEscena;
+    }
+
+    private void AlCargarEscena(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("Escena cargada: " + scene.name);
+
         ActualizarArmas();
 
         ActualizarHabilidades();
@@ -36,7 +66,6 @@ public class Scr_DatosArmas : MonoBehaviour
             if (PlayerPrefs.GetString("Arma" + TodasLasArmas[i].Nombre, "No") == "Si")
             {
                 ArmasDesbloqueadas[i] = true;
-
             }
             else
             {
@@ -52,7 +81,6 @@ public class Scr_DatosArmas : MonoBehaviour
             if (PlayerPrefs.GetString("Habilidad" + HabilidadesPermanentes[i].Nombre, "No") == "Si")
             {
                 HabilidatPDesbloqueadas[i] = true;
-
             }
             else
             {
@@ -65,7 +93,9 @@ public class Scr_DatosArmas : MonoBehaviour
     public void DesbloquearArma(string Nombre)
     {
         Debug.Log("Se esta guardando el arma: " + Nombre);
+
         PlayerPrefs.SetString("Arma" + Nombre, "Si");
+
         PlayerPrefs.Save();
 
         for (int i = 1; i < TodasLasArmas.Length; i++)
@@ -80,9 +110,10 @@ public class Scr_DatosArmas : MonoBehaviour
     public void guardarHabilidades()
     {
         guardarHabilidadesPermanentes();
+
         PlayerPrefs.Save();
     }
-    
+
     public void guardarHabilidadesPermanentes()
     {
         for (int i = 0; i < HabilidadesPermanentes.Length; i++)
@@ -90,7 +121,6 @@ public class Scr_DatosArmas : MonoBehaviour
             if (HabilidatPDesbloqueadas[i])
             {
                 PlayerPrefs.SetString("Habilidad" + HabilidadesPermanentes[i].Nombre, "Si");
-
             }
             else
             {
@@ -101,12 +131,12 @@ public class Scr_DatosArmas : MonoBehaviour
 
     public void AgregarUsosTemporales(string Nombre)
     {
-
         for (int i = 1; i < HabilidadesTemporales.Length; i++)
         {
             if (HabilidadesTemporales[i].Nombre == Nombre)
             {
                 UsosHabilidadesT[i]++;
+
                 break;
             }
         }
@@ -114,17 +144,17 @@ public class Scr_DatosArmas : MonoBehaviour
 
     public void QuitarUsosTemporales(string Nombre)
     {
-
         for (int i = 0; i < HabilidadesTemporales.Length; i++)
         {
             if (HabilidadesTemporales[i].Nombre == Nombre)
             {
-                Debug.Log("Entra2");
                 UsosHabilidadesT[i]--;
+
                 break;
             }
         }
     }
+
     public void QuitarCanidadPociones(string Nombre)
     {
         for (int i = 0; i < Pociones.Length; i++)
@@ -132,22 +162,24 @@ public class Scr_DatosArmas : MonoBehaviour
             if (Pociones[i].Nombre == Nombre)
             {
                 CantidadPociones[i]--;
+
                 break;
             }
         }
     }
-    //encuentra la habilidar por nombre
+
+    //encuentra la habilidad por nombre
     public Scr_CreadorHabilidadesBatalla BuscarHabilidadTemporalPorNombre(string nombre)
     {
         foreach (var habilidad in HabilidadesTemporales)
         {
-            if (habilidad.Nombre == nombre) // Asegúrate de que sea 'Nombre' o 'nombre' según el campo real
+            if (habilidad.Nombre == nombre)
             {
                 return habilidad;
             }
         }
 
-        return null; // No se encontró
+        return null;
     }
 
     public int BuscarUSoHabilidadTemporalPorNombre(string nombre)
@@ -165,23 +197,23 @@ public class Scr_DatosArmas : MonoBehaviour
 
         return -1;
     }
-    //encuentra la habilidar por nombre
+
     public Scr_CreadorHabilidadesBatalla BuscarHabilidadPermanentePorNombre(string nombre)
     {
         foreach (var habilidad in HabilidadesPermanentes)
         {
-            if (habilidad.Nombre == nombre) // Asegúrate de que sea 'Nombre' o 'nombre' según el campo real
+            if (habilidad.Nombre == nombre)
             {
                 return habilidad;
             }
         }
 
-        return null; // No se encontró
+        return null;
     }
 
     public void SincronizarHabilidadesYPocionesDesdeInventario(
-    Scr_Inventario inventario
-)
+        Scr_Inventario inventario
+    )
     {
         // =========================
         // HABILIDADES TEMPORALES
@@ -198,11 +230,11 @@ public class Scr_DatosArmas : MonoBehaviour
                 if (inventario.Objetos[j].Nombre == nombre)
                 {
                     cantidad = inventario.Cantidades[j];
+
                     break;
                 }
             }
 
-            // Cantidad actual
             UsosHabilidadesT[i] = cantidad;
         }
 
@@ -221,11 +253,11 @@ public class Scr_DatosArmas : MonoBehaviour
                 if (inventario.Objetos[j].Nombre == nombre)
                 {
                     cantidad = inventario.Cantidades[j];
+
                     break;
                 }
             }
 
-            // Cantidad actual
             CantidadPociones[i] = cantidad;
         }
 
@@ -240,7 +272,7 @@ public class Scr_DatosArmas : MonoBehaviour
             (int[])CantidadPociones.Clone();
     }
 
-    private void VerificarConsumosBatalla()
+    public void VerificarConsumosBatalla()
     {
         GameObject gata = GameObject.Find("Gata");
 
@@ -303,6 +335,7 @@ public class Scr_DatosArmas : MonoBehaviour
         // =========================
 
         CantidadPocionesInicial = null;
+
         UsosHabilidadesTInicial = null;
     }
 }
