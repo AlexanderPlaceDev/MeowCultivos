@@ -344,6 +344,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             if (ene != null)
             {
                 ene.RecibirDaño(daño, Color.red);
+                Debug.Log("Efecto:" + EfectoTemp);
                 ene.realizardaño(daño, EfectoTemp, EfectoHab);
             }
         }

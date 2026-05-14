@@ -291,17 +291,31 @@ public class Scr_ControladorBatalla : MonoBehaviour
     public void ConseguirHabilidadesArma(string arma)
     {
         CehcarHabilidadDefault(arma);
+
         HabilidadT = PlayerPrefs.GetString(arma + "HT", HabilidadTDefault);
 
+        // Si NO es "Nada", verificar que exista y tenga usos
         if (HabilidadT != "Nada")
         {
+            Datosarmas = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>();
             int index = Datosarmas.BuscarUSoHabilidadTemporalPorNombre(HabilidadT);
 
-            if (Datosarmas.UsosHabilidadesT[index] <= 0)
+            // Verifica que el índice exista
+            if (index >= 0 && index < Datosarmas.UsosHabilidadesT.Length)
             {
+                // Si no tiene usos, quitar habilidad
+                if (Datosarmas.UsosHabilidadesT[index] <= 0)
+                {
+                    HabilidadT = "Nada";
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Habilidad temporal no encontrada: " + HabilidadT);
                 HabilidadT = "Nada";
             }
         }
+
         Habilidad1 = PlayerPrefs.GetString(arma + "H1", Habilidad1Default);
         Habilidad2 = PlayerPrefs.GetString(arma + "H2", Habilidad2Default);
         HabilidadEspecial = PlayerPrefs.GetString(arma + "HE", HabilidadEspecialDefault);
@@ -462,7 +476,6 @@ public class Scr_ControladorBatalla : MonoBehaviour
             }
             else
             {
-                Debug.Log(ComprobarEnemigos() + "/" + ComenzarCuenta);
                 // --- Fin de la cuenta atrás ---
                 if (ComprobarCantidadEnemigos() && ComenzarCuenta)
                 {
@@ -475,7 +488,6 @@ public class Scr_ControladorBatalla : MonoBehaviour
                             NavMeshHit hit;
                             bool enNavMesh = NavMesh.SamplePosition(Enemigo.transform.position, out hit, 1.5f, NavMesh.AllAreas);
 
-                            Debug.Log($"¿Está {Enemigo.name} sobre NavMesh? {enNavMesh}");
                             enenav.enabled = true;
                         }
                         else

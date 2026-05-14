@@ -225,7 +225,6 @@ public class Scr_ActivadorHabilidad : MonoBehaviour
         {
             if (DatosArmas.HabilidadesPermanentes[i].Nombre == habilidad)
             {
-                habilidades.EfectoHabilidad = DatosArmas.HabilidadesPermanentes[i].Efecto;
                 TiempoMaximo = DatosArmas.HabilidadesPermanentes[i].Enfriamiento;
                 cargaHabilidad = DatosArmas.HabilidadesPermanentes[i].Enfriamiento;
                 habilidades.duracionHabilidad = DatosArmas.HabilidadesPermanentes[i].duracion;

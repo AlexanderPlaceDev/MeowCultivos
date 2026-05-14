@@ -15,7 +15,7 @@ public class Scr_CreadorHabilidadesBatalla : ScriptableObject
     public int Usos;
     public float duracion;
     public int Enfriamiento; //cuanto tarda en cargar la habilidad despues de su uso
-    public GameObject Efecto;
+    public string Efecto;
     public string Arma;
     public Color Color;
 }

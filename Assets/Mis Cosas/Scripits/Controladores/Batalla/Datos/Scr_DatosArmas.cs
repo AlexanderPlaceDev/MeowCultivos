@@ -17,11 +17,16 @@ public class Scr_DatosArmas : MonoBehaviour
     public SCR_Pociones[] Pociones;
     public int[] CantidadPociones;
 
+    public int[] UsosHabilidadesTInicial;
+    public int[] CantidadPocionesInicial;
+
     void Start()
     {
         ActualizarArmas();
 
         ActualizarHabilidades();
+
+        VerificarConsumosBatalla();
     }
 
     public void ActualizarArmas()
@@ -110,10 +115,11 @@ public class Scr_DatosArmas : MonoBehaviour
     public void QuitarUsosTemporales(string Nombre)
     {
 
-        for (int i = 1; i < HabilidadesTemporales.Length; i++)
+        for (int i = 0; i < HabilidadesTemporales.Length; i++)
         {
             if (HabilidadesTemporales[i].Nombre == Nombre)
             {
+                Debug.Log("Entra2");
                 UsosHabilidadesT[i]--;
                 break;
             }
@@ -146,15 +152,18 @@ public class Scr_DatosArmas : MonoBehaviour
 
     public int BuscarUSoHabilidadTemporalPorNombre(string nombre)
     {
-        for(int i = 0; i<HabilidadesTemporales.Length; i++)
+        for (int i = 0; i < HabilidadesTemporales.Length; i++)
         {
-            if (HabilidadesTemporales[i].Nombre == nombre) // Asegúrate de que sea 'Nombre' o 'nombre' según el campo real
+            if (HabilidadesTemporales[i] != null)
             {
-                return i;
+                if (HabilidadesTemporales[i].Nombre == nombre)
+                {
+                    return i;
+                }
             }
         }
 
-        return 0; // No se encontró
+        return -1;
     }
     //encuentra la habilidar por nombre
     public Scr_CreadorHabilidadesBatalla BuscarHabilidadPermanentePorNombre(string nombre)
@@ -170,8 +179,14 @@ public class Scr_DatosArmas : MonoBehaviour
         return null; // No se encontró
     }
 
-    public void SincronizarHabilidadesDesdeInventario(Scr_Inventario inventario)
+    public void SincronizarHabilidadesYPocionesDesdeInventario(
+    Scr_Inventario inventario
+)
     {
+        // =========================
+        // HABILIDADES TEMPORALES
+        // =========================
+
         for (int i = 0; i < HabilidadesTemporales.Length; i++)
         {
             string nombre = HabilidadesTemporales[i].Nombre;
@@ -187,7 +202,107 @@ public class Scr_DatosArmas : MonoBehaviour
                 }
             }
 
+            // Cantidad actual
             UsosHabilidadesT[i] = cantidad;
         }
+
+        // =========================
+        // POCIONES
+        // =========================
+
+        for (int i = 0; i < Pociones.Length; i++)
+        {
+            string nombre = Pociones[i].Nombre;
+
+            int cantidad = 0;
+
+            for (int j = 0; j < inventario.Objetos.Length; j++)
+            {
+                if (inventario.Objetos[j].Nombre == nombre)
+                {
+                    cantidad = inventario.Cantidades[j];
+                    break;
+                }
+            }
+
+            // Cantidad actual
+            CantidadPociones[i] = cantidad;
+        }
+
+        // =========================
+        // SNAPSHOT INICIAL
+        // =========================
+
+        UsosHabilidadesTInicial =
+            (int[])UsosHabilidadesT.Clone();
+
+        CantidadPocionesInicial =
+            (int[])CantidadPociones.Clone();
+    }
+
+    private void VerificarConsumosBatalla()
+    {
+        GameObject gata = GameObject.Find("Gata");
+
+        if (gata == null)
+            return;
+
+        Scr_Inventario inventario =
+            gata.transform.GetChild(7)
+            .GetComponent<Scr_Inventario>();
+
+        if (inventario == null)
+            return;
+
+        // =========================
+        // POCIONES
+        // =========================
+
+        if (CantidadPocionesInicial != null)
+        {
+            for (int i = 0; i < Pociones.Length; i++)
+            {
+                int consumidas =
+                    CantidadPocionesInicial[i]
+                    - CantidadPociones[i];
+
+                if (consumidas > 0)
+                {
+                    inventario.QuitarObjeto(
+                        Pociones[i].Nombre,
+                        consumidas
+                    );
+                }
+            }
+        }
+
+        // =========================
+        // GADGETS
+        // =========================
+
+        if (UsosHabilidadesTInicial != null)
+        {
+            for (int i = 0; i < HabilidadesTemporales.Length; i++)
+            {
+                int consumidas =
+                    UsosHabilidadesTInicial[i]
+                    - UsosHabilidadesT[i];
+
+                if (consumidas > 0)
+                {
+                    inventario.QuitarObjeto(
+                        HabilidadesTemporales[i].Nombre,
+                        consumidas
+                    );
+                }
+            }
+        }
+
+        // =========================
+        // LIMPIAR SNAPSHOTS
+        // =========================
+
+        CantidadPocionesInicial = null;
+        UsosHabilidadesTInicial = null;
     }
 }
