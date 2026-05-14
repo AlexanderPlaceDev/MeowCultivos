@@ -12,12 +12,6 @@ public class Scr_ActivadorColisiones : MonoBehaviour
     {
         Controlador = GameObject.Find("Controlador").GetComponent<Scr_ControladorArmas>();
     }
-
-    public void ActivarGolpeDistancia()
-    {
-        Controlador.Golpea();
-    }
-
     public void Disparar()
     {
         Controlador.DisparaBala();

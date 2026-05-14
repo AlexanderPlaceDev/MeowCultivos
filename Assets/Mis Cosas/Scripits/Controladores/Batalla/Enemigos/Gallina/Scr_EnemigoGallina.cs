@@ -78,7 +78,6 @@ public class Scr_EnemigoGallina : Scr_Enemigo
                     {
                         agente.isStopped = false;
                         agente.SetDestination(puntoDestino);
-                        Debug.Log("Moviéndose a nueva posición: " + puntoDestino);
                         return;
                     }
                 }

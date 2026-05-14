@@ -298,8 +298,6 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
 
     public void AceptarBatalla()
     {
-        Debug.Log(Tutopeleas.gameObject.activeInHierarchy);
-        Debug.Log(Tutopeleas.enabled);
         //if (!Tutopeleas.PuedeComenzar && Tutopeleas.isActiveAndEnabled) return;
 
         EsconderFlechasHabilidades();
@@ -335,9 +333,11 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             IconoHabilidadE.transform.GetChild(1).gameObject.SetActive(false);
         }
 
+        Debug.Log("Brinca");
         //Descontar Habilidades en el singleton
         if (newTem)
         {
+            Debug.Log("aqui"+ht);
             //Aqui debo ajustar las cantidades de gadgets en el singleton
             datos.QuitarUsosTemporales(ht);
 
@@ -345,7 +345,11 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
 
             if (datos.UsosHabilidadesT[index] <= 0)
             {
-                ControladorBatalla.HabilidadT = "Nada";
+                // Solo limpiar guardado para próximas selecciones
+                PlayerPrefs.SetString("GadgetSeleccionado", "Nada");
+
+                TieneHabTemporal = false;
+                GadgetMostrar = -1;
             }
         }
         //Descontar pociones en el singleton
@@ -420,13 +424,18 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
         //Descontar habilidades en el singleton
         if (newTem)
         {
+            Debug.Log("Entra1");
             datos.QuitarUsosTemporales(ht);
 
             int index = datos.BuscarUSoHabilidadTemporalPorNombre(ht);
 
             if (datos.UsosHabilidadesT[index] <= 0)
             {
-                ControladorBatalla.HabilidadT = "Nada";
+                // Solo limpiar guardado para próximas selecciones
+                PlayerPrefs.SetString("GadgetSeleccionado", "Nada");
+
+                TieneHabTemporal = false;
+                GadgetMostrar = -1;
             }
         }
         //Descontar pociones en el singleton
@@ -784,6 +793,8 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
 
                 ControladorBatalla.HabilidadT =
                     HabilidadesMostrar[Habmostrar].Nombre;
+
+                GameObject.Find("Controlador").GetComponent<Scr_ControladorArmas>().EfectoTemp = HabT.Efecto;
 
                 TieneHabTemporal = true;
 
@@ -1196,12 +1207,16 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
 
                     TieneHabTemporal = true;
 
-                    ControladorBatalla.HabilidadT =
-                        gadgetGuardado;
+                    // IMPORTANTE
+                    HabT = datos.BuscarHabilidadTemporalPorNombre(gadgetGuardado);
 
-                    // =========================
-                    // SINCRONIZAR INDICES
-                    // =========================
+                    // ESTA ES LA QUE TE FALTABA
+                    ControladorBatalla.HabilidadT = HabT.Nombre;
+
+                    Scr_ControladorArmas controladorArmas= GameObject.Find("Controlador").GetComponent<Scr_ControladorArmas>();
+
+                    Debug.Log("cargando:"+controladorArmas.EfectoTemp);
+                    newTem = true;
 
                     for (int j = 0; j < HabilidadesMostrar.Count; j++)
                     {

@@ -246,6 +246,7 @@ public class Scr_Enemigo : MonoBehaviour
 
             if (!FueBloqueado)
             {
+                Debug.Log("daño"+arma.EfectoTemp);
                 realizardaño(Daño, arma.EfectoTemp, arma.EfectoHab);
             }
             StartCoroutine(GolpePaticula(other.transform));
@@ -280,6 +281,7 @@ public class Scr_Enemigo : MonoBehaviour
             // Lógica de daño
             if (!FueBloqueado)
             {
+                Debug.Log("sisi"+arma.EfectoTemp);
                 realizardaño(Daño, arma.EfectoTemp, arma.EfectoHab);
             }
             StartCoroutine(GolpePaticula(other.transform));

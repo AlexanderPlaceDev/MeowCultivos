@@ -159,7 +159,7 @@ public class Scr_CambiadorBatalla : MonoBehaviour
 
         if (DatosArmas != null && Inventario != null)
         {
-            DatosArmas.SincronizarHabilidadesDesdeInventario(Inventario);
+            DatosArmas.SincronizarHabilidadesYPocionesDesdeInventario(Inventario);
         }
 
         var sol = GameObject.Find("Sol");

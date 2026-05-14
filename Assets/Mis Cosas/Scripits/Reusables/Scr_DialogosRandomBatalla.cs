@@ -21,7 +21,6 @@ public class Scr_DialogosRandomBatalla : MonoBehaviour
             Contador = 0;
 
             int r = Random.Range(0, Dialogos.Length+1);
-            Debug.Log("R:" + r + " Cant:" + Dialogos.Length);
 
             if (r < Dialogos.Length)
             {
