@@ -14,21 +14,18 @@ public class Scr_ActivadorCinematica : MonoBehaviour
 
     private void Awake()
     {
-        Tiempo = FindObjectOfType<Scr_ControladorTiempo>();
+        Collider col = GetComponent<Collider>();
 
-        if (Tiempo == null)
-            Debug.LogError("No se encontró Scr_ControladorTiempo");
+        bool vioActual =
+            PlayerPrefs.GetString("Cinematica " + Cinematica, "No") == "Si";
 
-        // Si la cinemática ya fue reproducida, desactivar el activador completo
-        if (PlayerPrefs.GetString("Cinematica " + Cinematica, "No") == "Si")
-        {
-            gameObject.GetComponent<Collider>().enabled = false;
-        }
+        bool vioAnterior =
+            string.IsNullOrEmpty(CinematicaAnterior) ||
+            PlayerPrefs.GetString("Cinematica " + CinematicaAnterior, "No") == "Si";
 
-        if (PlayerPrefs.GetString("Cinematica " + CinematicaAnterior, "No") == "Si")
-        {
-            gameObject.GetComponent<Collider>().enabled = true;
-        }
+        Tiempo = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
+
+        col.enabled = !vioActual && vioAnterior;
 
     }
 
@@ -76,8 +73,8 @@ public class Scr_ActivadorCinematica : MonoBehaviour
         // ✅ Guardar la cinemática como completada
         PlayerPrefs.SetString("Cinematica " + Cinematica, "Si");
 
-        PlayerPrefs.SetString("DiaCinematica:" + gameObject.transform.parent.parent.name, Tiempo.DiaActual);
-        PlayerPrefs.SetInt("HoraCinematica:" + gameObject.transform.parent.parent.name, Tiempo.HoraActual);
+        PlayerPrefs.SetString("DiaCinematica:" + Cinematica, Tiempo.DiaActual);
+        PlayerPrefs.SetInt("HoraCinematica:" + Cinematica, Tiempo.HoraActual);
         Debug.Log("Guarda desde: " + gameObject.name);
 
         Scr_ActivadorElementos ActivadorPadre = transform.parent.GetComponent<Scr_ActivadorElementos>();
