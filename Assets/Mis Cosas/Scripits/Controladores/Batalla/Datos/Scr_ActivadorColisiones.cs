@@ -45,4 +45,9 @@ public class Scr_ActivadorColisiones : MonoBehaviour
     {
         Colision2.SetActive(false);
     }
+
+    public void ActivarGolpeDistancia()
+    {
+        Controlador.Golpea();
+    }
 }

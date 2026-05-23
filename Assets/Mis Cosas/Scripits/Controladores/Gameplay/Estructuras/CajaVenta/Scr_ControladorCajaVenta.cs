@@ -34,6 +34,12 @@ public class Scr_ControladorCajaVenta : MonoBehaviour
     [SerializeField] TextMeshProUGUI TextoCajasVendidas;
     [SerializeField] GameObject MarcoVenta;
 
+    [Header("Scroll")]
+    [SerializeField] Scrollbar scrollbar;
+
+    GridLayoutGroup grid;
+    RectTransform itemsRect;
+
     [Header("Flechas")]
     [SerializeField] GameObject FlechaIzquierda;
     [SerializeField] GameObject FlechaDerecha;
@@ -67,6 +73,11 @@ public class Scr_ControladorCajaVenta : MonoBehaviour
 
     void Start()
     {
+        grid = Items.GetComponent<GridLayoutGroup>();
+        itemsRect = Items.GetComponent<RectTransform>();
+
+        scrollbar.onValueChanged.AddListener(OnScrollValueChanged);
+
         CargarProgreso();
         RefrescarItems();
     }
@@ -77,6 +88,65 @@ public class Scr_ControladorCajaVenta : MonoBehaviour
         CargarProgreso();
         RefrescarItems();
     }
+
+    void OnScrollValueChanged(float value)
+    {
+        ActualizarScroll();
+    }
+
+    void ActualizarScroll()
+    {
+        if (grid == null || itemsRect == null)
+            return;
+
+        int totalItems = Items.transform.childCount;
+
+        if (totalItems <= 9)
+        {
+            scrollbar.gameObject.SetActive(false);
+
+            Vector2 pos = itemsRect.anchoredPosition;
+            pos.y = 500;
+
+            itemsRect.anchoredPosition = pos;
+
+            return;
+        }
+
+        scrollbar.gameObject.SetActive(true);
+
+        int columnas = 3;
+        int filasVisibles = 3;
+
+        float altoCelda = grid.cellSize.y;
+        float spacingY = grid.spacing.y;
+
+        int filasTotales =
+            Mathf.CeilToInt((float)totalItems / columnas);
+
+        int filasExtra =
+            filasTotales - filasVisibles;
+
+        float escalaY = itemsRect.localScale.y;
+
+        float yInicial = 500;
+
+        float distanciaScroll =
+            filasExtra *
+            (altoCelda + spacingY) *
+            escalaY;
+
+        float yFinal =
+            yInicial + distanciaScroll;
+
+        Vector2 nuevaPos = itemsRect.anchoredPosition;
+
+        nuevaPos.y =
+            Mathf.Lerp(yInicial, yFinal, scrollbar.value);
+
+        itemsRect.anchoredPosition = nuevaPos;
+    }
+
 
     // =========================
     // SELECCIÓN ITEM
@@ -307,6 +377,9 @@ public class Scr_ControladorCajaVenta : MonoBehaviour
                 SeleccionarItem(obj));
 
             trigger.triggers.Add(entry);
+
+            Canvas.ForceUpdateCanvases();
+            ActualizarScroll();
         }
     }
 
