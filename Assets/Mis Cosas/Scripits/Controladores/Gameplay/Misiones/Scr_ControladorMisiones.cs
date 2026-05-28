@@ -493,11 +493,13 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
 
             // Oculta el panel si no es caza ni recolección
-            if (MisionActual.Tipo != Tipos.Caza && MisionActual.Tipo != Tipos.Recoleccion)
+            bool mostrarObjetos = MisionActual.Tipo == Tipos.Caza || MisionActual.Tipo == Tipos.Recoleccion || (MisionActual.Tipo == Tipos.Construccion && !MisionesCompletas[PaginaActual]);
+
+            if (!mostrarObjetos)
             {
                 ObjetosRecoleccion.SetActive(false);
                 TextoNoAplica.SetActive(true);
-                return; // Ya que no hay más que mostrar
+                return;
             }
 
             // Ocultar todos los hijos

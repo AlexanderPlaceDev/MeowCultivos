@@ -25,8 +25,12 @@ MonoBehaviour:
   LugarObjetivoExploracion: 
   DireccionesRequeridas: 
   Teclas: 
-  ObjetosNecesarios: []
-  CantidadesQuita: 
+  ObjetosNecesarios:
+  - {fileID: 11400000, guid: 39699c4a042de2247955bcd7f5e992f8, type: 2}
+  - {fileID: 11400000, guid: a1dcbf004b25dc8478076e9ce3ec3b63, type: 2}
+  - {fileID: 11400000, guid: e2e5c9ac1c1b77d4b91658849ea31af6, type: 2}
+  - {fileID: 11400000, guid: a87d1159b0a18c04985e7dd619997811, type: 2}
+  CantidadesQuita: 140000000f0000000a0000000a000000
   ObjetivosACazar: []
   CantidadACazar: 
   IconosACazar: []
