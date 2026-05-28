@@ -12,6 +12,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
     public string DiaActual = "LUN"; // Día inicial del juego
     public int HoraActual = 10; // Hora inicial, por ejemplo, 6:00 AM
     public float MinutoActual = 0; // Minuto actual, avanza en intervalos de 10 minutos
+    public int SemanaActual = 0;
     [SerializeField] Image ImagenClima;
     [SerializeField] int[] HorasClima; // Horas en las que cambia el icono del clima
     [SerializeField] Sprite[] IconosClima; // Iconos del clima para representar visualmente
@@ -58,6 +59,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
         DiaActual = PlayerPrefs.GetString("DiaActual", "LUN");
         HoraActual = PlayerPrefs.GetInt("HoraActual", 11);
         MinutoActual = PlayerPrefs.GetFloat("MinutoActual", 0);
+        SemanaActual = PlayerPrefs.GetInt("SemanaActual", 0);
         DineroRecompensa = PlayerPrefs.GetInt("DineroCajaVenta", 0);
         //Clima = GameObject.Find("Clima").GetComponent<Scr_controladorClima>();
         ActualizarTextoFecha();
@@ -333,9 +335,21 @@ public class Scr_ControladorTiempo : MonoBehaviour
     void ActualizarDia()
     {
         string[] dias = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
+
         int diaActualIndex = System.Array.IndexOf(dias, DiaActual);
+
+        string diaAnterior = DiaActual;
+
         DiaActual = dias[(diaActualIndex + 1) % dias.Length];
-        if(DiaActual == "DOM")
+
+        // Cambio de semana: DOM -> LUN
+        if (diaAnterior == "DOM" && DiaActual == "LUN")
+        {
+            SemanaActual++;
+        }
+
+        // Reiniciar clima semanal al llegar a DOM
+        if (DiaActual == "DOM")
         {
             LimpiarClimaSemanal();
             NuevoclimaSemanal();
@@ -359,6 +373,8 @@ public class Scr_ControladorTiempo : MonoBehaviour
         PlayerPrefs.SetString("DiaActual", DiaActual);
         PlayerPrefs.SetInt("HoraActual", HoraActual);
         PlayerPrefs.SetFloat("MinutoActual", MinutoActual);
+        PlayerPrefs.SetInt("SemanaActual", SemanaActual);
+
         PlayerPrefs.Save();
     }
 

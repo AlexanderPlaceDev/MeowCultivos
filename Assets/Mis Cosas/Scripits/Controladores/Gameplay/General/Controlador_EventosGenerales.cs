@@ -185,7 +185,16 @@ public class Controlador_EventosGenerales : MonoBehaviour
         TimeSpan inicio = new TimeSpan(e.horaInicio, e.minutoInicio, 0);
         TimeSpan fin = new TimeSpan(e.horaFin, e.minutoFin, 0);
 
-        return actual >= inicio && actual <= fin;
+        // horario normal
+        if (inicio <= fin)
+        {
+            return actual >= inicio && actual <= fin;
+        }
+        // cruza medianoche
+        else
+        {
+            return actual >= inicio || actual <= fin;
+        }
     }
 
     public void DesactivarEvento(string nombreEvento)

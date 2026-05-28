@@ -29,12 +29,15 @@ public class Scr_ActivadorElementos : MonoBehaviour
     [Header("Control de reactivación")]
     public int HorasParaReactivar = 24;
 
+    [Header("Debug")]
+    [SerializeField] private int HorasRestantesParaActivar;
+
     private Scr_ControladorTiempo Tiempo;
     private Controlador_EventosGenerales Eventos;
 
     private string diaUltimaRevision = "";
     private bool diaPermitido = true;
-    private bool prevActivado = false;
+
 
     void Start()
     {
@@ -67,23 +70,12 @@ public class Scr_ActivadorElementos : MonoBehaviour
         if (UsaEventoGeneral)
         {
             var evento = Eventos.ObtenerEventoPorNombre(NombreEventoGeneral);
-            if (evento == null)
-            {
-                prevActivado = false;
-                return;
-            }
-
+            
             // Día válido
             bool esDia = Array.Exists(evento.diasActivo, d => d == Tiempo.DiaActual);
 
             // Mapa activo
             bool mapaActivo = (evento.mapaAsociado == null) || evento.mapaAsociado.activeInHierarchy;
-
-            if (!(esDia && mapaActivo))
-            {
-                prevActivado = false;
-                return;
-            }
 
             // SOLO HORAS
             rangoMin = evento.horaInicio;
@@ -169,25 +161,31 @@ public class Scr_ActivadorElementos : MonoBehaviour
 
         // --- CONTROL DE TIEMPO SOLO POR DÍA ---
         bool bloqueadoPorTiempo = false;
+        HorasRestantesParaActivar = 0;
 
         if (!string.IsNullOrEmpty(CinematicaPrevia))
         {
-            string ultimoDia = PlayerPrefs.GetString("DiaCinematica:" + CinematicaPrevia, "");
-            int ultimaHora = PlayerPrefs.GetInt("HoraCinematica:" + CinematicaPrevia, -1);
+            int horaGuardada =
+    PlayerPrefs.GetInt("HoraTotalCinematica:" + CinematicaPrevia, -1);
 
-            if (!string.IsNullOrEmpty(ultimoDia) && ultimaHora >= 0)
+            if (horaGuardada >= 0)
             {
-                int horaPrevTotal = GetDayIndex(ultimoDia) * 24 + ultimaHora;
-                int horaActualTotal = GetDayIndex(Tiempo.DiaActual) * 24 + Tiempo.HoraActual;
+                int horaActualTotal = GetHoraTotalMundo();
 
-                int horasTranscurridas = horaActualTotal - horaPrevTotal;
-
-                // Ajuste si cruzó semana
-                if (horasTranscurridas < 0)
-                    horasTranscurridas += 7 * 24;
+                int horasTranscurridas =
+                    horaActualTotal - horaGuardada;
 
                 if (horasTranscurridas < HorasParaReactivar)
+                {
                     bloqueadoPorTiempo = true;
+
+                    HorasRestantesParaActivar =
+                        HorasParaReactivar - horasTranscurridas;
+                }
+                else
+                {
+                    HorasRestantesParaActivar = 0;
+                }
             }
         }
 
@@ -222,19 +220,6 @@ public class Scr_ActivadorElementos : MonoBehaviour
             if (obj != null)
                 obj.SetActive(activar);
 
-        // Guardar cinemática vista
-        if (EsCinematica)
-        {
-            if (activar && !prevActivado)
-            {
-                // Guardar solo día + hora
-                PlayerPrefs.SetString("DiaCinematica:" + NombreCinematica, Tiempo.DiaActual);
-                PlayerPrefs.SetInt("HoraCinematica:" + NombreCinematica, Tiempo.HoraActual);
-
-                PlayerPrefs.Save();
-            }
-            prevActivado = activar;
-        }
     }
 
     // Devuelve el índice del día (LUN=0, MAR=1,... DOM=6)
@@ -243,6 +228,14 @@ public class Scr_ActivadorElementos : MonoBehaviour
         string[] dias = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
         int idx = Array.IndexOf(dias, dia);
         return Mathf.Clamp(idx, 0, 6);
+    }
+
+    private int GetHoraTotalMundo()
+    {
+        return
+            (Tiempo.SemanaActual * 7 * 24) +
+            (GetDayIndex(Tiempo.DiaActual) * 24) +
+            Tiempo.HoraActual;
     }
 
     private bool DiaEsValido(string diaActual)

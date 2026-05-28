@@ -1,4 +1,5 @@
 ﻿using Cinemachine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -73,8 +74,15 @@ public class Scr_ActivadorCinematica : MonoBehaviour
         // ✅ Guardar la cinemática como completada
         PlayerPrefs.SetString("Cinematica " + Cinematica, "Si");
 
-        PlayerPrefs.SetString("DiaCinematica:" + Cinematica, Tiempo.DiaActual);
-        PlayerPrefs.SetInt("HoraCinematica:" + Cinematica, Tiempo.HoraActual);
+        int horaTotalMundo =
+        (Tiempo.SemanaActual * 7 * 24) +
+        (GetDayIndex(Tiempo.DiaActual) * 24) +
+        Tiempo.HoraActual;
+
+        PlayerPrefs.SetInt(
+            "HoraTotalCinematica:" + Cinematica,
+            horaTotalMundo
+        );
         Debug.Log("Guarda desde: " + gameObject.name);
 
         Scr_ActivadorElementos ActivadorPadre = transform.parent.GetComponent<Scr_ActivadorElementos>();
@@ -116,5 +124,20 @@ public class Scr_ActivadorCinematica : MonoBehaviour
         // ✅ Desactivar elementos y activador
         gameObject.GetComponent<Collider>().enabled = false; // Desactiva el activador para no volver a activarlo
 
+    }
+
+    private int GetHoraTotalMundo()
+    {
+        return
+            (Tiempo.SemanaActual * 7 * 24) +
+            (GetDayIndex(Tiempo.DiaActual) * 24) +
+            Tiempo.HoraActual;
+    }
+
+    private int GetDayIndex(string dia)
+    {
+        string[] dias = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
+        int idx = Array.IndexOf(dias, dia);
+        return Mathf.Clamp(idx, 0, 6);
     }
 }
