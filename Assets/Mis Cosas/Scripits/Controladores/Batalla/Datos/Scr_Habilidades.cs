@@ -77,6 +77,7 @@ public class Scr_Habilidades : MonoBehaviour
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
                     StartCoroutine(ModificarVignette(_vignette, ColorHabilidad, 0.5f, 5f));
+                    StartCoroutine(HabilidadPotasio(duracionHabilidad));
                 }
 
                 StartCoroutine(ActivarEfectoVisual(5f));
@@ -315,9 +316,9 @@ public class Scr_Habilidades : MonoBehaviour
     IEnumerator HabilidadGarras()
     {
         //Guardamos el daño que tenia
-        DañoAnterior = Singleton.GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño;
+        DañoAnterior = Controlador.GetComponent<Scr_ControladorArmas>().daño;
         //Multiplicamos el daño x 4
-        Singleton.GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño=(int)(DañoAnterior*4);
+        Controlador.GetComponent<Scr_ControladorArmas>().daño = (int)(DañoAnterior*4);
         //Se activan las colisiones
         AreasGarras[0].SetActive(true);
         AreasGarras[1].SetActive(true);
@@ -344,7 +345,7 @@ public class Scr_Habilidades : MonoBehaviour
         AreasGarras[1].SetActive(true);
         yield return new WaitForSeconds(0.75f / 2f);
         //Reasignamos el daño
-        Singleton.GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño=(int)DañoAnterior;
+        Controlador.GetComponent<Scr_ControladorArmas>().daño = (int)DañoAnterior;
         Armas.transform.GetChild(0).gameObject.SetActive(true);
 
         Personaje.GetComponent<Scr_Movimiento>().enabled = true;

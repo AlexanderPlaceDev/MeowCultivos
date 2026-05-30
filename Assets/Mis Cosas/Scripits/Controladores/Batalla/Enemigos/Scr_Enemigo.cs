@@ -232,7 +232,7 @@ public class Scr_Enemigo : MonoBehaviour
             }*/
             // Instanciar el CanvasDaño en la posición inicial
             //Debug.LogError(FueBloqueado);
-            int Daño = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño;
+            float Daño = Controlador.GetComponent<Scr_ControladorArmas>().daño;
 
             // Desactivar el golpe para evitar múltiples activaciones
             if (other.gameObject.name != "Impulso")
@@ -259,7 +259,7 @@ public class Scr_Enemigo : MonoBehaviour
         else if (other.gameObject.tag == "Bala")
         {
             // Instanciar el CanvasDaño en la posición inicial
-            int Daño = GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño;
+            float Daño = Controlador.GetComponent<Scr_ControladorArmas>().daño;
             /*
             // Verifica que las posiciones inicial y final estén asignadas
             if (PosInicialDaño == null || PosFinalDaño == null)
@@ -336,7 +336,7 @@ public class Scr_Enemigo : MonoBehaviour
 
             // Hacer que el Canvas sea hijo del enemigo para que se mueva con él
             canvasInstanciado.transform.SetParent(transform);
-            canvasInstanciado.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = daño.ToString();
+            canvasInstanciado.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = (int)daño+"";
             // Iniciar el movimiento del CanvasDaño
             StartCoroutine(MoverCanvas(canvasInstanciado, PosInicialDaño.position, PosFinalDaño.position, 1f));
         }

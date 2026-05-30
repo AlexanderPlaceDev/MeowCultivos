@@ -192,7 +192,7 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 
     void RestaurarEnemigos()
     {
-        haveAcivate = PlayerPrefs.GetInt($"{IDSpawner}_Active");
+        haveAcivate = PlayerPrefs.GetInt($"{IDSpawner}_Active", 0);
 
         // Forzar activación si NoUsaHaveActive está en true
         if (NoUsaHaveActive)
@@ -200,7 +200,7 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 
         if (haveAcivate == 1)
         {
-            int enemigosVivos = PlayerPrefs.GetInt($"{IDSpawner}_CantidadEnemigosVivos", CantidadDeEnemigos);
+            int enemigosVivos = PlayerPrefs.GetInt($"{IDSpawner}_CantidadEnemigosVivos", 0);
 
             for (int i = 0; i < enemigosVivos; i++)
             {

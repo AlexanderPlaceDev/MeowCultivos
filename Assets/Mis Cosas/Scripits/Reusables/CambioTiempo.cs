@@ -110,6 +110,10 @@ public class CambioTiempo : MonoBehaviour
             Radio.SetActive(true);
             Radio_not();
         }
+        else
+        {
+            Radio.SetActive(false);
+        }
     }
     public void cabTiempo()
     {

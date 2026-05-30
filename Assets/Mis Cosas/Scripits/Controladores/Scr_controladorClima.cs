@@ -51,6 +51,7 @@ public class Scr_controladorClima : MonoBehaviour
         Apagar_Luvia();
         Apagar_Neblina();
         Apagar_Viento();
+        Apagar_NeblinaRoja();
     }
     public void Prender_Viento()
     {

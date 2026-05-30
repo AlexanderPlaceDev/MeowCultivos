@@ -28,7 +28,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     [SerializeField] GameObject[] FrutaMano;
     [SerializeField] GameObject[] FrutaDrop;
     public GameObject BalaADisparar; //que va a disparar
-    public Transform puntoDisparo; //lugar donde sale la bala
+    //public Transform puntoDisparo; //lugar donde sale la bala
     public Camera camara;
     public float fuerzaDisparo = 70f;
     public int ArmaActual = 0;
@@ -36,7 +36,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     private TextMeshProUGUI contadorbalas;
 
 
-    public Transform PuntodeArma;//pundo para daño melee
+    public Transform PuntodeArma;//pundo para daño melee o bala
     bool Atacando = false;  // Evita que se interrumpa la animación actual
     public int CantBalasActual = 0;
     public int balascargador = 0;
@@ -162,7 +162,6 @@ public class Scr_ControladorArmas : MonoBehaviour
         if (ArmaActual != 0)
         {
             ObjetoArmas_reales[ArmaActual].SetActive(true);
-            puntoDisparo = ObjetoArmas_reales[ArmaActual - 1].GetComponentInChildren<Transform>();
             AnimArma = ObjetoArmas_reales[ArmaActual].GetComponent<Animator>();
         }
         if (TodasLasArmas[ArmaActual].Tipo != "Cuerpo a Cuerpo")
@@ -173,7 +172,6 @@ public class Scr_ControladorArmas : MonoBehaviour
             contador[1].SetActive(true);
             contadorbalas = contador[1].GetComponent<TextMeshProUGUI>();
             contadorbalas.text = CantBalasActual + "/" + balascargador;
-
             BalaADisparar = balaPrefab[ArmaActual];
         }
         else
@@ -251,7 +249,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             }
         }
         //prueba de recarga
-        if (Recargar.IsPressed())
+        if (Recargar.WasPressedThisFrame())
         {
             RecargarBala();
         }
@@ -275,7 +273,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         }
         else if (Tipo == "Escopeta")
         {
-            StartCoroutine(GolpePaticula(puntoDisparo));
+            StartCoroutine(GolpePaticula(PuntodeArma));
             source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[0]);
             DispararEscopeta();
         }
@@ -286,7 +284,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         }
         else
         {
-            StartCoroutine(GolpePaticula(puntoDisparo));
+            StartCoroutine(GolpePaticula(PuntodeArma));
             source.PlayOneShot(TodasLasArmas[ArmaActual].Sonidos[0]);
             DisparaBala();
         }
@@ -377,7 +375,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         }
         temporizadorDisparo = 0;
         Atacando = true;
-        GameObject bala = Instantiate(BalaADisparar, puntoDisparo.position, puntoDisparo.rotation);
+        GameObject bala = Instantiate(BalaADisparar, PuntodeArma.position, PuntodeArma.rotation);
         bala.transform.localScale = bala.transform.localScale * TamaProyectil;
         float masdaño = 0;
         if (minLimit && CantBalasActual < 2)
@@ -399,7 +397,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, 100f))
         {
             // Si choca algo, disparamos hacia ese punto
-            direccionDisparo = (hit.point - puntoDisparo.position).normalized;
+            direccionDisparo = (hit.point - PuntodeArma.position).normalized;
         }
         else
         {
@@ -437,7 +435,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         float dañopoerdigon = daño / cantidadPerdigones;
         for (int i = 0; i < cantidadPerdigones; i++)
         {
-            GameObject bala = Instantiate(BalaADisparar, puntoDisparo.position, puntoDisparo.rotation);
+            GameObject bala = Instantiate(BalaADisparar, PuntodeArma.position, PuntodeArma.rotation);
             bala.transform.localScale = bala.transform.localScale * TamaProyectil;
             float masdaño = 0;
             if (minLimit && CantBalasActual < 2)
