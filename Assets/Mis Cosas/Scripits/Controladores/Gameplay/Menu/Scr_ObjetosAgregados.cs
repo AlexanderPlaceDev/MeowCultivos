@@ -293,6 +293,7 @@ public class Scr_ObjetosAgregados : MonoBehaviour
     {
         for (int i = Lista.Count - 1; i >= 0; i--)
         {
+            if(i>=Tiempo.Length) break;
             Tiempo[i] -= Time.deltaTime;
 
             if (Tiempo[i] <= 0f)

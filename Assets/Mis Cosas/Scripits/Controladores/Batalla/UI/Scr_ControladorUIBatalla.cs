@@ -1050,6 +1050,22 @@ public class Scr_ControladorUIBatalla : MonoBehaviour
             Secciones[2].transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = "Ningina Pocion";
         }
     }
+    public void MostrarPocion1()
+    {
+        MostrarDescipcion();
+
+        int opc = PocionMostrar - 1;
+        if (opc >= 0)
+        {
+            Secciones[2].transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = datos.Pociones[PocionMostrar].Nombre;
+            Secciones[2].transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = datos.Pociones[PocionMostrar].Descripcion;
+        }
+        else
+        {
+            Secciones[2].transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = "Nada";
+            Secciones[2].transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = "Ningina Pocion";
+        }
+    }
 
     public void IconoConsumible()
     {

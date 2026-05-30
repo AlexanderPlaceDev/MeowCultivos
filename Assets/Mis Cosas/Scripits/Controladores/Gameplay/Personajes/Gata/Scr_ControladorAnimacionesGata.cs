@@ -76,7 +76,7 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
         Anim.SetBool("Recolectando", Recolectando);
         Anim.SetBool("Regando", Regando);
 
-        if (!Talando && !Recolectando && !Regando)
+        if (!Talando && !Recolectando && !Regando && PuedeCaminar)
         {
             Anim.SetBool("Caminando", Mov.Estado == Scr_Movimiento.Estados.Caminar);
             Anim.SetBool("Corriendo", Mov.Estado == Scr_Movimiento.Estados.Correr);
