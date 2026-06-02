@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.20422114, g: 0.036994975, b: 0.116158225, a: 1}
+  m_IndirectSpecularColor: {r: 0.20422998, g: 0.03699511, b: 0.11615894, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3753,24 +3753,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: abf481f90e89dc74c95b1ac5c4954500, type: 2}
   ArmasDesbloqueadas: 01000000000000000000
   HabilidadesTemporales:
-  - {fileID: 11400000, guid: 0e3676ae6046aee42909c679b531f8c2, type: 2}
-  - {fileID: 11400000, guid: 137755481242f9842afeb6be3d9202dd, type: 2}
   - {fileID: 11400000, guid: a52d6915f99baf34f971a41f687b08d2, type: 2}
-  - {fileID: 11400000, guid: 91c457c1b4557d6498a122a51a9ceb48, type: 2}
-  - {fileID: 11400000, guid: 75d737e22855db247be665d778643b6c, type: 2}
-  - {fileID: 11400000, guid: d111aee91499fd84eb8f8593f31418c6, type: 2}
-  - {fileID: 11400000, guid: cde79a6ca33346340897d95a24593cb5, type: 2}
-  - {fileID: 11400000, guid: ad8cac3971934644c89e83baa8e1e801, type: 2}
   - {fileID: 11400000, guid: c8b48b8c4bde66141bbb8aa5c3b04a78, type: 2}
-  - {fileID: 11400000, guid: 5e96066b87756a946beab6aff27ecafc, type: 2}
-  - {fileID: 11400000, guid: bfc5b1af7108342479696513b08064ef, type: 2}
-  - {fileID: 11400000, guid: 5bb86d9bd179de246b3923ce34e175ee, type: 2}
+  - {fileID: 11400000, guid: cde79a6ca33346340897d95a24593cb5, type: 2}
+  - {fileID: 11400000, guid: 91c457c1b4557d6498a122a51a9ceb48, type: 2}
+  - {fileID: 11400000, guid: d46077b1c195aaa458da311aed1238bf, type: 2}
+  - {fileID: 11400000, guid: ad8cac3971934644c89e83baa8e1e801, type: 2}
+  - {fileID: 11400000, guid: f15d480373574304aa4767575c8cc0eb, type: 2}
+  - {fileID: 11400000, guid: d111aee91499fd84eb8f8593f31418c6, type: 2}
   - {fileID: 11400000, guid: ce24e34adada15d40b9274bdef475f8c, type: 2}
-  - {fileID: 11400000, guid: a21e389cff0a69e4580d53bdbf4d917e, type: 2}
-  - {fileID: 11400000, guid: f9e54410853fec84e9f6b820cf99bdab, type: 2}
-  - {fileID: 11400000, guid: ddb5727822e160e49b34ffe14bf5d520, type: 2}
-  HabilidatTDesbloqueadas: 00000000000000000000000000000000
-  UsosHabilidadesT: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  - {fileID: 11400000, guid: bfc5b1af7108342479696513b08064ef, type: 2}
+  UsosHabilidadesT: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
   HabilidadesPermanentes:
   - {fileID: 11400000, guid: 845b88dde0c4a5a45809494e7e0e7256, type: 2}
   - {fileID: 11400000, guid: c624195f5dea30b428f37082bf0d597b, type: 2}
@@ -3804,6 +3797,8 @@ MonoBehaviour:
   Pociones:
   - {fileID: 11400000, guid: edcab70fb9145024b8ae0a5ecb9e4a6a, type: 2}
   CantidadPociones: 00000000
+  UsosHabilidadesTInicial: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
+  CantidadPocionesInicial: 00000000
 --- !u!114 &736642639
 MonoBehaviour:
   m_ObjectHideFlags: 0

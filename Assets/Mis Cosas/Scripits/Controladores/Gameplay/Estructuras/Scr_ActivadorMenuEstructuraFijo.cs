@@ -91,6 +91,7 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 230, 1);
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(), -800, 1);
             Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(3).GetComponent<RectTransform>(), -800, 1);
+            Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(4).GetComponent<RectTransform>(), 150, 1);
             Checar_input.CammbiarAction_UI();
         }
         else
@@ -213,5 +214,6 @@ public class Scr_ActivadorMenuEstructuraFijo : MonoBehaviour
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 0, 1);
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(), 22.5f, 1);
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(3).GetComponent<RectTransform>(), -12.5f, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(4).GetComponent<RectTransform>(), -50f, 1);
     }
 }

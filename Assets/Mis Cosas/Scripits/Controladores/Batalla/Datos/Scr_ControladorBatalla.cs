@@ -98,7 +98,6 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
     [Header("Barra Oleadas")]
     public GameObject BarraOleadas;
-    [SerializeField] Transform BarraSlider;
     [SerializeField] float TiempoEntreOleadas;
     private bool PrimerSpawn = false;
 

@@ -28,9 +28,11 @@ public class Scr_DatosArmas : MonoBehaviour
     void Start()
     {
         ActualizarArmas();
-
         ActualizarHabilidades();
-
+        if (GameObject.Find("Gata") != null)
+        {
+            SincronizarHabilidadesYPocionesDesdeInventario(GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>());
+        }
         VerificarConsumosBatalla();
     }
 
@@ -53,9 +55,11 @@ public class Scr_DatosArmas : MonoBehaviour
         Debug.Log("Escena cargada: " + scene.name);
 
         ActualizarArmas();
-
         ActualizarHabilidades();
-
+        if (GameObject.Find("Gata") != null)
+        {
+            SincronizarHabilidadesYPocionesDesdeInventario(GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>());
+        }
         VerificarConsumosBatalla();
     }
 
@@ -221,6 +225,8 @@ public class Scr_DatosArmas : MonoBehaviour
 
         for (int i = 0; i < HabilidadesTemporales.Length; i++)
         {
+            Debug.Log("HT " + i + " = " + (HabilidadesTemporales[i] != null));
+
             string nombre = HabilidadesTemporales[i].Nombre;
 
             int cantidad = 0;
@@ -244,6 +250,8 @@ public class Scr_DatosArmas : MonoBehaviour
 
         for (int i = 0; i < Pociones.Length; i++)
         {
+            Debug.Log("P " + i + " = " + (Pociones[i] != null));
+
             string nombre = Pociones[i].Nombre;
 
             int cantidad = 0;

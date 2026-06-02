@@ -134,7 +134,7 @@ public class Scr_ControladorOleadas : MonoBehaviour
                 {
                     BotonOleada.SetActive(true);
 
-                    IconProvider.ActualizarIconoUI(Interactuar, BotonOleada.transform, ref iconoActualInteractuar, ref textoActualInteractuar, true);
+                    IconProvider.ActualizarIconoUI(Interactuar, BotonOleada.transform, ref iconoActualInteractuar, ref textoActualInteractuar, false);
                     if (Interactuar.IsPressed())
                     {
                         estaPresionandoE = true;
