@@ -291,23 +291,24 @@ public class Scr_ObjetosAgregados : MonoBehaviour
     // =========================
     private void ActualizarTimers()
     {
-        for (int i = Lista.Count - 1; i >= 0; i--)
+        int visibles = Mathf.Min(Lista.Count, Tiempo.Length);
+
+        for (int i = visibles - 1; i >= 0; i--)
         {
-            if(i>=Tiempo.Length) break;
             Tiempo[i] -= Time.deltaTime;
 
-            if (Tiempo[i] <= 0f)
+            if (Tiempo[i] <= 0)
             {
                 Lista.RemoveAt(i);
                 Cantidades.RemoveAt(i);
                 FueExcedente.RemoveAt(i);
 
-                ReindexarXP(i);
-
                 for (int t = i; t < Tiempo.Length - 1; t++)
+                {
                     Tiempo[t] = Tiempo[t + 1];
+                }
 
-                Tiempo[Tiempo.Length - 1] = 0f;
+                Tiempo[Tiempo.Length - 1] = 2f;
             }
         }
     }
