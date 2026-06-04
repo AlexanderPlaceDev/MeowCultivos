@@ -77,10 +77,10 @@ public class Scr_Habilidades : MonoBehaviour
                 if (volumen.profile.TryGet<Vignette>(out _vignette))
                 {
                     StartCoroutine(ModificarVignette(_vignette, ColorHabilidad, 0.5f, 5f));
-                    StartCoroutine(HabilidadPotasio(duracionHabilidad));
+                    StartCoroutine(HabilidadRugido(duracionHabilidad));
                 }
 
-                StartCoroutine(ActivarEfectoVisual(5f));
+                StartCoroutine(ActivarEfectoVisual(duracionHabilidad));
                 break;
 
             case "Ojo":
@@ -316,9 +316,8 @@ public class Scr_Habilidades : MonoBehaviour
     IEnumerator HabilidadGarras()
     {
         //Guardamos el daño que tenia
-        DañoAnterior = Controlador.GetComponent<Scr_ControladorArmas>().daño;
         //Multiplicamos el daño x 4
-        Controlador.GetComponent<Scr_ControladorArmas>().daño = (int)(DañoAnterior*4);
+        Controlador.GetComponent<Scr_ControladorArmas>().daño = (int)(Controlador.GetComponent<Scr_ControladorArmas>().daño * 4);
         //Se activan las colisiones
         AreasGarras[0].SetActive(true);
         AreasGarras[1].SetActive(true);
@@ -345,7 +344,7 @@ public class Scr_Habilidades : MonoBehaviour
         AreasGarras[1].SetActive(true);
         yield return new WaitForSeconds(0.75f / 2f);
         //Reasignamos el daño
-        Controlador.GetComponent<Scr_ControladorArmas>().daño = (int)DañoAnterior;
+        Controlador.GetComponent<Scr_ControladorArmas>().daño = (int)(Controlador.GetComponent<Scr_ControladorArmas>().daño/4);
         Armas.transform.GetChild(0).gameObject.SetActive(true);
 
         Personaje.GetComponent<Scr_Movimiento>().enabled = true;
@@ -355,7 +354,14 @@ public class Scr_Habilidades : MonoBehaviour
         AreasGarras[0].SetActive(false);
         AreasGarras[1].SetActive(false);
     }
-
+    IEnumerator HabilidadRugido(float espera)
+    {
+        DañoAnterior = Controlador.GetComponent<Scr_ControladorArmas>().daño;
+        Controlador.GetComponent<Scr_ControladorArmas>().daño = (int)(Controlador.GetComponent<Scr_ControladorArmas>().daño * 2);
+        Debug.LogError("eeess" + Controlador.GetComponent<Scr_ControladorArmas>().daño);
+        yield return new WaitForSeconds(espera);
+        Controlador.GetComponent<Scr_ControladorArmas>().daño = (int)(Controlador.GetComponent<Scr_ControladorArmas>().daño / 2);
+    }
     IEnumerator HabilidadAumentoCarga(float espera)
     {
         //Guardamos La cantidad de perdigones que tenia
@@ -548,6 +554,7 @@ public class Scr_Habilidades : MonoBehaviour
     IEnumerator HabilidadPotasio(float espera)
     {
         curar(20);
+        DañoAnterior = Controlador.GetComponent<Scr_ControladorArmas>().daño;
         Controlador.GetComponent<Scr_ControladorArmas>().daño = Controlador.GetComponent<Scr_ControladorArmas>().daño * 2;
         yield return new WaitForSeconds(espera);
         Controlador.GetComponent<Scr_ControladorArmas>().daño = Controlador.GetComponent<Scr_ControladorArmas>().daño / 2;
@@ -692,7 +699,7 @@ public class Scr_Habilidades : MonoBehaviour
     private IEnumerator ActivarEfectoVisual(float duracion)
     {
         int DañoInicial = Singleton.GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño;
-        Singleton.GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño = DañoInicial * 2;
+        //Singleton.GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño = DañoInicial * 2;
         Efecto.transform.GetChild(0).gameObject.SetActive(true);
         Efecto.transform.GetChild(0).GetComponent<Animator>().Play("ZoomAparecer");
         yield return new WaitForSeconds(0.05f);
@@ -700,7 +707,7 @@ public class Scr_Habilidades : MonoBehaviour
         yield return new WaitForSeconds(duracion - 0.1f);
         Efecto.transform.GetChild(0).GetComponent<Animator>().Play("ZoomDesaparecer");
         yield return new WaitForSeconds(0.05f);
-        Singleton.GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño = DañoInicial;
+        //Singleton.GetComponent<Scr_DatosArmas>().TodasLasArmas[Controlador.GetComponent<Scr_ControladorUIBatalla>().ArmaActual].Daño = DañoInicial;
         Efecto.transform.GetChild(0).gameObject.SetActive(false);
     }
 

@@ -62,6 +62,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     public int Maspenetracion = 0;
 
     public float daño = 0;
+    public float dañoantes = 0;
 
     public float MasDistancia = 0f;
 
