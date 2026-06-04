@@ -59,6 +59,8 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
 
     private void OnEnable()
     {
+        if (!Application.isPlaying)
+            return;
         if (TryGetComponent(out NavMeshAgent nav) && nav.isOnNavMesh)
         {
             agente = nav;
@@ -67,9 +69,9 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
             agente.autoBraking = true;
         }
 
-
+        /*
         CambiarAnimacion("Iddle1");
-        LanzarNuevoEstado();
+        LanzarNuevoEstado();*/
         iniciado = true;
     }
 
@@ -80,27 +82,6 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
             SalirDeHuida();
             return;
         }
-
-        if (agente != null && agente.hasPath && !agente.isStopped)
-        {
-            if (agente.velocity.magnitude < 0.05f)
-                tiempoSinMover += Time.deltaTime;
-            else
-                tiempoSinMover = 0f;
-
-            // 🔴 EVITA QUEDARSE CAMINANDO EN EL BORDE
-            if (tiempoSinMover >= tiempoMaxSinMover)
-            {
-                agente.ResetPath();
-                agente.isStopped = true;
-
-                CambiarAnimacion(Random.value < 0.5f ? "Iddle1" : "Iddle2");
-
-                ejecutando = false;
-                tiempoSinMover = 0f;
-                LanzarNuevoEstado();
-            }
-        }
     }
 
     // ================================
@@ -108,6 +89,7 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
     // ================================
     void LanzarNuevoEstado()
     {
+
         if (corriendo || ejecutando) return;
 
         ejecutando = true;
@@ -144,6 +126,10 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
 
         if (agente == null || punto == transform.position)
         {
+            CambiarAnimacion("Iddle1");
+
+            yield return new WaitForSeconds(1f);
+
             ejecutando = false;
             LanzarNuevoEstado();
             yield break;
@@ -152,26 +138,68 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
         agente.isStopped = false;
         agente.speed = Velocidad;
         agente.SetDestination(punto);
-        Debug.Log($"Pending:{agente.pathPending} Dist:{agente.remainingDistance} Vel:{agente.velocity.magnitude}");
-        // ⏳ Esperar a que el path se calcule
-        while (agente.pathPending)
-            yield return null;
 
-        // 🚶‍♂️ Esperar a que realmente camine
-        while (!corriendo &&
-               agente.hasPath &&
-               agente.remainingDistance > agente.stoppingDistance)
+        float tiempoMaximo = 10f;
+        float tiempoAtascado = 0f;
+
+        while (!corriendo)
         {
+            // Esperar a que calcule el path
+            if (agente.pathPending)
+            {
+                tiempoMaximo -= Time.deltaTime;
+
+                if (tiempoMaximo <= 0f)
+                {
+                    Debug.LogWarning("Path tardó demasiado");
+                    break;
+                }
+
+                yield return null;
+                continue;
+            }
+
+            // Llegó
+            if (agente.remainingDistance <= agente.stoppingDistance)
+            {
+                if (!agente.hasPath ||
+                    agente.velocity.sqrMagnitude < 0.01f)
+                {
+                    break;
+                }
+            }
+
+            // Atascado
+            if (agente.velocity.magnitude < 0.05f)
+            {
+                tiempoAtascado += Time.deltaTime;
+
+                if (tiempoAtascado >= 2f)
+                {
+                    Debug.Log("Atascado, cancelando ruta");
+                    break;
+                }
+            }
+            else
+            {
+                tiempoAtascado = 0f;
+            }
+
             yield return null;
         }
 
-        // 🛑 Llegó correctamente
-        agente.ResetPath();
         agente.isStopped = true;
+        agente.velocity = Vector3.zero;
+        agente.ResetPath();
 
-        CambiarAnimacion(Random.value < 0.5f ? "Iddle1" : "Iddle2");
+        CambiarAnimacion(
+            Random.value < 0.5f ? "Iddle1" : "Iddle2"
+        );
 
         ejecutando = false;
+
+        yield return new WaitForSeconds(Random.Range(0.5f, 2f));
+
         LanzarNuevoEstado();
     }
 
