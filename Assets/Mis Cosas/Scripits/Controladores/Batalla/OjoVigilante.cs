@@ -13,6 +13,8 @@ public class OjoVigilante : MonoBehaviour
     private int direccion = 1;
 
     bool dormido = false;
+
+    public Animator Anim;
     private void Start()
     {
         jugador= GameObject.Find("Personaje").transform;
@@ -38,6 +40,10 @@ public class OjoVigilante : MonoBehaviour
 
     public void Dormir()
     {
+        if (Anim!=null)
+        {
+            Anim.SetBool("EstaDormido",true);
+        }
         StartCoroutine(descansar(20f));
     }
 
@@ -48,6 +54,10 @@ public class OjoVigilante : MonoBehaviour
         yield return new WaitForSeconds(duracion);
         dormido = false;
         Detector.SetActive(true);
+        if (Anim != null)
+        {
+            Anim.SetBool("EstaDormido", false);
+        }
     }
 
     
