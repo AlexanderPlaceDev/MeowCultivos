@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Scr_GestionadorDeRecursos : MonoBehaviour
@@ -40,6 +41,11 @@ public class Scr_GestionadorDeRecursos : MonoBehaviour
 
     // ================= UNITY =================
 
+    PlayerInput playerInput;
+    private InputAction Talar_;
+    InputIconProvider IconProvider;
+    private Sprite iconoActualRecolectar = null;
+    private string textoActualRecolectar = "";
     private void Awake()
     {
         foreach (Transform hijo in transform)
@@ -70,6 +76,10 @@ public class Scr_GestionadorDeRecursos : MonoBehaviour
             else
                 IniciarCrecimiento(r);
         }
+
+        playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
+        Talar_ = playerInput.actions["Talar"];
     }
 
     private void Update()
@@ -130,13 +140,13 @@ public class Scr_GestionadorDeRecursos : MonoBehaviour
 
         Transform ui = gata.GetChild(3);
         ui.gameObject.SetActive(true);
-
-        ui.GetChild(0).GetChild(0)
+        IconProvider.ActualizarIconoUI(Talar_, ui.GetChild(0), ref iconoActualRecolectar, ref textoActualRecolectar, true);
+        /*ui.GetChild(0).GetChild(0)
             .GetComponent<TextMeshProUGUI>().text = Recurso.tecla;
 
         ui.GetChild(0)
             .GetComponent<Image>().sprite = Recurso.teclaIcono;
-
+        */
         ui.GetChild(1)
             .GetComponent<Image>().sprite = Recurso.icono;
 
@@ -154,7 +164,8 @@ public class Scr_GestionadorDeRecursos : MonoBehaviour
     {
         gata.GetChild(3).gameObject.SetActive(false);
         herramienta.SetActive(false);
-
+        iconoActualRecolectar = null;
+        textoActualRecolectar = "";
         var anim = gata.GetComponent<Scr_ControladorAnimacionesGata>();
         anim.PuedeTalar = false;
         anim.HabilidadUsando = "";
