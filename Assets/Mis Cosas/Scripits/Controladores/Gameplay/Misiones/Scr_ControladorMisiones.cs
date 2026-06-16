@@ -1119,11 +1119,11 @@ public class Scr_ControladorMisiones : MonoBehaviour
         return false;
     }
 
-    public bool HayMisionRecolectar()
+    public bool HayMisionRecolectar(Scr_CreadorObjetos objeto)
     {
         for (int i = 0; i < Misiones.Count; i++)
         {
-            if (Misiones[i].Tipo == Scr_CreadorMisiones.Tipos.Recoleccion)
+            if (Misiones[i].Tipo == Scr_CreadorMisiones.Tipos.Recoleccion && Misiones[i].ObjetosNecesarios[0]== objeto)
             {
                 return true;
             }
@@ -1131,6 +1131,7 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
         return false;
     }
+
     public bool HayMisionDefensa()
     {
         for (int i = 0; i < Misiones.Count; i++)

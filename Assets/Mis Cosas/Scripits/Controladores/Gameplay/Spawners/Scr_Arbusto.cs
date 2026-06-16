@@ -82,7 +82,7 @@ public class Scr_Arbusto : MonoBehaviour
                 estaLejos = false;
 
                 // Detectar interacción
-                if (Interactuar.IsPressed() && !batalla.escenaCargada && Mis.HayMisionRecolectar())
+                if (Interactuar.IsPressed() && !batalla.escenaCargada && Mis.HayMisionRecolectar(objetosQueDa[tipoActual]))
                 {
                     batalla.Fruta = objetosQueDa[tipoActual].Nombre;
                     batalla.Item = objetosQueDa[tipoActual].Nombre;
@@ -188,7 +188,7 @@ public class Scr_Arbusto : MonoBehaviour
 
         if (Mis != null)
         {
-            if (Mis.HayMisionRecolectar())
+            if (Mis.HayMisionRecolectar(objetosQueDa[tipoActual]))
             {
                 gata.GetChild(3).GetChild(2).gameObject.SetActive(true);
                 gata.GetChild(3).GetChild(3).gameObject.SetActive(true);
@@ -218,7 +218,7 @@ public class Scr_Arbusto : MonoBehaviour
         //(PlayerPrefs.GetString("TutorialPeleas", "NO") == "SI")
         if (Mis != null)
         {
-            if (Mis.HayMisionRecolectar())
+            if (Mis.HayMisionRecolectar(objetosQueDa[tipoActual]))
             {
                 gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
                 gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
