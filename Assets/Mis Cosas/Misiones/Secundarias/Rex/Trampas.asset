@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea24d2bc748133d448a419af8bc82e61, type: 3}
+  m_Name: Trampas
+  m_EditorClassIdentifier: 
+  TituloMision: Trampas ocultas
+  LogoMision: {fileID: 21300000, guid: f9b0dfc991e91804db1c2685bf591f74, type: 3}
+  DescripcionEnMision: Consigue materiales para hacer trampas
+  DescripcionMisionCompleta: Entrega los materiales a Rex
+  DialogoEnMision: {fileID: 11400000, guid: 5b1f8b83e236fd944a121a62367cd7d1, type: 2}
+  DialogoMisionCompleta: {fileID: 11400000, guid: bd28d2e70706d4d4a9df668e40b4a712,
+    type: 2}
+  Personaje: REX
+  LugarMision: Bosque
+  prioridad: 1
+  Tipo: 3
+  LugarObjetivoExploracion: 
+  DireccionesRequeridas: 
+  Teclas: 
+  ObjetosNecesarios:
+  - {fileID: 11400000, guid: aff1da518b428bb42b16ea88b5bf8f59, type: 2}
+  - {fileID: 11400000, guid: c0713f28251af8245a6f0ff1e35b5a0c, type: 2}
+  - {fileID: 11400000, guid: 16d59de0d61659641a6f7c640e284942, type: 2}
+  CantidadesQuita: 010000000200000003000000
+  ObjetivosACazar: []
+  CantidadACazar: 
+  IconosACazar: []
+  EstructurasRequeridas: []
+  RecompensaDinero: 70
+  RecompensaXP: 70
+  ObjetosQueDa: []
+  CantidadesQueDa: 
+  ObjetosQueQuita: []
+  CantidadesQueQuita: 
+  QuitaObjetosDesdeSignal: 0
+  MisionAnterior: {fileID: 0}
