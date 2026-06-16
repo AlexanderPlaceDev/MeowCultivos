@@ -22,7 +22,8 @@ MonoBehaviour:
   Personaje: Rex
   LugarMision: Bosque
   prioridad: 1
-  Tipo: 7
+  Tipo: 6
+  LugarObjetivoExploracion: 
   DireccionesRequeridas: 
   Teclas: 
   ObjetosNecesarios: []
@@ -32,6 +33,7 @@ MonoBehaviour:
   CantidadACazar: 05000000
   IconosACazar:
   - {fileID: 21300000, guid: 58912cfc2ccd42a4b94389986c01b5a8, type: 3}
+  EstructurasRequeridas: []
   RecompensaDinero: 50
   RecompensaXP: 20
   ObjetosQueDa:
@@ -39,3 +41,5 @@ MonoBehaviour:
   CantidadesQueDa: 05000000
   ObjetosQueQuita: []
   CantidadesQueQuita: 
+  QuitaObjetosDesdeSignal: 0
+  MisionAnterior: {fileID: 0}
