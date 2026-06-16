@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 {
@@ -23,8 +24,10 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
     [SerializeField] private bool NoUsaHaveActive = false;
     [SerializeField] public int haveAcivate = 0;
 
-    private List<GameObject> Enemigos = new List<GameObject>();
+    [SerializeField] private List<GameObject> Enemigos = new List<GameObject>();
     public Scr_ControladorTiempo ControlT;
+
+    Coroutine Spawn;
     void Start()
     {
         ControlT = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
@@ -32,7 +35,24 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
         // Recuperar el tiempo de respawn guardado
         TiempoRestanteSpawn = PlayerPrefs.GetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoSpawn);
         RestaurarEnemigos(); // Cargar enemigos en escena
-        StartCoroutine(SpawnEnemies()); // Iniciar la rutina
+        Spawn= StartCoroutine(SpawnEnemies()); // Iniciar la rutina
+    }
+
+    private void OnEnable()
+    {
+        // Recuperar el tiempo de respawn guardado
+        TiempoRestanteSpawn = PlayerPrefs.GetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoSpawn);
+        RestaurarEnemigos(); // Cargar enemigos en escena
+        if (Spawn != null)
+        {
+            StopCoroutine(Spawn);
+        }
+        Spawn = StartCoroutine(SpawnEnemies()); // Iniciar la rutina
+    }
+
+    private void OnDisable()
+    {
+        StopCoroutine(Spawn);
     }
 
     void FixedUpdate()
