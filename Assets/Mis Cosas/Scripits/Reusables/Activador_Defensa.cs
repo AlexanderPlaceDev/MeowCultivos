@@ -44,7 +44,7 @@ public class Activador_Defensa : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (ActivadorMenu.EstaEnRango && Mis.HayMisionRecolectar())
+        if (ActivadorMenu.EstaEnRango && Mis.HayMisionDefensa())
         {
             if (!Gata.GetChild(3).GetChild(3).gameObject.activeSelf)
             {
@@ -66,13 +66,13 @@ public class Activador_Defensa : MonoBehaviour
             }
 
         }
-        else if (!ActivadorMenu.EstaEnRango && Mis.HayMisionRecolectar())
+        else if (!ActivadorMenu.EstaEnRango && Mis.HayMisionDefensa())
         {
             if (!Gata.GetChild(3).GetChild(3).gameObject.activeSelf)
             {
                 if (Mis != null)
                 {
-                    if (Mis.HayMisionRecolectar())
+                    if (Mis.HayMisionDefensa())
                     {
                         Gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
                         Gata.GetChild(3).GetChild(3).gameObject.SetActive(false);

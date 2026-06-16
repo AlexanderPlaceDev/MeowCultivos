@@ -163,7 +163,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
             float distanciaGata = Vector3.Distance(gata.position, transform.position);
             if (batalla != null && distanciaGata < distancia)
             {
-                if (Interactuar.IsPressed() && !batalla.escenaCargada && Mis.HayMisionRecolectar() && TieneBatalla)
+                if (Interactuar.IsPressed() && !batalla.escenaCargada && Mis.HayMisionRecolectar(objetoQueDa) && TieneBatalla)
                     batalla.Iniciar(gameObject);
             }
             if (!recolectando)
@@ -333,7 +333,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
         gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = icono;
         if (batalla != null)
         {
-            if (Mis.HayMisionRecolectar() && TieneBatalla)
+            if (Mis.HayMisionRecolectar(objetoQueDa) && TieneBatalla)
             {
                 gata.GetChild(3).GetChild(2).gameObject.SetActive(true);
                 gata.GetChild(3).GetChild(3).gameObject.SetActive(true);
@@ -359,7 +359,7 @@ public class Scr_SpawnerRecolectable : MonoBehaviour
         textoActualSpawn = "";
         if (batalla != null)
         {
-            if (Mis.HayMisionRecolectar() && TieneBatalla)
+            if (Mis.HayMisionRecolectar(objetoQueDa) && TieneBatalla)
             {
                 gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
                 gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
