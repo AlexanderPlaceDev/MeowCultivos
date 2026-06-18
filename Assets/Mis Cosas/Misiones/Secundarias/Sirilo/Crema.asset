@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Crema
   m_EditorClassIdentifier: 
   TituloMision: Crema Humectante
-  LogoMision: {fileID: 21300000, guid: f9b0dfc991e91804db1c2685bf591f74, type: 3}
-  DescripcionEnMision: Parece que Sirilo ocupa algo de gel
+  LogoMision: {fileID: 21300000, guid: 50f643241b298f74f96297e7f871e030, type: 3}
+  DescripcionEnMision: Necesito mantener mi bellesa sabes
   DescripcionMisionCompleta: Regresa con Sirilo los martes y viernes
   DialogoEnMision: {fileID: 11400000, guid: 2a790fd008c7cfc4d9b6ad6622236fbe, type: 2}
   DialogoMisionCompleta: {fileID: 11400000, guid: e23d390529c16d04b88aee4efb9f430d,
@@ -28,7 +28,8 @@ MonoBehaviour:
   Teclas: 
   ObjetosNecesarios:
   - {fileID: 11400000, guid: 5ba7d52a723e74c4686db45ccc9fa656, type: 2}
-  CantidadesQuita: 05000000
+  - {fileID: 11400000, guid: 29499f9b29120a7429317534b3882715, type: 2}
+  CantidadesQuita: 0500000002000000
   ObjetivosACazar: []
   CantidadACazar: 
   IconosACazar: []
