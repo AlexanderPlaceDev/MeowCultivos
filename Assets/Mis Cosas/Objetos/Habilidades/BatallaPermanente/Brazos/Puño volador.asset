@@ -15,7 +15,7 @@ MonoBehaviour:
   Nombre: "Pu\xF1o volador"
   Icono: {fileID: 21300000, guid: 6cbded08fcbfe9545b09d6300c2b147a, type: 3}
   Tipo: Normal
-  Descripcion: "El pu\xF1o emuja al enemigo por un determinado tiempon determinado
+  Descripcion: "El pu\xF1o empuja al enemigo por un determinado tiempo determinado
     tiempo"
   RequiereCraftear: 0
   ItemsRequeridos: []
@@ -23,6 +23,6 @@ MonoBehaviour:
   Usos: 0
   duracion: 4
   Enfriamiento: 7
-  Efecto: {fileID: 0}
+  Efecto: 
   Arma: Brazos
   Color: {r: 1, g: 0.11792451, b: 0.23003672, a: 1}
