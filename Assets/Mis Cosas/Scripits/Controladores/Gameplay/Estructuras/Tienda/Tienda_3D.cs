@@ -417,6 +417,9 @@ public class Tienda_3D : MonoBehaviour
             c.enabled = false;
 
         objetoVisual.name += "_VENDIDO";
+
+        Scr_Inventario inventario = GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>();
+        inventario.AgregarObjeto(objetoScriptable.Nombre, cantidad, mostrarUI: true, darXP: true);
         Debug.Log($"Compraste {cantidad} x {nombre} por ${costoTotal}.");
     }
 

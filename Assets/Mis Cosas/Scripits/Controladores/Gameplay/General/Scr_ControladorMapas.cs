@@ -85,7 +85,7 @@ public class Scr_ControladorMapas : MonoBehaviour
             if (PlayerPrefs.HasKey(key))
             {
                 string estado = PlayerPrefs.GetString(key);
-                bool activo = (estado == "Si"); 
+                bool activo = (estado == "Si");
                 child.gameObject.SetActive(activo);
             }
             else

@@ -68,7 +68,10 @@ public class VirtualMouseGamepad : MonoBehaviour
 
     private void OnDisable()
     {
-        InputSystem.RemoveDevice(virtualMouse);
+        if (virtualMouse != null)
+        {
+            InputSystem.RemoveDevice(virtualMouse);
+        }
         InputSystem.onAfterUpdate -= UpdateMotion;
         playerInput.onControlsChanged -= OnControlsChange;
     }

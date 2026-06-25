@@ -140,7 +140,7 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
         else
         {
             if (gameObject.name == "Aserradero")
-                transform.GetChild(0).GetComponent<Scr_GirarObjeto>().enabled = false;
+                transform.GetChild(2).GetComponent<Scr_GirarObjeto>().enabled = false;
 
             TiempoProduciendo = 0;
         }
@@ -368,7 +368,7 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
         }
 
 
-        if (NumEstructura == estructuraActual)
+        if (NumEstructura == estructuraActual|| NumEstructura==0)
         {
             Activador.Salir();
         }
@@ -414,13 +414,25 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
             BotonEstructuraPrimaria.transform.GetChild(0).gameObject.SetActive(false);
             BotonEstructuraSecundaria.GetComponent<Image>().sprite = ImagenBotonEstructuraSecundaria;
             BotonEstructuraSecundaria.transform.GetChild(0).gameObject.SetActive(true);
+            if (PanelInformacion != null)
+            {
+                PanelInformacion.sprite = PanelInformacionsecundario;
+            }
+            if(PanelObjetos != null)
+            {
+                PanelObjetos.sprite = PanelObjetosSecundario;
+            }
+            if(PanelProductos != null)
+            {
+                PanelProductos.sprite = PanelProductoSecundario;
+                PanelProductos.transform.GetChild(1).GetComponent<Image>().sprite = PanelProductoSecundario;
+            }
+            if (BarraCarga != null)
+            {
+                BarraCarga.transform.GetChild(0).GetComponent<Image>().sprite = CargaSombraSecundario;
+                BarraCarga.transform.GetChild(1).GetComponent<Image>().sprite = CargaSecundario;
 
-            PanelInformacion.sprite = PanelInformacionsecundario;
-            PanelObjetos.sprite = PanelObjetosSecundario;
-            PanelProductos.sprite = PanelProductoSecundario;
-            PanelProductos.transform.GetChild(1).GetComponent<Image>().sprite = PanelProductoSecundario;
-            BarraCarga.transform.GetChild(0).GetComponent<Image>().sprite = CargaSombraSecundario;
-            BarraCarga.transform.GetChild(1).GetComponent<Image>().sprite = CargaSecundario;
+            }
 
             foreach (GameObject Objeto in ObjetosPrincipales)
             {

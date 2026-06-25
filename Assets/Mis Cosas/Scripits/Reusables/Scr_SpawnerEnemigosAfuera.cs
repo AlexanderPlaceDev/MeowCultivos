@@ -46,8 +46,8 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
         if (Spawn != null)
         {
             StopCoroutine(Spawn);
+            Spawn = StartCoroutine(SpawnEnemies()); // Iniciar la rutina
         }
-        Spawn = StartCoroutine(SpawnEnemies()); // Iniciar la rutina
     }
 
     private void OnDisable()
