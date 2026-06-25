@@ -24,6 +24,7 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
     bool EstaEnMenu = false;
     float TiempoDeEspera = 0;
     GameObject Gata;
+    Scr_ControladorAnimacionesGata animacionesGata;
     private Animator animator;
 
     [SerializeField] GameObject reloj;
@@ -50,6 +51,7 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
     {
         // Busca y guarda una referencia al objeto de la gata
         Gata = GameObject.Find("Gata");
+        animacionesGata = Gata.GetComponent<Scr_ControladorAnimacionesGata>();
         animator = Menu.GetComponent<Animator>();
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
@@ -58,6 +60,7 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
         Click = playerInput.actions["click"];
         Checar_input = GameObject.Find("Singleton").GetComponent<ChecarInput>();
         tiempo = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
+
     }
 
     void Update()
@@ -70,7 +73,7 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
             IconProvider.ActualizarIconoUI(Click, Click_.transform, ref iconoActualClick, ref textoActualClick, false);
             // Desactiva los componentes de movimiento de la gata mientras está en el menú
             Gata.GetComponent<Scr_GiroGata>().enabled = false;
-            if ((Regresar.WasPressedThisFrame() || Reloj.WasPressedThisFrame())  && !Esperando && !EstaReproduciendoAnimacion())
+            if ((Regresar.WasPressedThisFrame() || Reloj.WasPressedThisFrame())  && !Esperando && !EstaReproduciendoAnimacion() )
             {
                 if (Menu.transform.GetChild(2).gameObject.activeSelf)
                 {
@@ -89,7 +92,7 @@ public class Scr_ControladorMenuGameplay : MonoBehaviour
         else
         {
             IconProvider.ActualizarIconoUI(Reloj, reloj.transform, ref iconoActualReloj, ref textoActualReloj, false);
-            if ((Regresar.IsPressed() || Reloj.IsPressed()) && !Esperando && !EstaReproduciendoAnimacion())
+            if ((Regresar.IsPressed() || Reloj.IsPressed()) && !Esperando && !EstaReproduciendoAnimacion() && animacionesGata.PuedeCaminar)
             {
                 Esperando = true;
                 RestablecerColor();
