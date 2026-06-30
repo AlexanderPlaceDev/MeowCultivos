@@ -5024,6 +5024,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 7721754965930637957}
   m_SourcePrefab: {fileID: 100100000, guid: cc23686a75a88e045b240a2381ca3f9f, type: 3}
+--- !u!137 &4446158686561440713 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8417361359673230750, guid: cc23686a75a88e045b240a2381ca3f9f,
+    type: 3}
+  m_PrefabInstance: {fileID: 5288233441516525143}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5017851773229083398 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: cc23686a75a88e045b240a2381ca3f9f,
@@ -5394,7 +5400,7 @@ MonoBehaviour:
   XPMaxima: 10
   Probabilidades: []
   Objetivo: {fileID: 0}
-  ColorHerido: {r: 1, g: 0.5803922, b: 0.5803922, a: 0}
+  ColorHerido: {r: 1, g: 0.5803922, b: 0.5803922, a: 1}
   DuracionCambioColor: 0.5
   cambiandoColor: 0
   tipoenemigo: 1
@@ -5419,6 +5425,7 @@ MonoBehaviour:
   resistenciaEmpujar: 0.05
   resistenciaElectrificar: 0.25
   resistenciaExplotar: 0.4
+  Modelo: {fileID: 4446158686561440713}
   Anim: {fileID: 7721754965930637957}
   gata: {fileID: 0}
   VelocidadRotacion: 5

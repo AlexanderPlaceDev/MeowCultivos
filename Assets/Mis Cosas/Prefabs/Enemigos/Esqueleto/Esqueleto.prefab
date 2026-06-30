@@ -6067,6 +6067,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5110313765175523129}
   m_PrefabAsset: {fileID: 0}
+--- !u!137 &481009126811930002 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4631837917492017835, guid: 74f6bff137cb67b41b75f79e4dfe247d,
+    type: 3}
+  m_PrefabInstance: {fileID: 5110313765175523129}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2832444439819094534 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7036213049465896255, guid: 74f6bff137cb67b41b75f79e4dfe247d,
@@ -6345,6 +6351,7 @@ MonoBehaviour:
   resistenciaEmpujar: 0.7
   resistenciaElectrificar: 0.1
   resistenciaExplotar: 0.6
+  Modelo: {fileID: 481009126811930002}
   anim: {fileID: 1185623201031609563}
   agente: {fileID: 4582622469244926071}
   jugador: {fileID: 0}

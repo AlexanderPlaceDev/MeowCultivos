@@ -5148,6 +5148,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: -4102632012378482328}
   m_SourcePrefab: {fileID: 100100000, guid: 6ce1986922dd10542b8084a299567b99, type: 3}
+--- !u!137 &3726352824307828234 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5714055229159863796, guid: 6ce1986922dd10542b8084a299567b99,
+    type: 3}
+  m_PrefabInstance: {fileID: 9005735609103102974}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5209966612179744886 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5424786043558474872, guid: 6ce1986922dd10542b8084a299567b99,
@@ -5320,6 +5326,7 @@ MonoBehaviour:
   Objetivo: {fileID: 0}
   ColorHerido: {r: 1, g: 0.5803922, b: 0.5803922, a: 1}
   DuracionCambioColor: 0.5
+  cambiandoColor: 0
   tipoenemigo: 0
   tipocomportamiento: 1
   Fruta: 0
@@ -5342,6 +5349,7 @@ MonoBehaviour:
   resistenciaEmpujar: 0.05
   resistenciaElectrificar: 0.25
   resistenciaExplotar: 0.4
+  Modelo: {fileID: 3726352824307828234}
   RadioDeambulacion: 30
   capasPermitidas:
     serializedVersion: 2
