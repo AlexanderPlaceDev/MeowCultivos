@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using TMPro;
 using Unity.Burst.Intrinsics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -75,6 +76,8 @@ public class Scr_Enemigo : MonoBehaviour
     public float resistenciaEmpujar = 0.05f; // 5% de probabilidad de resistir el Empujar
     public float resistenciaElectrificar = 0.25f; // 25% de probabilidad de resistir el Electrificar
     public float resistenciaExplotar = 0.4f; // 40% de probabilidad de resistir la Explotación
+
+    public Renderer Modelo;
     protected virtual void Start()
     {
         // Asumiendo que el material está en el segundo hijo
@@ -496,16 +499,19 @@ public class Scr_Enemigo : MonoBehaviour
     {
         cambiandoColor = true;
 
-        Renderer renderer = transform.GetChild(1).GetComponent<Renderer>();
+        Renderer renderer = Modelo;
         if (renderer != null)
         {
             // Obtener los materiales actuales
             Material[] materiales = renderer.materials;
             // Guardar una copia de los materiales originales
             Material[] materialesOriginales = new Material[materiales.Length];
+
+            Color[] ColorOriginal= new Color[materiales.Length];
             for (int i = 0; i < materiales.Length; i++)
             {
                 materialesOriginales[i] = new Material(materiales[i]);
+                ColorOriginal[i] = materiales[i].GetColor("_Base_Color");
             }
 
             // Crear copias modificadas de los materiales y cambiar el _BaseColor
@@ -531,11 +537,16 @@ public class Scr_Enemigo : MonoBehaviour
             renderer.materials = materialesOriginales;
 
             // Restaurar color base original
+            for (int i = 0; i < materiales.Length; i++)
+            {
+                materiales[i].SetColor("_Base_Color", ColorOriginal[i]); // Cambiar el color a blanco (o restaurar el color original)
+            }
+            /*
             foreach (Material material in renderer.materials)
             {
                 material.SetColor("_Base_Color", Color.white); // Cambiar el color a blanco (o restaurar el color original)
             }
-
+            */
             cambiandoColor = false;
         }
     }

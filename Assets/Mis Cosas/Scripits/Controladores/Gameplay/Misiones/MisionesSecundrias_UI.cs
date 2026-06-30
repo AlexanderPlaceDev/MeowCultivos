@@ -5,6 +5,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.HID;
 using UnityEngine.UI;
 
 public class MisionesSecundrias_UI : MonoBehaviour
@@ -58,6 +59,11 @@ public class MisionesSecundrias_UI : MonoBehaviour
 
         checarInput = GameObject.Find("Singleton").GetComponent<ChecarInput>();
 
+        
+    }
+
+    private void OnEnable()
+    {
         // Crear botones dinámicamente
         if (activadorActual != null)
         {
@@ -86,7 +92,6 @@ public class MisionesSecundrias_UI : MonoBehaviour
             }
         }
     }
-
     // ================================
     // CERRAR UI
     // ================================
@@ -101,7 +106,7 @@ public class MisionesSecundrias_UI : MonoBehaviour
             activadorActual.DesactivarDialogo();
             activadorActual = null;
         }
-
+        destruirMisiones();
         EventSystem.current.SetSelectedGameObject(null);
         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
 
@@ -109,6 +114,13 @@ public class MisionesSecundrias_UI : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    void destruirMisiones()
+    {
+        foreach(Transform mis in BotonesMisiones.transform)
+        {
+            Destroy(mis.gameObject);
+        }
+    }
     // ================================
     // SELECCIONAR MISIÓN
     // ================================

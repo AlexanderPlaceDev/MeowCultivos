@@ -19889,6 +19889,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.x
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 3743993344710040121, guid: 0971a354750a6d04488c5cc5f8226ffc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3748359892381204692, guid: 0971a354750a6d04488c5cc5f8226ffc,
         type: 3}
       propertyPath: m_LocalPosition.z
@@ -20185,6 +20190,7 @@ MonoBehaviour:
   resistenciaEmpujar: 0.05
   resistenciaElectrificar: 0.25
   resistenciaExplotar: 0.4
+  Modelo: {fileID: 94610907440958275}
   VelocidadBala: 600
   OffsetBala: -1
   TiempoEntreDisparos: 3

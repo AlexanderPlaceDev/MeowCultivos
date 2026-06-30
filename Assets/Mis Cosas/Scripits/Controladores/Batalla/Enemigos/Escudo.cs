@@ -52,10 +52,11 @@ public class Escudo : MonoBehaviour
     public void quitar_Restiencia(float daño)
     {
         EscudoSalud -= daño;
-        if (EscudoSalud < 0)
+        if (EscudoSalud <= 0)
         {
             enemy.FueBloqueado = false;
-            gameObject.SetActive(false);
+            //Debug.LogError("Voy a destruir: " + gameObject.name);
+            Destroy(gameObject);
         }
         else
         {
