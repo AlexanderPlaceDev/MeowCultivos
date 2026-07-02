@@ -45,7 +45,7 @@ public class Scr_MenuGuia : MonoBehaviour
         Scroll.onValueChanged.AddListener(ActualizarScroll);
     }
 
-    void Update()
+    void LateUpdate()
     {
         if (!MenuGuia.activeSelf)
             return;
@@ -55,36 +55,37 @@ public class Scr_MenuGuia : MonoBehaviour
             layout.padding.top = 0;
             Scroll.value = 0;
 
+            Debug.Log("Entra3");
             switch (MenuActual)
             {
                 case 0:
-                    IconoSeleccion.GetComponent<RectTransform>().anchoredPosition = new Vector2(200, 400);
-                    CargarMenu(ObjetosMenu1);
+                    IconoSeleccion.GetComponent<RectTransform>().anchoredPosition = new Vector2(200, 350);
+                    StartCoroutine(CargarMenu(ObjetosMenu1));
                     break;
 
                 case 1:
-                    IconoSeleccion.GetComponent<RectTransform>().anchoredPosition = new Vector2(200, 250);
-                    CargarMenu(ObjetosMenu2);
+                    IconoSeleccion.GetComponent<RectTransform>().anchoredPosition = new Vector2(200, 200);
+                    StartCoroutine(CargarMenu(ObjetosMenu2));
                     break;
 
                 case 2:
-                    IconoSeleccion.GetComponent<RectTransform>().anchoredPosition = new Vector2(200, 100);
-                    CargarMenu(ObjetosMenu3);
+                    IconoSeleccion.GetComponent<RectTransform>().anchoredPosition = new Vector2(200, 75);
+                    StartCoroutine(CargarMenu(ObjetosMenu3));
                     break;
 
                 case 3:
-                    IconoSeleccion.GetComponent<RectTransform>().anchoredPosition = new Vector2(200, -50);
-                    CargarMenu(ObjetosMenu4);
+                    IconoSeleccion.GetComponent<RectTransform>().anchoredPosition = new Vector2(200, -75);
+                    StartCoroutine(CargarMenu(ObjetosMenu4));
                     break;
 
                 case 4:
                     IconoSeleccion.GetComponent<RectTransform>().anchoredPosition = new Vector2(200, -200);
-                    CargarMenu(ObjetosMenu5);
+                    StartCoroutine(CargarMenu(ObjetosMenu5));
                     break;
 
                 case 5:
                     IconoSeleccion.GetComponent<RectTransform>().anchoredPosition = new Vector2(200, -350);
-                    CargarMenu(ObjetosMenu6);
+                    StartCoroutine(CargarMenu(ObjetosMenu6));
                     break;
             }
 
@@ -94,24 +95,25 @@ public class Scr_MenuGuia : MonoBehaviour
         }
     }
 
-    void CargarMenu(GameObject[] objetos)
+    IEnumerator CargarMenu(GameObject[] objetos)
     {
-        //Eliminar hijos
+        // 1. destruir
         foreach (Transform hijo in Area.transform)
-        {
-            DestroyImmediate(hijo.gameObject);
-        }
+            Destroy(hijo.gameObject);
 
-        //Instanciar nuevos objetos
+        // 2. esperar 1 frame para que Unity procese Destroy
+        yield return null;
+
+        // 3. instanciar
         foreach (GameObject obj in objetos)
-        {
             Instantiate(obj, Area.transform);
-        }
 
-        //Forzar actualización del layout
+        // 4. esperar otro frame para layout
+        yield return null;
+
         LayoutRebuilder.ForceRebuildLayoutImmediate(Area.GetComponent<RectTransform>());
 
-        //Calcular altura total
+        // 5. recalcular tamaño
         Tamaños = 0;
 
         for (int i = 0; i < Area.transform.childCount; i++)
@@ -121,14 +123,10 @@ public class Scr_MenuGuia : MonoBehaviour
         }
 
         if (Area.transform.childCount > 1)
-        {
             Tamaños += layout.spacing * (Area.transform.childCount - 1);
-        }
 
-        //Ajustar tamaño del handle
         Scroll.size = Mathf.Clamp01(AlturaVisible / Tamaños);
 
-        //Actualizar posición
         ActualizarScroll(0);
     }
 
@@ -145,6 +143,7 @@ public class Scr_MenuGuia : MonoBehaviour
 
     void ActualizarColoresMenus()
     {
+            Debug.Log("Entra5");
         for (int i = 0; i < TextosMenus.Length; i++)
         {
             if (i == MenuActual)
@@ -156,5 +155,30 @@ public class Scr_MenuGuia : MonoBehaviour
                 TextosMenus[i].color = ColoresTextos[1];
             }
         }
+    }
+
+    public void FlechaArriba()
+    {
+        MenuActual--;
+
+        if (MenuActual < 0)
+        {
+            MenuActual = TextosMenus.Length - 1;
+        }
+        MenuActualizado = false;
+        Debug.Log("Entra1");
+    }
+
+    public void FlechaAbajo()
+    {
+        MenuActual++;
+
+        if (MenuActual >= TextosMenus.Length)
+        {
+            MenuActual = 0;
+        }
+
+        MenuActualizado = false;
+        Debug.Log("Entra2");
     }
 }
