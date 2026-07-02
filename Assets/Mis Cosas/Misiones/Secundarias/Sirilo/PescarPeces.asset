@@ -12,31 +12,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea24d2bc748133d448a419af8bc82e61, type: 3}
   m_Name: PescarPeces
   m_EditorClassIdentifier: 
-  TituloMision: Peces
+  TituloMision: Pescando peces
   LogoMision: {fileID: 21300000, guid: 8c859f14ec613a84489c07e1f1cabd97, type: 3}
-  Descripcion: Pesca 5 Peces
-  DescripcionCompleta: Pesca 5 Peces en el rio pero que no beban
+  DescripcionEnMision: Consigue pescado fresco
+  DescripcionMisionCompleta: Regresa con Sirilo los martes y viernes
   DialogoEnMision: {fileID: 11400000, guid: 859a261e75f329e439f09e94ce7462f1, type: 2}
   DialogoMisionCompleta: {fileID: 11400000, guid: d9814a1d2de05544a8881535be1f3aa8,
     type: 2}
+  Personaje: Sirilo
+  LugarMision: Foodtruck
   prioridad: 1
   Tipo: 3
+  LugarObjetivoExploracion: 
+  DireccionesRequeridas: 
+  Teclas: 
   ObjetosNecesarios:
   - {fileID: 11400000, guid: dd3c1f08f853d604684d088e1c75659d, type: 2}
   CantidadesQuita: 05000000
   ObjetivosACazar: []
   CantidadACazar: 
   IconosACazar: []
-  DireccionesRequeridas: 
-  AccionMovimientoH: {fileID: 0}
-  AccionMovimientoV: {fileID: 0}
-  Teclas: 
-  EsContinua: 1
-  QuitaObjetos: 1
-  DaObjetos: 0
-  RecompensaDinero: 300
-  RecompensaXP: 20
+  EstructurasRequeridas: []
+  RecompensaDinero: 60
+  RecompensaXP: 50
   ObjetosQueDa: []
-  CantidadesDa: 
-  objetosCostruir: []
-  TargetExplorado: 
+  CantidadesQueDa: 
+  ObjetosQueQuita: []
+  CantidadesQueQuita: 
+  QuitaObjetosDesdeSignal: 0
+  MisionAnterior: {fileID: 0}

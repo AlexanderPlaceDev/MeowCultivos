@@ -143,7 +143,7 @@ public class Scr_CambiadorMenus : MonoBehaviour
                 case "Guia":
                     CambiarGuia = true;
                     MenuActual = "Guia";
-                    Menu.GetComponent<Animator>().Play("Cerrar 3");
+                    Menu.GetComponent<Animator>().Play("Cerrar 3",0,0);
                     break;
             }
         }
@@ -185,7 +185,7 @@ public class Scr_CambiadorMenus : MonoBehaviour
                 case "Guia":
                     CambiarGuia = true;
                     MenuActual = "Guia";
-                    Menu.GetComponent<Animator>().Play("Cerrar 3");
+                    Menu.GetComponent<Animator>().Play("Cerrar 3",0,0);
                     break;
             }
         }

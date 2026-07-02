@@ -712,6 +712,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5be3fbe55668cb74d8a905ea881511af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EsPlanta: 0
   PrefabEnemigo: {fileID: 8087238990687637167, guid: 59a42bf95c534e84bbf65ac346775e94,
     type: 3}
   CantidadEnemigosMinima: 1
@@ -719,9 +720,14 @@ MonoBehaviour:
   Mision: Captura
   ColorMision: {r: 0.37254903, g: 0.6156863, b: 0.09803922, a: 1}
   Complemento: a los
-  Item: Gallomora
+  Item: Pollodrilo
   ColorItem: {r: 0.6226415, g: 0.30700436, b: 0.12100388, a: 1}
+  NombreMapa: Batalla Base
+  Modo: 0
+  Pista: 0
+  Fruta: 
   Cambiando: 0
+  escenaCargada: 0
 --- !u!114 &-3256836983574926304
 MonoBehaviour:
   m_ObjectHideFlags: 0
