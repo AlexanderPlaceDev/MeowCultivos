@@ -273,6 +273,7 @@ public class Scr_MenuTablero : MonoBehaviour
                 GameObject.Find("Canvas").transform.GetChild(10).GetComponent<Scr_NuevoRango>().MostrarRango("Naturaleza",PlayerPrefs.GetInt("Rango Barra Naturaleza3",0));
             }
 
+            PlayerPrefs.Save();
             QuitarObjetos(estructura.Materiales, estructura.Cantidades);
 
             camara_tablero.SetActive(false);

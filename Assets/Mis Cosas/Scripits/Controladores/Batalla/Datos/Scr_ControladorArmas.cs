@@ -44,6 +44,7 @@ public class Scr_ControladorArmas : MonoBehaviour
     public float dispersion = 25f; // en grados de dispersion
     public float cadencia = 0;
     public float temporizadorDisparo = 0f;
+    private bool EstaRecargando =false;
     public bool hizoHit = false; //detecta si golpeo algo
     private bool yasonohit = false;
 
@@ -250,19 +251,35 @@ public class Scr_ControladorArmas : MonoBehaviour
             }
         }
         //prueba de recarga
-        if (Recargar.WasPressedThisFrame())
+        if (Recargar.WasPressedThisFrame() && !EstaRecargando)
         {
             RecargarBala();
         }
+
     }
     private void LateUpdate()
     {
         DetectarEnemigoConRaycast();
     }
-
+    //Algo pasa aqui que truena 
     bool PuedeDisparar()
     {
-        return CantBalasActual > 0 || TodasLasArmas[ArmaActual].Tipo == "Cuerpo a Cuerpo";
+        if (CantBalasActual <= 0 )
+        {
+            return false;
+        }
+        else if (TodasLasArmas[ArmaActual].Tipo == "Cuerpo a Cuerpo" )
+        {
+            return false;
+        }
+        else if (EstaRecargando)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     void Disparar()
@@ -567,8 +584,10 @@ public class Scr_ControladorArmas : MonoBehaviour
         if (CantBalasActual < balascargador)
         {
             Anim.Play(checaranimacionRecarga());
+            string animation = checaranimacionRecarga();
+            float duracion = GetAnimationClipDuration(Anim,animation);
+            StartCoroutine(recargadndo(duracion));
             //balascargador = balascargador - cantidadarestar;
-            CantBalasActual = TodasLasArmas[ArmaActual].Capacidad;
             source.PlayOneShot(TodasLasArmas[ArmaActual].Recarga);
             //Anim.SetBool("EstaRecargando", false);
         }
@@ -577,6 +596,15 @@ public class Scr_ControladorArmas : MonoBehaviour
             int cantidadarestar = TodasLasArmas[ArmaActual].Capacidad - CantBalasActual;
            
         }*/
+    }
+
+    IEnumerator recargadndo(float wait)
+    {
+        EstaRecargando = true;
+        yield return new WaitForSeconds(wait);
+        temporizadorDisparo = (cadencia * MenosCadencia);
+        CantBalasActual = TodasLasArmas[ArmaActual].Capacidad;
+        EstaRecargando =false;
     }
     public void Lanzar()
     {
@@ -703,7 +731,7 @@ public class Scr_ControladorArmas : MonoBehaviour
         switch (TodasLasArmas[ArmaActual].Nombre)
         {
             case "Platano":
-                return "PistolaRecarga";
+                return "PlatanoRecarga";
 
             case "Tomate":
                 return "TomateRecarga";
@@ -714,7 +742,7 @@ public class Scr_ControladorArmas : MonoBehaviour
             case "Uvalon":
                 return "UvaRecarga";
             default:
-                return "PistolaRecarga";
+                return "PlatanoRecarga";
         }
     }
 
