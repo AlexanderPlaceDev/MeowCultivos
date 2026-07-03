@@ -13,10 +13,9 @@ MonoBehaviour:
   m_Name: Alien 7
   m_EditorClassIdentifier: 
   EsUnico: 0
-  EsMisionPrincipal: 0
-  Mision: {fileID: 0}
+  EsMisionPrincipal: 1
+  RequiereMisionCompleta: 1
+  Mision: {fileID: 11400000, guid: 63d97eec5c1894a4e84b23761153f3f5, type: 2}
   Lineas:
-  - ' Bienvanida al Circo de Marvin'
+  - ' Bienvenida al Circo de Marvin'
   - ' Un lugar donde puedes encontar animales exoticos'
-  - ' He dejado un cofre adentro'
-  - ' Ahi puedes dejar algunos materiales que necesito'
