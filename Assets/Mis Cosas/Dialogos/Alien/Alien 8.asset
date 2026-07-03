@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Alien 8
   m_EditorClassIdentifier: 
   EsUnico: 1
-  EsMisionPrincipal: 0
-  Mision: {fileID: 0}
+  EsMisionPrincipal: 1
+  RequiereMisionCompleta: 0
+  Mision: {fileID: 11400000, guid: df3632d8bf78f614a98363a7e043be3c, type: 2}
   Lineas:
   - ' Si me ayudas a conseguir los materiales te puedo mostrar algunos planos'
