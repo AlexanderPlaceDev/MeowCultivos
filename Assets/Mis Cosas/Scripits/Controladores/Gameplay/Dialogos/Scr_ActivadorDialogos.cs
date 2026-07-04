@@ -406,7 +406,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
             return;
 
         // 🔹 Caso B
-        if (dialogo.EsUnico && sistemaDialogos.Leido)
+        if (!dialogo.EsUnico && sistemaDialogos.Leido)
         {
             if (sistemaDialogos.DialogoActual + 1 < sistemaDialogos.Dialogos.Length)
             {
@@ -556,7 +556,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         foreach (var icono in iconos)
             if (icono != null) icono.SetActive(false);
 
-        iconoActualInteractuar=null;
+        iconoActualInteractuar = null;
         iconoActualMisiones = null;
         textoActualInteractuar = "";
         textoActualMisiones = "";
@@ -682,6 +682,7 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         var eventosGuardado = GetComponent<Scr_EventosGuardado>();
         if (eventosGuardado != null)
             eventosGuardado.EventoDialogo(sistemaDialogos.DialogoActual, sistemaDialogos.NombreNPC);
+        PlayerPrefs.SetInt("Dialogo" + NombreNPC, sistemaDialogos.DialogoActual);
     }
 
     private void OnTriggerEnter(Collider other)
