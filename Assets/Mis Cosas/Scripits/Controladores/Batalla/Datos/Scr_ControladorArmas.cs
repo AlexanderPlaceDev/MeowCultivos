@@ -33,6 +33,8 @@ public class Scr_ControladorArmas : MonoBehaviour
     public float fuerzaDisparo = 70f;
     public int ArmaActual = 0;
     public GameObject[] contador;//es para mostar las balas o si es infinito
+    public Image ArmaUI;
+    public Sprite[] ArmaIcono;
     private TextMeshProUGUI contadorbalas;
 
 
@@ -175,11 +177,13 @@ public class Scr_ControladorArmas : MonoBehaviour
             contadorbalas = contador[1].GetComponent<TextMeshProUGUI>();
             contadorbalas.text = CantBalasActual + "/" + balascargador;
             BalaADisparar = balaPrefab[ArmaActual];
+            ArmaUI.sprite = ArmaIcono[1];
         }
         else
         {
             contador[0].SetActive(true);
             contador[1].SetActive(false);
+            ArmaUI.sprite = ArmaIcono[0];
         }
         daño = TodasLasArmas[ArmaActual].Daño;
         Tipo = TodasLasArmas[ArmaActual].Tipo;

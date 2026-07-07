@@ -704,7 +704,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
                 int cantCazados = PlayerPrefs.GetInt("cazado_cant" + i, 0);
                 if (!string.IsNullOrEmpty(nombrecazado) && cantCazados > 0)
                 {
-                    if (nombrecazado == enemigo.name)
+                    if (nombrecazado == enemigo.NombreEnemigo)
                     {
                         Debug.Log("ya exite");
                         PlayerPrefs.SetString("Cazado_" + i, nombrecazado);
