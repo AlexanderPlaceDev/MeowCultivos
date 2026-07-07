@@ -202,7 +202,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1cab223f70e9b814fabafb6b4da8c735, type: 2}
   - {fileID: 11400000, guid: d751dbd9ddd76d04d9382a756b7d289a, type: 2}
   - {fileID: 11400000, guid: 38aa457ca17cae044912a929b4e2a3c9, type: 2}
+  - {fileID: 11400000, guid: b9faac34556c0184c8deb2002f904452, type: 2}
   - {fileID: 11400000, guid: a484e7c7dc41c364580d3e6983f31bc7, type: 2}
+  - {fileID: 11400000, guid: 7da0b2b4f45d133438b16c12d6d9be8b, type: 2}
   - {fileID: 11400000, guid: f7b49d3c712142e409382aabe7421c7a, type: 2}
   - {fileID: 11400000, guid: dcdee7b61c832314985e36eadd49cfea, type: 2}
   - {fileID: 11400000, guid: d73b56f18581dde43b9932461a0d7796, type: 2}
@@ -210,6 +212,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 22dab43b06064b243b11429c3779c916, type: 2}
   - {fileID: 11400000, guid: 084d4a2bb90ee1349b6e25667c57086d, type: 2}
   - {fileID: 11400000, guid: 36d61ad45225b3f4e9167b75b4719848, type: 2}
+  - {fileID: 11400000, guid: b09b2bd3848d5bb4a8d7845e771ed6ed, type: 2}
+  - {fileID: 11400000, guid: 3747a648be9f0134a807e7b39b40420b, type: 2}
+  - {fileID: 11400000, guid: cfa7047ea24ca8047b9a27187d5b967e, type: 2}
+  - {fileID: 11400000, guid: 0e40f7c1ca0661342b5b81ac432beaff, type: 2}
+  - {fileID: 11400000, guid: 9abce1f34e5c1be4ca4f2b7c99afd577, type: 2}
+  - {fileID: 11400000, guid: cd006e99b9b92f14999cacbf4b3eb15a, type: 2}
   EstaEnDialogo: 0
   BotonesUI: {fileID: 811448977}
   ObjetosRecoleccion: {fileID: 776582803}
@@ -6468,8 +6476,8 @@ MonoBehaviour:
   m_UpdateMethod: 2
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
-    m_Style: 0
-    m_Time: 2
+    m_Style: 1
+    m_Time: 1
     m_CustomCurve:
       serializedVersion: 2
       m_Curve: []
@@ -245459,7 +245467,7 @@ PlayableDirector:
   m_GameObject: {fileID: 1023469648}
   m_Enabled: 1
   serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: cc32ce7e55418f4479a4abb4c02de8a8, type: 2}
+  m_PlayableAsset: {fileID: 11400000, guid: 0b382272a5d8dc647ba9121d44d5e014, type: 2}
   m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
@@ -326797,7 +326805,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Path: {fileID: 804691065}
-  m_PathPosition: 0.43483812
+  m_PathPosition: 2
   m_PositionUnits: 0
   m_PathOffset: {x: 0, y: 0, z: 0}
   m_XDamping: 0
@@ -416264,7 +416272,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1711522146}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.12342164, y: 0.00000020861626, z: -0.000000011175871, w: 0.9923544}
+  m_LocalRotation: {x: -0.123421624, y: 0.00000017881393, z: -0.000000007450581, w: 0.9923544}
   m_LocalPosition: {x: -0.000007033348, y: -2.0952892, z: 4.5398064}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -449532,7 +449540,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Path: {fileID: 324556849}
-  m_PathPosition: 1.58
+  m_PathPosition: 1.966976
   m_PositionUnits: 0
   m_PathOffset: {x: 0, y: 0, z: 0}
   m_XDamping: 0
@@ -508949,7 +508957,7 @@ MonoBehaviour:
   Barra: {fileID: 694585471}
   DuracionBarra: 0.2
   ObjetoCreado: {fileID: 1576283979}
-  estructuraRequerida: 7
+  estructuraRequerida: 8
   BotonEstructuraPrimaria: {fileID: 2004732018}
   ImagenBotonEstructuraPrimaria: {fileID: 21300000, guid: e39359d4741a52c419abab5e36c39847,
     type: 3}

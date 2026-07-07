@@ -1,406 +1,406 @@
-﻿using Cinemachine;
-using PrimeTween;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
-using UnityEngine.Playables;
-using UnityEngine.SceneManagement;
-using UnityEngine.Timeline;
-using UnityEngine.Events;
-using System.Reflection;
-using static Scr_DatosSingletonBatalla;
+﻿        using Cinemachine;
+        using PrimeTween;
+        using System.Collections;
+        using System.Collections.Generic;
+        using TMPro;
+        using UnityEngine;
+        using UnityEngine.Playables;
+        using UnityEngine.SceneManagement;
+        using UnityEngine.Timeline;
+        using UnityEngine.Events;
+        using System.Reflection;
+        using static Scr_DatosSingletonBatalla;
 
-public class Scr_ControladorCinematica : MonoBehaviour
-{
-    int Escena = 0;
-    bool esperandoReproduccion = false;
-
-    [SerializeField] PlayableDirector Director;
-    [SerializeField] PlayableAsset[] Timelines;
-    [SerializeField] private List<Scr_SistemaDialogos> NPCsDeLaCinematica;
-    [SerializeField] GameObject Panel;
-    [SerializeField] bool[] Easy;
-    [SerializeField] float[] Tiempos;
-    [SerializeField, Tooltip("Pausar en caso de terminar la cinematica en dialogo")]
-    public bool[] PausaAlTerminar;
-    [SerializeField] GameObject[] ObjetosApagar;
-    [SerializeField] GameObject[] ObjetosEncender;
-    [SerializeField] Collider ActivadorCinematicaSiguiente;
-    [SerializeField] GameObject Enemigo;
-    [SerializeField] int CantidadEnemigos;
-    [SerializeField] public string NombreMapa = "Batalla Base";
-    [SerializeField] public Modo modo= Modo.Pelea;
-    [SerializeField] Animator[] Barras;
-    public Scr_CreadorArmas[] TodasLasArmas;
-
-    private AsyncOperation Operacion;
-
-    private void Start()
-    {
-        ValidarSignals();
-    }
-
-    public void Update()
-    {
-        // Avanza a la siguiente cinemática si ya terminó la anterior
-        if (!esperandoReproduccion && Director.state != PlayState.Playing && !Panel.activeSelf && Escena < Timelines.Length && !PausaAlTerminar[Escena])
+        public class Scr_ControladorCinematica : MonoBehaviour
         {
+            int Escena = 0;
+            bool esperandoReproduccion = false;
 
-            // Configura blending según si es "Easy"
-            var brain = Camera.main.GetComponent<CinemachineBrain>();
-            if (Easy[Escena])
+            [SerializeField] PlayableDirector Director;
+            [SerializeField] PlayableAsset[] Timelines;
+            [SerializeField] private List<Scr_SistemaDialogos> NPCsDeLaCinematica;
+            [SerializeField] GameObject Panel;
+            [SerializeField] bool[] Easy;
+            [SerializeField] float[] Tiempos;
+            [SerializeField, Tooltip("Pausar en caso de terminar la cinematica en dialogo")]
+            public bool[] PausaAlTerminar;
+            [SerializeField] GameObject[] ObjetosApagar;
+            [SerializeField] GameObject[] ObjetosEncender;
+            [SerializeField] Collider ActivadorCinematicaSiguiente;
+            [SerializeField] GameObject Enemigo;
+            [SerializeField] int CantidadEnemigos;
+            [SerializeField] public string NombreMapa = "Batalla Base";
+            [SerializeField] public Modo modo= Modo.Pelea;
+            [SerializeField] Animator[] Barras;
+            public Scr_CreadorArmas[] TodasLasArmas;
+
+            private AsyncOperation Operacion;
+
+            private void Start()
             {
-                brain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.EaseInOut;
-                brain.m_DefaultBlend.m_Time = Tiempos[Escena];
-            }
-            else
-            {
-                brain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.Cut;
-            }
-
-            // Reproduce la cinemática
-            Director.playableAsset = Timelines[Escena];
-            Director.Play();
-
-            // Aumenta el índice de escena
-            Escena++;
-
-            // Espera a que comience la reproducción antes de permitir otro avance
-            StartCoroutine(EsperarInicioReproduccion());
-        }
-
-        // Si todas las cinemáticas terminaron
-        if (Escena >= Timelines.Length && !Panel.activeSelf && Director.state != PlayState.Playing)
-        {
-            var brain = Camera.main.GetComponent<CinemachineBrain>();
-            brain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.EaseInOut;
-            Debug.Log("Actualiza");
-            brain.m_DefaultBlend.m_Time = 2;
-
-            // Encender objetos
-            foreach (GameObject Objeto in ObjetosEncender)
-            {
-                Objeto.SetActive(true);
-            }
-            //Activar siguiente cinematica
-            if (ActivadorCinematicaSiguiente != null)
-            {
-                ActivadorCinematicaSiguiente.enabled = true;
+                ValidarSignals();
             }
 
-            // Apagar objetos
-            foreach (GameObject Objeto in ObjetosApagar)
+            public void Update()
             {
-                Objeto.SetActive(false);
-            }
-
-            // ✅ REACTIVAR MOVIMIENTO Y CÁMARA 360
-            GameObject gata = GameObject.Find("Gata");
-            if (gata != null)
-            {
-                var animControl = gata.GetComponent<Scr_ControladorAnimacionesGata>();
-                animControl.EstaEnCinematica = false;
-                if (animControl != null)
+                // Avanza a la siguiente cinemática si ya terminó la anterior
+                if (!esperandoReproduccion && Director.state != PlayState.Playing && !Panel.activeSelf && Escena < Timelines.Length && !PausaAlTerminar[Escena])
                 {
-                    animControl.PuedeCaminar = true;
-                }
 
-                var movimiento = gata.GetComponent<Scr_Movimiento>();
-                if (movimiento != null)
-                {
-                    movimiento.enabled = true;
-                }
-            }
-
-            //Activar camara principal
-            if (GameObject.Find("Cosas Inutiles") != null)
-            {
-                GameObject.Find("Cosas Inutiles").transform.GetChild(3).gameObject.SetActive(true);
-            }
-
-            Escena = 0; // Reinicia solo una vez
-        }
-    }
-
-    public void DesbloquearArma(string Nombre)
-    {
-        Debug.Log("Se esta guardando el arma: " + Nombre);
-        PlayerPrefs.SetString("Arma" + Nombre, "Si");
-        PlayerPrefs.Save();
-
-        for (int i = 1; i < TodasLasArmas.Length; i++)
-        {
-            if (TodasLasArmas[i].Nombre == Nombre)
-            {
-                GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>(). ArmasDesbloqueadas[i] = true;
-            }
-        }
-    }
-
-    void ValidarSignals()
-    {
-        Debug.Log("=== VALIDANDO SIGNALS ===");
-
-        var receivers = FindObjectsOfType<SignalReceiver>();
-
-        foreach (var timeline in Timelines)
-        {
-            if (timeline == null) continue;
-
-            var tl = timeline as TimelineAsset;
-            if (tl == null) continue;
-
-            foreach (var track in tl.GetOutputTracks())
-            {
-                if (!(track is SignalTrack signalTrack)) continue;
-
-                foreach (var clip in signalTrack.GetClips())
-                {
-                    var emitter = clip.asset as SignalEmitter;
-                    if (emitter == null) continue;
-
-                    string signalName = emitter.asset != null ? emitter.asset.name : "NULL_SIGNAL";
-
-                    // 🔴 Signal sin asset
-                    if (emitter.asset == null)
+                    // Configura blending según si es "Easy"
+                    var brain = Camera.main.GetComponent<CinemachineBrain>();
+                    if (Easy[Escena])
                     {
-                        Debug.LogError($"[Signal ERROR] Sin asset | Timeline: {timeline.name} | Tiempo: {clip.start}");
-                        continue;
+                        brain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.EaseInOut;
+                        brain.m_DefaultBlend.m_Time = Tiempos[Escena];
+                    }
+                    else
+                    {
+                        brain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.Cut;
                     }
 
-                    bool tieneEvento = false;
+                    // Reproduce la cinemática
+                    Director.playableAsset = Timelines[Escena];
+                    Director.Play();
 
-                    foreach (var receiver in receivers)
+                    // Aumenta el índice de escena
+                    Escena++;
+
+                    // Espera a que comience la reproducción antes de permitir otro avance
+                    StartCoroutine(EsperarInicioReproduccion());
+                }
+
+                // Si todas las cinemáticas terminaron
+                if (Escena >= Timelines.Length && !Panel.activeSelf && Director.state != PlayState.Playing)
+                {
+                    var brain = Camera.main.GetComponent<CinemachineBrain>();
+                    brain.m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.EaseInOut;
+                    Debug.Log("Actualiza");
+                    brain.m_DefaultBlend.m_Time = 2;
+
+                    // Encender objetos
+                    foreach (GameObject Objeto in ObjetosEncender)
                     {
-                        // 🔥 Reflection aquí
-                        var field = typeof(SignalReceiver).GetField("m_Events", BindingFlags.NonPublic | BindingFlags.Instance);
+                        Objeto.SetActive(true);
+                    }
+                    //Activar siguiente cinematica
+                    if (ActivadorCinematicaSiguiente != null)
+                    {
+                        ActivadorCinematicaSiguiente.enabled = true;
+                    }
 
-                        if (field == null)
+                    // Apagar objetos
+                    foreach (GameObject Objeto in ObjetosApagar)
+                    {
+                        Objeto.SetActive(false);
+                    }
+
+                    // ✅ REACTIVAR MOVIMIENTO Y CÁMARA 360
+                    GameObject gata = GameObject.Find("Gata");
+                    if (gata != null)
+                    {
+                        var animControl = gata.GetComponent<Scr_ControladorAnimacionesGata>();
+                        animControl.EstaEnCinematica = false;
+                        if (animControl != null)
                         {
-                            Debug.LogError("No se pudo acceder a m_Events");
-                            return;
+                            animControl.PuedeCaminar = true;
                         }
 
-                        var dict = field.GetValue(receiver) as IDictionary;
-
-                        if (dict == null) continue;
-
-                        foreach (DictionaryEntry entry in dict)
+                        var movimiento = gata.GetComponent<Scr_Movimiento>();
+                        if (movimiento != null)
                         {
-                            var signalAsset = entry.Key as SignalAsset;
-                            var unityEvent = entry.Value as UnityEvent;
+                            movimiento.enabled = true;
+                        }
+                    }
 
-                            if (signalAsset == emitter.asset)
+                    //Activar camara principal
+                    if (GameObject.Find("Cosas Inutiles") != null)
+                    {
+                        GameObject.Find("Cosas Inutiles").transform.GetChild(3).gameObject.SetActive(true);
+                    }
+
+                    Escena = 0; // Reinicia solo una vez
+                }
+            }
+
+            public void DesbloquearArma(string Nombre)
+            {
+                Debug.Log("Se esta guardando el arma: " + Nombre);
+                PlayerPrefs.SetString("Arma" + Nombre, "Si");
+                PlayerPrefs.Save();
+
+                for (int i = 1; i < TodasLasArmas.Length; i++)
+                {
+                    if (TodasLasArmas[i].Nombre == Nombre)
+                    {
+                        GameObject.Find("Singleton").GetComponent<Scr_DatosArmas>(). ArmasDesbloqueadas[i] = true;
+                    }
+                }
+            }
+
+            void ValidarSignals()
+            {
+                Debug.Log("=== VALIDANDO SIGNALS ===");
+
+                var receivers = FindObjectsOfType<SignalReceiver>();
+
+                foreach (var timeline in Timelines)
+                {
+                    if (timeline == null) continue;
+
+                    var tl = timeline as TimelineAsset;
+                    if (tl == null) continue;
+
+                    foreach (var track in tl.GetOutputTracks())
+                    {
+                        if (!(track is SignalTrack signalTrack)) continue;
+
+                        foreach (var clip in signalTrack.GetClips())
+                        {
+                            var emitter = clip.asset as SignalEmitter;
+                            if (emitter == null) continue;
+
+                            string signalName = emitter.asset != null ? emitter.asset.name : "NULL_SIGNAL";
+
+                            // 🔴 Signal sin asset
+                            if (emitter.asset == null)
                             {
-                                if (unityEvent == null || unityEvent.GetPersistentEventCount() == 0)
+                                Debug.LogError($"[Signal ERROR] Sin asset | Timeline: {timeline.name} | Tiempo: {clip.start}");
+                                continue;
+                            }
+
+                            bool tieneEvento = false;
+
+                            foreach (var receiver in receivers)
+                            {
+                                // 🔥 Reflection aquí
+                                var field = typeof(SignalReceiver).GetField("m_Events", BindingFlags.NonPublic | BindingFlags.Instance);
+
+                                if (field == null)
                                 {
-                                    Debug.LogError($"[Signal ERROR] Sin función asignada | Signal: {signalName} | Timeline: {timeline.name} | Tiempo: {clip.start}");
+                                    Debug.LogError("No se pudo acceder a m_Events");
+                                    return;
                                 }
-                                else
+
+                                var dict = field.GetValue(receiver) as IDictionary;
+
+                                if (dict == null) continue;
+
+                                foreach (DictionaryEntry entry in dict)
                                 {
-                                    for (int i = 0; i < unityEvent.GetPersistentEventCount(); i++)
+                                    var signalAsset = entry.Key as SignalAsset;
+                                    var unityEvent = entry.Value as UnityEvent;
+
+                                    if (signalAsset == emitter.asset)
                                     {
-                                        var target = unityEvent.GetPersistentTarget(i);
-                                        var method = unityEvent.GetPersistentMethodName(i);
-
-                                        if (target == null)
+                                        if (unityEvent == null || unityEvent.GetPersistentEventCount() == 0)
                                         {
-                                            Debug.LogError($"[Signal ERROR] Target NULL | Signal: {signalName} | Timeline: {timeline.name}");
+                                            Debug.LogError($"[Signal ERROR] Sin función asignada | Signal: {signalName} | Timeline: {timeline.name} | Tiempo: {clip.start}");
                                         }
-
-                                        if (string.IsNullOrEmpty(method))
+                                        else
                                         {
-                                            Debug.LogError($"[Signal ERROR] Método vacío | Signal: {signalName} | Timeline: {timeline.name}");
+                                            for (int i = 0; i < unityEvent.GetPersistentEventCount(); i++)
+                                            {
+                                                var target = unityEvent.GetPersistentTarget(i);
+                                                var method = unityEvent.GetPersistentMethodName(i);
+
+                                                if (target == null)
+                                                {
+                                                    Debug.LogError($"[Signal ERROR] Target NULL | Signal: {signalName} | Timeline: {timeline.name}");
+                                                }
+
+                                                if (string.IsNullOrEmpty(method))
+                                                {
+                                                    Debug.LogError($"[Signal ERROR] Método vacío | Signal: {signalName} | Timeline: {timeline.name}");
+                                                }
+                                            }
+
+                                            tieneEvento = true;
                                         }
                                     }
-
-                                    tieneEvento = true;
                                 }
+                            }
+
+                            if (!tieneEvento)
+                            {
+                                Debug.LogError($"[Signal ERROR] No hay receiver para este signal | Signal: {signalName} | Timeline: {timeline.name} | Tiempo: {clip.start}");
                             }
                         }
                     }
+                }
 
-                    if (!tieneEvento)
+                Debug.Log("=== FIN VALIDACIÓN SIGNALS ===");
+            }
+
+            private IEnumerator EsperarInicioReproduccion()
+            {
+                // Espera 0.1s y luego permite otra reproducción
+                yield return new WaitForSeconds(0.1f);
+                esperandoReproduccion = false;
+            }
+
+            public void CambiarEscena(int Escena)
+            {
+                if (Operacion != null && Operacion.progress >= 0.9f)
+                {
+                    Operacion.allowSceneActivation = true;
+                }
+            }
+
+            public void CambiarEscenaForzada(int Escena)
+            {
+                SceneManager.LoadScene(Escena);
+            }
+
+            public void ActivadorPrecarga(int Escena)
+            {
+                StartCoroutine(PrecargarEscena(Escena));
+            }
+
+            public IEnumerator PrecargarEscena(int Escena)
+            {
+                Operacion = SceneManager.LoadSceneAsync(Escena);
+                Operacion.allowSceneActivation = false;
+
+                while (!Operacion.isDone)
+                {
+                    if (Operacion.progress >= 0.9f)
                     {
-                        Debug.LogError($"[Signal ERROR] No hay receiver para este signal | Signal: {signalName} | Timeline: {timeline.name} | Tiempo: {clip.start}");
+                        Debug.Log("La escena está precargada.");
                     }
+
+                    yield return null;
+                }
+            }
+
+            public void AsignarSinleton()
+            {
+                Scr_DatosSingletonBatalla Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
+                Singleton.Enemigo = Enemigo.GetComponent<Scr_CambiadorBatalla>().PrefabEnemigo;
+                Singleton.Mision = Enemigo.GetComponent<Scr_CambiadorBatalla>().Mision;
+                Singleton.ColorMision = Enemigo.GetComponent<Scr_CambiadorBatalla>().ColorMision;
+                Singleton.Complemento = Enemigo.GetComponent<Scr_CambiadorBatalla>().Complemento;
+                Singleton.Item = Enemigo.GetComponent<Scr_CambiadorBatalla>().Item;
+                Singleton.ColorItem = Enemigo.GetComponent<Scr_CambiadorBatalla>().ColorItem;
+                Singleton.Luz = GameObject.Find("Sol").GetComponent<Light>().color;
+                Singleton.ModoSeleccionado = Enemigo.GetComponent<Scr_CambiadorBatalla>().Modo;
+                Singleton.CantidadEnemigosPorOleada = CantidadEnemigos;
+                Singleton.NombreMapa = NombreMapa;
+                Singleton.ModoSeleccionado= modo;
+            }
+
+            public void GuardarCinematica(string Cinematica)
+            {
+                Debug.Log("Escena Guardada");
+                PlayerPrefs.SetString("Cinematica " + Cinematica, "Si");
+
+                Scr_ControladorTiempo Tiempo = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
+
+                PlayerPrefs.SetString("DiaCinematica:" + gameObject.transform.parent.parent.name, Tiempo.DiaActual);
+                PlayerPrefs.SetInt("HoraCinematica:" + gameObject.transform.parent.parent.name, Tiempo.HoraActual);
+                Debug.Log("Guarda desde: " + gameObject.name);
+                if (transform.parent.parent.GetComponent<Scr_ActivadorElementos>().CinematicaSiguiente == null && transform.parent.parent.GetComponent<Scr_ActivadorElementos>().UsaEventoGeneral)
+                {
+                    Debug.Log("Desactiva evento");
+                    GameObject.Find("EventosGenerales").GetComponent<Controlador_EventosGenerales>().DesactivarEvento(transform.parent.parent.GetComponent<Scr_ActivadorElementos>().NombreEventoGeneral);
+                }
+                PlayerPrefs.Save();
+
+            }
+
+            public void GuardarPosicion(Transform Trans)
+            {
+                PlayerPrefs.SetFloat("GataPosX", Trans.position.x);
+                PlayerPrefs.SetFloat("GataPosY", Trans.position.y);
+                PlayerPrefs.SetFloat("GataPosZ", Trans.position.z);
+
+                PlayerPrefs.SetFloat("GataRotX", Trans.rotation.eulerAngles.x);
+                PlayerPrefs.SetFloat("GataRotY", Trans.rotation.eulerAngles.y);
+                PlayerPrefs.SetFloat("GataRotZ", Trans.rotation.eulerAngles.z);
+            }
+
+            public void PermiteGuardarPosicion()
+            {
+                GameObject.Find("Gata").GetComponent<Scr_Movimiento>().PuedeGuardarPosicion = true;
+            }
+
+            public void DesactivaGuardarPosicion()
+            {
+                GameObject.Find("Gata").GetComponent<Scr_Movimiento>().PuedeGuardarPosicion = false;
+            }
+
+            public void CerrarBarras()
+            {
+                foreach (Animator Anim in Barras)
+                {
+                    Anim.Play("Cerrar");
+                }
+            }
+
+            public void ActivarReloj()
+            {
+                GameObject Reloj = GameObject.Find("Canvas").transform.GetChild(2).gameObject;
+                Reloj.SetActive(true);
+                Tween.UIAnchoredPositionY(Reloj.transform.GetChild(0).GetComponent<RectTransform>(), 15, 0.5f, Ease.Default);
+                Tween.UIAnchoredPositionX(Reloj.transform.GetChild(1).GetComponent<RectTransform>(), 0, 0.5f, Ease.Default);
+                Tween.UIAnchoredPositionX(Reloj.transform.GetChild(2).GetComponent<RectTransform>(), 22.5f, 0.5f, Ease.Default);
+                Tween.UIAnchoredPositionX(Reloj.transform.GetChild(3).GetComponent<RectTransform>(), -12.5f, 0.5f, Ease.Default);
+
+            }
+
+            public void DesactivarReloj()
+            {
+
+                GameObject Reloj = GameObject.Find("Canvas").transform.GetChild(2).gameObject;
+                Tween.UIAnchoredPositionY(Reloj.transform.GetChild(0).GetComponent<RectTransform>(), -100, 0.5f, Ease.Default);
+                Tween.UIAnchoredPositionX(Reloj.transform.GetChild(1).GetComponent<RectTransform>(), 226, 0.5f, Ease.Default);
+                Tween.UIAnchoredPositionX(Reloj.transform.GetChild(2).GetComponent<RectTransform>(), -800, 0.5f, Ease.Default);
+                Tween.UIAnchoredPositionX(Reloj.transform.GetChild(3).GetComponent<RectTransform>(), -800, 0.5f, Ease.Default);
+                StartCoroutine(EsperarReloj(Reloj));
+            }
+
+            IEnumerator EsperarReloj(GameObject Reloj)
+            {
+                yield return new WaitForSeconds(0.5f);
+                Reloj.SetActive(false);
+            }
+
+            public void AumentarRango(string Rama)
+            {
+                // Aumenta rango interno
+                PlayerPrefs.SetInt(
+                    "Rango Barra " + Rama,
+                    PlayerPrefs.GetInt("Rango Barra " + Rama, 0) + 1
+                );
+
+                // Limpia la rama (Arsenal3 -> Arsenal)
+                string ramaLimpia = Rama.TrimEnd('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+
+                // Activa UI de rango
+                GameObject rangoUI = GameObject.Find("Canvas").transform.GetChild(10).gameObject;
+                rangoUI.SetActive(true);
+
+                // Muestra rango (interno + 1 si lo necesitas visual)
+                rangoUI.GetComponent<Scr_NuevoRango>()
+                    .MostrarRango(
+                        ramaLimpia,
+                        PlayerPrefs.GetInt("Rango Barra " + Rama, 0)
+                    );
+            }
+
+            public void AumentarDialogoNPC(int index)
+            {
+                if (index < 0 || index >= NPCsDeLaCinematica.Count)
+                {
+                    Debug.LogWarning("Índice fuera de rango en NPCsDeLaCinematica");
+                    return;
+                }
+
+                var npc = NPCsDeLaCinematica[index];
+
+                if (npc != null)
+                {
+                    npc.AumentarDialogo();
                 }
             }
         }
-
-        Debug.Log("=== FIN VALIDACIÓN SIGNALS ===");
-    }
-
-    private IEnumerator EsperarInicioReproduccion()
-    {
-        // Espera 0.1s y luego permite otra reproducción
-        yield return new WaitForSeconds(0.1f);
-        esperandoReproduccion = false;
-    }
-
-    public void CambiarEscena(int Escena)
-    {
-        if (Operacion != null && Operacion.progress >= 0.9f)
-        {
-            Operacion.allowSceneActivation = true;
-        }
-    }
-
-    public void CambiarEscenaForzada(int Escena)
-    {
-        SceneManager.LoadScene(Escena);
-    }
-
-    public void ActivadorPrecarga(int Escena)
-    {
-        StartCoroutine(PrecargarEscena(Escena));
-    }
-
-    public IEnumerator PrecargarEscena(int Escena)
-    {
-        Operacion = SceneManager.LoadSceneAsync(Escena);
-        Operacion.allowSceneActivation = false;
-
-        while (!Operacion.isDone)
-        {
-            if (Operacion.progress >= 0.9f)
-            {
-                Debug.Log("La escena está precargada.");
-            }
-
-            yield return null;
-        }
-    }
-
-    public void AsignarSinleton()
-    {
-        Scr_DatosSingletonBatalla Singleton = GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>();
-        Singleton.Enemigo = Enemigo.GetComponent<Scr_CambiadorBatalla>().PrefabEnemigo;
-        Singleton.Mision = Enemigo.GetComponent<Scr_CambiadorBatalla>().Mision;
-        Singleton.ColorMision = Enemigo.GetComponent<Scr_CambiadorBatalla>().ColorMision;
-        Singleton.Complemento = Enemigo.GetComponent<Scr_CambiadorBatalla>().Complemento;
-        Singleton.Item = Enemigo.GetComponent<Scr_CambiadorBatalla>().Item;
-        Singleton.ColorItem = Enemigo.GetComponent<Scr_CambiadorBatalla>().ColorItem;
-        Singleton.Luz = GameObject.Find("Sol").GetComponent<Light>().color;
-        Singleton.ModoSeleccionado = Enemigo.GetComponent<Scr_CambiadorBatalla>().Modo;
-        Singleton.CantidadEnemigosPorOleada = CantidadEnemigos;
-        Singleton.NombreMapa = NombreMapa;
-        Singleton.ModoSeleccionado= modo;
-    }
-
-    public void GuardarCinematica(string Cinematica)
-    {
-        Debug.Log("Escena Guardada");
-        PlayerPrefs.SetString("Cinematica " + Cinematica, "Si");
-
-        Scr_ControladorTiempo Tiempo = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>();
-
-        PlayerPrefs.SetString("DiaCinematica:" + gameObject.transform.parent.parent.name, Tiempo.DiaActual);
-        PlayerPrefs.SetInt("HoraCinematica:" + gameObject.transform.parent.parent.name, Tiempo.HoraActual);
-        Debug.Log("Guarda desde: " + gameObject.name);
-        if (transform.parent.parent.GetComponent<Scr_ActivadorElementos>().CinematicaSiguiente == null && transform.parent.parent.GetComponent<Scr_ActivadorElementos>().UsaEventoGeneral)
-        {
-            Debug.Log("Desactiva evento");
-            GameObject.Find("EventosGenerales").GetComponent<Controlador_EventosGenerales>().DesactivarEvento(transform.parent.parent.GetComponent<Scr_ActivadorElementos>().NombreEventoGeneral);
-        }
-        PlayerPrefs.Save();
-
-    }
-
-    public void GuardarPosicion(Transform Trans)
-    {
-        PlayerPrefs.SetFloat("GataPosX", Trans.position.x);
-        PlayerPrefs.SetFloat("GataPosY", Trans.position.y);
-        PlayerPrefs.SetFloat("GataPosZ", Trans.position.z);
-
-        PlayerPrefs.SetFloat("GataRotX", Trans.rotation.eulerAngles.x);
-        PlayerPrefs.SetFloat("GataRotY", Trans.rotation.eulerAngles.y);
-        PlayerPrefs.SetFloat("GataRotZ", Trans.rotation.eulerAngles.z);
-    }
-
-    public void PermiteGuardarPosicion()
-    {
-        GameObject.Find("Gata").GetComponent<Scr_Movimiento>().PuedeGuardarPosicion = true;
-    }
-
-    public void DesactivaGuardarPosicion()
-    {
-        GameObject.Find("Gata").GetComponent<Scr_Movimiento>().PuedeGuardarPosicion = false;
-    }
-
-    public void CerrarBarras()
-    {
-        foreach (Animator Anim in Barras)
-        {
-            Anim.Play("Cerrar");
-        }
-    }
-
-    public void ActivarReloj()
-    {
-        GameObject Reloj = GameObject.Find("Canvas").transform.GetChild(2).gameObject;
-        Reloj.SetActive(true);
-        Tween.UIAnchoredPositionY(Reloj.transform.GetChild(0).GetComponent<RectTransform>(), 15, 0.5f, Ease.Default);
-        Tween.UIAnchoredPositionX(Reloj.transform.GetChild(1).GetComponent<RectTransform>(), 0, 0.5f, Ease.Default);
-        Tween.UIAnchoredPositionX(Reloj.transform.GetChild(2).GetComponent<RectTransform>(), 22.5f, 0.5f, Ease.Default);
-        Tween.UIAnchoredPositionX(Reloj.transform.GetChild(3).GetComponent<RectTransform>(), -12.5f, 0.5f, Ease.Default);
-
-    }
-
-    public void DesactivarReloj()
-    {
-
-        GameObject Reloj = GameObject.Find("Canvas").transform.GetChild(2).gameObject;
-        Tween.UIAnchoredPositionY(Reloj.transform.GetChild(0).GetComponent<RectTransform>(), -100, 0.5f, Ease.Default);
-        Tween.UIAnchoredPositionX(Reloj.transform.GetChild(1).GetComponent<RectTransform>(), 226, 0.5f, Ease.Default);
-        Tween.UIAnchoredPositionX(Reloj.transform.GetChild(2).GetComponent<RectTransform>(), -800, 0.5f, Ease.Default);
-        Tween.UIAnchoredPositionX(Reloj.transform.GetChild(3).GetComponent<RectTransform>(), -800, 0.5f, Ease.Default);
-        StartCoroutine(EsperarReloj(Reloj));
-    }
-
-    IEnumerator EsperarReloj(GameObject Reloj)
-    {
-        yield return new WaitForSeconds(0.5f);
-        Reloj.SetActive(false);
-    }
-
-    public void AumentarRango(string Rama)
-    {
-        // Aumenta rango interno
-        PlayerPrefs.SetInt(
-            "Rango Barra " + Rama,
-            PlayerPrefs.GetInt("Rango Barra " + Rama, 0) + 1
-        );
-
-        // Limpia la rama (Arsenal3 -> Arsenal)
-        string ramaLimpia = Rama.TrimEnd('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
-
-        // Activa UI de rango
-        GameObject rangoUI = GameObject.Find("Canvas").transform.GetChild(10).gameObject;
-        rangoUI.SetActive(true);
-
-        // Muestra rango (interno + 1 si lo necesitas visual)
-        rangoUI.GetComponent<Scr_NuevoRango>()
-            .MostrarRango(
-                ramaLimpia,
-                PlayerPrefs.GetInt("Rango Barra " + Rama, 0)
-            );
-    }
-
-    public void AumentarDialogoNPC(int index)
-    {
-        if (index < 0 || index >= NPCsDeLaCinematica.Count)
-        {
-            Debug.LogWarning("Índice fuera de rango en NPCsDeLaCinematica");
-            return;
-        }
-
-        var npc = NPCsDeLaCinematica[index];
-
-        if (npc != null)
-        {
-            npc.AumentarDialogo();
-        }
-    }
-}
