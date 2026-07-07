@@ -43,7 +43,6 @@ public class Scr_EventosGuardado : MonoBehaviour
                         PlayerPrefs.SetString("Reloj", "Si");
                         Gata.transform.GetChild(6).GetComponent<Scr_ControladorMenuGameplay>().enabled = true;
                     }
-                    PlayerPrefs.SetInt("DialogoMiguel", UltimoDialogo);
                     break;
                 }
         }

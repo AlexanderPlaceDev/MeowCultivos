@@ -17,6 +17,9 @@ public class Scr_ActivadorParticular : MonoBehaviour
     [SerializeField]
     private NavMeshSurface Nav;
 
+    [SerializeField]
+    Scr_CreadorMisiones Mision;
+
 
     private void OnEnable()
     {
@@ -26,6 +29,21 @@ public class Scr_ActivadorParticular : MonoBehaviour
             {
                 foreach (GameObject obj in ObjetosAEncender) { obj.SetActive(true); }
                 foreach (GameObject obj in ObjetosAApagar) { obj.SetActive(false); }
+
+                if (Mision != null)
+                {
+                    int i = 0;
+                    Scr_CreadorMisiones[] MisionesActuales = GameObject.Find("Gata").transform.GetChild(4).GetComponent<Scr_ControladorMisiones>().Misiones.ToArray();
+                    foreach(Scr_CreadorMisiones mision in MisionesActuales)
+                    {
+                        if(mision == Mision)
+                        {
+                            GameObject.Find("Gata").transform.GetChild(4).GetComponent<Scr_ControladorMisiones>().MisionesCompletas[i] = true;
+                            break;
+                        }
+                        i++;
+                    }
+                }
             }
             else
             {

@@ -65,6 +65,8 @@ public class Scr_CargadorGuardado : MonoBehaviour
         //Dialogos
         Personajes[0].GetComponent<Scr_SistemaDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoMiguel", 0);
         Personajes[1].GetComponent<Scr_SistemaDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoBony", 0);
+        Personajes[2].GetComponent<Scr_SistemaDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoRex", 0);
+        Personajes[3].GetComponent<Scr_SistemaDialogos>().DialogoActual = PlayerPrefs.GetInt("DialogoMarvin", 0);
         if (PlayerPrefs.GetInt("DialogoMiguel", 0) > 0)
         {
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;

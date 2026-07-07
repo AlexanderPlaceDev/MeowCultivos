@@ -197,6 +197,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3f2444c712822e54487e036164c36315, type: 2}
   - {fileID: 11400000, guid: 08088d704a70fd64dadb4876a21dfa19, type: 2}
   - {fileID: 11400000, guid: f0227f41451828943a140e83d73acf58, type: 2}
+  - {fileID: 11400000, guid: 63d97eec5c1894a4e84b23761153f3f5, type: 2}
+  - {fileID: 11400000, guid: df3632d8bf78f614a98363a7e043be3c, type: 2}
+  - {fileID: 11400000, guid: 1cab223f70e9b814fabafb6b4da8c735, type: 2}
   - {fileID: 11400000, guid: d751dbd9ddd76d04d9382a756b7d289a, type: 2}
   - {fileID: 11400000, guid: 38aa457ca17cae044912a929b4e2a3c9, type: 2}
   - {fileID: 11400000, guid: a484e7c7dc41c364580d3e6983f31bc7, type: 2}
@@ -30772,7 +30775,7 @@ Transform:
   m_GameObject: {fileID: 110880361}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7, y: 1.87, z: -0.14}
+  m_LocalPosition: {x: -0.5, y: 1.87, z: -0.14}
   m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -33757,6 +33760,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 3a3af1e63de509c4bb597290a6ff85ca, type: 2}
     - {fileID: 11400000, guid: 6336610be051992428fba7dbe9fc1cf6, type: 2}
     - {fileID: 11400000, guid: b3ad8067139790d4682aa0b97bd938ce, type: 2}
+    - {fileID: 11400000, guid: 8c9722f17f90b4f46b6a49e3eaf2acad, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -34122,6 +34126,21 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 74822}
+          m_TargetAssemblyTypeName: Scr_ControladorMisiones, Assembly-CSharp
+          m_MethodName: SustituirMisionDesdeSingleton
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 11400000, guid: 63d97eec5c1894a4e84b23761153f3f5,
+              type: 2}
+            m_ObjectArgumentAssemblyTypeName: Scr_CreadorMisiones, Assembly-CSharp
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!320 &123417978
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -34131,7 +34150,7 @@ PlayableDirector:
   m_GameObject: {fileID: 123417974}
   m_Enabled: 1
   serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: cf8c621b2ba03bb4a8182e02b4766dc0, type: 2}
+  m_PlayableAsset: {fileID: 11400000, guid: cb536217d4a90ec4eaec9379cea7dbb5, type: 2}
   m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
@@ -194632,9 +194651,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ObjetosNecesarios:
   - {fileID: 11400000, guid: 2ae239e92871c5f40ab548eeda0a0ca0, type: 2}
-  - {fileID: 11400000, guid: 39699c4a042de2247955bcd7f5e992f8, type: 2}
+  - {fileID: 11400000, guid: c0713f28251af8245a6f0ff1e35b5a0c, type: 2}
   - {fileID: 11400000, guid: a1dcbf004b25dc8478076e9ce3ec3b63, type: 2}
-  CantidadesNecesarias: 0f0000001400000019000000
+  CantidadesNecesarias: 14000000190000001e000000
   Items:
   - {fileID: 1833470475}
   - {fileID: 2004540755}
@@ -194643,6 +194662,8 @@ MonoBehaviour:
   Torre: {fileID: 731625311}
   CamaraTorre: {fileID: 27504878}
   Camara360: {fileID: 1600294763}
+  Marvin: {fileID: 1465105400}
+  NuevaMision: {fileID: 11400000, guid: 1cab223f70e9b814fabafb6b4da8c735, type: 2}
   EjeRotacion: {x: -1, y: 0, z: 0}
   ChildToRotate: {fileID: 331843832}
   CanvasUI: {fileID: 1696358848}
@@ -226994,7 +227015,7 @@ Transform:
   m_GameObject: {fileID: 954854679}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.423, y: 1.81, z: -0.035}
+  m_LocalPosition: {x: 1.3, y: 1.81, z: -0.035}
   m_LocalScale: {x: 0.3333334, y: 0.33333343, z: 0.33333352}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -245438,7 +245459,7 @@ PlayableDirector:
   m_GameObject: {fileID: 1023469648}
   m_Enabled: 1
   serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: aeab6bac1a2d17b4dbb2243bef83bfc9, type: 2}
+  m_PlayableAsset: {fileID: 11400000, guid: cc32ce7e55418f4479a4abb4c02de8a8, type: 2}
   m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
@@ -352947,7 +352968,7 @@ MonoBehaviour:
   Comprando: 0
   ViendoMisiones: 0
   ViendoTienda: 0
-  NombreNPC: 
+  NombreNPC: Marvin
   autoIniciarDialogo: 0
   EsTienda: 0
   UsaMisionesSecundarias: 1
@@ -352986,8 +353007,10 @@ MonoBehaviour:
   ContrasteNPC: {r: 0.050980393, g: 0.2901961, b: 0.02745098, a: 1}
   Texto: {fileID: 1096617367}
   Dialogos:
-  - {fileID: 11400000, guid: d291c486ed4f5444ea0699af987db031, type: 2}
+  - {fileID: 11400000, guid: bc6194b5a2a5ac747aef582b545b895c, type: 2}
   - {fileID: 11400000, guid: f535d320f509bae4e898d5c88a5c1962, type: 2}
+  - {fileID: 11400000, guid: 72c4dc5bb64fa944abd21b22a21faad3, type: 2}
+  - {fileID: 11400000, guid: 1c8a32441120bd748ac0f79c09369d21, type: 2}
   DialogoSecundario: {fileID: 11400000, guid: 1693e45ffc074f34ba03ea836ee418e2, type: 2}
   DialogoArecibir: {fileID: 0}
   letraDelay: 0.1
@@ -396198,7 +396221,7 @@ Transform:
   m_GameObject: {fileID: 1637412045}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.277, y: 1.83, z: -0.135}
+  m_LocalPosition: {x: 0.5, y: 1.83, z: -0.135}
   m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -417545,7 +417568,7 @@ Transform:
   m_GameObject: {fileID: 1714930419}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.4, y: 1.89, z: -0.24}
+  m_LocalPosition: {x: -1.3, y: 1.89, z: -0.24}
   m_LocalScale: {x: 0.3333334, y: 0.33333343, z: 0.33333352}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -445009,7 +445032,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1819689476}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.14140406, y: 0.00000017881392, z: -0.0000000037252899, w: 0.98995197}
+  m_LocalRotation: {x: -0.14140406, y: 0.00000017881392, z: -0.0000000074505797, w: 0.98995197}
   m_LocalPosition: {x: -0.000007033348, y: -2.0952892, z: 4.5398064}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -462488,6 +462511,7 @@ MonoBehaviour:
   - {fileID: 312152871}
   - {fileID: 560449225}
   - {fileID: 1331211903}
+  - {fileID: 1465105400}
   Reloj: {fileID: 76932924}
   Tablero: {fileID: 570367918}
   MuroTutorial: {fileID: 829782948}
@@ -518298,6 +518322,7 @@ MonoBehaviour:
   - {fileID: 902828208}
   - {fileID: 1791767174}
   Nav: {fileID: 1259677889}
+  Mision: {fileID: 11400000, guid: 63d97eec5c1894a4e84b23761153f3f5, type: 2}
 --- !u!1001 &2093820517
 PrefabInstance:
   m_ObjectHideFlags: 0
