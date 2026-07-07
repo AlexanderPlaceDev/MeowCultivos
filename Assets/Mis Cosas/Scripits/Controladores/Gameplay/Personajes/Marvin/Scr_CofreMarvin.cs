@@ -12,6 +12,8 @@ public class Scr_CofreMarvin : MonoBehaviour
     [SerializeField] GameObject Torre;
     [SerializeField] GameObject CamaraTorre;
     [SerializeField] GameObject Camara360;
+    [SerializeField] GameObject Marvin;
+    [SerializeField] Scr_CreadorMisiones NuevaMision;
     Scr_Inventario Inventario;
 
     // --- ROTACIÓN ---
@@ -289,7 +291,9 @@ public class Scr_CofreMarvin : MonoBehaviour
         if (Torre != null)
             Torre.SetActive(true);
 
-
+        GameObject.Find("Gata").transform.GetChild(4).GetComponent<Scr_ControladorMisiones>().SustituirMisionDesdeSingleton(NuevaMision);
+        Marvin.GetComponent<Scr_SistemaDialogos>().DialogoActual = 3;
+        PlayerPrefs.SetInt("DialogoMarvin", 3);
         var rangoUI = GameObject.Find("Canvas").transform.GetChild(10).GetComponent<Scr_NuevoRango>();
         rangoUI.gameObject.SetActive(true);
         rangoUI.MostrarRango("Industrial", 1);

@@ -197,23 +197,22 @@ public class Scr_ActivadorDialogos : MonoBehaviour
         Hablando = true;
         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
 
-        // 🔥 VERIFICAR MISIÓN ANTES DE TODO
-        bool misionCompletada = VerificarMisionPrincipal();
+        // Obtener el diálogo actual
+        var dialogo = sistemaDialogos.Dialogos[sistemaDialogos.DialogoActual];
 
-        // 🔥 FORZAR CAMBIO DE DIÁLOGO ANTES DE INICIAR
-        if (misionCompletada)
+        // Solo verificar misión si este diálogo lo requiere
+        if (dialogo.RequiereMisionCompleta)
         {
-            Debug.Log("🚀 Cambiando a diálogo siguiente antes de iniciar");
-
-            sistemaDialogos.CambiarDialogo(sistemaDialogos.DialogoActual + 1);
+            if (VerificarMisionPrincipal())
+            {
+                sistemaDialogos.CambiarDialogo(sistemaDialogos.DialogoActual + 1);
+            }
         }
 
-        // 🔥 RESET TOTAL DEL SISTEMA (CLAVE)
         sistemaDialogos.LineaActual = 0;
         sistemaDialogos.Leido = false;
         sistemaDialogos.EnPausa = true;
 
-        // 🔥 INICIAR NORMAL
         if (panelDialogo.activeSelf)
         {
             ActivarDialogo(true);
@@ -229,6 +228,16 @@ public class Scr_ActivadorDialogos : MonoBehaviour
     private bool VerificarMisionPrincipal()
     {
         if (controladorMisiones == null) return false;
+
+        var dialogo = sistemaDialogos.Dialogos[sistemaDialogos.DialogoActual];
+
+        // ESTE DIÁLOGO NO ESPERA UNA MISIÓN
+        if (!dialogo.RequiereMisionCompleta)
+            return false;
+
+        if (controladorMisiones == null)
+            return false;
+
 
         int total = Mathf.Min(
             controladorMisiones.Misiones.Count,
@@ -380,74 +389,64 @@ public class Scr_ActivadorDialogos : MonoBehaviour
 
     private void EvaluarProgresoDialogo()
     {
-        if (sistemaDialogos.Dialogos == null || sistemaDialogos.Dialogos.Length == 0)
-        {
-            Debug.LogError("❌ No hay diálogos en " + NombreNPC);
-            return;
-        }
-
-        if (sistemaDialogos.DialogoActual >= sistemaDialogos.Dialogos.Length)
-        {
-            Debug.LogError($"❌ DialogoActual fuera de rango en {NombreNPC}: {sistemaDialogos.DialogoActual}/{sistemaDialogos.Dialogos.Length}");
-            sistemaDialogos.DialogoActual = sistemaDialogos.Dialogos.Length - 1;
-            return;
-        }
-
         var dialogo = sistemaDialogos.Dialogos[sistemaDialogos.DialogoActual];
 
         if (dialogo == null)
-        {
-            Debug.LogError("❌ Dialogo NULL en índice " + sistemaDialogos.DialogoActual);
             return;
-        }
 
-        // 🔹 Caso A
+        //===============================
+        // PRIORIDAD 1
+        // Esperar misión completa
+        //===============================
+
         if (dialogo.RequiereMisionCompleta)
             return;
 
-        // 🔹 Caso B
-        if (!dialogo.EsUnico && sistemaDialogos.Leido)
-        {
-            if (sistemaDialogos.DialogoActual + 1 < sistemaDialogos.Dialogos.Length)
-            {
-                sistemaDialogos.DialogoActual++;
-            }
+        //===============================
+        // PRIORIDAD 2
+        // Diálogo repetitivo
+        //===============================
+
+        if (dialogo.EsRepetitivo)
             return;
+
+        //===============================
+        // PRIORIDAD 3
+        // Avanzar normalmente
+        //===============================
+
+        if (sistemaDialogos.DialogoActual + 1 < sistemaDialogos.Dialogos.Length)
+        {
+            sistemaDialogos.DialogoActual++;
         }
     }
     private void ProcesarMisionDelDialogo()
     {
         var dialogo = sistemaDialogos.DialogoArecibir;
 
-        if (dialogo == null) return;
+        if (dialogo == null)
+            return;
 
-        // 🔥 SOLO si el diálogo tiene misión
-        if (dialogo.EsMisionPrincipal && dialogo.Mision != null)
-        {
-            // 🔥 EVITAR DUPLICADOS
-            bool yaExiste = controladorMisiones.Misiones
-                .Any(m => m.name == dialogo.Mision.name);
+        if (!dialogo.AsignaMision || dialogo.Mision == null)
+            return;
 
-            if (!yaExiste)
-            {
-                Debug.Log("📌 Asignando misión desde Activador");
+        bool yaExiste = controladorMisiones.Misiones
+            .Any(m => m.name == dialogo.Mision.name);
 
-                if (controladorMisiones.MisionActual == null)
-                {
-                    controladorMisiones.MisionActual = dialogo.Mision;
-                }
+        if (yaExiste)
+            return;
 
-                controladorMisiones.Misiones.Add(dialogo.Mision);
-                controladorMisiones.MisionesCompletas.Add(false);
-                controladorMisiones.MisionesVistas.Add(false);
-                if (dialogo.EsUnico)
-                {
-                    sistemaDialogos.DialogoActual++;
-                }
-                controladorMisiones.ActualizarUI();
-                controladorMisiones.GuardarMisiones();
-            }
-        }
+        Debug.Log("Asignando misión");
+
+        if (controladorMisiones.MisionActual == null)
+            controladorMisiones.MisionActual = dialogo.Mision;
+
+        controladorMisiones.Misiones.Add(dialogo.Mision);
+        controladorMisiones.MisionesCompletas.Add(false);
+        controladorMisiones.MisionesVistas.Add(false);
+
+        controladorMisiones.ActualizarUI();
+        controladorMisiones.GuardarMisiones();
     }
     private void ManejarMisionesSecundarias()
     {

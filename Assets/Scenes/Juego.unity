@@ -199,6 +199,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f0227f41451828943a140e83d73acf58, type: 2}
   - {fileID: 11400000, guid: 63d97eec5c1894a4e84b23761153f3f5, type: 2}
   - {fileID: 11400000, guid: df3632d8bf78f614a98363a7e043be3c, type: 2}
+  - {fileID: 11400000, guid: 1cab223f70e9b814fabafb6b4da8c735, type: 2}
   - {fileID: 11400000, guid: d751dbd9ddd76d04d9382a756b7d289a, type: 2}
   - {fileID: 11400000, guid: 38aa457ca17cae044912a929b4e2a3c9, type: 2}
   - {fileID: 11400000, guid: a484e7c7dc41c364580d3e6983f31bc7, type: 2}
@@ -194661,6 +194662,8 @@ MonoBehaviour:
   Torre: {fileID: 731625311}
   CamaraTorre: {fileID: 27504878}
   Camara360: {fileID: 1600294763}
+  Marvin: {fileID: 1465105400}
+  NuevaMision: {fileID: 11400000, guid: 1cab223f70e9b814fabafb6b4da8c735, type: 2}
   EjeRotacion: {x: -1, y: 0, z: 0}
   ChildToRotate: {fileID: 331843832}
   CanvasUI: {fileID: 1696358848}
@@ -353004,9 +353007,10 @@ MonoBehaviour:
   ContrasteNPC: {r: 0.050980393, g: 0.2901961, b: 0.02745098, a: 1}
   Texto: {fileID: 1096617367}
   Dialogos:
-  - {fileID: 11400000, guid: d291c486ed4f5444ea0699af987db031, type: 2}
+  - {fileID: 11400000, guid: bc6194b5a2a5ac747aef582b545b895c, type: 2}
   - {fileID: 11400000, guid: f535d320f509bae4e898d5c88a5c1962, type: 2}
   - {fileID: 11400000, guid: 72c4dc5bb64fa944abd21b22a21faad3, type: 2}
+  - {fileID: 11400000, guid: 1c8a32441120bd748ac0f79c09369d21, type: 2}
   DialogoSecundario: {fileID: 11400000, guid: 1693e45ffc074f34ba03ea836ee418e2, type: 2}
   DialogoArecibir: {fileID: 0}
   letraDelay: 0.1
