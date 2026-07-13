@@ -28,6 +28,9 @@ public class Scr_BloqueAgua : MonoBehaviour
     [SerializeField] private float tiempoMaxPicada = 10f;
     [SerializeField] private float ventanaReaccion = 2f;
     [SerializeField] private GameObject JuegoPesca;
+    [SerializeField] private Transform[] PuntosPesca;
+    [SerializeField] private float velocidadCuerda = 6f;
+    private LineRenderer Cuerda;
     private GameObject CamaraIzquierda;
     private GameObject CamaraDerecha;
     private GameObject CamaraPrincipal;
@@ -51,6 +54,7 @@ public class Scr_BloqueAgua : MonoBehaviour
         gata = GameObject.Find("Gata").GetComponent<Transform>();
         animatorGata = gata.GetComponent<Animator>();
 
+        CrearCuerda();
 
         Herramienta = gata.GetChild(0).GetChild(0).GetChild(0).GetChild(1)
             .GetChild(0).GetChild(1).GetChild(0).GetChild(0)
@@ -79,6 +83,7 @@ public class Scr_BloqueAgua : MonoBehaviour
         Scr_MiniJuegoPesca.OnFinMiniJuego -= ResolverFinPesca;
 
     }
+
 
 
 
@@ -307,6 +312,10 @@ public class Scr_BloqueAgua : MonoBehaviour
     IEnumerator EsperarPesca()
     {
         Pescando = true;
+        Cuerda.gameObject.SetActive(true);
+        PuntosPesca[5].gameObject.SetActive(false);
+        StartCoroutine(SeguirCaña());
+        
 
         // Esperamos hasta que Talando alcance el frame deseado
         while (true)
@@ -321,10 +330,83 @@ public class Scr_BloqueAgua : MonoBehaviour
 
             yield return null;
         }
-
+        StartCoroutine(AnimarLanzamiento());
         StartCoroutine(EsperarPicada());
     }
 
+    void CrearCuerda()
+    {
+        if (Cuerda != null)
+            return;
+
+        GameObject obj = new GameObject("Cuerda Pesca");
+        obj.transform.SetParent(transform); // o donde prefieras
+
+        Cuerda = obj.AddComponent<LineRenderer>();
+
+        Cuerda.material = new Material(Shader.Find("Sprites/Default"));
+        Cuerda.startColor = Color.white;
+        Cuerda.endColor = Color.white;
+
+        Cuerda.startWidth = 0.02f;
+        Cuerda.endWidth = 0.02f;
+
+        Cuerda.useWorldSpace = true;
+        Cuerda.positionCount = 0;
+
+        Cuerda.gameObject.SetActive(false);
+    }
+
+    IEnumerator AnimarLanzamiento()
+    {
+        Vector3 inicio = PuntosPesca[3].position;
+        Vector3 fin = PuntosPesca[4].position;
+
+        // Aparece la boya justo cuando sale de la punta
+        PuntosPesca[5].gameObject.SetActive(true);
+        PuntosPesca[5].position = inicio;
+
+        float t = 0;
+
+        while (t < 1)
+        {
+            t += Time.deltaTime * velocidadCuerda;
+
+            Vector3 pos = Vector3.Lerp(inicio, fin, t);
+
+            // Los primeros siguen fijos en la caña
+            for (int i = 0; i < 4; i++)
+                Cuerda.SetPosition(i, PuntosPesca[i].position);
+
+            // Solo se mueve el extremo
+            Cuerda.SetPosition(4, pos);
+
+            // La boya sigue el extremo
+            PuntosPesca[5].position = pos;
+
+            yield return null;
+        }
+
+        Cuerda.SetPosition(4, fin);
+        PuntosPesca[5].position = fin;
+    }
+    IEnumerator SeguirCaña()
+    {
+        Cuerda.positionCount = 5;
+
+        while (animatorGata.speed > 0)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                Cuerda.SetPosition(i, PuntosPesca[i].position);
+            }
+
+            // El extremo de la cuerda sigue la punta de la caña
+            Cuerda.SetPosition(4, PuntosPesca[3].position);
+
+            yield return null;
+        }
+    }
 
     IEnumerator EsperarPicada()
     {
@@ -477,6 +559,9 @@ public class Scr_BloqueAgua : MonoBehaviour
             Herramienta.transform.GetChild(2).gameObject.SetActive(true);
         }
 
+        Cuerda.gameObject.SetActive(false);
+        PuntosPesca[5].gameObject.SetActive(false);
+
         // Restaurar icono de caña
         gata.GetChild(3).GetChild(3).GetComponent<Image>().sprite = IconoCaña;
 
@@ -524,6 +609,9 @@ public class Scr_BloqueAgua : MonoBehaviour
         DesactivarUI();
 
         // 🔹 Reset minijuego
+
+        Cuerda.gameObject.SetActive(false);
+        PuntosPesca[5].gameObject.SetActive(false);
 
         if (gano)
         {
@@ -586,6 +674,11 @@ public class Scr_BloqueAgua : MonoBehaviour
     {
         if (other.tag == "Gata")
         {
+            if (Pescando)
+            {
+                return;
+            }
+
             Herramienta.SetActive(false);
             Herramienta.transform.GetChild(2).gameObject.SetActive(false);
             Herramienta.transform.GetChild(3).gameObject.SetActive(false);
