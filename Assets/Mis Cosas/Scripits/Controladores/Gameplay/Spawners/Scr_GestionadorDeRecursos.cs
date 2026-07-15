@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -151,9 +152,17 @@ public class Scr_GestionadorDeRecursos : MonoBehaviour
             .GetComponent<Image>().sprite = Recurso.icono;
 
         herramienta.SetActive(true);
+        if (Recurso.GetUsaHacha())
+        {
+            herramienta.transform.GetChild(checarHacha()).gameObject.SetActive(true);
+            //herramienta.transform.GetChild(0).gameObject.SetActive(Recurso.GetUsaHacha());
+        }
+        if (Recurso.GetUsaPico())
+        {
+            herramienta.transform.GetChild(checarPico()).gameObject.SetActive(true);
+            //herramienta.transform.GetChild(1).gameObject.SetActive(Recurso.GetUsaPico());
 
-        herramienta.transform.GetChild(0).gameObject.SetActive(Recurso.GetUsaHacha());
-        herramienta.transform.GetChild(1).gameObject.SetActive(Recurso.GetUsaPico());
+        }
 
         var anim = gata.GetComponent<Scr_ControladorAnimacionesGata>();
         anim.PuedeTalar = true;
@@ -163,6 +172,9 @@ public class Scr_GestionadorDeRecursos : MonoBehaviour
     private void DesactivarInteraccion()
     {
         gata.GetChild(3).gameObject.SetActive(false);
+
+        herramienta.transform.GetChild(checarHacha()).gameObject.SetActive(false);
+        herramienta.transform.GetChild(checarPico()).gameObject.SetActive(false);
         herramienta.SetActive(false);
         iconoActualRecolectar = null;
         textoActualRecolectar = "";
@@ -180,7 +192,52 @@ public class Scr_GestionadorDeRecursos : MonoBehaviour
 
         return PlayerPrefs.GetString("Habilidad:" + habilidad, "No") == "Si";
     }
-
+    private int checarHacha()
+    {
+        if (JugadorTieneHabilidad("Hacha Extraterrita"))
+        {
+            return 7;
+        }
+        else if (JugadorTieneHabilidad("Hacha Oro"))
+        {
+            return 6;
+        }
+        else if (JugadorTieneHabilidad("Hacha Piedra"))
+        {
+            return 5;
+        }
+        else if (JugadorTieneHabilidad("Hacha Madera"))
+        {
+            return 0;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    private int checarPico()
+    {
+        if (JugadorTieneHabilidad("Pico Extraterrita"))
+        {
+            return 10;
+        }
+        else if (JugadorTieneHabilidad("Pico Oro"))
+        {
+            return 9;
+        }
+        else if (JugadorTieneHabilidad("Pico Piedra"))
+        {
+            return 8;
+        }
+        else if (JugadorTieneHabilidad("Pico Madera"))
+        {
+            return 1;
+        }
+        else
+        {
+            return 1;
+        }
+    }
     // ================= MUERTE =================
 
     public void OnSpawnerMuerto(Scr_Recurso Recurso)

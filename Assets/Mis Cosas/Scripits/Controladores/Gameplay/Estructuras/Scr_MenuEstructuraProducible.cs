@@ -361,12 +361,12 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
 
     public void DecidirCambiarOSalir(int NumEstructura)
     {
-        if (NumEstructura == estructuraActual)
+        if (NumEstructura == estructuraActual || Produciendo || cantidadAProducir > 0)
         {
             Debug.Log("aaaa");
             Activador.Salir();
         }
-        else if(Produciendo || cantidadAProducir > 0)
+        else
         {
             estructuraActual = NumEstructura;
             ActualizarEstructura();
