@@ -268,11 +268,12 @@ public class Scr_ControladorArmas : MonoBehaviour
     //Algo pasa aqui que truena 
     bool PuedeDisparar()
     {
-        if (CantBalasActual <= 0 )
+        if (TodasLasArmas[ArmaActual].Tipo == "Cuerpo a Cuerpo")
         {
-            return false;
+            return true;
         }
-        else if (TodasLasArmas[ArmaActual].Tipo == "Cuerpo a Cuerpo" )
+        
+        else if (CantBalasActual <= 0)
         {
             return false;
         }

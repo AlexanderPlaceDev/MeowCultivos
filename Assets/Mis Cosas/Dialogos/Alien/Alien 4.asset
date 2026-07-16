@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfd7b7348ecdf544ab73fad30de2eac3, type: 3}
   m_Name: Alien 4
   m_EditorClassIdentifier: 
-  EsUnico: 1
-  EsMisionPrincipal: 0
+  EsRepetitivo: 0
+  AsignaMision: 0
+  RequiereMisionCompleta: 0
   Mision: {fileID: 0}
   Lineas:
   - ' He visto tus acciones, es por eso que vengo a pedir tu ayuda'
-  - ' Necesito darle mi ubicacion a la nave nodrisa antes de que hagan el hypersalto'
+  - ' Necesito darle mi ubicacion a la nave nodriza antes de que hagan el hypersalto'
   - ' Debo construir una antena pero no tengo suficientes materiales'

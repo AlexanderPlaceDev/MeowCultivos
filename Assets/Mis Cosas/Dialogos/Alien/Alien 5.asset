@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfd7b7348ecdf544ab73fad30de2eac3, type: 3}
   m_Name: Alien 5
   m_EditorClassIdentifier: 
-  EsUnico: 1
-  EsMisionPrincipal: 0
+  EsRepetitivo: 0
+  AsignaMision: 0
+  RequiereMisionCompleta: 0
   Mision: {fileID: 0}
   Lineas:
-  - " si aceptas ayudarme te puedo ense\xF1ar algunos planos que tengo en la nave"
+  - "Si aceptas ayudarme te puedo ense\xF1ar algunos planos que tengo en la nave"
   - ' Dejare una caja con los materiales que necesito por aqui cerca'
-  - ' y por mi no te preocupes, buscare una manera de ocultarme para cuando regreses'
+  - Y por mi no te preocupes, buscare una manera de ocultarme para cuando regreses
