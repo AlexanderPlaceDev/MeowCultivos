@@ -16,18 +16,18 @@ MonoBehaviour:
   TipoPlanta: 
   TipoMaterial: Consumible
   Descripcion: No pruebes mucho o podrias congelarte
-  Icono: {fileID: 21300000, guid: 736f09b591b45c64a88ceff89b12ec6a, type: 3}
-  IconoInventario: {fileID: 21300000, guid: 0b6e6267c40863a46924d7c0f1b64f6a, type: 3}
+  Icono: {fileID: 21300000, guid: 658d7f0dc73268b4695691686c9de240, type: 3}
+  IconoInventario: {fileID: 21300000, guid: f779d2510b470144bab47d58ed4a3c7b, type: 3}
   MaterialesDeProduccion:
-  - {fileID: 11400000, guid: 1dca6f37e9b52e04f93d98f23347c532, type: 2}
-  - {fileID: 11400000, guid: a1dcbf004b25dc8478076e9ce3ec3b63, type: 2}
-  - {fileID: 11400000, guid: 4a1357594e65d8047b0e6ca45c64e293, type: 2}
+  - {fileID: 11400000, guid: f2543b661a1c0c041a404b85733fa7b6, type: 2}
+  - {fileID: 11400000, guid: cd611a08133702f4f9ae13db6eec3c53, type: 2}
+  - {fileID: 11400000, guid: c0713f28251af8245a6f0ff1e35b5a0c, type: 2}
   - {fileID: 0}
-  CantidadMaterialesDeProduccion: 020000000300000001000000
+  CantidadMaterialesDeProduccion: 010000000200000001000000
   CantidadProducto: 1
   TiempoDeProduccion: 10
   ValorComposta: 0
   MinimoMaximoSembradio: 
-  XPRecolecta: 4
+  XPRecolecta: 20
   CantidadVentaMinima: 2
-  ValorVentaIndividual: 7
+  ValorVentaIndividual: 70

@@ -336,7 +336,7 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
         PlayerPrefs.SetInt(name + "_CantidadProducida", cantidadProducida);
         PlayerPrefs.SetFloat(name + "_TiempoProduciendo", TiempoProduciendo);
         PlayerPrefs.SetFloat(name + "_BarraProgreso", Carga.fillAmount);
-        PlayerPrefs.SetInt(name + "_Produciendo", Produciendo ? 1 : 0);
+        PlayerPrefs.SetInt(name + "_EstructuraActual", estructuraActual);
         PlayerPrefs.Save();
     }
 
@@ -344,10 +344,12 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
     {
         ObjetoActual = PlayerPrefs.GetInt(name + "_ObjetoActual", 0);
         cantidadAProducir = PlayerPrefs.GetInt(name + "_CantidadAProducir", 0);
+        Produciendo = cantidadAProducir > 0;
         cantidadProducida = PlayerPrefs.GetInt(name + "_CantidadProducida", 0);
         TiempoProduciendo = PlayerPrefs.GetFloat(name + "_TiempoProduciendo", 0);
         Carga.fillAmount = PlayerPrefs.GetFloat(name + "_BarraProgreso", 0);
-        Produciendo = PlayerPrefs.GetInt(name + "_Produciendo", 0) == 1;
+        estructuraActual = PlayerPrefs.GetInt(name + "_EstructuraActual", 0);
+        ActualizarEstructura();
     }
 
     private void LimpiarObjetoCreadoUI()
@@ -361,15 +363,17 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
 
     public void DecidirCambiarOSalir(int NumEstructura)
     {
-        if (NumEstructura == estructuraActual || Produciendo || cantidadAProducir > 0)
+        if (NumEstructura == estructuraActual)
         {
-            Debug.Log("aaaa");
             Activador.Salir();
         }
         else
         {
-            estructuraActual = NumEstructura;
-            ActualizarEstructura();
+            if (cantidadProducida == 0 && !Produciendo && cantidadAProducir == 0)
+            {
+                estructuraActual = NumEstructura;
+                ActualizarEstructura();
+            }
         }
     }
 
@@ -412,11 +416,11 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
             {
                 PanelInformacion.sprite = PanelInformacionsecundario;
             }
-            if(PanelObjetos != null)
+            if (PanelObjetos != null)
             {
                 PanelObjetos.sprite = PanelObjetosSecundario;
             }
-            if(PanelProductos != null)
+            if (PanelProductos != null)
             {
                 PanelProductos.sprite = PanelProductoSecundario;
                 PanelProductos.transform.GetChild(1).GetComponent<Image>().sprite = PanelProductoSecundario;
