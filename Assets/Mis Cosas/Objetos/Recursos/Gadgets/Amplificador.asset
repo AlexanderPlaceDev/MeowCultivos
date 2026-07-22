@@ -16,18 +16,18 @@ MonoBehaviour:
   TipoPlanta: 
   TipoMaterial: Consumible
   Descripcion: Asi o mas grande?
-  Icono: {fileID: 21300000, guid: 736f09b591b45c64a88ceff89b12ec6a, type: 3}
-  IconoInventario: {fileID: 21300000, guid: 0b6e6267c40863a46924d7c0f1b64f6a, type: 3}
+  Icono: {fileID: 21300000, guid: 07d24a631c272a34a96e7aa0fc44fd20, type: 3}
+  IconoInventario: {fileID: 21300000, guid: b42615b009cdec6429ba98958ff74320, type: 3}
   MaterialesDeProduccion:
-  - {fileID: 11400000, guid: 1dca6f37e9b52e04f93d98f23347c532, type: 2}
-  - {fileID: 11400000, guid: a1dcbf004b25dc8478076e9ce3ec3b63, type: 2}
-  - {fileID: 11400000, guid: 4a1357594e65d8047b0e6ca45c64e293, type: 2}
+  - {fileID: 11400000, guid: 9dddcdbff62452742943921b8c39941c, type: 2}
+  - {fileID: 11400000, guid: 74fd9c65dd328c3479841cf247f0e23d, type: 2}
+  - {fileID: 11400000, guid: 41dd61d5317771646bf24bb07c63e225, type: 2}
   - {fileID: 0}
-  CantidadMaterialesDeProduccion: 020000000300000001000000
+  CantidadMaterialesDeProduccion: 050000000100000001000000
   CantidadProducto: 1
   TiempoDeProduccion: 10
   ValorComposta: 0
   MinimoMaximoSembradio: 
-  XPRecolecta: 4
+  XPRecolecta: 50
   CantidadVentaMinima: 2
-  ValorVentaIndividual: 7
+  ValorVentaIndividual: 420

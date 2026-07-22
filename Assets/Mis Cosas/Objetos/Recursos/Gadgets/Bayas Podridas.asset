@@ -19,15 +19,15 @@ MonoBehaviour:
   Icono: {fileID: 21300000, guid: 1d3d3613152987048bdef8ebb63054c3, type: 3}
   IconoInventario: {fileID: 21300000, guid: 0a97a8851656b2a47ae2e92cba8a0707, type: 3}
   MaterialesDeProduccion:
+  - {fileID: 11400000, guid: f2dd07ffe30451b4d9ced2110326053a, type: 2}
+  - {fileID: 11400000, guid: 937cf6adbb4c6df4baaecd7679105a24, type: 2}
+  - {fileID: 11400000, guid: aff1da518b428bb42b16ea88b5bf8f59, type: 2}
   - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  CantidadMaterialesDeProduccion: 
+  CantidadMaterialesDeProduccion: 050000000500000002000000
   CantidadProducto: 1
   TiempoDeProduccion: 10
   ValorComposta: 0
   MinimoMaximoSembradio: 
-  XPRecolecta: 4
+  XPRecolecta: 20
   CantidadVentaMinima: 2
-  ValorVentaIndividual: 7
+  ValorVentaIndividual: 70
