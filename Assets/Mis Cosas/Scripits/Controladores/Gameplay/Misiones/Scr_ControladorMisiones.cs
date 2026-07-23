@@ -708,7 +708,6 @@ public class Scr_ControladorMisiones : MonoBehaviour
         // 🔥 FIX: restaurar texto inmediatamente
         if (MisionActual != null)
         {
-            Debug.Log("Cambia 5");
             DescripcionForma2.text = MisionesCompletas[PaginaActual]
                 ? MisionActual.DescripcionMisionCompleta
                 : MisionActual.DescripcionEnMision;

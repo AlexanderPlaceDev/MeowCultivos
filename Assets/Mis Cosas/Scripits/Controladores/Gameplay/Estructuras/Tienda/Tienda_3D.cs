@@ -65,7 +65,7 @@ public class Tienda_3D : MonoBehaviour
         }
         else
         {
-            Debug.Log($"Día actual sin cambios ({DiaDeHoy}), cargando objetos guardados...");
+            //Debug.Log($"Día actual sin cambios ({DiaDeHoy}), cargando objetos guardados...");
             CargarObjetosGuardados();
         }
 

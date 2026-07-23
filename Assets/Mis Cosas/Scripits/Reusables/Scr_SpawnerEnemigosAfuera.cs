@@ -34,8 +34,11 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 
         // Recuperar el tiempo de respawn guardado
         TiempoRestanteSpawn = PlayerPrefs.GetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoSpawn);
-        RestaurarEnemigos(); // Cargar enemigos en escena
-        Spawn= StartCoroutine(SpawnEnemies()); // Iniciar la rutina
+        if (Enemigos.Count < 0)
+        {
+            RestaurarEnemigos(); // Cargar enemigos en escena
+            Spawn = StartCoroutine(SpawnEnemies()); // Iniciar la rutina
+        }
     }
 
     private void OnEnable()
@@ -45,6 +48,7 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
         RestaurarEnemigos(); // Cargar enemigos en escena
         if (Spawn != null)
         {
+
             StopCoroutine(Spawn);
             Spawn = StartCoroutine(SpawnEnemies()); // Iniciar la rutina
         }
@@ -52,7 +56,10 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 
     private void OnDisable()
     {
-        StopCoroutine(Spawn);
+        if (Spawn != null)
+        {
+            StopCoroutine(Spawn);
+        }
     }
 
     void FixedUpdate()
@@ -89,7 +96,7 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
                     PlayerPrefs.SetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoRestanteSpawn);
                     PlayerPrefs.Save();
                 }
-                else if(Enemigos.Count > CantidadDeEnemigos)
+                else if (Enemigos.Count > CantidadDeEnemigos)
                 {
                     foreach (var enem in Enemigos)
                     {
@@ -103,8 +110,8 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
     }
     public bool ChecarLunaRoja()
     {
-       
-        if (ControlT.ClimaSemanal.Count>0 && ControlT.ClimaSemanal[ControlT.ConseguirDia()].ToString() == "LunaRoja" && ControlT.EstaActivoClima)
+
+        if (ControlT.ClimaSemanal.Count > 0 && ControlT.ClimaSemanal[ControlT.ConseguirDia()].ToString() == "LunaRoja" && ControlT.EstaActivoClima)
         {
             return true;
         }
@@ -116,7 +123,7 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 
     public void ActivarLunaRoja()
     {
-        if(ChecarLunaRoja())
+        if (ChecarLunaRoja())
         {
             CantidadDeEnemigos = Enemigos_normales * 2;
         }
@@ -138,7 +145,7 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
             return (ControlT.HoraActual >= HoraInicio) || (ControlT.HoraActual < HoraFin);
         }
     }
-    
+
     public void checartiempoDeNOSpawn()
     {
         if (!UsaTiempo) return;
@@ -192,11 +199,14 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
             }
 
             PlayerPrefs.SetInt($"{IDSpawner}_CantidadEnemigosVivos", Enemigos.Count);
+            PlayerPrefs.SetInt($"{IDSpawner}_CantidadEnemigosVivos", Enemigos.Count);
+
 
             for (i = 0; i < Enemigos.Count; i++)
             {
                 if (Enemigos[i] != null)
                 {
+
                     Vector3 pos = Enemigos[i].transform.position;
                     PlayerPrefs.SetFloat($"{IDSpawner}_EnemigoX_{i}", pos.x);
                     PlayerPrefs.SetFloat($"{IDSpawner}_EnemigoY_{i}", pos.y);
@@ -206,12 +216,14 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
         }
 
         // Guardar estado real
+        PlayerPrefs.SetFloat($"{IDSpawner}_TiempoRestanteSpawn", 0);
         PlayerPrefs.SetInt($"{IDSpawner}_Active", estado);
         PlayerPrefs.Save();
     }
 
     void RestaurarEnemigos()
     {
+
         haveAcivate = PlayerPrefs.GetInt($"{IDSpawner}_Active", 0);
 
         // Forzar activación si NoUsaHaveActive está en true
@@ -221,6 +233,7 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
         if (haveAcivate == 1)
         {
             int enemigosVivos = PlayerPrefs.GetInt($"{IDSpawner}_CantidadEnemigosVivos", 0);
+
 
             for (int i = 0; i < enemigosVivos; i++)
             {

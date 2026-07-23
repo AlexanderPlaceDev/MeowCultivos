@@ -164,8 +164,14 @@ public class Scr_ObjetosAgregados : MonoBehaviour
     }
 
     // =========================
-    // XP (con niveles y habilidades)
+    // XP 
     // =========================
+    private int ObtenerXPNecesaria(int nivel)
+    {
+        int n = nivel - 1;
+        return 10 + 5 * n * n;
+    }
+
     public void AgregarExperiencia(int cantidadXP)
     {
         if (cantidadXP <= 0) return;
@@ -173,37 +179,45 @@ public class Scr_ObjetosAgregados : MonoBehaviour
         xpPendiente += cantidadXP;
 
         int xpActual = PlayerPrefs.GetInt("XPActual", 0);
-        int xpSiguiente = PlayerPrefs.GetInt("XPSiguiente", 10);
         int nivelActual = PlayerPrefs.GetInt("Nivel", 1);
+
+        // Calcula la XP necesaria según el nivel actual
+        int xpSiguiente = ObtenerXPNecesaria(nivelActual);
 
         xpActual += cantidadXP;
 
-        // SUBIDA DE NIVEL
-        if (xpActual >= xpSiguiente)
+        bool subioNivel = false;
+
+        while (xpActual >= xpSiguiente)
         {
             xpActual -= xpSiguiente;
 
             nivelActual++;
-            xpSiguiente *= 2;
+            subioNivel = true;
 
-            PlayerPrefs.SetInt("Nivel", nivelActual);
-            PlayerPrefs.SetInt("XPSiguiente", xpSiguiente);
-            PlayerPrefs.SetInt("PuntosDeHabilidad",
-                PlayerPrefs.GetInt("PuntosDeHabilidad", 0) + 3);
+            PlayerPrefs.SetInt(
+                "PuntosDeHabilidad",
+                PlayerPrefs.GetInt("PuntosDeHabilidad", 0) + 3
+            );
 
-            if (XPText != null)
-                XPText.text = "LV.+1";
+            // Recalcula la XP para el siguiente nivel
+            xpSiguiente = ObtenerXPNecesaria(nivelActual);
 
             xpAudioSource?.Play();
         }
-        else
-        {
-            if (XPText != null)
-                XPText.text = "XP + " + xpPendiente;
-        }
 
+        PlayerPrefs.SetInt("Nivel", nivelActual);
         PlayerPrefs.SetInt("XPActual", xpActual);
+
+        // Sólo por compatibilidad si en otras partes del juego aún lo lees
+        PlayerPrefs.SetInt("XPSiguiente", xpSiguiente);
+
         PlayerPrefs.Save();
+
+        if (XPText != null)
+        {
+            XPText.text = subioNivel ? "LV.+1" : "XP + " + xpPendiente;
+        }
 
         XPAnimator?.Play("Desaparecer");
 

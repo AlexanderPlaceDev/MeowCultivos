@@ -55,7 +55,7 @@ public class Scr_CosaAfuera : Scr_EnemigoFuera
         {
             if (distancia < DistanciaNervisoso)
             {
-                Debug.Log("Entra 3");
+                //Debug.Log("Entra 3");
                 if (Contador <= 0)
                 {
                     Contador = 10;

@@ -225,7 +225,7 @@ public class Scr_DatosArmas : MonoBehaviour
 
         for (int i = 0; i < HabilidadesTemporales.Length; i++)
         {
-            Debug.Log("HT " + i + " = " + (HabilidadesTemporales[i] != null));
+            //Debug.Log("HT " + i + " = " + (HabilidadesTemporales[i] != null));
 
             string nombre = HabilidadesTemporales[i].Nombre;
 
@@ -250,7 +250,7 @@ public class Scr_DatosArmas : MonoBehaviour
 
         for (int i = 0; i < Pociones.Length; i++)
         {
-            Debug.Log("P " + i + " = " + (Pociones[i] != null));
+            //Debug.Log("P " + i + " = " + (Pociones[i] != null));
 
             string nombre = Pociones[i].Nombre;
 

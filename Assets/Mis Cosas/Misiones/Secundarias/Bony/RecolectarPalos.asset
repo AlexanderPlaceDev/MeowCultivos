@@ -33,12 +33,11 @@ MonoBehaviour:
   CantidadACazar: 
   IconosACazar: []
   EstructurasRequeridas: []
-  RecompensaDinero: 25
-  RecompensaXP: 25
+  RecompensaDinero: 20
+  RecompensaXP: 30
   ObjetosQueDa:
-  - {fileID: 11400000, guid: a65042bb6b4ceef4894cfce6610315ea, type: 2}
   - {fileID: 11400000, guid: 98057a97554cd0a4ba29639b7360daad, type: 2}
-  CantidadesQueDa: 010000000a000000
+  CantidadesQueDa: 05000000
   ObjetosQueQuita: []
   CantidadesQueQuita: 
   QuitaObjetosDesdeSignal: 0
