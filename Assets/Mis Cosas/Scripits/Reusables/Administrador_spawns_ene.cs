@@ -6,17 +6,22 @@ public class Administrador_spawns_ene : MonoBehaviour
 {
     [SerializeField] private Scr_SpawnerEnemigosAfuera[] spawmsEnemies;
     // Start is called before the first frame update
-   
+
     public void spawnall()
     {
         for (int i = 0; i < spawmsEnemies.Length; i++)
         {
             spawmsEnemies[i].haveAcivate = 1;
+            PlayerPrefs.SetInt($"{spawmsEnemies[i].IDSpawner}_Active", 1);
         }
+
+        PlayerPrefs.Save();
     }
 
     public void spawnselec(int i)
     {
         spawmsEnemies[i].haveAcivate = 1;
+        PlayerPrefs.SetInt($"{spawmsEnemies[i].IDSpawner}_Active", 1);
+        PlayerPrefs.Save();
     }
 }

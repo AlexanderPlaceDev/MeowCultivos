@@ -119,6 +119,9 @@ public class Scr_Enemigo : MonoBehaviour
     }
     public void RecibirDaño(float DañoRecibido, Color efectoDaño)
     {
+        if (EstaMuerto)
+            return;
+
         // Reducir la vida del enemigo
         Vida -= DañoRecibido;
         mostrarDaño(DañoRecibido);
@@ -138,6 +141,9 @@ public class Scr_Enemigo : MonoBehaviour
     }
     public virtual void Morir()
     {
+        if (EstaMuerto)
+            return;
+
         if (UsaParticulasAlMorir)
         {
             EstaMuerto = true; // <- Añadido
@@ -210,6 +216,9 @@ public class Scr_Enemigo : MonoBehaviour
     }
     protected virtual void OnTriggerEnter(Collider other)
     {
+        if (EstaMuerto)
+            return;
+
         Scr_ControladorArmas arma= GameObject.Find("Controlador").GetComponent<Scr_ControladorArmas>();
         if (other.gameObject.tag == "Golpe")
         {

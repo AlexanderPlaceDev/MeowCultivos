@@ -93,7 +93,7 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
         estructuraActual = 0;   // Fuerza estructura primaria al abrir
         ActualizarEstructura(); // Aplica el estado visual correcto
 
-        if (estructuraRequerida < 0) { return; }
+        if (estructuraRequerida <= 0) { return; }
 
         if (PlayerPrefs.GetInt("Estructura" + estructuraRequerida, 0) == 1)
         {
@@ -120,7 +120,7 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
         if (cantidadAProducir > 0)
         {
             if (gameObject.name == "Aserradero")
-                transform.GetChild(0).GetComponent<Scr_GirarObjeto>().enabled = true;
+                transform.GetChild(3).GetComponent<Scr_GirarObjeto>().enabled = true;
 
             TiempoProduciendo += Time.deltaTime *
                 (PlayerPrefs.GetString("Habilidad:" + HabilidadMejoraVelocidad, "No") == "Si" ? 2 : 1);
@@ -140,7 +140,7 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
         else
         {
             if (gameObject.name == "Aserradero")
-                transform.GetChild(2).GetComponent<Scr_GirarObjeto>().enabled = false;
+                transform.GetChild(3).GetComponent<Scr_GirarObjeto>().enabled = false;
 
             TiempoProduciendo = 0;
         }
@@ -379,6 +379,18 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
 
     private void ActualizarEstructura()
     {
+        if (estructuraRequerida == 0)
+        {
+            foreach (GameObject objeto in ObjetosPrincipales)
+                objeto.SetActive(true);
+
+            foreach (GameObject objeto in ObjetosSecundarios)
+                if (objeto != null)
+                    objeto.SetActive(false);
+
+            return;
+        }
+
         if (estructuraActual == 0)
         {
             if (BotonEstructuraPrimaria != null)

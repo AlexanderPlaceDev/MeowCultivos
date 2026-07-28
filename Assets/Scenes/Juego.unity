@@ -6476,7 +6476,7 @@ MonoBehaviour:
   m_UpdateMethod: 2
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
-    m_Style: 1
+    m_Style: 0
     m_Time: 1
     m_CustomCurve:
       serializedVersion: 2
@@ -6504,7 +6504,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RenderShadows: 1
-  m_RequiresDepthTextureOption: 1
+  m_RequiresDepthTextureOption: 0
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
@@ -47899,22 +47899,28 @@ MonoBehaviour:
   DuracionBarra: 0.2
   ObjetoCreado: {fileID: 1895873910}
   estructuraRequerida: 0
-  BotonEstructuraPrimaria: {fileID: 0}
+  BotonEstructuraPrimaria: {fileID: 2125336444}
   ImagenBotonEstructuraPrimaria: {fileID: 0}
   ImagenIconoEstructuraPrimaria: {fileID: 0}
   BotonEstructuraSecundaria: {fileID: 0}
   ImagenBotonEstructuraSecundaria: {fileID: 0}
   ImagenIconoEstructuraSecundaria: {fileID: 0}
-  PanelObjetos: {fileID: 0}
+  PanelObjetos: {fileID: 1412506778}
   PanelObjetosPrincipal: {fileID: 0}
   PanelObjetosSecundario: {fileID: 0}
-  PanelInformacion: {fileID: 0}
+  PanelInformacion: {fileID: 1805720365}
   PanelInformacionPrincipal: {fileID: 0}
   PanelInformacionsecundario: {fileID: 0}
-  PanelProductos: {fileID: 0}
+  PanelProductos: {fileID: 1895873913}
   PanelProductoPrincipal: {fileID: 0}
   PanelProductoSecundario: {fileID: 0}
-  ObjetosPrincipales: []
+  ObjetosPrincipales:
+  - {fileID: 1603711048}
+  - {fileID: 809174679}
+  - {fileID: 628634333}
+  - {fileID: 2097796689}
+  - {fileID: 1949965540}
+  - {fileID: 1080156487}
   ObjetosSecundarios: []
   BarraCarga: {fileID: 0}
   CargaPrincipal: {fileID: 0}
@@ -47940,7 +47946,7 @@ MonoBehaviour:
   Tecla: E
   Distancia: 8
   DuracionMaterial: 0.2
-  DuracionCamara: 2
+  DuracionCamara: 1
   EstaDentro: 0
 --- !u!1001 &185258421
 PrefabInstance:
@@ -229384,7 +229390,7 @@ MonoBehaviour:
   HoraFin: 5
   TiempoRestanteSpawn: 0
   NoUsaHaveActive: 0
-  haveAcivate: 1
+  haveAcivate: 0
   Enemigos: []
   ControlT: {fileID: 0}
 --- !u!23 &964972542
@@ -238394,7 +238400,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9cbb3eefca8ea8c488666fcabe0845d6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a01eae16738bf924b8471b0f50f46e06, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -291091,7 +291097,7 @@ MonoBehaviour:
   TextoDinero: {fileID: 1942118659}
   TextoDescripcion: {fileID: 1326864272}
   UI: {fileID: 1894772407}
-  PrecioDeRangos: 64000000f4010000d007000088130000
+  PrecioDeRangos: f4010000d00700008813000010270000
   BotonAceptar: {fileID: 584883553}
   RevistasDisponibles: 00000101
 --- !u!1 &1197680710 stripped
@@ -306800,11 +306806,11 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: b0a37e6d997fae347a247442ecf634d4,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 381225787}
+      addedObject: {fileID: 1154121304}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: b0a37e6d997fae347a247442ecf634d4,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1154121304}
+      addedObject: {fileID: 381225787}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: b0a37e6d997fae347a247442ecf634d4,
         type: 3}
       insertIndex: -1

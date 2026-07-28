@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 {
     [Header("Configuración del Spawner")]
-    [SerializeField] private string IDSpawner;
+    [SerializeField] public string IDSpawner;
     [SerializeField] private GameObject Enemigo;
     [SerializeField] private int CantidadDeEnemigos = 1;
     [SerializeField] private int Enemigos_normales = 1;
@@ -34,7 +34,7 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 
         // Recuperar el tiempo de respawn guardado
         TiempoRestanteSpawn = PlayerPrefs.GetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoSpawn);
-        if (Enemigos.Count < 0)
+        if (Enemigos.Count <= 0)
         {
             RestaurarEnemigos(); // Cargar enemigos en escena
             Spawn = StartCoroutine(SpawnEnemies()); // Iniciar la rutina
@@ -43,6 +43,9 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 
     private void OnEnable()
     {
+        if(Enemigos.Count < CantidadDeEnemigos)
+        {
+
         // Recuperar el tiempo de respawn guardado
         TiempoRestanteSpawn = PlayerPrefs.GetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoSpawn);
         RestaurarEnemigos(); // Cargar enemigos en escena
@@ -51,6 +54,7 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 
             StopCoroutine(Spawn);
             Spawn = StartCoroutine(SpawnEnemies()); // Iniciar la rutina
+        }
         }
     }
 
@@ -216,7 +220,7 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
         }
 
         // Guardar estado real
-        PlayerPrefs.SetFloat($"{IDSpawner}_TiempoRestanteSpawn", 0);
+        PlayerPrefs.SetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoRestanteSpawn);
         PlayerPrefs.SetInt($"{IDSpawner}_Active", estado);
         PlayerPrefs.Save();
     }

@@ -5,6 +5,7 @@ using TMPro;
 using System.Text.RegularExpressions;
 using UnityEngine.Windows;
 using UnityEngine.SceneManagement;
+using Cinemachine;
 
 public class Scr_ConsolaComandos : MonoBehaviour
 {
@@ -111,6 +112,7 @@ public class Scr_ConsolaComandos : MonoBehaviour
                     // Otras acciones relacionadas con la eliminación de datos
                     Camera.main.transform.GetChild(0).GetComponent<Scr_BarrasNegras>().Awake();
                     Camera.main.transform.GetChild(1).GetComponent<Scr_BarrasNegras>().Awake();
+                    Camera.main.GetComponent<CinemachineBrain>().m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.Cut;
 
                     // Recargar la escena (opcional)
                     SceneManager.LoadScene(2);
