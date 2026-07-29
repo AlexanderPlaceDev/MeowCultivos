@@ -169,7 +169,7 @@ public class Scr_ObjetosAgregados : MonoBehaviour
     private int ObtenerXPNecesaria(int nivel)
     {
         int n = nivel - 1;
-        return 10 + 5 * n * n;
+        return 10 + 3 * n * n;
     }
 
     public void AgregarExperiencia(int cantidadXP)
