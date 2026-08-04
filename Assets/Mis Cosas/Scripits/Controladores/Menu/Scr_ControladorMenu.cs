@@ -23,6 +23,7 @@ public class Scr_ControladorMenu : MonoBehaviour
     public GameObject Panel_Volumenes;
 
     public GameObject Panel_Brillo;
+    private int Op =0;
     [SerializeField] TextMeshProUGUI TextoVolumen_General;
     [SerializeField] Slider SliderVolumen_General;
     [SerializeField] TextMeshProUGUI TextoVolumen_Musica;
@@ -166,11 +167,23 @@ public class Scr_ControladorMenu : MonoBehaviour
 
     public void GuardarOpciones()
     {
-        PlayerPrefs.SetInt("Volumen", (int)SliderVolumen_General.value);
-        PlayerPrefs.SetInt("Volumen_Musica", (int)SliderVolumen_Musica.value);
-        PlayerPrefs.SetInt("Volumen_Ambiente", (int)SliderVolumen_Ambiental.value);
-        PlayerPrefs.SetInt("Volumen_Combate", (int)SliderVolumen_Combate.value);
-        PlayerPrefs.SetInt("Brillo", (int)SliderBrillo.value);
+        if (Op == 0)
+        {
+            PlayerPrefs.SetInt("Volumen", (int)SliderVolumen_General.value);
+            PlayerPrefs.SetInt("Volumen_Musica", (int)SliderVolumen_Musica.value);
+            PlayerPrefs.SetInt("Volumen_Ambiente", (int)SliderVolumen_Ambiental.value);
+            PlayerPrefs.SetInt("Volumen_Combate", (int)SliderVolumen_Combate.value);
+
+            foreach (Scr_AsignacionDeVolumen audio in FindObjectsOfType<Scr_AsignacionDeVolumen>())
+            {
+                audio.AsignarVolumen();
+            }
+        }
+        else
+        {
+            PlayerPrefs.SetInt("Brillo", (int)SliderBrillo.value);
+        }
+        PlayerPrefs.Save();
         Panel.SetActive(false);
     }
     public void ReiniciarOpciones()
@@ -200,6 +213,7 @@ public class Scr_ControladorMenu : MonoBehaviour
         Panel_Opciones.SetActive(false);
         Panel_Volumenes.SetActive(true);
         Panel_Brillo.SetActive(false);
+        Op = 0;
     }
 
 
@@ -208,6 +222,7 @@ public class Scr_ControladorMenu : MonoBehaviour
         Panel_Opciones.SetActive(false);
         Panel_Volumenes.SetActive(false);
         Panel_Brillo.SetActive(true);
+        Op = 1;
     }
 
     public void aparecerOpciones()

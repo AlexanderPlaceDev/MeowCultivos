@@ -41,6 +41,11 @@ public class Scr_ControladorMenuOpciones : MonoBehaviour
     {
         PlayerPrefs.SetInt("Volumen", (int)SliderVolumen.value);
         PlayerPrefs.SetInt("Brillo", (int)SliderBrillo.value);
+
+        foreach (Scr_AsignacionDeVolumen audio in FindObjectsOfType<Scr_AsignacionDeVolumen>())
+        {
+            audio.AsignarVolumen();
+        }
     }
     public void ReiniciarOpciones()
     {
