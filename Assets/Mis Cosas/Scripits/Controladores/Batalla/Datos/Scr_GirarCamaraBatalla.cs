@@ -37,8 +37,39 @@ public class Scr_GirarCamaraBatalla : MonoBehaviour
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         Mirar = playerInput.actions["Mirar"];
+        checarSensibilidad();
     }
 
+
+    private void  checarSensibilidad()
+    {
+        int valorSensMH = PlayerPrefs.GetInt("Sensibilidad_MouseH", 30);
+        int valorSensMV = PlayerPrefs.GetInt("Sensibilidad_MouseV", 30);
+        int SensMGeneral = PlayerPrefs.GetInt("Sensibilidad_Mouse", 100);       // valor general
+
+        valorSensMH = Mathf.Clamp(valorSensMH, 0, 100);
+        valorSensMV= Mathf.Clamp(valorSensMV, 0, 100);
+        SensMGeneral = Mathf.Clamp(SensMGeneral, 0, 100);
+
+        float SensmouseH = valorSensMH * (SensMGeneral / 100f);
+        float SensmouseV = valorSensMV * (SensMGeneral / 100f);
+
+        int valorSensJH = PlayerPrefs.GetInt("Sensibilidad_joystickH", 30);
+        int valorSensJV = PlayerPrefs.GetInt("Sensibilidad_joystickV", 30);
+        int SensJGeneral = PlayerPrefs.GetInt("Sensibilidad_joystick", 100);       // valor general
+
+        valorSensJH = Mathf.Clamp(valorSensJH, 0, 100);
+        valorSensJV = Mathf.Clamp(valorSensJV, 0, 100);
+        SensJGeneral = Mathf.Clamp(SensJGeneral, 0, 100);
+
+        float SensJoyH = valorSensJH * (SensJGeneral / 100f);
+        float SensJoyV = valorSensJV * (SensJGeneral / 100f);
+
+        mouseSensitivityX = SensmouseH;
+        mouseSensitivityY = SensmouseV;
+        JoystikcX = SensJoyH;
+        JoystikcY = SensJoyV;
+    }
     void Update()
     {
         // --- Lectura del ratón ---
