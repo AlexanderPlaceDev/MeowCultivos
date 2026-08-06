@@ -12,6 +12,7 @@ public class Scr_GiroGata : MonoBehaviour
     public float velocidad;
     Rigidbody rb;
     PlayerInput playerInput;
+    public float Sensibilidad = .3f;
     private InputAction MoverHorizontal;
     private InputAction CambiarCamara;
     InputIconProvider IconProvider;
@@ -20,6 +21,7 @@ public class Scr_GiroGata : MonoBehaviour
     public GameObject CamaraBoton;
     public GameObject Camara;
     public GameObject giro;
+
     private void OnEnable()
     {
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
@@ -41,6 +43,37 @@ public class Scr_GiroGata : MonoBehaviour
 
     }
 
+    private void checarSensibilidad()
+    {
+        int valorSensMH = PlayerPrefs.GetInt("Sensibilidad_MouseH", 30);
+        int valorSensMV = PlayerPrefs.GetInt("Sensibilidad_MouseV", 30);
+        int SensMGeneral = PlayerPrefs.GetInt("Sensibilidad_Mouse", 100);       // valor general
+
+        valorSensMH = Mathf.Clamp(valorSensMH, 0, 100);
+        valorSensMV = Mathf.Clamp(valorSensMV, 0, 100);
+        SensMGeneral = Mathf.Clamp(SensMGeneral, 0, 100);
+
+        float SensmouseH = valorSensMH * (SensMGeneral / 100f);
+
+        int valorSensJH = PlayerPrefs.GetInt("Sensibilidad_joystickH", 30);
+        int valorSensJV = PlayerPrefs.GetInt("Sensibilidad_joystickV", 30);
+        int SensJGeneral = PlayerPrefs.GetInt("Sensibilidad_joystick", 100);       // valor general
+
+        valorSensJH = Mathf.Clamp(valorSensJH, 0, 100);
+        valorSensJV = Mathf.Clamp(valorSensJV, 0, 100);
+        SensJGeneral = Mathf.Clamp(SensJGeneral, 0, 100);
+
+        float SensJoyH = valorSensJH * (SensJGeneral / 100f);
+
+        if (IconProvider.UsandoGamepad())
+        {
+            Sensibilidad = SensJoyH / 100;
+        }
+        else
+        {
+            Sensibilidad = SensmouseH / 100;
+        }
+    }
     public void checar_Control()
     {
 
@@ -77,10 +110,11 @@ public class Scr_GiroGata : MonoBehaviour
     }
     void FixedUpdate()
     {
+        checarSensibilidad();
         float Hor = MoverHorizontal.ReadValue<float>();
         if (Hor != 0)
         {
-            GetComponent<Transform>().Rotate(Vector3.up, 1 * Hor * velocidad * Time.deltaTime);
+            GetComponent<Transform>().Rotate(Vector3.up, 1 * Hor * Sensibilidad * velocidad * Time.deltaTime);
         }
     }
 }
