@@ -24,7 +24,10 @@ public class Scr_AsignacionDeVolumen : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         AsignarVolumen();
     }
-
+    private void OnEnable()
+    {
+        AsignarVolumen();
+    }
     public void AsignarVolumen()
     {
         string nombrePref = categoria.ToString(); // el nombre del PlayerPref

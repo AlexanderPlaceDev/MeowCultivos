@@ -1,8 +1,9 @@
+using PrimeTween;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
-using PrimeTween;
+using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Scr_ControladorMenu : MonoBehaviour
@@ -23,6 +24,10 @@ public class Scr_ControladorMenu : MonoBehaviour
     public GameObject Panel_Volumenes;
 
     public GameObject Panel_Brillo;
+    public GameObject Panel_Sencibilidad;
+    public GameObject Panel_Sensibilidad_joystick;
+    public GameObject Panel_Sensibilidad_Mouse;
+    private int Op =0;
     [SerializeField] TextMeshProUGUI TextoVolumen_General;
     [SerializeField] Slider SliderVolumen_General;
     [SerializeField] TextMeshProUGUI TextoVolumen_Musica;
@@ -33,6 +38,18 @@ public class Scr_ControladorMenu : MonoBehaviour
     [SerializeField] Slider SliderVolumen_Combate;
     [SerializeField] TextMeshProUGUI TextoBrillo;
     [SerializeField] Slider SliderBrillo;
+    [SerializeField] TextMeshProUGUI TextoSencibilidad_Mouse;
+    [SerializeField] Slider SliderSencibilidad_Mouse;
+    [SerializeField] TextMeshProUGUI TextoSencibilidad_MouseH;
+    [SerializeField] Slider SliderSencibilidad_MouseH;
+    [SerializeField] TextMeshProUGUI TextoSencibilidad_MouseV;
+    [SerializeField] Slider SliderSencibilidad_MouseV;
+    [SerializeField] TextMeshProUGUI TextoSencibilidad_joystick;
+    [SerializeField] Slider SliderSencibilidad_joystick;
+    [SerializeField] TextMeshProUGUI TextoSencibilidad_joystickH;
+    [SerializeField] Slider SliderSencibilidad_joystickH;
+    [SerializeField] TextMeshProUGUI TextoSencibilidad_joystickV;
+    [SerializeField] Slider SliderSencibilidad_joystickV;
     [Header("Nueva Partida")]
     [SerializeField] GameObject opcioensNuevaPartida;
     [Header("Titulo")]
@@ -57,10 +74,10 @@ public class Scr_ControladorMenu : MonoBehaviour
     float TiempoShake = 0;
     int r;
 
-
+    InputIconProvider inputIconProvider;
     void Start()
     {
-
+        inputIconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         if (!UsaFormaEspecifica)
         {
             RandomEase();
@@ -70,29 +87,7 @@ public class Scr_ControladorMenu : MonoBehaviour
         Version.text = "Ver " + Application.version;
 
 
-        //InicializarOpciones
-        if (PlayerPrefs.HasKey("Volumen"))
-        {
-            SliderVolumen_General.value = PlayerPrefs.GetInt("Volumen", 100);
-        }
-        if (PlayerPrefs.HasKey("Volumen_Musica"))
-        {
-            SliderVolumen_Musica.value = PlayerPrefs.GetInt("Volumen_Musica", 50);
-        }
-        if (PlayerPrefs.HasKey("Volumen_Ambiente"))
-        {
-            SliderVolumen_Ambiental.value = PlayerPrefs.GetInt("Volumen_Ambiente", 20);
-        }
-        if (PlayerPrefs.HasKey("Volumen_Combate"))
-        {
-            SliderVolumen_Combate.value = PlayerPrefs.GetInt("Volumen_Combate", 50);
-        }
-        if (PlayerPrefs.HasKey("Brillo"))
-        {
-            SliderBrillo.value = PlayerPrefs.GetInt("Brillo", 50);
-        }
-
-        if(PlayerPrefs.GetString("Partida", "SI") == "SI")
+        if (PlayerPrefs.GetString("Partida", "SI") == "SI")
         {
             NuevaPartida.SetActive(true);
         }
@@ -155,28 +150,78 @@ public class Scr_ControladorMenu : MonoBehaviour
     {
         if (Panel.activeSelf)
         {
-
-            TextoVolumen_General.text = "Volumen General " + (int)SliderVolumen_General.value + " %";
-            TextoVolumen_Musica.text = "Musica "+(int)SliderVolumen_Musica.value + " %";
-            TextoVolumen_Ambiental.text = "Ambiental " + (int)SliderVolumen_Ambiental.value + " %";
-            TextoVolumen_Combate.text = "Combate" + (int)SliderVolumen_Combate.value + " %";
-            TextoBrillo.text =(int)SliderBrillo.value + " %";
+            TextoVolumen_General.text = (int)SliderVolumen_General.value + " %";
+            TextoVolumen_Musica.text = (int)SliderVolumen_Musica.value + " %";
+            TextoVolumen_Ambiental.text = (int)SliderVolumen_Ambiental.value + " %";
+            TextoVolumen_Combate.text = (int)SliderVolumen_Combate.value + " %";
+            TextoBrillo.text = (int)SliderBrillo.value + " %";
+            TextoSencibilidad_Mouse.text = (int)SliderSencibilidad_Mouse.value + "%";
+            TextoSencibilidad_MouseH.text = (int)SliderSencibilidad_MouseH.value + "%";
+            TextoSencibilidad_MouseV.text = (int)SliderSencibilidad_MouseV.value + "%";
+            TextoSencibilidad_joystick.text = (int)SliderSencibilidad_joystick.value + "%";
+            TextoSencibilidad_joystickH.text = (int)SliderSencibilidad_joystickH.value + "%";
+            TextoSencibilidad_joystickV.text = (int)SliderSencibilidad_joystickV.value + "%";
         }
     }
 
     public void GuardarOpciones()
     {
-        PlayerPrefs.SetInt("Volumen", (int)SliderVolumen_General.value);
-        PlayerPrefs.SetInt("Volumen_Musica", (int)SliderVolumen_Musica.value);
-        PlayerPrefs.SetInt("Volumen_Ambiente", (int)SliderVolumen_Ambiental.value);
-        PlayerPrefs.SetInt("Volumen_Combate", (int)SliderVolumen_Combate.value);
-        PlayerPrefs.SetInt("Brillo", (int)SliderBrillo.value);
+        if (Op == 0)
+        {
+            PlayerPrefs.SetInt("Volumen", (int)SliderVolumen_General.value);
+            PlayerPrefs.SetInt("Volumen_Musica", (int)SliderVolumen_Musica.value);
+            PlayerPrefs.SetInt("Volumen_Ambiente", (int)SliderVolumen_Ambiental.value);
+            PlayerPrefs.SetInt("Volumen_Combate", (int)SliderVolumen_Combate.value);
+
+            foreach (Scr_AsignacionDeVolumen audio in FindObjectsOfType<Scr_AsignacionDeVolumen>())
+            {
+                audio.AsignarVolumen();
+            }
+        }
+        else if(Op==1)
+        {
+            PlayerPrefs.SetInt("Brillo", (int)SliderBrillo.value);
+        }
+        else if (Op == 2)
+        {
+            if (Panel_Sensibilidad_Mouse.activeSelf)
+            {
+                PlayerPrefs.SetInt("Sensibilidad_Mouse", (int)SliderSencibilidad_Mouse.value);
+                PlayerPrefs.SetInt("Sensibilidad_MouseH", (int)SliderSencibilidad_MouseH.value);
+                PlayerPrefs.SetInt("Sensibilidad_MouseV", (int)SliderSencibilidad_MouseV.value);
+            }
+            else
+            {
+                PlayerPrefs.SetInt("Sensibilidad_joystick", (int)SliderSencibilidad_joystick.value);
+                PlayerPrefs.SetInt("Sensibilidad_joystickH", (int)SliderSencibilidad_joystickH.value);
+                PlayerPrefs.SetInt("Sensibilidad_joystickV", (int)SliderSencibilidad_joystickV.value);
+            }
+        }
+        PlayerPrefs.Save();
         Panel.SetActive(false);
     }
     public void ReiniciarOpciones()
     {
-        SliderVolumen_Musica.value = 50;
-        SliderBrillo.value = 50;
+        if (Op == 0)
+        {
+            SliderVolumen_General.value = 100;
+            SliderVolumen_Musica.value = 50;
+            SliderVolumen_Ambiental.value = 20;
+            SliderVolumen_Combate.value = 50;
+        }
+        else if (Op == 1)
+        {
+            SliderBrillo.value = 50;
+        }
+        else if (Op == 2)
+        {
+            SliderSencibilidad_Mouse.value = 30;
+            SliderSencibilidad_MouseH.value = 30;
+            SliderSencibilidad_MouseV.value = 30;
+            SliderSencibilidad_joystick.value = 30;
+            SliderSencibilidad_joystickH.value = 30;
+            SliderSencibilidad_joystickV.value = 30;
+        }
     }
     private void SpawnNubes()
     {
@@ -200,6 +245,13 @@ public class Scr_ControladorMenu : MonoBehaviour
         Panel_Opciones.SetActive(false);
         Panel_Volumenes.SetActive(true);
         Panel_Brillo.SetActive(false);
+        Panel_Sencibilidad.SetActive(false);
+        Op = 0;
+        SliderVolumen_General.value = PlayerPrefs.GetInt("Volumen", 100);
+        SliderVolumen_Musica.value = PlayerPrefs.GetInt("Volumen_Musica", 50);
+        SliderVolumen_Ambiental.value = PlayerPrefs.GetInt("Volumen_Ambiente", 20);
+        SliderVolumen_Combate.value = PlayerPrefs.GetInt("Volumen_Combate", 50);
+        
     }
 
 
@@ -208,13 +260,58 @@ public class Scr_ControladorMenu : MonoBehaviour
         Panel_Opciones.SetActive(false);
         Panel_Volumenes.SetActive(false);
         Panel_Brillo.SetActive(true);
+        Panel_Sencibilidad.SetActive(false);
+        Op = 1;
+        SliderBrillo.value = PlayerPrefs.GetInt("Brillo", 50);
     }
-
+    public void aparecerSencibilidad()
+    {
+        Panel_Opciones.SetActive(false);
+        Panel_Volumenes.SetActive(false);
+        Panel_Brillo.SetActive(false);
+        Panel_Sencibilidad.SetActive(true);
+        Op = 2;
+        Panel_Sensibilidad_joystick.SetActive(false);
+        Panel_Sensibilidad_Mouse.SetActive(false);
+        detectarobjeto();
+    }
     public void aparecerOpciones()
     {
         Panel_Opciones.SetActive(true);
         Panel_Volumenes.SetActive(false);
         Panel_Brillo.SetActive(false);
+        Panel_Sencibilidad.SetActive(false);
+        Op = -1;
+    }
+
+    private void detectarobjeto()
+    {
+        if (inputIconProvider.UsandoGamepad())
+        {
+            Aparecer_joystick();
+        }
+        else
+        {
+            Aparecer_Mouse();
+        }
+    }
+
+    public void Aparecer_joystick()
+    {
+        Panel_Sensibilidad_joystick.SetActive(true);
+        Panel_Sensibilidad_Mouse.SetActive(false);
+        SliderSencibilidad_joystick.value = PlayerPrefs.GetInt("Sensibilidad_joystick", 30);
+        SliderSencibilidad_joystickH.value = PlayerPrefs.GetInt("Sensibilidad_joystickH", 30);
+        SliderSencibilidad_joystickV.value = PlayerPrefs.GetInt("Sensibilidad_joystickV", 30);
+    }
+    public void Aparecer_Mouse()
+    {
+
+        Panel_Sensibilidad_joystick.SetActive(false);
+        Panel_Sensibilidad_Mouse.SetActive(true);
+        SliderSencibilidad_Mouse.value = PlayerPrefs.GetInt("Sensibilidad_Mouse", 30);
+        SliderSencibilidad_MouseH.value = PlayerPrefs.GetInt("Sensibilidad_MouseH", 30);
+        SliderSencibilidad_MouseV.value = PlayerPrefs.GetInt("Sensibilidad_MouseV", 30);
     }
     void RandomEase()
     {
