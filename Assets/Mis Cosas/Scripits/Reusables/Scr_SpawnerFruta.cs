@@ -12,27 +12,34 @@ public class Scr_SpawnerFruta : MonoBehaviour
 
     void Awake()
     {
-        // Recuperar tiempos guardados
         MinutosRestantes = PlayerPrefs.GetInt("MinutosRestantes:" + gameObject.name, MinutosDuracion);
         SegundosRestantes = PlayerPrefs.GetFloat("SegundosRestantes:" + gameObject.name, SegundosDuracion);
 
-        // Restaurar estado de los hijos
-        int childCount = transform.childCount;
-        for (int i = 0; i < childCount; i++)
+        int frutasFaltantes = 0;
+
+        for (int i = 0; i < transform.childCount; i++)
         {
             Transform child = transform.GetChild(i);
-            if (child.GetComponent<Scr_SpawnerRecolectable>() != null)
-            {
-                string key = "MeshRendererState:" + gameObject.name + child.gameObject.name;
-                if (PlayerPrefs.HasKey(key))
-                {
-                    bool isActive = PlayerPrefs.GetInt(key) == 1;
-                    child.GetComponent<MeshRenderer>().enabled = isActive;
-                    child.GetComponent<Scr_SpawnerRecolectable>().TieneObjeto = isActive;
-                    Creando = true;
-                }
-            }
+            var recolectable = child.GetComponent<Scr_SpawnerRecolectable>();
+
+            if (recolectable == null)
+                continue;
+
+            string key = "Recolectable_Tiene_" + child.gameObject.name;
+
+            bool tieneFruta = true;
+
+            if (PlayerPrefs.HasKey(key))
+                tieneFruta = PlayerPrefs.GetInt(key) == 1;
+
+            child.GetComponent<MeshRenderer>().enabled = tieneFruta;
+            recolectable.TieneObjeto = tieneFruta;
+
+            if (!tieneFruta)
+                frutasFaltantes++;
         }
+
+        Creando = frutasFaltantes > 0;
     }
 
     void Update()
@@ -75,44 +82,93 @@ public class Scr_SpawnerFruta : MonoBehaviour
 
     void RespawnObjeto()
     {
-        int childCount = transform.childCount;
-        for (int i = 0; i < childCount; i++)
+        // Reaparecer solo una fruta
+        for (int i = 0; i < transform.childCount; i++)
         {
             Transform child = transform.GetChild(i);
-            if (child.GetComponent<Scr_SpawnerRecolectable>() != null && !child.GetComponent<MeshRenderer>().enabled)
+            var recolectable = child.GetComponent<Scr_SpawnerRecolectable>();
+
+            if (recolectable == null)
+                continue;
+
+            if (!child.GetComponent<MeshRenderer>().enabled)
             {
                 child.GetComponent<MeshRenderer>().enabled = true;
-                child.GetComponent<Scr_SpawnerRecolectable>().TieneObjeto = true;
-                Creando = false;
+                recolectable.TieneObjeto = true;
 
-                // Guardar el estado activado del MeshRenderer
-                PlayerPrefs.SetInt("MeshRendererState:" + gameObject.name + child.gameObject.name, 1);
+                // Actualizar el guardado del recolectable
+                PlayerPrefs.SetInt("Recolectable_Tiene_" + child.gameObject.name, 1);
+                PlayerPrefs.DeleteKey("Recolectable_Respawn_" + child.gameObject.name);
+                PlayerPrefs.DeleteKey("Recolectable_RespawnObjetivo_" + child.gameObject.name);
+
+                break; // Solo reaparece una fruta
+            }
+        }
+
+        // Comprobar si todavía quedan frutas desaparecidas
+        bool quedanFrutas = false;
+
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Transform child = transform.GetChild(i);
+            var recolectable = child.GetComponent<Scr_SpawnerRecolectable>();
+
+            if (recolectable == null)
+                continue;
+
+            if (!child.GetComponent<MeshRenderer>().enabled)
+            {
+                quedanFrutas = true;
                 break;
             }
         }
+
+        if (quedanFrutas)
+        {
+            // Reiniciar el temporizador para la siguiente fruta
+            MinutosRestantes = MinutosDuracion;
+            SegundosRestantes = SegundosDuracion;
+
+            PlayerPrefs.SetInt("MinutosRestantes:" + gameObject.name, MinutosDuracion);
+            PlayerPrefs.SetFloat("SegundosRestantes:" + gameObject.name, SegundosDuracion);
+
+            Creando = true;
+        }
+        else
+        {
+            // Ya reaparecieron todas
+            Creando = false;
+
+            PlayerPrefs.DeleteKey("MinutosRestantes:" + gameObject.name);
+            PlayerPrefs.DeleteKey("SegundosRestantes:" + gameObject.name);
+        }
+
+        PlayerPrefs.Save();
     }
 
     void VerificarEstadoObjetos()
     {
-        int childCount = transform.childCount;
-        int objetosDesactivados = 0;
+        if (Creando)
+            return;
 
-        for (int i = 0; i < childCount; i++)
+        for (int i = 0; i < transform.childCount; i++)
         {
             Transform child = transform.GetChild(i);
-            if (child.GetComponent<MeshRenderer>().enabled == false)
-            {
-                objetosDesactivados++;
-                if (!Creando) // Solo cambiar el estado si aún no está en el modo de creación
-                {
-                    Creando = true;
-                    MinutosRestantes = MinutosDuracion;
-                    SegundosRestantes = SegundosDuracion;
 
-                    // Guardar el estado desactivado del MeshRenderer
-                    PlayerPrefs.SetInt("MeshRendererState:" + gameObject.name + child.gameObject.name, 0);
-                    PlayerPrefs.SetString("CantidadObjetos:" + gameObject.name, objetosDesactivados.ToString());
-                }
+            var recolectable = child.GetComponent<Scr_SpawnerRecolectable>();
+            if (recolectable == null)
+                continue;
+
+            if (!child.GetComponent<MeshRenderer>().enabled)
+            {
+                Creando = true;
+                MinutosRestantes = MinutosDuracion;
+                SegundosRestantes = SegundosDuracion;
+
+                PlayerPrefs.SetInt("MinutosRestantes:" + gameObject.name, MinutosDuracion);
+                PlayerPrefs.SetFloat("SegundosRestantes:" + gameObject.name, SegundosDuracion);
+
+                break;
             }
         }
     }

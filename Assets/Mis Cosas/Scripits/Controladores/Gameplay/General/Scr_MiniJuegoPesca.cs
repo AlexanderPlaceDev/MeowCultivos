@@ -32,7 +32,6 @@ public class Scr_MiniJuegoPesca : MonoBehaviour
     public static event Action<bool> OnFinMiniJuego;
     // true = ganó, false = perdió
 
-
     Color colorRojo = Color.red;
     Color colorAmarillo = Color.yellow;
     Color colorVerde = Color.green;
@@ -52,11 +51,16 @@ public class Scr_MiniJuegoPesca : MonoBehaviour
     float cooldownCambioCamara = 1f;
     float tiempoCambioCamara;
 
+    [Header("Controles")]
+    [SerializeField] GameObject IconosMando;
+    [SerializeField] GameObject IconosTeclado;
     PlayerInput playerInput;
     InputAction MoverHorizontal;
+    InputIconProvider IconProvider;
 
     void Start()
     {
+        IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
         MoverHorizontal = playerInput.actions["MoverHorizontal"];
 
@@ -218,6 +222,17 @@ public class Scr_MiniJuegoPesca : MonoBehaviour
     // ------------------ UI ------------------
     void ActualizarUI()
     {
+        if (IconProvider.UsandoGamepad())
+        {
+            IconosMando.SetActive(true);
+            IconosTeclado.SetActive(false);
+        }
+        else
+        {
+            IconosMando.SetActive(false);
+            IconosTeclado.SetActive(true);
+        }
+
         if (!Carga) return;
 
         float t = Mathf.InverseLerp(-5f, 5f, contadorCaptura);

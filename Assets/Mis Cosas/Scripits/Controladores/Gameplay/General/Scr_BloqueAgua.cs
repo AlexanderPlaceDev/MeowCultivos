@@ -521,13 +521,36 @@ public class Scr_BloqueAgua : MonoBehaviour
     {
         if (lado == 0)
         {
+            //Caña
             JuegoPesca.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>().localPosition = new Vector3(-130, 5, 0);
             JuegoPesca.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>().localRotation = Quaternion.Euler(0f, -180f, 0f);
+
+            //Teclas
+            JuegoPesca.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>().localPosition = new Vector3(-160f, 0f, 0f);
+            JuegoPesca.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>().localPosition = new Vector3(-100f, 0f, 0f);
+
+            JuegoPesca.transform.GetChild(2).GetChild(3).GetChild(0).GetComponent<RectTransform>().localPosition = new Vector3(-160f, -60f, 0f);
+            JuegoPesca.transform.GetChild(2).GetChild(3).GetChild(1).GetComponent<RectTransform>().localPosition = new Vector3(-100f, -60f, 0f);
+
+            JuegoPesca.transform.GetChild(2).GetChild(4).GetChild(0).GetComponent<RectTransform>().localPosition = new Vector3(-160f, -60f, 0f);
+            JuegoPesca.transform.GetChild(2).GetChild(4).GetChild(1).GetComponent<RectTransform>().localPosition = new Vector3(-100f, -60f, 0f);
+
         }
         else
         {
+            //Caña
             JuegoPesca.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>().localPosition = new Vector3(130, 5, 0);
             JuegoPesca.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>().localRotation = Quaternion.Euler(0f, 0f, 0f);
+
+            //Teclas
+            JuegoPesca.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>().localPosition = new Vector3(100f, 0f, 0f);
+            JuegoPesca.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>().localPosition = new Vector3(160f, 0f, 0f);
+
+            JuegoPesca.transform.GetChild(2).GetChild(3).GetChild(0).GetComponent<RectTransform>().localPosition = new Vector3(100f, -60f, 0f);
+            JuegoPesca.transform.GetChild(2).GetChild(3).GetChild(1).GetComponent<RectTransform>().localPosition = new Vector3(160f, -60f, 0f);
+
+            JuegoPesca.transform.GetChild(2).GetChild(4).GetChild(0).GetComponent<RectTransform>().localPosition = new Vector3(100f, -60f, 0f);
+            JuegoPesca.transform.GetChild(2).GetChild(4).GetChild(1).GetComponent<RectTransform>().localPosition = new Vector3(160f, -60f, 0f);
         }
     }
 
