@@ -90,19 +90,22 @@ public class Scr_MenuEstructuraProducible : MonoBehaviour
 
     private void OnEnable()
     {
-        estructuraActual = 0;   // Fuerza estructura primaria al abrir
-        ActualizarEstructura(); // Aplica el estado visual correcto
+        estructuraActual = 0;
+        ActualizarEstructura();
 
-        if (estructuraRequerida <= 0) { return; }
+        ActualizarDisponibilidadEstructura();
+    }
 
-        if (PlayerPrefs.GetInt("Estructura" + estructuraRequerida, 0) == 1)
-        {
-            BotonEstructuraSecundaria.SetActive(true);
-        }
-        else
-        {
-            BotonEstructuraSecundaria.SetActive(false);
-        }
+    public void ActualizarDisponibilidadEstructura()
+    {
+        if (estructuraRequerida <= 0)
+            return;
+
+        bool desbloqueada =
+            PlayerPrefs.GetInt("Estructura" + estructuraRequerida, 0) == 1;
+
+        if (BotonEstructuraSecundaria != null)
+            BotonEstructuraSecundaria.SetActive(desbloqueada);
     }
 
 

@@ -34,6 +34,7 @@ public class Scr_BloqueAgua : MonoBehaviour
     private GameObject CamaraIzquierda;
     private GameObject CamaraDerecha;
     private GameObject CamaraPrincipal;
+    private AudioSource AudioPesca;
 
     private bool VentanaActiva;
     bool usandoCamaraIzquierda;
@@ -68,6 +69,7 @@ public class Scr_BloqueAgua : MonoBehaviour
         CamaraDerecha = JuegoPesca.transform.GetChild(0).gameObject;
         CamaraIzquierda = JuegoPesca.transform.GetChild(1).gameObject;
         CamaraPrincipal = GameObject.Find("Cosas Inutiles").transform.GetChild(2).gameObject;
+        AudioPesca = JuegoPesca.transform.GetChild(2).GetComponent<AudioSource>();
     }
 
     void OnEnable()
@@ -487,6 +489,10 @@ public class Scr_BloqueAgua : MonoBehaviour
         GameObject contenedor = JuegoPesca.transform.GetChild(2).gameObject;
         contenedor.SetActive(true);
 
+        // 🔊 Comienza el sonido de pesca
+        if (AudioPesca != null)
+            AudioPesca.Play();
+
         miniJuego = contenedor.GetComponent<Scr_MiniJuegoPesca>();
         miniJuego.enabled = true;
         miniJuego.Resetear();
@@ -558,6 +564,10 @@ public class Scr_BloqueAgua : MonoBehaviour
     {
         Debug.Log("❌ Falló la pesca");
 
+        // 🔊 Detener sonido de pesca
+        if (AudioPesca != null)
+            AudioPesca.Stop();
+
         // Reanudar animator
         animatorGata.speed = 1;
         animatorGata.SetBool("Talando", false);
@@ -596,6 +606,11 @@ public class Scr_BloqueAgua : MonoBehaviour
     {
         if (bloqueActivo != this) return;
         bloqueActivo = null;
+
+        // 🔊 Detener sonido de pesca
+        if (AudioPesca != null)
+            AudioPesca.Stop();
+
         // 🔹 Cámara
         CamaraIzquierda.SetActive(false);
         CamaraDerecha.SetActive(false);

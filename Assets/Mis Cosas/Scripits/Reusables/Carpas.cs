@@ -25,7 +25,6 @@ public class Carpas : MonoBehaviour
     public int HoraDeSiestaInicio = 19;
     public int HoraDeSiestaFin = 5;
     public GameObject radio;
-    public GameObject Reloj;
     GameObject Canvas;
 
     public bool dentroHorario;
@@ -95,8 +94,9 @@ public class Carpas : MonoBehaviour
         Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = false;
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), -200, 1);
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 230, 1);
-        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(), -810, 1);
-        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(3).GetComponent<RectTransform>(), 180, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(), 22.5f - 800f, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(3).GetComponent<RectTransform>(), -12.5f - 800f, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(4).GetComponent<RectTransform>(), 80f, 1);
         yield return new WaitForSeconds(dur);
         Debug.Log("carpita");
         carpaUI.SetActive(true);
@@ -113,8 +113,9 @@ public class Carpas : MonoBehaviour
         yield return new WaitForSeconds(dur);
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>(), 0, 1);
         Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(1).GetComponent<RectTransform>(), 0, 1);
-        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(), -610, 1);
-        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(3).GetComponent<RectTransform>(), -50, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(2).GetComponent<RectTransform>(), 22.5f, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(3).GetComponent<RectTransform>(), -12.5f, 1);
+        Tween.UIAnchoredPosition3DX(Canvas.transform.GetChild(2).GetChild(4).GetComponent<RectTransform>(), -50f, 1);
     }
     private void activarRadio()
     {
@@ -122,7 +123,7 @@ public class Carpas : MonoBehaviour
         //PlayerPrefs.GetInt("Estructura" + indiceReal, 0) == 1;
         if (PlayerPrefs.GetInt("Estructura" + 8, 0) == 1)
         {
-            Tiene_Radio = true; 
+            Tiene_Radio = true;
             radio.SetActive(true);
         }
         else
@@ -147,22 +148,17 @@ public class Carpas : MonoBehaviour
 
         if (Tiene_Reloj)
         {
-            Reloj.SetActive(true);
             TextMeshProUGUI RelojText = GetComponentInChildren<TextMeshProUGUI>();
             if (RelojText != null)
             {
                 RelojText.text = ControlT.HoraActual + ":" + ControlT.MinutoActual;
             }
         }
-        else
-        {
-            Reloj.SetActive(false);
-        }
     }
 
     public bool ChecarLunaRoja()
     {
-        if(ControlT.ClimaSemanal.Count > 0 && ControlT.ClimaSemanal[ControlT.ConseguirDia()].ToString() == "LunaRoja" && ControlT.EstaActivoClima)
+        if (ControlT.ClimaSemanal.Count > 0 && ControlT.ClimaSemanal[ControlT.ConseguirDia()].ToString() == "LunaRoja" && ControlT.EstaActivoClima)
         {
             return true;
         }
@@ -183,7 +179,7 @@ public class Carpas : MonoBehaviour
         Gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
         Gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
 
-        IconProvider.ActualizarIconoUI(Interactuar, Gata.GetChild(3).GetChild(0), ref iconoActualInteractuar, ref textoActualInteractuar,true);
+        IconProvider.ActualizarIconoUI(Interactuar, Gata.GetChild(3).GetChild(0), ref iconoActualInteractuar, ref textoActualInteractuar, true);
     }
 
     private void OnTriggerEnter(Collider other)

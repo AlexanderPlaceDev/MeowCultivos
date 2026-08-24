@@ -28464,12 +28464,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 98304857}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &98455335 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 626a612c2f65f64488c9b9568f8efe1a,
-    type: 3}
-  m_PrefabInstance: {fileID: 1523227586}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &98541764
 GameObject:
   m_ObjectHideFlags: 0
@@ -138176,7 +138170,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dd0a7e0da55a050409a40c75972c83a1, type: 2}
   - {fileID: 11400000, guid: dc8b4d1fab9557f47b7ba94a472b82c0, type: 2}
   - {fileID: 11400000, guid: c0e291efdc660bb46bfba2649d5141d8, type: 2}
-  - {fileID: 11400000, guid: 0c353d5e2c1af294ba746b4113fea328, type: 2}
   - {fileID: 11400000, guid: 88f8d2f70710e524daa20bf977920ece, type: 2}
   Objetos:
   - ObjetosEstructura:
@@ -305221,7 +305214,6 @@ MonoBehaviour:
   HoraDeSiestaInicio: 19
   HoraDeSiestaFin: 5
   radio: {fileID: 1200601116}
-  Reloj: {fileID: 98455335}
   dentroHorario: 0
 --- !u!1001 &1233359037
 PrefabInstance:
@@ -376773,7 +376765,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 626a612c2f65f64488c9b9568f8efe1a,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -520764,6 +520756,8 @@ GameObject:
   - component: {fileID: 2064899472}
   - component: {fileID: 2064899471}
   - component: {fileID: 2064899474}
+  - component: {fileID: 2064899476}
+  - component: {fileID: 2064899475}
   m_Layer: 5
   m_Name: Canvas Pesca
   m_TagString: Untagged
@@ -520882,6 +520876,115 @@ MonoBehaviour:
   Carga: {fileID: 1068137512}
   IconosMando: {fileID: 1316109012}
   IconosTeclado: {fileID: 1241107147}
+--- !u!114 &2064899475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2064899469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d5364f17fb28794e90a6af4d8f0bf2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  categoria: 2
+--- !u!82 &2064899476
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2064899469}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 4791e123960de3a46a6bc6a6bad362ac, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &2064960219 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7ad178f2dcb685c4dbde656609630156,

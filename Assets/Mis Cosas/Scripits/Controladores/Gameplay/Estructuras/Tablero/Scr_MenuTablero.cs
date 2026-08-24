@@ -261,6 +261,14 @@ public class Scr_MenuTablero : MonoBehaviour
 
             PlayerPrefs.SetInt("Estructura" + indiceReal, 1);
 
+            // 🔥 Avisar a los menús de producción que una estructura fue desbloqueada
+            Scr_MenuEstructuraProducible[] menus =
+                FindObjectsByType<Scr_MenuEstructuraProducible>(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None
+                );
+
+
             Scr_CreadorEstructuras estructura = estructurasFiltradas[EstructuraActual];
 
             if (estructura.AumentaRango)
@@ -274,6 +282,11 @@ public class Scr_MenuTablero : MonoBehaviour
             }
 
             PlayerPrefs.Save();
+
+            foreach (Scr_MenuEstructuraProducible menu in menus)
+            {
+                menu.ActualizarDisponibilidadEstructura();
+            }
             QuitarObjetos(estructura.Materiales, estructura.Cantidades);
 
             camara_tablero.SetActive(false);
