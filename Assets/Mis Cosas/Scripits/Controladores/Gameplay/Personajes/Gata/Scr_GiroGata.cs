@@ -9,7 +9,8 @@ public class Scr_GiroGata : MonoBehaviour
     public Transform Gata;
     public Transform CabezaGata;
     public bool CamFija;
-    public float velocidad;
+    public float velocidad = 150;
+    float velocidadMaxima = 300;
     Rigidbody rb;
     PlayerInput playerInput;
     public float Sensibilidad = .3f;
@@ -21,7 +22,9 @@ public class Scr_GiroGata : MonoBehaviour
     public GameObject CamaraBoton;
     public GameObject Camara;
     public GameObject giro;
-
+    public CinemachineVirtualCamera Camera;
+    public CinemachineOrbitalTransposer orbital;
+    private float MaxSpeed=500;
     private void OnEnable()
     {
         playerInput = GameObject.Find("Singleton").GetComponent<PlayerInput>();
@@ -29,7 +32,12 @@ public class Scr_GiroGata : MonoBehaviour
         CambiarCamara = playerInput.actions["CamaraLibre"];
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         rb = GetComponent<Rigidbody>();
-       
+
+        Debug.Log("Camera = " + Camera);
+        Camera = GameObject.Find("Cosas Inutiles").transform.GetChild(2).GetComponent<CinemachineVirtualCamera>();
+
+        orbital = Camera.GetCinemachineComponent<CinemachineOrbitalTransposer>();
+
 
         if (PlayerPrefs.GetString("CamaraFija", "SI")== "SI")
         {
@@ -41,10 +49,11 @@ public class Scr_GiroGata : MonoBehaviour
         }
         checar_Control();
 
+        
     }
 
     private void checarSensibilidad()
-    {
+    {/*
         int valorSensMH = PlayerPrefs.GetInt("Sensibilidad_MouseH", 30);
         int valorSensMV = PlayerPrefs.GetInt("Sensibilidad_MouseV", 30);
         int SensMGeneral = PlayerPrefs.GetInt("Sensibilidad_Mouse", 100);       // valor general
@@ -72,21 +81,40 @@ public class Scr_GiroGata : MonoBehaviour
         else
         {
             Sensibilidad = SensmouseH / 100;
+        }*/
+
+        float SensmouseH = PlayerPrefs.GetInt("Sensibilidad_MouseT", 100);
+
+        float SensJoyH = PlayerPrefs.GetInt("Sensibilidad_joystickT", 100);
+        float speed = 0;
+        if (IconProvider.UsandoGamepad())
+        {
+            speed = (MaxSpeed * SensJoyH) /100;
+            Sensibilidad = SensJoyH / 100;
         }
+        else
+        {
+            speed = (MaxSpeed * SensmouseH) / 100;
+            Sensibilidad = SensmouseH / 100;
+        }
+        orbital.m_XAxis.m_MaxSpeed = speed;
+
+        float camvel = PlayerPrefs.GetInt("Velocidad_de_camara", 50);
+        velocidad = (velocidadMaxima * camvel) / 100;
     }
     public void checar_Control()
     {
 
         if (CamFija)
         {
-            GameObject.Find("Cosas Inutiles").transform.GetChild(2).GetComponent<CinemachineVirtualCamera>().Follow = CabezaGata;
+            Camera.Follow = CabezaGata;
             PlayerPrefs.SetString("CamaraFija", "SI");
             Camara.SetActive(true);
             giro.SetActive(false);
         }
         else
         {
-            GameObject.Find("Cosas Inutiles").transform.GetChild(2).GetComponent<CinemachineVirtualCamera>().Follow = Gata;
+            Camera.Follow = Gata;
             PlayerPrefs.SetString("CamaraFija", "NO"); 
             Camara.SetActive(false);
             giro.SetActive(true);

@@ -43,9 +43,9 @@ public class Scr_GirarCamaraBatalla : MonoBehaviour
 
     private void  checarSensibilidad()
     {
-        int valorSensMH = PlayerPrefs.GetInt("Sensibilidad_MouseH", 30);
-        int valorSensMV = PlayerPrefs.GetInt("Sensibilidad_MouseV", 30);
-        int SensMGeneral = PlayerPrefs.GetInt("Sensibilidad_Mouse", 100);       // valor general
+        int valorSensMH = PlayerPrefs.GetInt("Sensibilidad_MouseHP", 30);
+        int valorSensMV = PlayerPrefs.GetInt("Sensibilidad_MouseVP", 30);
+        int SensMGeneral = PlayerPrefs.GetInt("Sensibilidad_MouseP", 100);       // valor general
 
         valorSensMH = Mathf.Clamp(valorSensMH, 0, 100);
         valorSensMV= Mathf.Clamp(valorSensMV, 0, 100);
@@ -54,9 +54,9 @@ public class Scr_GirarCamaraBatalla : MonoBehaviour
         float SensmouseH = valorSensMH * (SensMGeneral / 100f);
         float SensmouseV = valorSensMV * (SensMGeneral / 100f);
 
-        int valorSensJH = PlayerPrefs.GetInt("Sensibilidad_joystickH", 30);
-        int valorSensJV = PlayerPrefs.GetInt("Sensibilidad_joystickV", 30);
-        int SensJGeneral = PlayerPrefs.GetInt("Sensibilidad_joystick", 100);       // valor general
+        int valorSensJH = PlayerPrefs.GetInt("Sensibilidad_joystickHP", 30);
+        int valorSensJV = PlayerPrefs.GetInt("Sensibilidad_joystickVP", 30);
+        int SensJGeneral = PlayerPrefs.GetInt("Sensibilidad_joystickP", 100);       // valor general
 
         valorSensJH = Mathf.Clamp(valorSensJH, 0, 100);
         valorSensJV = Mathf.Clamp(valorSensJV, 0, 100);
