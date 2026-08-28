@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ab77d28d84896ba4f8138a10736fcd1a
+guid: 4ad98943a01889c4abdc6cdd28c5eeed
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,13 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Hojas
-    second: {fileID: 2100000, guid: e316ea55b7d207940afe1a1240dfe8d5, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Tallo
-    second: {fileID: 2100000, guid: e56251aa2a87309479de8f258d79d1cf, type: 2}
+      name: Material
+    second: {fileID: 2100000, guid: 10df1fa6f4e931344b917fbaad2e5731, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

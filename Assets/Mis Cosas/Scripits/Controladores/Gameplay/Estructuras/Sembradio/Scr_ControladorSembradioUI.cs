@@ -14,6 +14,7 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
     [SerializeField] GameObject ObjetoPlanta;
     [SerializeField] Scr_BarrilSembradio Barril;
     [SerializeField] GameObject Abono;
+    [SerializeField] GameObject CanvasIcono;
     [SerializeField] Image Semilla;
     [SerializeField] Image Producto;
     [SerializeField] GameObject[] Botones;
@@ -21,6 +22,10 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
     [SerializeField] bool Regado;
     [SerializeField] bool Abonado;
     [SerializeField] bool AbonadoPlus;
+    [SerializeField] int ReduccionAbono = 1;
+    [SerializeField] int ReduccionAbonoPlus = 2;
+
+    private TextMeshProUGUI TextoTiempo;
     Scr_Inventario Inventario;
 
     public Scr_CreadorObjetos SemillaPlantada = null;
@@ -29,15 +34,23 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
     string diaAnterior = "";
     Sprite Vacio;
 
-    
 
-    
+
+
     void Start()
     {
         Vacio = Producto.GetComponent<Image>().sprite;
         Inventario = GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>();
         DiasPlantado = PlayerPrefs.GetInt("DiasPlantado:" + ID, 0);
-        diaAnterior = PlayerPrefs.GetString("DiaAnterior:" + ID, "LUN");
+
+        string diaActual = GameObject.Find("Controlador Tiempo")
+            .GetComponent<Scr_ControladorTiempo>()
+            .DiaActual;
+
+        diaAnterior = PlayerPrefs.GetString(
+            "DiaAnterior:" + ID,
+            diaActual
+        );
 
 
         if (PlayerPrefs.GetString("Plantado" + ID, "No") == "Si")
@@ -51,7 +64,7 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
         if (PlayerPrefs.GetString("SembradioRegado:" + ID, "No") == "Si")
         {
             Regado = true;
-            Abono.GetComponent<SpriteRenderer>().material = MaterialesAbono[1];
+            Abono.GetComponent<MeshRenderer>().material = MaterialesAbono[1];
         }
 
         if (PlayerPrefs.GetString("SembradioAbonado:" + ID, "No") == "Si")
@@ -60,11 +73,11 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
 
             if (Regado)
             {
-                Abono.GetComponent<SpriteRenderer>().material = MaterialesAbono[4];
+                Abono.GetComponent<MeshRenderer>().material = MaterialesAbono[4];
             }
             else
             {
-                Abono.GetComponent<SpriteRenderer>().material = MaterialesAbono[2];
+                Abono.GetComponent<MeshRenderer>().material = MaterialesAbono[2];
             }
         }
 
@@ -73,14 +86,20 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
             AbonadoPlus = true;
             if (Regado)
             {
-                Abono.GetComponent<SpriteRenderer>().material = MaterialesAbono[5];
+                Abono.GetComponent<MeshRenderer>().material = MaterialesAbono[5];
             }
             else
             {
-                Abono.GetComponent<SpriteRenderer>().material = MaterialesAbono[2];
+                Abono.GetComponent<MeshRenderer>().material = MaterialesAbono[2];
             }
         }
 
+        CanvasIcono.SetActive(false);
+
+        if (CanvasIcono.transform.childCount >= 2)
+        {
+            TextoTiempo = CanvasIcono.transform.GetChild(1).GetComponentInChildren<TextMeshProUGUI>();
+        }
 
         if (Regado)
         {
@@ -93,76 +112,60 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
             Botones[1].SetActive(false);
             Botones[2].SetActive(false);
         }
-        if (!GetComponent<Scr_ActivadorMenuEstructuraFijo>().EstaDentro)
-        {
-            Botones[0].SetActive(false);
-            Botones[1].SetActive(false);
-            Botones[2].SetActive(false);
-            transform.GetChild(1).GetChild(6).gameObject.SetActive(false);
-            transform.GetChild(1).GetChild(7).gameObject.SetActive(false);
-            transform.GetChild(1).GetChild(8).gameObject.SetActive(false);
-            transform.GetChild(1).GetChild(9).gameObject.SetActive(false);
-            transform.GetChild(1).GetChild(10).gameObject.SetActive(false);
-            transform.GetChild(1).GetChild(11).gameObject.SetActive(false);
-        }
 
-        ActualizarPlantaInicial();
+        ActualizarCanvas();
+        ActualizarModeloPlanta();
     }
 
     // Update is called once per frame
     void Update()
     {
+        // =========================
+        // ACTUALIZAR CANVAS
+        // =========================
+
+        ActualizarCanvas();
+
+
+        // =========================
+        // MENU DEL SEMBRADIO
+        // =========================
+
         if (GetComponent<Scr_ActivadorMenuEstructuraFijo>().EstaDentro)
         {
-            if (!Regado && !Botones[0].activeSelf && PlayerPrefs.GetInt("CantidadAgua", 0) >= 2 && SemillaPlantada == null)
-            {
-                Botones[0].SetActive(true);
-                Botones[0].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetInt("CantidadAgua", 0).ToString();
-            }
-            int posicion = 0;
-            foreach (Scr_CreadorObjetos Item in Inventario.Objetos)
-            {
-                if (Item.Nombre == "Abono")
-                {
-                    if (Inventario.Cantidades[posicion] > 0 && SemillaPlantada == null)
-                    {
-                        if (!Abonado && !AbonadoPlus && !Botones[1].activeSelf)
-                        {
-                            Botones[1].SetActive(true);
-                            Botones[1].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = Inventario.Cantidades[posicion].ToString();
-                        }
-                    }
-                }
-                posicion++;
-            }
-            posicion = 0;
-            foreach (Scr_CreadorObjetos Item in Inventario.Objetos)
-            {
-                if (Item.Nombre == "Abono+")
-                {
-                    if (Inventario.Cantidades[posicion] > 0 && SemillaPlantada == null)
-                    {
-                        if (!Abonado && !AbonadoPlus && !Botones[2].activeSelf)
-                        {
-                            Botones[2].SetActive(true);
-                            Botones[2].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = Inventario.Cantidades[posicion].ToString();
-                        }
-                    }
-                }
-                posicion++;
-            }
+            // =========================
+            // ACTUALIZAR BOTONES
+            // =========================
+
+            ActualizarBotones();
+
+
+            // =========================
+            // ACTUALIZAR ICONO DE SEMILLA
+            // =========================
 
             Semilla.sprite = ObjetosQuePlanta[SemillaActual].Icono;
-            posicion = 0;
+
+            int posicion = 0;
+
             foreach (Scr_CreadorObjetos Item in Inventario.Objetos)
             {
                 if (Item == ObjetosQuePlanta[SemillaActual])
                 {
-                    Semilla.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = Inventario.Cantidades[posicion].ToString();
+                    Semilla.transform.GetChild(0)
+                        .GetComponent<TextMeshProUGUI>()
+                        .text = Inventario.Cantidades[posicion].ToString();
 
+                    break;
                 }
+
                 posicion++;
             }
+
+
+            // =========================
+            // MOSTRAR / OCULTAR OPCIONES DE PLANTAR
+            // =========================
 
             if (SemillaPlantada == null)
             {
@@ -171,126 +174,243 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
                 transform.GetChild(1).GetChild(8).gameObject.SetActive(true);
                 transform.GetChild(1).GetChild(11).gameObject.SetActive(true);
             }
-
-
-            transform.GetChild(1).GetChild(9).gameObject.SetActive(true);
-            transform.GetChild(1).GetChild(10).gameObject.SetActive(true);
-
-
-
-            
-        }
-        else
-        {
-            if (Botones[0].activeSelf || Botones[1].activeSelf || Botones[2].activeSelf || transform.GetChild(1).GetChild(6).gameObject.activeSelf || transform.GetChild(1).GetChild(10).gameObject.activeSelf)
+            else
             {
-                Botones[0].SetActive(false);
-                Botones[1].SetActive(false);
-                Botones[2].SetActive(false);
                 transform.GetChild(1).GetChild(6).gameObject.SetActive(false);
                 transform.GetChild(1).GetChild(7).gameObject.SetActive(false);
                 transform.GetChild(1).GetChild(8).gameObject.SetActive(false);
-                transform.GetChild(1).GetChild(9).gameObject.SetActive(false);
-                transform.GetChild(1).GetChild(10).gameObject.SetActive(false);
                 transform.GetChild(1).GetChild(11).gameObject.SetActive(false);
             }
+
+
+            // =========================
+            // OTRAS OPCIONES DEL TABLERO
+            // =========================
+
+            transform.GetChild(1).GetChild(9).gameObject.SetActive(true);
+            transform.GetChild(1).GetChild(10).gameObject.SetActive(true);
+        }
+        else
+        {
+            // =========================
+            // OCULTAR TODO AL SALIR
+            // =========================
+
+            Botones[0].SetActive(false);
+            Botones[1].SetActive(false);
+            Botones[2].SetActive(false);
+
+            transform.GetChild(1).GetChild(6).gameObject.SetActive(false);
+            transform.GetChild(1).GetChild(7).gameObject.SetActive(false);
+            transform.GetChild(1).GetChild(8).gameObject.SetActive(false);
+            transform.GetChild(1).GetChild(9).gameObject.SetActive(false);
+            transform.GetChild(1).GetChild(10).gameObject.SetActive(false);
+            transform.GetChild(1).GetChild(11).gameObject.SetActive(false);
         }
 
-        
+
+        // =========================
+        // ACTUALIZAR CRECIMIENTO
+        // =========================
+
         ActualizarPlanta();
     }
 
     private void ActualizarPlanta()
     {
-        string diaActual = GameObject.Find("Controlador Tiempo").GetComponent<Scr_ControladorTiempo>().DiaActual;
+        string diaActual = GameObject.Find("Controlador Tiempo")
+            .GetComponent<Scr_ControladorTiempo>()
+            .DiaActual;
 
-        // Verificamos si ha cambiado el día
-        if (diaActual != diaAnterior)
+        // Si todavía estamos en el mismo día, no hacemos nada
+        if (diaActual == diaAnterior)
+            return;
+
+        if (SemillaPlantada != null)
         {
-            if (SemillaPlantada != null)
+            DiasPlantado++;
+
+            PlayerPrefs.SetInt(
+                "DiasPlantado:" + ID,
+                DiasPlantado
+            );
+
+            int TiempoCrecimiento = ObtenerTiempoCrecimiento();
+
+            // ACTUALIZAR EL MODELO
+            ActualizarModeloPlanta();
+
+            // =========================
+            // TERMINÓ DE CRECER
+            // =========================
+
+            if (DiasPlantado >= TiempoCrecimiento)
             {
-                // Incrementamos los días plantados solo si la semilla está plantada
-                DiasPlantado++;
-                PlayerPrefs.SetInt("DiasPlantado:" + ID, DiasPlantado);
-
-                // Recorremos los transform hijos que representan las etapas de crecimiento de la planta
-                foreach (Transform Planta in ObjetoPlanta.GetComponentInChildren<Transform>())
+                if (Regado && Barril.Cantidad == 0)
                 {
-                    // Verificamos si el nombre de la planta coincide con la semilla plantada
-                    if (Planta.name == SemillaPlantada.TipoPlanta)
-                    {
+                    Barril.TipoFruta = SemillaPlantada;
 
-                        // Si aún no se ha completado el ciclo de crecimiento
-                        if (DiasPlantado <= Planta.childCount)
-                        {
-                            // Activamos la planta principal y solo la etapa correspondiente
-                            Planta.gameObject.SetActive(true);
+                    int cantidad = Random.Range(
+                        SemillaPlantada.MinimoMaximoSembradio[0],
+                        SemillaPlantada.MinimoMaximoSembradio[1] + 1
+                    );
 
-                            for (int i = 0; i < Planta.childCount; i++)
-                            {
-                                // Activar solo la etapa de crecimiento correspondiente al día actual
-                                Planta.GetChild(i).gameObject.SetActive(i == DiasPlantado - 1);
-                            }
-                        }
-                        else
-                        {
-                            // Si se ha completado el ciclo de crecimiento, procedemos a la recolección de fruta
-                            if (Regado && Barril.Cantidad == 0)
-                            {
-                                // Lógica de recolección de fruta
-                                Barril.TipoFruta = SemillaPlantada;
-                                int cantidad = Random.Range(SemillaPlantada.MinimoMaximoSembradio[0], SemillaPlantada.MinimoMaximoSembradio[1]);
+                    Barril.Cantidad = Mathf.Min(
+                        cantidad,
+                        Barril.CantidadMaxima
+                    );
 
-                                if (Abonado) cantidad *= 2;
-                                if (AbonadoPlus) cantidad *= 3;
+                    Barril.UltimoDiaPlanta = true;
 
-                                Barril.Cantidad = Mathf.Min(Barril.Cantidad + cantidad, Barril.CantidadMaxima);
-                            }
-
-                            BotonBasura();
-                        }
-                        //En caso de ser la ultima face
-                        if (DiasPlantado == Planta.childCount)
-                        {
-                            if (Barril.TipoFruta != null)
-                            {
-                                Barril.UltimoDiaPlanta = true;
-                            }
-                        }
-                        // Detenemos el bucle tras procesar la planta correcta
-                        break;
-                    }
+                    Barril.GuardarEstado();
+                    
                 }
             }
 
-            // Actualizamos el día anterior en PlayerPrefs
-            diaAnterior = diaActual;
-            PlayerPrefs.SetString("DiaAnterior:" + ID, diaAnterior);
+            ActualizarCanvas();
         }
+
+        // Guardar que este día ya fue procesado
+        diaAnterior = diaActual;
+
+        PlayerPrefs.SetString(
+            "DiaAnterior:" + ID,
+            diaAnterior
+        );
+
+        PlayerPrefs.Save();
     }
 
+    public void CosecharPlanta()
+    {
+        Debug.Log("Sembradio: reiniciando planta");
 
+        // =========================
+        // REINICIAR ESTADO
+        // =========================
+
+        Regado = false;
+        Abonado = false;
+        AbonadoPlus = false;
+
+        DiasPlantado = 0;
+
+        // MUY IMPORTANTE:
+        // quitar la semilla
+        SemillaPlantada = null;
+
+        // =========================
+        // REINICIAR BARRIL
+        // =========================
+
+        if (Barril != null)
+        {
+            Barril.UltimoDiaPlanta = false;
+        }
+
+        // =========================
+        // PLAYER PREFS
+        // =========================
+
+        PlayerPrefs.DeleteKey("SembradioRegado:" + ID);
+        PlayerPrefs.DeleteKey("SembradioAbonado:" + ID);
+        PlayerPrefs.DeleteKey("SembradioAbonadoPlus:" + ID);
+        PlayerPrefs.DeleteKey("Plantado" + ID);
+        PlayerPrefs.DeleteKey("SemillaPlantada" + ID);
+        PlayerPrefs.DeleteKey("DiasPlantado:" + ID);
+
+        // Guardamos el día actual para evitar
+        // que vuelva a procesar crecimiento inmediatamente
+        string diaActual = GameObject.Find("Controlador Tiempo")
+            .GetComponent<Scr_ControladorTiempo>()
+            .DiaActual;
+
+        diaAnterior = diaActual;
+
+        PlayerPrefs.SetString(
+            "DiaAnterior:" + ID,
+            diaAnterior
+        );
+
+        PlayerPrefs.Save();
+
+        // =========================
+        // UI
+        // =========================
+
+        Iconos[0].sprite = Sprites[0];
+        Iconos[1].sprite = Sprites[0];
+
+        Producto.sprite = Vacio;
+
+        if (Abono != null)
+        {
+            Abono.GetComponent<MeshRenderer>().material =
+                MaterialesAbono[0];
+        }
+
+        // =========================
+        // DESACTIVAR TODAS LAS PLANTAS
+        // =========================
+
+        foreach (Transform Planta in ObjetoPlanta.transform)
+        {
+            // Desactivar todas las fases
+            for (int i = 0; i < Planta.childCount; i++)
+            {
+                Planta.GetChild(i).gameObject.SetActive(false);
+            }
+
+            // Desactivar el objeto principal de la planta
+            Planta.gameObject.SetActive(false);
+        }
+
+        // =========================
+        // ACTUALIZAR SISTEMA
+        // =========================
+
+        ActualizarBotones();
+        ActualizarCanvas();
+
+        Debug.Log("Sembradio: reinicio terminado");
+    }
 
 
     public void BotonRegar()
     {
+        if (SemillaPlantada == null)
+            return;
+
+        if (Regado)
+            return;
+
         if (PlayerPrefs.GetInt("CantidadAgua", 0) >= 2)
         {
             Regado = true;
-            Botones[0].SetActive(false);
-            Iconos[0].sprite = Sprites[1];
-            PlayerPrefs.SetInt("CantidadAgua", PlayerPrefs.GetInt("CantidadAgua", 0) - 2);
+
+            PlayerPrefs.SetInt(
+                "CantidadAgua",
+                PlayerPrefs.GetInt("CantidadAgua", 0) - 2
+            );
+
             PlayerPrefs.SetString("SembradioRegado:" + ID, "Si");
 
-            Abono.GetComponent<SpriteRenderer>().material = MaterialesAbono[1];
+            Iconos[0].sprite = Sprites[1];
+
+            Abono.GetComponent<MeshRenderer>().material = MaterialesAbono[1];
+
             if (Abonado)
             {
-                Abono.GetComponent<SpriteRenderer>().material = MaterialesAbono[4];
+                Abono.GetComponent<MeshRenderer>().material = MaterialesAbono[4];
             }
+
             if (AbonadoPlus)
             {
-                Abono.GetComponent<SpriteRenderer>().material = MaterialesAbono[5];
+                Abono.GetComponent<MeshRenderer>().material = MaterialesAbono[5];
             }
+
+            ActualizarBotones();
+            ActualizarCanvas();
         }
     }
 
@@ -313,30 +433,28 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
 
     public void BotonAbonar()
     {
+        if (SemillaPlantada == null) return;
+        if (Abonado || AbonadoPlus) return;
+
+        // FIX: validar que quede mínimo 1 día pendiente
+        int tiempoRestante = ObtenerTiempoCrecimiento() - DiasPlantado;
+        if (tiempoRestante < 1)
+            return;
+
         int posicion = 0;
         foreach (Scr_CreadorObjetos Item in Inventario.Objetos)
         {
-            if (Item.Nombre == "Abono")
+            if (Item.Nombre == "Abono" && Inventario.Cantidades[posicion] > 0)
             {
-                if (Inventario.Cantidades[posicion] > 0)
-                {
-                    Abonado = true;
-                    Botones[1].SetActive(false);
-                    Botones[2].SetActive(false);
-                    Iconos[1].sprite = Sprites[1];
-                    Inventario.Cantidades[posicion]--;
-                    PlayerPrefs.SetString("SembradioAbonado:" + ID, "Si");
-
-                    if (Regado)
-                    {
-                        Abono.GetComponent<SpriteRenderer>().material = MaterialesAbono[4];
-                    }
-                    else
-                    {
-                        Abono.GetComponent<SpriteRenderer>().material = MaterialesAbono[2];
-                    }
-
-                }
+                Abonado = true;
+                Inventario.Cantidades[posicion]--;
+                PlayerPrefs.SetString("SembradioAbonado:" + ID, "Si");
+                PlayerPrefs.DeleteKey("SembradioAbonadoPlus:" + ID);
+                Iconos[1].sprite = Sprites[1];
+                Abono.GetComponent<MeshRenderer>().material = Regado ? MaterialesAbono[4] : MaterialesAbono[2];
+                ActualizarBotones();
+                ActualizarCanvas();
+                break;
             }
             posicion++;
         }
@@ -344,29 +462,28 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
 
     public void BotonAbonarPlus()
     {
+        if (SemillaPlantada == null) return;
+        if (Abonado || AbonadoPlus) return;
+
+        // FIX: validar que queden mínimo 2 días pendientes
+        int tiempoRestante = ObtenerTiempoCrecimiento() - DiasPlantado;
+        if (tiempoRestante < 2)
+            return;
+
         int posicion = 0;
         foreach (Scr_CreadorObjetos Item in Inventario.Objetos)
         {
-            if (Item.Nombre == "Abono+")
+            if (Item.Nombre == "Abono+" && Inventario.Cantidades[posicion] > 0)
             {
-                if (Inventario.Cantidades[posicion] > 0)
-                {
-                    AbonadoPlus = true;
-                    Botones[1].SetActive(false);
-                    Botones[2].SetActive(false);
-                    Iconos[1].sprite = Sprites[1];
-                    Inventario.Cantidades[posicion]--;
-                    PlayerPrefs.SetString("SembradioAbonadoPlus:" + ID, "Si");
-
-                    if (Regado)
-                    {
-                        Abono.GetComponent<SpriteRenderer>().material = MaterialesAbono[5];
-                    }
-                    else
-                    {
-                        Abono.GetComponent<SpriteRenderer>().material = MaterialesAbono[3];
-                    }
-                }
+                AbonadoPlus = true;
+                Inventario.Cantidades[posicion]--;
+                PlayerPrefs.SetString("SembradioAbonadoPlus:" + ID, "Si");
+                PlayerPrefs.DeleteKey("SembradioAbonado:" + ID);
+                Iconos[1].sprite = Sprites[1];
+                Abono.GetComponent<MeshRenderer>().material = Regado ? MaterialesAbono[5] : MaterialesAbono[3];
+                ActualizarBotones();
+                ActualizarCanvas();
+                break;
             }
             posicion++;
         }
@@ -386,7 +503,10 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
         AbonadoPlus = false;
         Iconos[0].sprite = Sprites[0];
         Iconos[1].sprite = Sprites[0];
-        Barril.UltimoDiaPlanta = false;
+        if (Barril != null)
+        {
+            Barril.ReiniciarBarril();
+        }
         PlayerPrefs.DeleteKey("SembradioRegado:" + ID);
         PlayerPrefs.DeleteKey("SembradioAbonadoPlus:" + ID);
         PlayerPrefs.DeleteKey("SembradioAbonado:" + ID);
@@ -394,21 +514,25 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
         PlayerPrefs.DeleteKey("SemillaPlantada" + ID);
         SemillaPlantada = null; // Aquí sí eliminamos la referencia a la semilla plantada
         Producto.sprite = Vacio;
-        Abono.GetComponent<SpriteRenderer>().material = MaterialesAbono[0];
+        Abono.GetComponent<MeshRenderer>().material = MaterialesAbono[0];
 
         // Reiniciamos visualmente la planta
-        foreach (Transform Planta in ObjetoPlanta.transform.GetComponentInChildren<Transform>())
+        foreach (Transform Planta in ObjetoPlanta.transform)
         {
-            foreach (Transform fase in Planta.GetComponentInChildren<Transform>())
+            for (int i = 0; i < Planta.childCount; i++)
             {
-                fase.gameObject.SetActive(false);
+                Planta.GetChild(i).gameObject.SetActive(false);
             }
+
             Planta.gameObject.SetActive(false);
         }
 
         DiasPlantado = 0;
         PlayerPrefs.DeleteKey("DiasPlantado:" + ID);
         PlayerPrefs.DeleteKey("DiaAnterior:" + ID);
+
+        ActualizarBotones();
+        ActualizarCanvas();
     }
 
 
@@ -425,6 +549,7 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
     public void BotonPlantar()
     {
         int posicion = 0;
+
         foreach (Scr_CreadorObjetos Item in Inventario.Objetos)
         {
             if (Item == ObjetosQuePlanta[SemillaActual])
@@ -432,56 +557,284 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
                 if (Inventario.Cantidades[posicion] > 0)
                 {
                     Inventario.Cantidades[posicion]--;
+
                     SemillaPlantada = Item;
-                    Botones[0].SetActive(false);
-                    Botones[1].SetActive(false);
-                    Botones[2].SetActive(false);
-                    transform.GetChild(1).GetChild(6).gameObject.SetActive(false);
-                    transform.GetChild(1).GetChild(7).gameObject.SetActive(false);
-                    transform.GetChild(1).GetChild(8).gameObject.SetActive(false);
-                    transform.GetChild(1).GetChild(11).gameObject.SetActive(false);
+
                     Producto.sprite = Item.Icono;
+
+                    DiasPlantado = 0;
+
+                    string diaActual = GameObject.Find("Controlador Tiempo")
+                    .GetComponent<Scr_ControladorTiempo>()
+                    .DiaActual;
+
+                    diaAnterior = diaActual;
+
+                    PlayerPrefs.SetString(
+                        "DiaAnterior:" + ID,
+                        diaAnterior
+                    );
+
+                    Regado = false;
+                    Abonado = false;
+                    AbonadoPlus = false;
+
                     PlayerPrefs.SetString("Plantado" + ID, "Si");
                     PlayerPrefs.SetInt("SemillaPlantada" + ID, SemillaActual);
 
+                    PlayerPrefs.DeleteKey("SembradioRegado:" + ID);
+                    PlayerPrefs.DeleteKey("SembradioAbonado:" + ID);
+                    PlayerPrefs.DeleteKey("SembradioAbonadoPlus:" + ID);
+
+                    PlayerPrefs.SetInt("DiasPlantado:" + ID, 0);
+                    ActualizarModeloPlanta();
+
+                    ActualizarBotones();
+                    ActualizarCanvas();
                 }
             }
+
             posicion++;
         }
     }
 
-    private void ActualizarPlantaInicial()
+
+    private void ActualizarModeloPlanta()
     {
-        if (SemillaPlantada != null && DiasPlantado > 0)
+        if (SemillaPlantada == null)
+            return;
+        Debug.Log("No null");
+        foreach (Transform Planta in ObjetoPlanta.transform)
         {
-            // Recorremos los hijos de la planta para mostrar la etapa de crecimiento correcta
-            foreach (Transform Planta in ObjetoPlanta.GetComponentInChildren<Transform>())
+            // No es la planta que está sembrada
+            if (Planta.name != SemillaPlantada.TipoPlanta)
             {
-                if (Planta.name == SemillaPlantada.TipoPlanta)
+                Planta.gameObject.SetActive(false);
+                continue;
+            }
+
+            // Es la planta correcta
+            Planta.gameObject.SetActive(true);
+
+            int cantidadEtapas = Planta.childCount;
+
+            if (cantidadEtapas == 0)
+                return;
+
+            /*
+             * DiasPlantado = 0 -> primera etapa
+             * DiasPlantado = 1 -> primera etapa
+             * DiasPlantado = 2 -> segunda etapa
+             * DiasPlantado = 3 -> tercera etapa
+             */
+
+            int etapaActual = Mathf.Clamp(
+                DiasPlantado - 1,
+                0,
+                cantidadEtapas - 1
+            );
+
+            if (Abonado)
+            {
+                etapaActual++;
+            }
+            else
+            {
+                if (AbonadoPlus)
                 {
-                    // Activamos la planta principal
-                    Planta.gameObject.SetActive(true);
-
-                    // Activar solo la etapa de crecimiento correspondiente al día actual
-                    for (int i = 0; i < Planta.childCount; i++)
-                    {
-                        Planta.GetChild(i).gameObject.SetActive(i == DiasPlantado - 1);
-                    }
-
-                    Debug.Log(Planta.childCount.ToString() + DiasPlantado.ToString());
-                    //En caso de ser la ultima face
-                    if (DiasPlantado == Planta.childCount)
-                    {
-                        if (Barril.TipoFruta != null)
-                        {
-
-                            Barril.UltimoDiaPlanta = true;
-                        }
-                    }
-
-                    break; // Detenemos el bucle después de activar la planta correcta
+                    etapaActual++;
+                    etapaActual++;
                 }
             }
+            // Cuando llega al final, mantenemos la última etapa
+            if (DiasPlantado >= cantidadEtapas)
+            {
+                etapaActual = cantidadEtapas - 1;
+            }
+
+            for (int i = 0; i < cantidadEtapas; i++)
+            {
+                Planta.GetChild(i).gameObject.SetActive(
+                    i == etapaActual
+                );
+            }
+
+            Debug.Log(
+                "Planta: " + Planta.name +
+                " | Dias plantado: " + DiasPlantado +
+                " | Etapa mostrada: " + etapaActual
+            );
+
+            break;
         }
+    }
+    private void ActualizarBotones()
+    {
+        // Si no hay semilla, no se puede hacer nada
+        if (SemillaPlantada == null)
+        {
+            Botones[0].SetActive(false);
+            Botones[1].SetActive(false);
+            Botones[2].SetActive(false);
+            return;
+        }
+
+        // =========================
+        // REGAR
+        // =========================
+        if (!Regado && PlayerPrefs.GetInt("CantidadAgua", 0) >= 2)
+        {
+            Botones[0].SetActive(true);
+            Botones[0].transform.GetChild(2)
+               .GetComponent<TextMeshProUGUI>()
+               .text = PlayerPrefs.GetInt("CantidadAgua", 0).ToString();
+        }
+        else
+        {
+            Botones[0].SetActive(false);
+        }
+
+        // =========================
+        // ABONO NORMAL
+        // =========================
+        bool TieneAbono = false;
+        bool TieneAbonoPlus = false;
+
+        int posicion = 0;
+        foreach (Scr_CreadorObjetos Item in Inventario.Objetos)
+        {
+            if (Item.Nombre == "Abono" && Inventario.Cantidades[posicion] > 0)
+                TieneAbono = true;
+
+            if (Item.Nombre == "Abono+" && Inventario.Cantidades[posicion] > 0)
+                TieneAbonoPlus = true;
+
+            posicion++;
+        }
+
+        // Calculamos cuanto le queda ANTES de abonar
+        int tiempoRestanteActual = ObtenerTiempoCrecimiento() - DiasPlantado;
+
+        // Solo se puede abonar si queda minimo 2 dia y no tiene ya abono
+        if (!Abonado && !AbonadoPlus && TieneAbono && tiempoRestanteActual >= 2)
+        {
+            Botones[1].SetActive(true);
+            posicion = 0;
+            foreach (Scr_CreadorObjetos Item in Inventario.Objetos)
+            {
+                if (Item.Nombre == "Abono")
+                {
+                    Botones[1].transform.GetChild(2)
+                       .GetComponent<TextMeshProUGUI>()
+                       .text = Inventario.Cantidades[posicion].ToString();
+                    break;
+                }
+                posicion++;
+            }
+        }
+        else
+        {
+            Botones[1].SetActive(false);
+        }
+
+        // =========================
+        // ABONO+
+        // =========================
+        // Solo se puede abonar plus si quedan minimo 3 dias
+        if (!Abonado && !AbonadoPlus && TieneAbonoPlus && tiempoRestanteActual >= 3)
+        {
+            Botones[2].SetActive(true);
+            posicion = 0;
+            foreach (Scr_CreadorObjetos Item in Inventario.Objetos)
+            {
+                if (Item.Nombre == "Abono+")
+                {
+                    Botones[2].transform.GetChild(2)
+                       .GetComponent<TextMeshProUGUI>()
+                       .text = Inventario.Cantidades[posicion].ToString();
+                    break;
+                }
+                posicion++;
+            }
+        }
+        else
+        {
+            Botones[2].SetActive(false);
+        }
+    }
+    private void ActualizarCanvas()
+    {
+        if (CanvasIcono == null)
+            return;
+
+        // No hay semilla
+        if (SemillaPlantada == null)
+        {
+            CanvasIcono.SetActive(false);
+            return;
+        }
+
+        // Hay una semilla
+        CanvasIcono.SetActive(true);
+
+        // No regado
+        if (!Regado)
+        {
+            CanvasIcono.transform.GetChild(0).gameObject.SetActive(true);
+            CanvasIcono.transform.GetChild(1).gameObject.SetActive(false);
+        }
+        // Regado
+        else
+        {
+            CanvasIcono.transform.GetChild(0).gameObject.SetActive(false);
+            CanvasIcono.transform.GetChild(1).gameObject.SetActive(true);
+        }
+
+        ActualizarTiempoRestante();
+    }
+
+    private void ActualizarTiempoRestante()
+    {
+        if (SemillaPlantada == null || TextoTiempo == null)
+            return;
+
+        int TiempoTotal = ObtenerTiempoCrecimiento();
+
+        int TiempoRestante = Mathf.Max(0, TiempoTotal - DiasPlantado);
+
+        if (TiempoRestante <= 0)
+        {
+            TextoTiempo.text = "Listo";
+        }
+        else if (TiempoRestante == 1)
+        {
+            TextoTiempo.text = "1 dia";
+        }
+        else
+        {
+            TextoTiempo.text = TiempoRestante + " dias";
+        }
+    }
+
+    private int ObtenerTiempoCrecimiento()
+    {
+        int TiempoBase = 0;
+
+        foreach (Transform Planta in ObjetoPlanta.GetComponentInChildren<Transform>())
+        {
+            if (Planta.name == SemillaPlantada.TipoPlanta)
+            {
+                TiempoBase = Planta.childCount;
+                break;
+            }
+        }
+
+        if (Abonado)
+            TiempoBase -= ReduccionAbono;
+
+        if (AbonadoPlus)
+            TiempoBase -= ReduccionAbonoPlus;
+
+        return Mathf.Max(1, TiempoBase);
     }
 }
