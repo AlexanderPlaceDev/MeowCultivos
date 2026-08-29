@@ -31,9 +31,9 @@ public class Scr_CargadorGuardado : MonoBehaviour
         }
         else
         {
+            camara.GetComponent<CinemachineBrain>().m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.Cut;
             if (CinematicaInicial.GetComponent<PlayableDirector>().enabled == false)
             {
-                camara.GetComponent<CinemachineBrain>().m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.EaseInOut;
             }
         }
         //Posicion y Rotacion
@@ -48,7 +48,7 @@ public class Scr_CargadorGuardado : MonoBehaviour
         if (PlayerPrefs.GetString("Movimiento", "No") == "Si")
         {
             Gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeCaminar = true;
-            Gata.GetComponent<Scr_Movimiento>().enabled=true;
+            Gata.GetComponent<Scr_Movimiento>().enabled = true;
         }
         //Mapa Batalla
         GameObject.Find("Singleton").GetComponent<Scr_DatosSingletonBatalla>().NombreMapa = PlayerPrefs.GetString("Mapa Actual", "Mapa Estacion Batalla");

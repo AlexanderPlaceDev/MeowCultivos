@@ -21,8 +21,11 @@ public class Scr_BarrilSembradio : MonoBehaviour
     [SerializeField] Scr_CreadorObjetos[] FrutasQueRecolecta;
     [SerializeField] public bool UltimoDiaPlanta;
 
+    [SerializeField] private Scr_ControladorSembradioUI Sembradio;
+
     private bool recolectando;
     private bool estaLejos;
+    private bool uiActiva = false;
 
     private Transform gata;
 
@@ -37,9 +40,9 @@ public class Scr_BarrilSembradio : MonoBehaviour
     {
         gata = GameObject.Find("Gata").GetComponent<Transform>();
 
-        foreach(Scr_CreadorObjetos Fruta in FrutasQueRecolecta)
+        foreach (Scr_CreadorObjetos Fruta in FrutasQueRecolecta)
         {
-            if(Fruta.Nombre==PlayerPrefs.GetString("BarrilSembradio Futa:" + ID, "No"))
+            if (Fruta.Nombre == PlayerPrefs.GetString("BarrilSembradio Futa:" + ID, "No"))
             {
                 TipoFruta = Fruta;
             }
@@ -49,6 +52,10 @@ public class Scr_BarrilSembradio : MonoBehaviour
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         Recolectar = playerInput.actions["Recolectar"];
         Cantidad = PlayerPrefs.GetInt("BarrilSembradio Cantidad:" + ID, 0);
+        UltimoDiaPlanta = PlayerPrefs.GetInt(
+    "BarrilSembradio UltimoDia:" + ID,
+    0
+) == 1;
 
     }
 
@@ -56,13 +63,13 @@ public class Scr_BarrilSembradio : MonoBehaviour
     {
         if (TipoFruta != null)
         {
-            if(PlayerPrefs.GetString("BarrilSembradio Futa:" + ID, "No") != TipoFruta.Nombre)
+            if (PlayerPrefs.GetString("BarrilSembradio Futa:" + ID, "No") != TipoFruta.Nombre)
             {
                 PlayerPrefs.SetString("BarrilSembradio Futa:" + ID, TipoFruta.Nombre);
                 PlayerPrefs.SetInt("BarrilSembradio Cantidad:" + ID, Cantidad);
             }
 
-            
+
             transform.GetChild(0).gameObject.SetActive(true);
             transform.GetChild(0).GetChild(1).GetComponent<Image>().sprite = TipoFruta.Icono;
             transform.GetChild(0).GetChild(2).GetComponent<TextMeshProUGUI>().text = Cantidad.ToString();
@@ -82,7 +89,13 @@ public class Scr_BarrilSembradio : MonoBehaviour
                 if (Vector3.Distance(gata.position, transform.position) < distancia)
                 {
                     estaLejos = false;
-                    ActivarUI(); 
+
+                    if (!uiActiva)
+                    {
+                        ActivarUI();
+                        uiActiva = true;
+                    }
+
                     if (gata.GetComponent<Animator>().GetBool("Recolectando"))
                     {
                         gata.GetComponent<Scr_ControladorAnimacionesGata>().Recolectando = true;
@@ -96,6 +109,8 @@ public class Scr_BarrilSembradio : MonoBehaviour
                     if (!estaLejos)
                     {
                         DesactivarUI();
+
+                        uiActiva = false;
                         estaLejos = true;
                     }
                 }
@@ -129,11 +144,40 @@ public class Scr_BarrilSembradio : MonoBehaviour
         if (TipoFruta != null)
         {
             DarObjeto();
+
             PlayerPrefs.DeleteKey("BarrilSembradio Futa:" + ID);
             PlayerPrefs.DeleteKey("BarrilSembradio Cantidad:" + ID);
+            PlayerPrefs.DeleteKey("BarrilSembradio UltimoDia:" + ID);
+
             transform.GetChild(0).gameObject.SetActive(false);
+
             TipoFruta = null;
+            Cantidad = 0;
+            UltimoDiaPlanta = false;
+
+            if (Sembradio != null)
+            {
+                Sembradio.CosecharPlanta();
+            }
         }
+    }
+
+    public void GuardarEstado()
+    {
+        PlayerPrefs.SetString(
+            "BarrilSembradio Futa:" + ID,
+            TipoFruta != null ? TipoFruta.Nombre : "No"
+        );
+
+        PlayerPrefs.SetInt(
+            "BarrilSembradio Cantidad:" + ID,
+            Cantidad
+        );
+
+        PlayerPrefs.SetInt(
+            "BarrilSembradio UltimoDia:" + ID,
+            UltimoDiaPlanta ? 1 : 0
+        );
     }
 
     void DarObjeto()
@@ -143,49 +187,63 @@ public class Scr_BarrilSembradio : MonoBehaviour
 
     void ActualizarInventario(int cantidad, Scr_CreadorObjetos objeto)
     {
-        Scr_ObjetosAgregados controlador = GameObject.Find("Canvas").transform.GetChild(4).GetComponent<Scr_ObjetosAgregados>();
-        if (controlador.Lista.Contains(objeto))
-        {
-            int indice = controlador.Lista.IndexOf(objeto);
-            controlador.Cantidades[indice] += cantidad;
-            if (indice <= 3)
-            {
-                controlador.Tiempo[indice] = 2;
-            }
-        }
-        else
-        {
-            controlador.Lista.Add(objeto);
-            controlador.Cantidades.Add(cantidad);
-        }
+        Scr_Inventario controlador =
+            GameObject.Find("Gata")
+            .transform
+            .GetChild(7)
+            .GetComponent<Scr_Inventario>();
+
+        if (controlador == null)
+            return;
+
+        controlador.AgregarObjeto(
+            objeto.Nombre,
+            cantidad,
+            true,
+            true
+        );
     }
 
     void ActivarUI()
     {
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = true;
-        gata.GetChild(3).gameObject.SetActive(true);
-        //gata.GetChild(3).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = tecla;
-        //gata.GetChild(3).GetChild(0).GetComponent<Image>().sprite = teclaIcono;
-        gata.GetChild(3).GetChild(1).GetComponent<Image>().sprite = icono;
-        GameObject ui = gata.GetChild(3).GetChild(2).gameObject;
 
-        if (!ui.activeSelf)
-        {
-            ui.SetActive(true);
-        }
-        IconProvider.ActualizarIconoUI(Recolectar, gata.GetChild(3).GetChild(0), ref iconoActualRecolectar, ref textoActualRecolectar, true);
-        //gata.GetChild(3).GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = "E";
-        //gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(1, 0, 0);
-        //gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(3, 0, 0);
+        Transform iconosAccion = gata.GetChild(3);
+
+        iconosAccion.gameObject.SetActive(true);
+
+        // Icono del objeto recolectable
+        iconosAccion.GetChild(1)
+            .GetComponent<Image>()
+            .sprite = icono;
+
+        // Actualizar solamente la tecla principal
+        IconProvider.ActualizarIconoUI(
+            Recolectar,
+            iconosAccion.GetChild(0),
+            ref iconoActualRecolectar,
+            ref textoActualRecolectar,
+            true
+        );
     }
     void DesactivarUI()
     {
         gata.GetComponent<Scr_ControladorAnimacionesGata>().PuedeRecolectar = false;
-        gata.GetChild(3).gameObject.SetActive(false);
-        gata.GetChild(3).GetChild(0).transform.localPosition = new Vector3(-1, 0, 0);
-        gata.GetChild(3).GetChild(1).transform.localPosition = new Vector3(1, 0, 0);
-        //gata.GetChild(3).GetChild(2).gameObject.SetActive(false);
-        //gata.GetChild(3).GetChild(3).gameObject.SetActive(false);
+
+        Transform iconosAccion = gata.GetChild(3);
+
+        // Apagar acciones secundarias
+        iconosAccion.GetChild(2).gameObject.SetActive(false);
+        iconosAccion.GetChild(3).gameObject.SetActive(false);
+
+        // Apagar todo el panel
+        iconosAccion.gameObject.SetActive(false);
+
+        iconosAccion.GetChild(0).transform.localPosition =
+            new Vector3(-1, 0, 0);
+
+        iconosAccion.GetChild(1).transform.localPosition =
+            new Vector3(1, 0, 0);
 
         iconoActualRecolectar = null;
         textoActualRecolectar = "";
@@ -193,7 +251,7 @@ public class Scr_BarrilSembradio : MonoBehaviour
 
     public void ColocarIconoPanel(bool EnAlerta)
     {
-        if(EnAlerta)
+        if (EnAlerta)
         {
             transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = IconosPanel[1];
         }
@@ -201,5 +259,37 @@ public class Scr_BarrilSembradio : MonoBehaviour
         {
             transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = IconosPanel[0];
         }
+    }
+
+    public void ReiniciarBarril()
+    {
+        // Reiniciar variables
+        TipoFruta = null;
+        Cantidad = 0;
+        UltimoDiaPlanta = false;
+
+        // Reiniciar estado de UI
+        recolectando = false;
+        uiActiva = false;
+        estaLejos = true;
+
+        // Eliminar guardado
+        PlayerPrefs.DeleteKey("BarrilSembradio Futa:" + ID);
+        PlayerPrefs.DeleteKey("BarrilSembradio Cantidad:" + ID);
+        PlayerPrefs.DeleteKey("BarrilSembradio UltimoDia:" + ID);
+
+        // Ocultar panel del barril
+        if (transform.childCount > 0)
+        {
+            transform.GetChild(0).gameObject.SetActive(false);
+        }
+
+        // Ocultar UI de recolección por seguridad
+        if (gata != null)
+        {
+            DesactivarUI();
+        }
+
+        PlayerPrefs.Save();
     }
 }
