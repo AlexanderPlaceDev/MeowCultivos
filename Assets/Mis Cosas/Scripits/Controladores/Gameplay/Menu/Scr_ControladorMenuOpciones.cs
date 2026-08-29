@@ -37,6 +37,7 @@ public class Scr_ControladorMenuOpciones : MonoBehaviour
     [Header("Sensibilidad")]
     private int SesnsMod=0;
     public GameObject Rotacion;
+    public GameObject Panel_Sensibilidad_Camara;
     public GameObject[] Opciones_sensibilidad_mouse;
     public GameObject[] Opciones_sensibilidad_joystick;
     [SerializeField] TextMeshProUGUI TextoSencibilidad_Mouse;
@@ -51,6 +52,8 @@ public class Scr_ControladorMenuOpciones : MonoBehaviour
     [SerializeField] Slider SliderSencibilidad_joystickH;
     [SerializeField] TextMeshProUGUI TextoSencibilidad_joystickV;
     [SerializeField] Slider SliderSencibilidad_joystickV;
+    [SerializeField] TextMeshProUGUI TextoSencibilidad_Camara;
+    [SerializeField] Slider SliderSencibilidad_Camara;
 
 
     InputIconProvider inputIconProvider;
@@ -80,6 +83,7 @@ public class Scr_ControladorMenuOpciones : MonoBehaviour
             TextoSencibilidad_joystick.text = (int)SliderSencibilidad_joystick.value + "%";
             TextoSencibilidad_joystickH.text = (int)SliderSencibilidad_joystickH.value + "%";
             TextoSencibilidad_joystickV.text = (int)SliderSencibilidad_joystickV.value + "%";
+            TextoSencibilidad_Camara.text = (int)SliderSencibilidad_Camara.value + "%";
         }
     }
 
@@ -107,9 +111,13 @@ public class Scr_ControladorMenuOpciones : MonoBehaviour
             {
                 guardarMouse();
             }
-            else
+            else if (Panel_Sensibilidad_joystick.activeSelf)
             {
                 guardarjoystick();
+            }
+            else if (Panel_Sensibilidad_Camara.activeSelf)
+            {
+                PlayerPrefs.SetInt("Velocidad_de_camara", (int)SliderSencibilidad_Camara.value);
             }
         }
         PlayerPrefs.Save();
@@ -204,6 +212,7 @@ public class Scr_ControladorMenuOpciones : MonoBehaviour
         Panel_Brillo.SetActive(false);
         Panel_Sencibilidad.SetActive(false);
         Panel_SencibilidadModos.SetActive(true);
+        Panel_Sensibilidad_Camara.SetActive(false);
         Op = 2;
         Panel_Sensibilidad_joystick.SetActive(false);
         Panel_Sensibilidad_Mouse.SetActive(false);
@@ -253,6 +262,7 @@ public class Scr_ControladorMenuOpciones : MonoBehaviour
     {
         Panel_Sensibilidad_joystick.SetActive(true);
         Panel_Sensibilidad_Mouse.SetActive(false);
+        Panel_Sensibilidad_Camara.SetActive(false);
         cargarjoystick();
         /*
         SliderSencibilidad_joystick.value = PlayerPrefs.GetInt("Sensibilidad_joystick", 30);
@@ -264,7 +274,8 @@ public class Scr_ControladorMenuOpciones : MonoBehaviour
     {
 
         Panel_Sensibilidad_joystick.SetActive(false);
-        Panel_Sensibilidad_Mouse.SetActive(true); 
+        Panel_Sensibilidad_Mouse.SetActive(true);
+        Panel_Sensibilidad_Camara.SetActive(false);
         cargararMouse();
         /*
         SliderSencibilidad_Mouse.value = PlayerPrefs.GetInt("Sensibilidad_Mouse", 30);
@@ -272,7 +283,14 @@ public class Scr_ControladorMenuOpciones : MonoBehaviour
         SliderSencibilidad_MouseV.value = PlayerPrefs.GetInt("Sensibilidad_MouseV", 30);
         */
     }
+    public void aparecerCamara()
+    {
+        Panel_Sensibilidad_joystick.SetActive(false);
+        Panel_Sensibilidad_Mouse.SetActive(false);
+        Panel_Sensibilidad_Camara.SetActive(true);
 
+        SliderSencibilidad_Camara.value = PlayerPrefs.GetInt("Velocidad_de_camara", 50);
+    }
     private void cargararMouse()
     {
         if (SesnsMod == 0)
