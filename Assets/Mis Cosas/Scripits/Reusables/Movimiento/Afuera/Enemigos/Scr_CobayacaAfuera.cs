@@ -29,7 +29,6 @@ public class Scr_CobayacaAfuera : Scr_EnemigoFuera
     private float pitchOriginal;
     private float velocidadOriginal;
 
-    private float tiempoSinMover = 0f;
     private const float tiempoMaxSinMover = 1.5f;
 
     void Start()

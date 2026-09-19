@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 94cda845678f4de48850c07a50af2c9c
+guid: 624dd9298bca14b469089a5252733f4d
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,13 +7,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Grifo
-    second: {fileID: 2100000, guid: 93ae3360c3dc5c64da930420e1972b99, type: 2}
+      name: Color Negro
+    second: {fileID: 2100000, guid: 8b69197c9c4d18942adca04686425b41, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Ojos Grifo
-    second: {fileID: 2100000, guid: 977f21c183c51a549adbca14b295fc55, type: 2}
+      name: Material Huevo
+    second: {fileID: 2100000, guid: 2c954c7579d23d743a3fa475defb9a37, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material Huevo.001
+    second: {fileID: 2100000, guid: 2c954c7579d23d743a3fa475defb9a37, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -45,7 +50,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.21
+    globalScale: 0.15
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -100,7 +105,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.0021
+    globalScale: 0.15
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

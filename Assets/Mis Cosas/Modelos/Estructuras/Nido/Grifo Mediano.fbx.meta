@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 94cda845678f4de48850c07a50af2c9c
+guid: d0e06121040f43e45955af610c7cab6c
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -12,7 +12,17 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Grifo.005
+    second: {fileID: 2100000, guid: 93ae3360c3dc5c64da930420e1972b99, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Ojos Grifo
+    second: {fileID: 2100000, guid: 977f21c183c51a549adbca14b295fc55, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Ojos Grifo.004
     second: {fileID: 2100000, guid: 977f21c183c51a549adbca14b295fc55, type: 2}
   materials:
     materialImportMode: 2
@@ -41,11 +51,40 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations: []
-    isReadable: 1
+    clipAnimations:
+    - serializedVersion: 16
+      name: Huesos Grifo Mediano|Huesos Grifo MedianoAction
+      takeName: Huesos Grifo Mediano|Huesos Grifo MedianoAction
+      internalID: 5274702819798332326
+      firstFrame: 0
+      lastFrame: 474
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.21
+    globalScale: 0.15
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -100,7 +139,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.0021
+    globalScale: 0.15
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
