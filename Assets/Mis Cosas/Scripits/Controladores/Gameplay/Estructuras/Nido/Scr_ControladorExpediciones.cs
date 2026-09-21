@@ -17,6 +17,7 @@ public class Scr_ControladorExpediciones : MonoBehaviour
     public int EtapaGrifo;
 
 
+
     // =========================================================
     // COMIDAS PARA EVOLUCIONAR
     // =========================================================
@@ -59,11 +60,11 @@ public class Scr_ControladorExpediciones : MonoBehaviour
     [Header("Comedero")]
 
     [SerializeField] GameObject Comedero;
+    [SerializeField] Image BarraComedero;
     [SerializeField] GameObject Botonx10;
+    [SerializeField] Image IconoComidaRequeridaParaEvo;
     private GameObject CanvasComedero;
     private TextMeshProUGUI TextoCantidadFrutaComedero;
-
-    [SerializeField] Image IconoComidaRequeridaParaEvo;
 
 
     // =========================================================
@@ -95,6 +96,7 @@ public class Scr_ControladorExpediciones : MonoBehaviour
 
     [SerializeField] Image ImagenComida;
     [SerializeField] TextMeshProUGUI TextoCantidadComida;
+    [SerializeField] TextMeshProUGUI TextoCapacidad;
 
 
     [SerializeField] Scr_CreadorObjetos[] RecompensasBatalla;
@@ -134,15 +136,6 @@ public class Scr_ControladorExpediciones : MonoBehaviour
 
     [SerializeField] Animator AnimatorGrifoGrande;
 
-    [SerializeField]
-    float TiempoDespegue =
-        1.35f;
-
-    [SerializeField]
-    string AnimacionGrifoExpedicion =
-        "Huesos Grifo_Iddle Grifo Grande";
-
-
     // =========================================================
     // ESTADO DE EXPEDICIÓN
     // =========================================================
@@ -158,6 +151,7 @@ public class Scr_ControladorExpediciones : MonoBehaviour
 
     private int[] CantidadesRecompensasPendientes;
 
+    private int CapacidadGrifoExpedicion = 20;
 
     // Tipos de expedición
     private const int EXPEDICION_BATALLA = 0;
@@ -196,6 +190,11 @@ public class Scr_ControladorExpediciones : MonoBehaviour
     private bool EsperandoPrimerHuevo;
     private bool SonidoPrimerHuevoReproducido;
     private AudioSource AudioPrimerHuevo;
+
+    [Header("Audio Grifo")]
+    [SerializeField] private AudioSource AudioGrifo; // arrastra un AudioSource del grifo
+    [SerializeField] AudioClip[] Sonidos;
+    private Coroutine RutinaSonidoGrifo;
 
     // 0 = huevo
     // 1 = evolución del grifo
@@ -265,7 +264,7 @@ public class Scr_ControladorExpediciones : MonoBehaviour
 
 
         CargarVariables();
-
+        ActualizarBarraComedero();
         InicializarEstado();
     }
 
@@ -751,22 +750,64 @@ public class Scr_ControladorExpediciones : MonoBehaviour
         if (!activar)
             return;
 
+        bool aparecioAhora = false;
+        GameObject huevoActivado = null;
+
         switch (etapa)
         {
             case 1:
                 if (Huevo1 != null)
+                {
+                    if (!Huevo1.activeSelf) aparecioAhora = true;
+                    huevoActivado = Huevo1;
                     Huevo1.SetActive(true);
+                }
                 break;
 
             case 2:
                 if (Huevo2 != null)
+                {
+                    if (!Huevo2.activeSelf) aparecioAhora = true;
+                    huevoActivado = Huevo2;
                     Huevo2.SetActive(true);
+                }
                 break;
 
             case 3:
                 if (Huevo3 != null)
+                {
+                    if (!Huevo3.activeSelf) aparecioAhora = true;
+                    huevoActivado = Huevo3;
                     Huevo3.SetActive(true);
+                }
                 break;
+        }
+
+        // Primer sonido del huevo en 2D aunque tu AudioSource esté en 3D (Spatial Blend = 1)
+        if (aparecioAhora && Sonidos != null && Sonidos.Length > 0 && Sonidos[0] != null)
+        {
+            if (AudioPrimerHuevo != null)
+            {
+                // Guarda el valor original para regresarlo después
+                float blendOriginal = AudioPrimerHuevo.spatialBlend;
+
+                // Lo ponemos en 2D solo para este grito
+                AudioPrimerHuevo.spatialBlend = 0f;
+
+                AudioPrimerHuevo.PlayOneShot(Sonidos[0]);
+
+                // Lo regresamos a 3D cuando termine el clip
+                StartCoroutine(RegresarA3D(AudioPrimerHuevo, blendOriginal, Sonidos[0].length));
+            }
+        }
+    }
+
+    private IEnumerator RegresarA3D(AudioSource source, float valorOriginal, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (source != null)
+        {
+            source.spatialBlend = valorOriginal; // vuelve a 1
         }
     }
 
@@ -823,50 +864,82 @@ public class Scr_ControladorExpediciones : MonoBehaviour
 
     private void AplicarEtapaGrifo()
     {
-        GrifoChico.SetActive(false);
-        Grifovolador.SetActive(false);
-        GrifoMediano.SetActive(false);
-        GrifoGrande.SetActive(false);
+        if (GrifoChico != null) GrifoChico.SetActive(false);
+        if (Grifovolador != null) Grifovolador.SetActive(false);
+        if (GrifoMediano != null) GrifoMediano.SetActive(false);
+        if (GrifoGrande != null) GrifoGrande.SetActive(false);
 
+        DetenerSonidoGrifo();
 
         switch (EtapaGrifo)
         {
             case 0:
-
-                GrifoChico.SetActive(true);
-                Huevo1.SetActive(false);
-                Huevo2.SetActive(false);
-                Huevo3.SetActive(false);
-                Nido.SetActive(true);
-
+                if (GrifoChico != null) GrifoChico.SetActive(true);
+                if (Huevo1 != null) Huevo1.SetActive(false);
+                if (Huevo2 != null) Huevo2.SetActive(false);
+                if (Huevo3 != null) Huevo3.SetActive(false);
+                if (Nido != null) Nido.SetActive(true);
+                IniciarSonidoGrifo(1); // Sonidos[1] chico
                 break;
 
-
-            case 1:
-
-                Grifovolador.SetActive(true);
-
-                Nido.SetActive(true);
-
+            case 1: // volador - SIN SONIDO
+                if (Grifovolador != null) Grifovolador.SetActive(true);
+                if (Nido != null) Nido.SetActive(true);
+                // no sonido
                 break;
-
 
             case 2:
-
-                GrifoMediano.SetActive(true);
-
-                Nido.SetActive(false);
-
+                if (GrifoMediano != null) GrifoMediano.SetActive(true);
+                if (Nido != null) Nido.SetActive(false);
+                IniciarSonidoGrifo(2); // Sonidos[2] mediano
                 break;
-
 
             case 3:
-
-                GrifoGrande.SetActive(true);
-                CanvasProgreso.SetActive(false);
-                Nido.SetActive(false);
-
+                if (GrifoGrande != null) GrifoGrande.SetActive(true);
+                if (CanvasProgreso != null) CanvasProgreso.SetActive(false);
+                if (Nido != null) Nido.SetActive(false);
+                IniciarSonidoGrifo(3); // Sonidos[3] grande
                 break;
+        }
+    }
+
+    private void IniciarSonidoGrifo(int indiceSonido)
+    {
+        if (Sonidos == null || Sonidos.Length <= indiceSonido || Sonidos[indiceSonido] == null) return;
+        if (AudioGrifo == null) return;
+
+        DetenerSonidoGrifo();
+        RutinaSonidoGrifo = StartCoroutine(LoopSonidoGrifo(Sonidos[indiceSonido]));
+    }
+
+    private void DetenerSonidoGrifo()
+    {
+        if (RutinaSonidoGrifo != null)
+        {
+            StopCoroutine(RutinaSonidoGrifo);
+            RutinaSonidoGrifo = null;
+        }
+        if (AudioGrifo != null && AudioGrifo.isPlaying)
+            AudioGrifo.Stop();
+    }
+
+    private IEnumerator LoopSonidoGrifo(AudioClip clip)
+    {
+        if (clip == null) yield break;
+
+        while (true)
+        {
+            // 1. Reproducir el sonido
+            if (AudioGrifo != null)
+            {
+                AudioGrifo.PlayOneShot(clip);
+            }
+
+            // 2. Esperar a que TERMINE el clip
+            yield return new WaitForSeconds(clip.length);
+
+            // 3. Ahora sí esperar tiempo aleatorio de 1 a 5 segundos
+            yield return new WaitForSeconds(Random.Range(1f, 5f));
         }
     }
 
@@ -1015,6 +1088,26 @@ public class Scr_ControladorExpediciones : MonoBehaviour
             cantidadNecesaria;
     }
 
+    private void ActualizarBarraComedero()
+    {
+        if (BarraComedero == null) return;
+
+        int requerida = 0;
+        if (EtapaGrifo < 3)
+        {
+            requerida = CantidadComidasRequeridas[EtapaGrifo]; // o la variable que uses para el huevo
+        }
+
+        if (requerida <= 0)
+        {
+            BarraComedero.fillAmount = 0f;
+            return;
+        }
+
+        float progreso = (float)ComidaDepositada / requerida;
+        BarraComedero.fillAmount = Mathf.Clamp01(progreso);
+    }
+
 
     // =========================================================
     // DEPOSITAR FRUTA
@@ -1069,6 +1162,7 @@ public class Scr_ControladorExpediciones : MonoBehaviour
         // Ahora sí podemos quitar 1 fruta del inventario
         Inventario.QuitarObjeto(nombreObjeto, 1, true);
 
+        BarraComedero.fillAmount = ComidaDepositada / CantidadComidasRequeridas[EtapaGrifo];
         // Aumentar la cantidad depositada
         ComidaDepositada++;
 
@@ -1078,6 +1172,8 @@ public class Scr_ControladorExpediciones : MonoBehaviour
 
         // Actualizar el texto de la UI
         ActualizarTextoCantidadComida();
+
+        ActualizarBarraComedero();
 
         // Comprobar si ya se completó la cantidad necesaria
         if (EtapaGrifo < CantidadComidasRequeridas.Count)
@@ -1170,6 +1266,8 @@ public class Scr_ControladorExpediciones : MonoBehaviour
         );
 
         PlayerPrefs.Save();
+
+        ActualizarBarraComedero();
 
         // Actualizar UI
         ActualizarTextoCantidadComida();
@@ -1300,6 +1398,8 @@ public class Scr_ControladorExpediciones : MonoBehaviour
         PlayerPrefs.SetInt("GrifoComidaDepositada", ComidaDepositada);
         PlayerPrefs.Save();
 
+        ActualizarBarraComedero();
+
         // Actualizar el texto
         ActualizarTextoCantidadComida();
 
@@ -1391,7 +1491,7 @@ public class Scr_ControladorExpediciones : MonoBehaviour
         // La nueva etapa comienza con 0 comida.
 
         ComidaDepositada = 0;
-
+        ActualizarBarraComedero();
 
         GuardarVariables();
 
@@ -1802,22 +1902,6 @@ public class Scr_ControladorExpediciones : MonoBehaviour
 
         EntregarRecompensasPendientes();
 
-
-        // =====================================================
-        // SI TODAVÍA QUEDAN RECOMPENSAS
-        // NO PERMITIR NUEVA EXPEDICIÓN
-        // =====================================================
-
-        if (RecompensasPendientes)
-        {
-            CanvasExpedicion.SetActive(true);
-
-            ActualizarUIExpedicion();
-
-            return;
-        }
-
-
         // =====================================================
         // RESTO DE LA APERTURA NORMAL
         // =====================================================
@@ -1866,36 +1950,26 @@ public class Scr_ControladorExpediciones : MonoBehaviour
 
     public void SeleccionarExpedicion(int tipo)
     {
-        // No permitir cambiar de expedición mientras
-        // hay una expedición funcionando.
         if (CuentaActiva && TipoCuenta == 2)
             return;
 
-        // No permitir seleccionar otra si hay recompensas
-        // pendientes de recoger.
-        if (RecompensasPendientes)
+        // ESTA LÍNEA era la que bloqueaba que cambiaran las recompensas
+        // Si quieres que SÍ deje cambiar aunque haya pendientes, bórrala o coméntala
+        // if (RecompensasPendientes) return;
+
+        if (tipo < EXPEDICION_BATALLA || tipo > EXPEDICION_NATURAL)
             return;
-
-
-        if (tipo < EXPEDICION_BATALLA ||
-            tipo > EXPEDICION_NATURAL)
-        {
-            return;
-        }
-
 
         TipoExpedicionActual = tipo;
 
-
-        PlayerPrefs.SetInt(
-            "GrifoExpedicionSeleccionada",
-            TipoExpedicionActual
-        );
-
+        PlayerPrefs.SetInt("GrifoExpedicionSeleccionada", TipoExpedicionActual);
         PlayerPrefs.Save();
 
-
+        // Forzar refresco completo
         ActualizarUIExpedicion();
+        ActualizarBotonEnviar();
+
+        Debug.Log("Expedición seleccionada: " + TipoExpedicionActual);
     }
 
 
@@ -2160,120 +2234,45 @@ public class Scr_ControladorExpediciones : MonoBehaviour
     {
         LimpiarRecompensasUI();
 
+        // IMPORTANTE: leer directamente con el tipo actual, sin trucos
+        Scr_CreadorObjetos[] recompensas = null;
+        int[] probabilidades = null;
 
-        Scr_CreadorObjetos[] recompensas =
-            ObtenerRecompensasExpedicion();
-
-        int[] probabilidades =
-            ObtenerProbabilidadesExpedicion();
-
-
-        if (recompensas == null ||
-            probabilidades == null)
+        switch (TipoExpedicionActual)
         {
-            return;
+            case EXPEDICION_BATALLA:
+                recompensas = RecompensasBatalla;
+                probabilidades = ProbabilidadesBatalla;
+                break;
+            case EXPEDICION_MINERAL:
+                recompensas = RecompensasMineral;
+                probabilidades = ProbabilidadesMineral;
+                break;
+            case EXPEDICION_NATURAL:
+                recompensas = RecompensasNatural;
+                probabilidades = ProbabilidadesNatural;
+                break;
         }
 
+        if (recompensas == null || probabilidades == null) return;
 
-        int cantidad =
-            Mathf.Min(
-                recompensas.Length,
-                probabilidades.Length
-            );
-
+        int cantidad = Mathf.Min(recompensas.Length, probabilidades.Length);
 
         for (int i = 0; i < cantidad; i++)
         {
-            if (recompensas[i] == null)
-                continue;
+            if (recompensas[i] == null) continue;
 
+            GameObject nuevo = Instantiate(PrefabRecompensa, PadreRecompensas);
+            Transform t = nuevo.transform;
 
-            GameObject nuevo =
-                Instantiate(
-                    PrefabRecompensa,
-                    PadreRecompensas
-                );
+            if (t.childCount > 0 && t.GetChild(0).childCount > 0)
+                t.GetChild(0).GetChild(0).GetComponent<Image>().sprite = recompensas[i].Icono;
 
+            if (t.childCount > 1 && t.GetChild(1).childCount > 0)
+                t.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = recompensas[i].Nombre;
 
-            Transform transformNuevo =
-                nuevo.transform;
-
-
-            // -------------------------------------------------
-            // ICONO
-            // -------------------------------------------------
-
-            if (transformNuevo.childCount > 0)
-            {
-                Transform contenedorIcono =
-                    transformNuevo.GetChild(0);
-
-
-                if (contenedorIcono.childCount > 0)
-                {
-                    Image icono =
-                        contenedorIcono
-                            .GetChild(0)
-                            .GetComponent<Image>();
-
-
-                    if (icono != null)
-                    {
-                        icono.sprite =
-                            recompensas[i].Icono;
-                    }
-                }
-            }
-
-
-            // -------------------------------------------------
-            // NOMBRE DEL ITEM
-            // -------------------------------------------------
-
-            if (transformNuevo.childCount > 1)
-            {
-                Transform contenedorNombre =
-                    transformNuevo.GetChild(1);
-
-                if (contenedorNombre.childCount > 0)
-                {
-                    TextMeshProUGUI textoNombre =
-                        contenedorNombre
-                            .GetChild(0)
-                            .GetComponent<TextMeshProUGUI>();
-
-                    if (textoNombre != null)
-                    {
-                        textoNombre.text =
-                            recompensas[i].Nombre;
-                    }
-                }
-            }
-
-
-            // -------------------------------------------------
-            // PROBABILIDAD
-            // -------------------------------------------------
-
-            if (transformNuevo.childCount > 2)
-            {
-                Transform contenedorProbabilidad =
-                    transformNuevo.GetChild(2);
-
-                if (contenedorProbabilidad.childCount > 0)
-                {
-                    TextMeshProUGUI textoProbabilidad =
-                        contenedorProbabilidad
-                            .GetChild(0)
-                            .GetComponent<TextMeshProUGUI>();
-
-                    if (textoProbabilidad != null)
-                    {
-                        textoProbabilidad.text =
-                            probabilidades[i] + "%";
-                    }
-                }
-            }
+            if (t.childCount > 2 && t.GetChild(2).childCount > 0)
+                t.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = probabilidades[i] + "%";
         }
     }
 
@@ -2401,91 +2400,38 @@ public class Scr_ControladorExpediciones : MonoBehaviour
         return 0;
     }
 
-
     // =========================================================
     // ACTUALIZAR ESTADO DEL BOTÓN ENVIAR
     // =========================================================
 
     private void ActualizarBotonEnviar()
     {
-        if (BotonEnviar == null)
-            return;
-
+        if (BotonEnviar == null) return;
 
         bool puedeEnviar = true;
 
+        if (!Eclosiono || EtapaGrifo < 3) puedeEnviar = false;
+        if (CuentaActiva) puedeEnviar = false;
+        if (!ValidarProbabilidadesExpedicion()) puedeEnviar = false;
 
-        // -----------------------------------------------------
-        // GRIFO ADULTO
-        // -----------------------------------------------------
-
-        if (!Eclosiono || EtapaGrifo < 3)
+        // NUEVO: Solo bloquea cuando está en 0 (lleno total)
+        // Con 1, 8, 15, 20 sí deja
+        if (CapacidadGrifoExpedicion <= 0)
         {
             puedeEnviar = false;
         }
 
+        Scr_CreadorObjetos comida = ObtenerComidaExpedicion();
+        int cantidadNecesaria = ObtenerCantidadComidaExpedicion();
 
-        // -----------------------------------------------------
-        // NO ESTÁ EN OTRA EXPEDICIÓN
-        // -----------------------------------------------------
-
-        if (CuentaActiva)
-        {
-            puedeEnviar = false;
-        }
-
-
-        // -----------------------------------------------------
-        // NO HAY RECOMPENSAS PENDIENTES
-        // -----------------------------------------------------
-
-        if (RecompensasPendientes)
-        {
-            puedeEnviar = false;
-        }
-
-
-        // -----------------------------------------------------
-        // PROBABILIDADES
-        // -----------------------------------------------------
-
-        if (!ValidarProbabilidadesExpedicion())
-        {
-            puedeEnviar = false;
-        }
-
-
-        // -----------------------------------------------------
-        // COMIDA
-        // -----------------------------------------------------
-
-        Scr_CreadorObjetos comida =
-            ObtenerComidaExpedicion();
-
-
-        int cantidadNecesaria =
-            ObtenerCantidadComidaExpedicion();
-
-
-        if (comida == null)
-        {
-            puedeEnviar = false;
-        }
+        if (comida == null) puedeEnviar = false;
         else
         {
-            int cantidadJugador =
-                ObtenerCantidadInventario(comida.Nombre);
-
-
-            if (cantidadJugador < cantidadNecesaria)
-            {
-                puedeEnviar = false;
-            }
+            int cantidadJugador = ObtenerCantidadInventario(comida.Nombre);
+            if (cantidadJugador < cantidadNecesaria) puedeEnviar = false;
         }
 
-
-        BotonEnviar.interactable =
-            puedeEnviar;
+        BotonEnviar.interactable = puedeEnviar;
     }
 
 
@@ -2495,101 +2441,35 @@ public class Scr_ControladorExpediciones : MonoBehaviour
 
     public void EnviarExpedicion()
     {
-        // -----------------------------------------------------
-        // VALIDACIONES
-        // -----------------------------------------------------
+        if (!Eclosiono || EtapaGrifo < 3) return;
+        if (CuentaActiva) return;
+        if (!ValidarProbabilidadesExpedicion()) return;
 
-        if (!Eclosiono ||
-            EtapaGrifo < 3)
+        // NUEVO: Solo bloquea el 0
+        if (CapacidadGrifoExpedicion <= 0) return;
+
+        Scr_CreadorObjetos comida = ObtenerComidaExpedicion();
+        int cantidadNecesaria = ObtenerCantidadComidaExpedicion();
+        if (comida == null) return;
+
+        int cantidadJugador = ObtenerCantidadInventario(comida.Nombre);
+        if (cantidadJugador < cantidadNecesaria) return;
+
+        // Si mandas con capacidad 15, los 5 que quedaban se pierden / se sobreescriben
+        // Si no quieres que se pierdan, comenta estas 3 líneas y deja que se acumulen
+        // pero se van a juntar con los 20 nuevos
+        if (RecompensasPendientes && CapacidadGrifoExpedicion > 0)
         {
-            return;
+            Debug.Log("Enviando con capacidad " + CapacidadGrifoExpedicion + ", se limpiarán " + (MAX_OBJETOS_EXPEDICION - CapacidadGrifoExpedicion) + " objetos pendientes restantes");
         }
 
-
-        if (CuentaActiva)
-        {
-            return;
-        }
-
-
-        if (RecompensasPendientes)
-        {
-            return;
-        }
-
-
-        if (!ValidarProbabilidadesExpedicion())
-        {
-            return;
-        }
-
-
-        Scr_CreadorObjetos comida =
-            ObtenerComidaExpedicion();
-
-
-        int cantidadNecesaria =
-            ObtenerCantidadComidaExpedicion();
-
-
-        if (comida == null)
-        {
-            return;
-        }
-
-
-        // -----------------------------------------------------
-        // COMPROBAR COMIDA
-        // -----------------------------------------------------
-
-        int cantidadJugador =
-            ObtenerCantidadInventario(comida.Nombre);
-
-
-        if (cantidadJugador < cantidadNecesaria)
-        {
-            return;
-        }
-
-
-        // -----------------------------------------------------
-        // QUITAR COMIDA
-        // -----------------------------------------------------
-
-        Inventario.QuitarObjeto(
-            comida.Nombre,
-            cantidadNecesaria,
-            true
-        );
-
-
-        // Guardar inmediatamente.
+        Inventario.QuitarObjeto(comida.Nombre, cantidadNecesaria, true);
         PlayerPrefs.Save();
 
-
-        // -----------------------------------------------------
-        // GUARDAR TIPO DE EXPEDICIÓN
-        // -----------------------------------------------------
-
-        PlayerPrefs.SetInt(
-            "GrifoExpedicionSeleccionada",
-            TipoExpedicionActual
-        );
-
-
+        PlayerPrefs.SetInt("GrifoExpedicionSeleccionada", TipoExpedicionActual);
         PlayerPrefs.Save();
 
-
-
-
-
-        // -----------------------------------------------------
-        // ANIMACIÓN DEL GRIFO
-        // -----------------------------------------------------
-
-        StartCoroutine(
-            IniciarExpedicionCoroutine()
-        );
+        StartCoroutine(IniciarExpedicionCoroutine());
     }
 
 
@@ -2599,75 +2479,36 @@ public class Scr_ControladorExpediciones : MonoBehaviour
 
     private IEnumerator IniciarExpedicionCoroutine()
     {
+        if (ObjetoRecompensa != null) ObjetoRecompensa.SetActive(false);
+
+        // DETENER loop del grande y reproducir GRITO
+        DetenerSonidoGrifo();
+        if (Sonidos != null && Sonidos.Length > 0 && Sonidos[0] != null)
+        {
+            if (AudioPrimerHuevo != null)
+                AudioPrimerHuevo.PlayOneShot(Sonidos[0]); // grito al enviar
+        }
+
+        // pequeña pausa para que se escuche el grito antes del despegue
+        yield return new WaitForSeconds(0.3f);
+
         Animator animador = AnimatorGrifoGrande;
+        if (animador == null && GrifoGrande != null) animador = GrifoGrande.GetComponent<Animator>();
+        if (animador == null && GrifoGrande != null) animador = GrifoGrande.GetComponentInChildren<Animator>();
 
-        if (animador == null && GrifoGrande != null)
-        {
-            animador = GrifoGrande.GetComponent<Animator>();
-        }
-
-        if (animador == null && GrifoGrande != null)
-        {
-            animador = GrifoGrande.GetComponentInChildren<Animator>();
-        }
-
-
-        // =====================================================
-        // INICIAR DESPEGUE
-        // =====================================================
-
-        if (animador != null)
-        {
-            animador.SetBool("Despego", true);
-        }
-
-
-        // =====================================================
-        // ESPERAR A QUE TERMINE LA ANIMACIÓN
-        // =====================================================
-
+        if (animador != null) animador.SetBool("Despego", true);
         yield return new WaitForSeconds(1.35f);
-
-        // -----------------------------------------------------
-        // CERRAR UI
-        // -----------------------------------------------------
 
         ObjetoExpedicion.GetComponent<Scr_ActivadorMenuEstructuraFijo>().CerrarTablero();
 
-        // =====================================================
-        // REGRESAR A IDLE
-        // =====================================================
+        if (animador != null) animador.SetBool("Despego", false);
 
-        if (animador != null)
-        {
-            animador.SetBool("Despego", false);
-        }
+        if (GrifoGrande != null) GrifoGrande.SetActive(false);
+        if (Grifovolador != null) Grifovolador.SetActive(true);
 
-
-        // =====================================================
-        // AHORA SÍ OCULTAR EL GRIFO
-        // =====================================================
-
-        if (GrifoGrande != null)
-        {
-            GrifoGrande.SetActive(false);
-        }
-
-
-        // =====================================================
-        // INICIAR CUENTA DE EXPEDICIÓN
-        // =====================================================
-
-        int duracionHoras =
-            ObtenerDuracionExpedicion();
-
-        int duracionMinutos =
-            duracionHoras * 60;
-
-        IniciarCuenta(
-            duracionMinutos,
-            2
-        );
+        int duracionHoras = ObtenerDuracionExpedicion();
+        int duracionMinutos = duracionHoras * 60;
+        IniciarCuenta(duracionMinutos, 2);
     }
 
 
@@ -2678,22 +2519,13 @@ public class Scr_ControladorExpediciones : MonoBehaviour
     private void RestaurarExpedicionEnCurso()
     {
         DesactivarSistemaComida();
-
-
         ObjetoExpedicion.SetActive(true);
-
-
         CanvasExpedicion.SetActive(false);
-
-
         CanvasProgreso.SetActive(true);
+        DetenerSonidoGrifo(); // volador sin sonido
 
-
-        // El grifo permanece fuera mientras está explorando.
-        if (GrifoGrande != null)
-        {
-            GrifoGrande.SetActive(false);
-        }
+        if (GrifoGrande != null) GrifoGrande.SetActive(false);
+        if (Grifovolador != null) Grifovolador.SetActive(true);
     }
 
 
@@ -2704,66 +2536,24 @@ public class Scr_ControladorExpediciones : MonoBehaviour
     private void CompletarExpedicion()
     {
         CuentaActiva = false;
-
-
-        // -----------------------------------------------------
-        // GENERAR LOS 20 OBJETOS
-        // -----------------------------------------------------
-
         GenerarRecompensasExpedicion();
 
-
-        // -----------------------------------------------------
-        // MOSTRAR GRIFO NUEVAMENTE
-        // -----------------------------------------------------
-
-        if (GrifoGrande != null)
-        {
-            GrifoGrande.SetActive(true);
-        }
+        if (GrifoGrande != null) GrifoGrande.SetActive(true);
+        if (Grifovolador != null) Grifovolador.SetActive(false);
+        if (GrifoChico != null) GrifoChico.SetActive(false);
+        if (GrifoMediano != null) GrifoMediano.SetActive(false);
 
         Animator animador = AnimatorGrifoGrande;
-
-        if (animador == null && GrifoGrande != null)
-        {
-            animador = GrifoGrande.GetComponent<Animator>();
-        }
-
-        if (animador == null && GrifoGrande != null)
-        {
-            animador = GrifoGrande.GetComponentInChildren<Animator>();
-        }
-
-        if (animador != null)
-        {
-            animador.SetBool("Despego", false);
-        }
-
-
-        // -----------------------------------------------------
-        // OCULTAR PROGRESO
-        // -----------------------------------------------------
+        if (animador == null && GrifoGrande != null) animador = GrifoGrande.GetComponentInChildren<Animator>();
+        if (animador != null) animador.SetBool("Despego", false);
 
         CanvasProgreso.SetActive(false);
+        if (ObjetoRecompensa != null) ObjetoRecompensa.SetActive(true);
 
-
-        // -----------------------------------------------------
-        // ACTIVAR INDICADOR DE RECOMPENSA
-        // -----------------------------------------------------
-
-        if (ObjetoRecompensa != null)
-        {
-            ObjetoRecompensa.SetActive(true);
-        }
-
-
-        ObjetoExpedicion.SetActive(true);
-
-        CanvasExpedicion.SetActive(false);
-
+        // Volver a iniciar loop del grande al regresar
+        IniciarSonidoGrifo(3);
 
         GuardarDatosExpedicion();
-
         GuardarCuenta();
     }
 
@@ -2774,71 +2564,33 @@ public class Scr_ControladorExpediciones : MonoBehaviour
 
     private void GenerarRecompensasExpedicion()
     {
-        Scr_CreadorObjetos[] recompensas =
-            ObtenerRecompensasExpedicion();
+        Scr_CreadorObjetos[] recompensas = ObtenerRecompensasExpedicion();
+        int[] probabilidades = ObtenerProbabilidadesExpedicion();
 
+        if (!ValidarProbabilidadesExpedicion()) return;
 
-        int[] probabilidades =
-            ObtenerProbabilidadesExpedicion();
+        CantidadesRecompensasPendientes = new int[recompensas.Length];
 
-
-        if (!ValidarProbabilidadesExpedicion())
+        for (int tirada = 0; tirada < MAX_OBJETOS_EXPEDICION; tirada++)
         {
-            return;
-        }
-
-
-        // Crear arreglo donde se almacenará
-        // la cantidad obtenida de cada recompensa.
-        CantidadesRecompensasPendientes =
-            new int[recompensas.Length];
-
-
-        // -----------------------------------------------------
-        // HACER 20 TIRADAS
-        // -----------------------------------------------------
-
-        for (int tirada = 0;
-             tirada < MAX_OBJETOS_EXPEDICION;
-             tirada++)
-        {
-            int numero =
-                Random.Range(1, 101);
-
-
+            int numero = Random.Range(1, 101);
             int acumulado = 0;
-
-
-            for (int i = 0;
-                 i < probabilidades.Length;
-                 i++)
+            for (int i = 0; i < probabilidades.Length; i++)
             {
-                acumulado +=
-                    probabilidades[i];
-
-
+                acumulado += probabilidades[i];
                 if (numero <= acumulado)
                 {
                     CantidadesRecompensasPendientes[i]++;
-
                     break;
                 }
             }
         }
 
+        TipoExpedicionPendiente = TipoExpedicionActual;
+        RecompensasPendientes = true;
 
-        // -----------------------------------------------------
-        // GUARDAR
-        // -----------------------------------------------------
-
-        TipoExpedicionPendiente =
-            TipoExpedicionActual;
-
-
-        RecompensasPendientes =
-            true;
-
-
+        // Al generar, capacidad pasa a 0 automaticamente
+        ActualizarTextoCapacidad();
         GuardarDatosExpedicion();
     }
 
@@ -2849,131 +2601,42 @@ public class Scr_ControladorExpediciones : MonoBehaviour
 
     private void EntregarRecompensasPendientes()
     {
-        if (!RecompensasPendientes)
-            return;
+        if (!RecompensasPendientes) return;
+        if (Inventario == null) return;
+        if (CantidadesRecompensasPendientes == null) return;
 
-        if (Inventario == null)
-            return;
+        int tipoActual = TipoExpedicionActual;
+        TipoExpedicionActual = TipoExpedicionPendiente;
+        Scr_CreadorObjetos[] recompensas = ObtenerRecompensasExpedicion();
+        TipoExpedicionActual = tipoActual;
 
-        if (CantidadesRecompensasPendientes == null)
-            return;
+        if (recompensas == null) return;
 
-
-        // =====================================================
-        // GUARDAR TIPO ACTUAL
-        // =====================================================
-
-        int tipoActual =
-            TipoExpedicionActual;
-
-
-        // =====================================================
-        // UTILIZAR EL TIPO QUE GENERÓ LAS RECOMPENSAS
-        // =====================================================
-
-        TipoExpedicionActual =
-            TipoExpedicionPendiente;
-
-
-        Scr_CreadorObjetos[] recompensas =
-            ObtenerRecompensasExpedicion();
-
-
-        // Restaurar la selección actual del jugador
-        TipoExpedicionActual =
-            tipoActual;
-
-
-        if (recompensas == null)
-            return;
-
-
-        int cantidadElementos =
-            Mathf.Min(
-                recompensas.Length,
-                CantidadesRecompensasPendientes.Length
-            );
-
-
+        int cantidadElementos = Mathf.Min(recompensas.Length, CantidadesRecompensasPendientes.Length);
         bool quedanRecompensas = false;
 
-
-        // =====================================================
-        // PROCESAR CADA RECOMPENSA
-        // =====================================================
-
-        for (int i = 0;
-             i < cantidadElementos;
-             i++)
+        for (int i = 0; i < cantidadElementos; i++)
         {
-            int cantidadPendiente =
-                CantidadesRecompensasPendientes[i];
+            int cantidadPendiente = CantidadesRecompensasPendientes[i];
+            if (cantidadPendiente <= 0) continue;
+            if (recompensas[i] == null) continue;
 
+            string nombreObjeto = recompensas[i].Nombre;
 
-            if (cantidadPendiente <= 0)
-                continue;
+            // INTENTA AGREGAR TODO LO QUE TIENE EL GRIFO DE ESTE ITEM
+            // AgregarObjeto devuelve CUANTO SI PUDO METER (ej: tenias 15/20 y el grifo trae 10, devuelve 5)
+            int cantidadAgregada = Inventario.AgregarObjeto(
+                nombreObjeto,
+                cantidadPendiente,
+                true,
+                false
+            );
 
-
-            if (recompensas[i] == null)
-                continue;
-
-
-            string nombreObjeto =
-                recompensas[i].Nombre;
-
-
-            // =================================================
-            // INTENTAR AGREGAR AL INVENTARIO
-            // =================================================
-
-            int cantidadAgregada =
-                Inventario.AgregarObjeto(
-                    nombreObjeto,
-                    cantidadPendiente,
-                    true,
-                    false
-                );
-
-
-            // =================================================
-            // ¿CUÁNTO PUDO ENTRAR?
-            // =================================================
-
+            // SOLO restamos lo que SI entró. El resto se queda en el grifo, no se destruye.
             if (cantidadAgregada > 0)
             {
-                // Evitamos que por seguridad se descuente
-                // más de lo que estaba pendiente.
-
-                cantidadAgregada =
-                    Mathf.Min(
-                        cantidadAgregada,
-                        cantidadPendiente
-                    );
-
-
-                // =================================================
-                // RETIRAR INMEDIATAMENTE LO QUE ENTRÓ
-                // =================================================
-
-                Inventario.QuitarObjeto(
-                    nombreObjeto,
-                    cantidadAgregada,
-                    false
-                );
-
-
-                // =================================================
-                // QUITARLO DE LAS RECOMPENSAS PENDIENTES
-                // =================================================
-
-                CantidadesRecompensasPendientes[i] -=
-                    cantidadAgregada;
+                CantidadesRecompensasPendientes[i] -= cantidadAgregada;
             }
-
-
-            // =================================================
-            // ¿TODAVÍA QUEDA ESTE OBJETO?
-            // =================================================
 
             if (CantidadesRecompensasPendientes[i] > 0)
             {
@@ -2981,32 +2644,59 @@ public class Scr_ControladorExpediciones : MonoBehaviour
             }
         }
 
+        // Verificar si aún queda algo de cualquier tipo
+        for (int i = 0; i < CantidadesRecompensasPendientes.Length; i++)
+        {
+            if (CantidadesRecompensasPendientes[i] > 0)
+            {
+                quedanRecompensas = true;
+                break;
+            }
+        }
 
-        // =====================================================
-        // ACTUALIZAR ESTADO GENERAL
-        // =====================================================
+        RecompensasPendientes = quedanRecompensas;
 
-        RecompensasPendientes =
-            quedanRecompensas;
-
-
-        // =====================================================
-        // INDICADOR DE RECOMPENSAS
-        // =====================================================
+        // Esto ya recalcula capacidad a 8 si recogiste 8, a 12 si recogiste 12, etc.
+        ActualizarTextoCapacidad();
 
         if (ObjetoRecompensa != null)
         {
-            ObjetoRecompensa.SetActive(
-                RecompensasPendientes
-            );
+            ObjetoRecompensa.SetActive(RecompensasPendientes);
         }
 
-
-        // =====================================================
-        // GUARDAR
-        // =====================================================
-
         GuardarDatosExpedicion();
+    }
+
+    private void ActualizarTextoCapacidad()
+    {
+        if (TextoCapacidad == null)
+            return;
+
+        int totalPendiente = 0;
+
+        if (CantidadesRecompensasPendientes != null)
+        {
+            for (int i = 0; i < CantidadesRecompensasPendientes.Length; i++)
+            {
+                totalPendiente += Mathf.Max(0, CantidadesRecompensasPendientes[i]);
+            }
+        }
+
+        // Si no hay recompensas pendientes, totalPendiente será 0
+        // Si aún quedan 3, totalPendiente=3 -> capacidad=17
+        // Si ya recogiste todo, totalPendiente=0 -> capacidad=20
+        if (!RecompensasPendientes)
+        {
+            totalPendiente = 0;
+        }
+
+        CapacidadGrifoExpedicion = MAX_OBJETOS_EXPEDICION - totalPendiente;
+        CapacidadGrifoExpedicion = Mathf.Clamp(CapacidadGrifoExpedicion, 0, MAX_OBJETOS_EXPEDICION);
+
+        TextoCapacidad.text = CapacidadGrifoExpedicion.ToString();
+
+        PlayerPrefs.SetInt("GrifoExpedicionCapacidad", CapacidadGrifoExpedicion);
+        PlayerPrefs.Save();
     }
 
 
@@ -3032,6 +2722,8 @@ public class Scr_ControladorExpediciones : MonoBehaviour
             "GrifoExpedicionTipoPendiente",
             TipoExpedicionPendiente
         );
+
+        PlayerPrefs.SetInt("GrifoExpedicionCapacidad", CapacidadGrifoExpedicion);
 
 
         // Guardar cantidades.
@@ -3085,6 +2777,12 @@ public class Scr_ControladorExpediciones : MonoBehaviour
                 "GrifoExpedicionTipoPendiente",
                 EXPEDICION_BATALLA
             );
+
+        CapacidadGrifoExpedicion =
+            PlayerPrefs.GetInt(
+                "GrifoExpedicionCapacidad",
+            20
+        );
 
 
         // -----------------------------------------------------
@@ -3142,9 +2840,13 @@ public class Scr_ControladorExpediciones : MonoBehaviour
         if (ObjetoRecompensa != null)
         {
             ObjetoRecompensa.SetActive(
-                RecompensasPendientes
+                false
             );
         }
+
+
+
+        ActualizarTextoCapacidad();
     }
 
 
