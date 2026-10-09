@@ -126,7 +126,6 @@ public class Scr_Arbusto : MonoBehaviour
         if (PlayerPrefs.GetString("Habilidad:" + HabilidadGuante, "No") == "Si" || string.IsNullOrEmpty(HabilidadGuante))
             animSpeed = 2f;
 
-        gata.GetComponent<Animator>().speed = animSpeed;
         yield return new WaitForSeconds(5.22f / animSpeed);
         gata.GetComponent<Animator>().speed = 1f;
 

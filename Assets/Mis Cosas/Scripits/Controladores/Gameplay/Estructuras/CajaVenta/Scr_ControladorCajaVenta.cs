@@ -153,8 +153,8 @@ public class Scr_ControladorCajaVenta : MonoBehaviour
     // =========================
     public void SeleccionarItem(GameObject prefabSeleccionado)
     {
+        BotonResetearTodo();
         ResetearMarco();
-
         Image img = prefabSeleccionado.GetComponent<Image>();
         Sprite icono = img.sprite;
 

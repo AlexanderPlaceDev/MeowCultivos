@@ -44,6 +44,10 @@ public class Tienda_3D : MonoBehaviour
     // Guarda las cantidades seleccionadas, por índice del inventario
     private Dictionary<int, int> cantidadesSeleccionadas = new Dictionary<int, int>();
 
+    [Header("Fix Dinero")]
+    private int dineroCache;
+
+
     ChecarInput Checar_input;
     PlayerInput playerInput;
     private InputAction Click;
@@ -103,6 +107,7 @@ public class Tienda_3D : MonoBehaviour
         mouseGamepad = GameObject.Find("EventSystem").GetComponent <VirtualMouseGamepad>();
         Click = playerInput.actions["Click"];
         GenerarListaCompraDesdeInventario();
+        dineroCache = PlayerPrefs.GetInt("Dinero", 0);
         ActualizarTextoDinero();
         ActualizarTextoDineroAPagar();
     }
@@ -137,6 +142,13 @@ public class Tienda_3D : MonoBehaviour
         }
 
         ActualizarScrollerCompra();
+
+        int dineroActual = PlayerPrefs.GetInt("Dinero", 0);
+        if (dineroActual != dineroCache)
+        {
+            dineroCache = dineroActual;
+            ActualizarTextoDinero();
+        }
     }
 
     ////////////////////////////////////
@@ -362,6 +374,7 @@ public class Tienda_3D : MonoBehaviour
     {
         if (Dinero != null)
             Dinero.text = "$" + PlayerPrefs.GetInt("Dinero", 0);
+        dineroCache = PlayerPrefs.GetInt("Dinero", 0);
     }
 
     public void ComprarObjeto(int IDObjeto)

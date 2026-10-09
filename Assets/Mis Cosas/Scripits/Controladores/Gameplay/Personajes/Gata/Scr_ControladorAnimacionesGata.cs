@@ -153,16 +153,51 @@ public class Scr_ControladorAnimacionesGata : MonoBehaviour
 
     IEnumerator EsperarRecolectar()
     {
-        int tiempo = PlayerPrefs.GetString("Habilidad:Guante", "No") == "Si" ? 2 : 1;
+        // 1. ¿Tiene guante?
+        bool tieneGuante = PlayerPrefs.GetString("Habilidad:Guante", "No") == "Si";
+        float velocidad = tieneGuante ? 2f : 1f;
+
+        // 2. Cache de componentes
+        Animator anim = GetComponent<Animator>();
+        AudioSource audio = GetComponent<AudioSource>();
+
+        // 3. Acelerar animación y audio
+        anim.speed = velocidad;
+        if (audio != null)
+        {
+            if (velocidad == 2)
+            {
+                audio.pitch = 1.5f;
+            }
+            else
+            {
+                audio.pitch = 1;
+            }
+
+            if (!audio.isPlaying) audio.Play(); // por si no se está reproduciendo
+        }
+
         PuedeCaminar = false;
-        yield return new WaitForSeconds(TiempoRecoleccion / tiempo);
+        Recolectando = true;
+
+        // 4. Esperar (si va al doble, tarda la mitad)
+        yield return new WaitForSeconds(TiempoRecoleccion / velocidad);
+
+        // 5. Regresar todo a normal
+        anim.speed = 1f;
+        if (audio != null)
+        {
+            audio.pitch = 1f;
+            audio.Stop();
+        }
+
         PuedeCaminar = true;
         Recolectando = false;
     }
 
     IEnumerator EsperarRegar()
     {
-        int tiempo = PlayerPrefs.GetString("Habilidad:Guante", "No") == "Si" ? 2 : 1; 
+        int tiempo = PlayerPrefs.GetString("Habilidad:Guante", "No") == "Si" ? 2 : 1;
         PuedeCaminar = false;
         yield return new WaitForSeconds(TiempoRegar / tiempo);
         PuedeCaminar = true;
