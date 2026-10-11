@@ -675,6 +675,11 @@ public class Scr_Taller : MonoBehaviour
     //Muestra las habilidades Temporales que deben de mostrar
     public void mostrar_HabilidadesTemporales()
     {
+        if(HabilidadesTemporales.Count == 0)
+        {
+            HabilidadesSec.SetActive(true);
+            return;
+        }
         Habilidadesint.Clear();
         escoonder_botonesH();
         int show = 0;
@@ -709,6 +714,12 @@ public class Scr_Taller : MonoBehaviour
         {
             Aparecer_botones();
         }
+        else if (HabilidadesTemporales.Count == 0)
+        {
+            MostarDescipcion.SetActive(true);
+            NombreHabilidad.text = "No hay";
+            DescripcionHabilidad.text = "Crea mas Gadgets";
+        }
         for (int i = 0; i < HabilidadesTemporales.Count; i++)
         {
             if (show < 6)
@@ -726,16 +737,20 @@ public class Scr_Taller : MonoBehaviour
         HabilidadesTemporales.Clear();
         for (int i = 0; i < Datosarmas.HabilidadesTemporales.Length; i++)
         {
-            /*if (Datosarmas.HabilidatTDesbloqueadas[i])
+            if (Datosarmas.UsosHabilidadesT[i]>0)
             {
                 HabilidadesTemporales.Add(Datosarmas.HabilidadesTemporales[i]);
             }
-            */
         }
     }
     //muestra las habilidades permanentes que deben de mostrar
     public void mostrar_HabilidadesPermanentes()
     {
+        if (HabilidadesPermanentes.Count == 0)
+        {
+            HabilidadesSec.SetActive(true);
+            return;
+        }
         Habilidadesint.Clear();
         escoonder_botonesH();
         int show = 0;
@@ -768,6 +783,11 @@ public class Scr_Taller : MonoBehaviour
     //muestra las habilidades especiales que deben de mostrar
     public void mostrar_HabilidadesEspeciales()
     {
+        if (HabilidadesPermanentes.Count == 0)
+        {
+            HabilidadesSec.SetActive(true);
+            return;
+        }
         Habilidadesint.Clear();
         escoonder_botonesH();
         int show = 0;

@@ -55,7 +55,7 @@ public class Scr_MenuTablero : MonoBehaviour
         for (int i = 0; i < Objetos.Length; i++)
         {
             bool activo = PlayerPrefs.GetInt("Estructura" + i, 0) == 1;
-
+            //Debug.LogWarning(Objetos[i].ObjetosEstructura[0].name + i);
             foreach (var obj in Objetos[i].ObjetosEstructura)
             {
                 if (obj != null)

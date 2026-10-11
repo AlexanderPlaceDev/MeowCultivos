@@ -146,6 +146,12 @@ public class Scr_Enemigo : MonoBehaviour
 
         if (UsaParticulasAlMorir)
         {
+            CapsuleCollider characterController = GetComponent<CapsuleCollider>();
+            if (characterController != null)
+            {
+                characterController.enabled = false;
+            }
+
             EstaMuerto = true; // <- Añadido
             DañoDistancia = 0;
             DañoMelee = 0;

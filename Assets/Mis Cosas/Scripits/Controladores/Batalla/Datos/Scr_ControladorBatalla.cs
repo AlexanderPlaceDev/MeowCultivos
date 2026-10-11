@@ -112,6 +112,7 @@ public class Scr_ControladorBatalla : MonoBehaviour
 
     [Header("Otros")]
     [SerializeField] Light OrigenLuz;
+    [SerializeField] GameObject LuzGata;
     private Scr_DatosSingletonBatalla Singleton;
     Scr_DatosArmas Datosarmas;
     private GameObject Personaje;
@@ -146,7 +147,8 @@ public class Scr_ControladorBatalla : MonoBehaviour
         ColorPrincipal = BarraVidaImage.GetComponent<Image>().color;
         Musica = GameObject.Find("Musica").GetComponent<Musica_pelea>();
 
-        TextoVidas.text = VidaMaxima + "/" + VidaMaxima;
+        TextoVidas.text = VidaMaxima + "/" + VidaMaxima; 
+        LuzGata.SetActive(false);
         if (Singleton.HoraActual > 7 && Singleton.HoraActual < 19)
         {
             RenderSettings.skybox = Singleton.SkyBoxDia;
@@ -154,6 +156,10 @@ public class Scr_ControladorBatalla : MonoBehaviour
         else
         {
             RenderSettings.skybox = Singleton.SkyBoxNoche;
+            if (PlayerPrefs.GetString("Habilidad:Linterna", "No") != "No")
+            {
+                LuzGata.SetActive(true);
+            }
         }
 
         //Deteccion de mando
