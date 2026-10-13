@@ -17,6 +17,8 @@ public class Scr_ControladorCajaVentaRegalo : MonoBehaviour
         if (PlayerPrefs.GetString("CajaVentaRegalo", "No") == "Si")
             Regalo.SetActive(true);
         Inventario = Gata.transform.GetChild(7).GetComponent<Scr_Inventario>();
+        int cajas = PlayerPrefs.GetInt("CajasVendidas", 0);
+        transform.GetChild(2).GetComponent<Scr_ControladorCajaVenta>().ActualizarUIProgreso(cajas);
     }
 
 
@@ -74,5 +76,8 @@ public class Scr_ControladorCajaVentaRegalo : MonoBehaviour
 
         Gata.transform.GetChild(3).gameObject.SetActive(false);
         Regalo.SetActive(false);
+
+        int cajas = PlayerPrefs.GetInt("CajasVendidas", 0);
+        transform.GetChild(2).GetComponent<Scr_ControladorCajaVenta>().ActualizarUIProgreso(cajas);
     }
 }

@@ -33,7 +33,6 @@ public class Scr_GiroGata : MonoBehaviour
         IconProvider = GameObject.Find("Singleton").GetComponent<InputIconProvider>();
         rb = GetComponent<Rigidbody>();
 
-        Debug.Log("Camera = " + Camera);
         Camera = GameObject.Find("Cosas Inutiles").transform.GetChild(2).GetComponent<CinemachineVirtualCamera>();
 
         orbital = Camera.GetCinemachineComponent<CinemachineOrbitalTransposer>();

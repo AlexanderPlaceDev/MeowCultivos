@@ -358,7 +358,6 @@ public class Scr_Habilidades : MonoBehaviour
     {
         DañoAnterior = Controlador.GetComponent<Scr_ControladorArmas>().daño;
         Controlador.GetComponent<Scr_ControladorArmas>().daño = (int)(Controlador.GetComponent<Scr_ControladorArmas>().daño * 2);
-        Debug.LogError("eeess" + Controlador.GetComponent<Scr_ControladorArmas>().daño);
         yield return new WaitForSeconds(espera);
         Controlador.GetComponent<Scr_ControladorArmas>().daño = (int)(Controlador.GetComponent<Scr_ControladorArmas>().daño / 2);
     }

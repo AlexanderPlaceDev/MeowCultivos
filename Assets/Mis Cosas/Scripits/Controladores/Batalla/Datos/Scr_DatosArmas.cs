@@ -52,8 +52,6 @@ public class Scr_DatosArmas : MonoBehaviour
 
     private void AlCargarEscena(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("Escena cargada: " + scene.name);
-
         ActualizarArmas();
         ActualizarHabilidades();
         if (GameObject.Find("Gata") != null)

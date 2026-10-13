@@ -289,7 +289,7 @@ public class Scr_ControladorCajaVenta : MonoBehaviour
         ActualizarUIProgreso(cajas);
     }
 
-    void ActualizarUIProgreso(int cajas)
+    public void ActualizarUIProgreso(int cajas)
     {
         TextoCajasVendidas.text = $"{cajas} / {VentasParaRegalo}";
 

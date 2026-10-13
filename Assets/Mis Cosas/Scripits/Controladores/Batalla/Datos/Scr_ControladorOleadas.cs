@@ -16,6 +16,14 @@ public class Scr_ControladorOleadas : MonoBehaviour
     [SerializeField] float TiempoEntreOleadas;
     [SerializeField] GameObject BotonOleada;
     [SerializeField] TextMeshProUGUI TextoCantidadEnemigos;
+    private List<GameObject> OleadasActuales = new List<GameObject>();
+    private GameObject FlechaOleadaActiva;
+    private GameObject BotonAdelantarOleada;
+
+    private float TiempoPresionAdelantar = 0f;
+    private bool EstaPresionandoAdelantar = false;
+    private float DuracionAdelantarOleada = 1.5f;
+
     private int CantEnemigosPorOleada;
     private float tiempoPresionE = 0f;
     private float duracionNecesaria = 1.5f;
@@ -31,6 +39,7 @@ public class Scr_ControladorOleadas : MonoBehaviour
     private string ultimoTextoMostrado = "";
 
 
+
     private Scr_DatosSingletonBatalla singleton;
 
 
@@ -42,6 +51,7 @@ public class Scr_ControladorOleadas : MonoBehaviour
     PlayerInput playerInput;
     InputIconProvider IconProvider;
     private InputAction Interactuar;
+    private InputAction Recolectar;
 
 
     private Sprite iconoActualInteractuar = null;
@@ -59,6 +69,7 @@ public class Scr_ControladorOleadas : MonoBehaviour
 
 
         Interactuar = playerInput.actions["Interactuar"];
+        Recolectar = playerInput.actions["Recolectar"];
         // Inicializar barra de oleadas
         var enemigo = singleton.Enemigo.GetComponent<Scr_Enemigo>();
         float dificultad = enemigo.DificultadInicial;
@@ -76,6 +87,7 @@ public class Scr_ControladorOleadas : MonoBehaviour
             {
                 int indiceIcono = Mathf.Clamp(dificultadIndex, 0, Iconos.Length - 2);
                 icono = Instantiate(Iconos[indiceIcono], BarraSlider.GetChild(1));
+                OleadasActuales.Add(icono);
                 dificultadIndex++;
             }
             icono.GetComponent<RectTransform>().localPosition = new Vector3(((80 / (totalOleadas - 1)) * (i - 1)) - 2.5f, 0, 0);
@@ -274,6 +286,11 @@ public class Scr_ControladorOleadas : MonoBehaviour
             ContTiempoEntreOleadas += Time.deltaTime;
             float progreso = Mathf.Clamp01(ContTiempoEntreOleadas / tiempoActualEntreOleadas);
 
+            ActualizarFlechaOleada(
+            enemigo,
+            tiempoActualEntreOleadas
+            );
+
             if (OleadaActual > enemigo.CantidadDeOleadas)
             {
                 ControladorBatalla.ComenzoBatalla = false;
@@ -336,9 +353,14 @@ public class Scr_ControladorOleadas : MonoBehaviour
 
             else
             {
+                OcultarFlechaOleada();
+
                 ControladorBatalla.NumeroCuenta.gameObject.SetActive(false);
                 textoTiempo.gameObject.SetActive(false);
                 ContTiempoEntreOleadas = 0;
+                // Sincronizar la barra con el progreso de la oleada actual.
+                Slider NewSlider = BarraSlider.GetChild(0).GetComponent<Slider>();
+                NewSlider.value = objetivo;
 
                 OleadaActual += siguienteEsBandera ? 2 : 1;
 
@@ -398,4 +420,140 @@ public class Scr_ControladorOleadas : MonoBehaviour
 
         }
     }
+
+
+
+
+    private void ActualizarFlechaOleada(
+        Scr_Enemigo enemigo,
+        float duracionEspera)
+    {
+        // Ocultar las flechas mientras hay enemigos en combate.
+        if (enemigosOleada.Count > 0)
+        {
+            OcultarFlechaOleada();
+            return;
+        }
+
+        // OleadasActuales NO contiene el icono de huida.
+        // Por eso calculamos directamente el índice del siguiente
+        // icono normal, saltando la posición de la bandera.
+
+        int indiceIcono = OleadaActual;
+
+        // Si la bandera ya se encuentra antes de la oleada actual,
+        // descontamos su posición de la lista.
+        if (enemigo.PuntoDeHuida <= OleadaActual)
+        {
+            indiceIcono--;
+        }
+
+        // Si no existe un icono siguiente, ocultar la flecha.
+        if (indiceIcono < 0 ||
+            indiceIcono >= OleadasActuales.Count)
+        {
+            OcultarFlechaOleada();
+            return;
+        }
+
+        // El hijo 0 del icono es la flecha.
+        Transform flecha =
+            OleadasActuales[indiceIcono].transform.GetChild(0);
+
+        // Cambiar de flecha solamente si cambia el icono objetivo.
+        if (FlechaOleadaActiva != flecha.gameObject)
+        {
+            OcultarFlechaOleada();
+
+            FlechaOleadaActiva = flecha.gameObject;
+            FlechaOleadaActiva.SetActive(true);
+        }
+
+        // El hijo 0 de la flecha es el botón.
+        Transform boton = flecha.GetChild(0);
+        BotonAdelantarOleada = boton.gameObject;
+
+        
+         IconProvider.ActualizarIconoUI(
+             Recolectar,
+             boton,
+              ref iconoActualInteractuar,
+             ref textoActualInteractuar,
+             false
+         );
+
+        // Aumentar la carga radial mientras se mantiene pulsada
+        // la acción de interacción.
+        if (Recolectar.IsPressed())
+        {
+            EstaPresionandoAdelantar = true;
+            TiempoPresionAdelantar += Time.deltaTime;
+
+            float progreso = Mathf.Clamp01(
+                TiempoPresionAdelantar / DuracionAdelantarOleada
+            );
+
+            // El hijo 1 del botón contiene la imagen de carga.
+            if (boton.childCount > 1)
+            {
+                Image carga =
+                    boton.GetChild(1).GetComponent<Image>();
+
+                if (carga != null)
+                {
+                    carga.fillAmount = progreso;
+                }
+            }
+
+            // Al completar la carga, finalizar la espera.
+            if (TiempoPresionAdelantar >= DuracionAdelantarOleada)
+            {
+                // Completar la espera actual.
+                ContTiempoEntreOleadas = duracionEspera;
+
+                // Completar visualmente la barra inmediatamente.
+                Slider slider = BarraSlider.GetChild(0).GetComponent<Slider>();
+                slider.value = slider.maxValue;
+
+                // Ocultar la flecha y reiniciar su carga.
+                OcultarFlechaOleada();
+            }
+        }
+        else if (EstaPresionandoAdelantar)
+        {
+            // Si se suelta antes de completar, cancelar la carga.
+            ReiniciarCargaAdelantar();
+        }
+    }
+
+
+
+    private void ReiniciarCargaAdelantar()
+    {
+        TiempoPresionAdelantar = 0f;
+        EstaPresionandoAdelantar = false;
+
+        if (BotonAdelantarOleada != null &&
+            BotonAdelantarOleada.transform.childCount > 1)
+        {
+            Image imagenCarga = BotonAdelantarOleada
+                .transform.GetChild(1)
+                .GetComponent<Image>();
+
+            if (imagenCarga != null)
+                imagenCarga.fillAmount = 0f;
+        }
+    }
+
+    private void OcultarFlechaOleada()
+    {
+        if (FlechaOleadaActiva != null)
+            FlechaOleadaActiva.SetActive(false);
+
+        FlechaOleadaActiva = null;
+        BotonAdelantarOleada = null;
+
+        ReiniciarCargaAdelantar();
+    }
+
 }

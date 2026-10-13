@@ -888,7 +888,6 @@ public class Scr_ControladorMisiones : MonoBehaviour
 
                 if (completada)
                 {
-                    Debug.Log($"✅ Misión secundaria '{mision.name}' completada.");
                     MisionesCompletas[i] = true;
                 }
             }
@@ -1107,7 +1106,6 @@ public class Scr_ControladorMisiones : MonoBehaviour
         {
             foreach (GameObject construccion in TodasLasConstrucciones)
             {
-                Debug.Log("La construccion:" + construccion.name + " esta:" + construccion.activeInHierarchy);
                 if (construccion.name == nombre && construccion.activeInHierarchy)
                 {
                     return true; // 🔥 con una basta
