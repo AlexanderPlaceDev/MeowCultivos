@@ -17,6 +17,9 @@ public class Scr_EstructuraConstruible : MonoBehaviour
     [SerializeField] GameObject Canvas;
 
     [SerializeField] GameObject CanvasDemo;
+
+    [SerializeField] bool QuitaMision;
+    [SerializeField] Scr_CreadorMisiones Mision;
     Scr_Inventario Inventario;
 
     ChecarInput Checar_input;
@@ -72,6 +75,8 @@ public class Scr_EstructuraConstruible : MonoBehaviour
 
         BotonCerrar();
 
+        if (QuitaMision) { GameObject.Find("Gata").transform.GetChild(4).GetComponent<Scr_ControladorMisiones>().ElimiminarMisionDesdeSignal(Mision); }
+
         CrearUIdemo();
         Start();
     }
@@ -92,7 +97,7 @@ public class Scr_EstructuraConstruible : MonoBehaviour
     }
     private void DesactivarCartel()
     {
-        Canvas.SetActive(false );
+        Canvas.SetActive(false);
         GetComponent<MeshRenderer>().enabled = false;
         GetComponent<BoxCollider>().enabled = false;
         ObjetoAnterior.SetActive(false);

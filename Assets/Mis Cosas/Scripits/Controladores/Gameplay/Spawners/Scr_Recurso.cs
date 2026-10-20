@@ -23,6 +23,13 @@ public class Scr_Recurso : MonoBehaviour
     public int VidaActual;
     public int VidaMaxima;
 
+    // ================= CATEGORÍA DEL RECURSO =================
+
+    [Header("Categoría del Recurso")]
+    [Tooltip("0 = Automático (usa etapaActual); 1 = Chico; 2 = Mediano; 3 = Grande")]
+    [Min(0)]
+    public int CategoriaTamanoRecurso = 0;
+
     // ================= ETAPAS =================
 
     [Header("Etapas")]
@@ -78,14 +85,104 @@ public class Scr_Recurso : MonoBehaviour
 
     public void RecibirDanio(int cantidad)
     {
-        if (etapaActual <= 0 || VidaActual <= 0)
+        if (etapaActual <= 0 || VidaActual <= 0 || cantidad <= 0)
             return;
+
+        // Los recursos que usan hacha o pico calculan el daño según la herramienta.
+        // Los demás recursos conservan el daño que recibían originalmente.
+        if (GetUsaHacha() || GetUsaPico())
+        {
+            int danioHerramienta = CalcularDanioHerramienta();
+
+            // Si no tiene la herramienta necesaria para esta etapa, no causa daño.
+            if (danioHerramienta <= 0)
+                return;
+
+            cantidad *= danioHerramienta;
+        }
 
         VidaActual = Mathf.Max(VidaActual - cantidad, 0);
 
-        // 🔴 MUERTE INMEDIATA
+        // MUERTE INMEDIATA
         if (VidaActual == 0)
             ProcesarMuerte();
+    }
+
+    private int CalcularDanioHerramienta()
+    {
+        // La categoría manual permite que un recurso con una sola etapa real
+        // se considere chico, mediano o grande para calcular el daño.
+        // Si es 0, se usa la etapa real (por ejemplo, árboles que crecen).
+        int categoria = CategoriaTamanoRecurso > 0
+            ? CategoriaTamanoRecurso
+            : etapaActual;
+
+        // Solo hay progresión definida para las categorías 1, 2 y 3.
+        if (categoria < 1 || categoria > 3)
+            return 1;
+
+        int nivelHerramienta = 0; // 0 = ninguna, 1 = madera, 2 = piedra, 3 = oro, 4 = extraterrita
+
+        if (GetUsaHacha())
+        {
+            if (PlayerPrefs.GetString("Habilidad:Hacha Extraterrita", "No") == "Si")
+                nivelHerramienta = 4;
+            else if (PlayerPrefs.GetString("Habilidad:Hacha Oro", "No") == "Si")
+                nivelHerramienta = 3;
+            else if (PlayerPrefs.GetString("Habilidad:Hacha Piedra", "No") == "Si")
+                nivelHerramienta = 2;
+            else if (PlayerPrefs.GetString("Habilidad:Hacha Madera", "No") == "Si")
+                nivelHerramienta = 1;
+        }
+
+        if (GetUsaPico())
+        {
+            int nivelPico = 0;
+
+            if (PlayerPrefs.GetString("Habilidad:Pico Extraterrita", "No") == "Si")
+                nivelPico = 4;
+            else if (PlayerPrefs.GetString("Habilidad:Pico Oro", "No") == "Si")
+                nivelPico = 3;
+            else if (PlayerPrefs.GetString("Habilidad:Pico Piedra", "No") == "Si")
+                nivelPico = 2;
+            else if (PlayerPrefs.GetString("Habilidad:Pico Madera", "No") == "Si")
+                nivelPico = 1;
+
+            nivelHerramienta = Mathf.Max(nivelHerramienta, nivelPico);
+        }
+
+        // Golpes requeridos por etapa y nivel de herramienta.
+        int golpesNecesarios = 0;
+
+        switch (categoria)
+        {
+            case 1: // Chico: madera 3, piedra 2, oro/extraterrita 1
+                if (nivelHerramienta == 1) golpesNecesarios = 3;
+                else if (nivelHerramienta == 2) golpesNecesarios = 2;
+                else if (nivelHerramienta >= 3) golpesNecesarios = 1;
+                break;
+
+            case 2: // Mediano: piedra 3, oro 2, extraterrita 1
+                if (nivelHerramienta == 2) golpesNecesarios = 3;
+                else if (nivelHerramienta == 3) golpesNecesarios = 2;
+                else if (nivelHerramienta >= 4) golpesNecesarios = 1;
+                break;
+
+            case 3: // Grande: oro 3, extraterrita 2
+                if (nivelHerramienta == 3) golpesNecesarios = 3;
+                else if (nivelHerramienta >= 4) golpesNecesarios = 2;
+                break;
+        }
+
+        if (golpesNecesarios <= 0)
+            return 0;
+
+        // Calcula el daño necesario para alcanzar la cantidad de golpes deseada.
+        // Ejemplo: 9 de vida / 2 golpes = 5 de daño por golpe (redondeo hacia arriba).
+        int vidaMaximaRecurso = VidaMaxima > 0
+            ? VidaMaxima
+            : VidaBase * etapaActual;
+        return Mathf.CeilToInt((float)vidaMaximaRecurso / golpesNecesarios);
     }
 
     private void ProcesarMuerte()

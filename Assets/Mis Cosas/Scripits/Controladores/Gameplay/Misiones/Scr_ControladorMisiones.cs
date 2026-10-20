@@ -1267,4 +1267,81 @@ public class Scr_ControladorMisiones : MonoBehaviour
         GuardarMisiones();
     }
 
+    public void ElimiminarMisionDesdeSignal(Scr_CreadorMisiones misionAEliminar)
+    {
+        if (misionAEliminar == null)
+        {
+            Debug.LogWarning("⚠️ Intentaste eliminar una misión nula desde signal.");
+            return;
+        }
+
+        int index = Misiones.IndexOf(misionAEliminar);
+
+        if (index == -1)
+        {
+            Debug.LogWarning($"⚠️ No se encontró la misión '{misionAEliminar.name}' entre las misiones activas.");
+            return;
+        }
+
+        // =========================================
+        // 🧹 1. BORRAR PROGRESO DE CAZA
+        // =========================================
+        if (misionAEliminar.ObjetivosACazar != null)
+        {
+            for (int i = 0; i < misionAEliminar.ObjetivosACazar.Length; i++)
+            {
+                string clave = $"{misionAEliminar.name}_CantidadCazados_{i}";
+
+                if (PlayerPrefs.HasKey(clave))
+                    PlayerPrefs.DeleteKey(clave);
+            }
+
+            Debug.Log($"🧹 Progreso de caza eliminado de '{misionAEliminar.name}'.");
+        }
+
+        // =========================================
+        // 🗑️ 2. ELIMINAR MISIÓN Y SUS ESTADOS
+        // =========================================
+        bool eraLaMisionActual = MisionActual == misionAEliminar;
+
+        Misiones.RemoveAt(index);
+        MisionesCompletas.RemoveAt(index);
+        MisionesVistas.RemoveAt(index);
+
+        // =========================================
+        // 🎯 3. ACTUALIZAR MISIÓN ACTUAL Y PÁGINA
+        // =========================================
+        if (Misiones.Count == 0)
+        {
+            MisionActual = null;
+            PaginaActual = 0;
+        }
+        else
+        {
+            if (eraLaMisionActual)
+            {
+                PaginaActual = Mathf.Clamp(index, 0, Misiones.Count - 1);
+                MisionActual = Misiones[PaginaActual];
+            }
+            else
+            {
+                // Si se eliminó una misión anterior a la página actual,
+                // la página debe retroceder una posición.
+                if (index < PaginaActual)
+                    PaginaActual--;
+
+                PaginaActual = Mathf.Clamp(PaginaActual, 0, Misiones.Count - 1);
+                MisionActual = Misiones[PaginaActual];
+            }
+        }
+
+        Debug.Log($"🗑️ Misión '{misionAEliminar.name}' eliminada desde signal.");
+
+        // =========================================
+        // 💾 4. ACTUALIZAR UI Y GUARDAR
+        // =========================================
+        ActualizarUI();
+        GuardarMisiones();
+    }
+
 }
