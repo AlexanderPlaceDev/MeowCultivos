@@ -677,7 +677,7 @@ public class Scr_Taller : MonoBehaviour
     {
         if(HabilidadesTemporales.Count == 0)
         {
-            HabilidadesSec.SetActive(true);
+            HabilidadesSec.SetActive(false);
             return;
         }
         Habilidadesint.Clear();
@@ -685,7 +685,7 @@ public class Scr_Taller : MonoBehaviour
         int show = 0;
         for (int i = 0; i < HabilidadesTemporales.Count; i++)
         {
-            if (HabilidadesTemporales[i].Arma == Datosarmas.TodasLasArmas[objetoPrincipalInt].Nombre || HabilidadesTemporales[i].Arma == "Todos")
+            if (ChecarArmas_(Datosarmas.HabilidadesTemporales[i].Arma))
             {
                 if (ht != HabilidadesTemporales[i].Nombre)
                 {
@@ -703,6 +703,10 @@ public class Scr_Taller : MonoBehaviour
         if (Habilidadesint.Count > 3)
         {
             Aparecer_botonesH();
+        }
+        else if(Habilidadesint.Count <=0)
+        {
+            HabilidadesSec.SetActive(false);
         }
     }
     public void mostrar_HabilidadesCrafteables()
@@ -737,10 +741,30 @@ public class Scr_Taller : MonoBehaviour
         HabilidadesTemporales.Clear();
         for (int i = 0; i < Datosarmas.HabilidadesTemporales.Length; i++)
         {
-            if (Datosarmas.UsosHabilidadesT[i]>0)
+            if (Datosarmas.UsosHabilidadesT[i]>0 && ChecarArmas_(Datosarmas.HabilidadesTemporales[i].Arma))
             {
                 HabilidadesTemporales.Add(Datosarmas.HabilidadesTemporales[i]);
             }
+        }
+    }
+
+    bool ChecarArmas_(string Arma)
+    {
+
+        if(Arma == "Todas")
+        {
+            return true;
+        }
+        else
+        {
+            for (int i = 0; i < Datosarmas.TodasLasArmas.Length; i++) 
+            {
+                if (Datosarmas.ArmasDesbloqueadas[i] == true && Datosarmas.TodasLasArmas[i].Nombre == Arma)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
     //muestra las habilidades permanentes que deben de mostrar
@@ -748,7 +772,7 @@ public class Scr_Taller : MonoBehaviour
     {
         if (HabilidadesPermanentes.Count == 0)
         {
-            HabilidadesSec.SetActive(true);
+            HabilidadesSec.SetActive(false);
             return;
         }
         Habilidadesint.Clear();
@@ -785,7 +809,7 @@ public class Scr_Taller : MonoBehaviour
     {
         if (HabilidadesPermanentes.Count == 0)
         {
-            HabilidadesSec.SetActive(true);
+            HabilidadesSec.SetActive(false);
             return;
         }
         Habilidadesint.Clear();
