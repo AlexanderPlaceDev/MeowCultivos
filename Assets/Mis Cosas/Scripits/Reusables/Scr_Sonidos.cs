@@ -64,11 +64,11 @@ public class Scr_Sonidos : MonoBehaviour
     public void herramienta()
     {
         if (Anim == null) return;
-        if(Anim.HabilidadUsando== "Hacha Madera")//contains
+        if(Anim.HabilidadUsando.StartsWith("Hacha "))//contains
         {
             Play_talar();
         }
-        else if (Anim.HabilidadUsando == "Pico Madera")
+        else if (Anim.HabilidadUsando.StartsWith("Pico "))
         {
             Play_picar();
         }
