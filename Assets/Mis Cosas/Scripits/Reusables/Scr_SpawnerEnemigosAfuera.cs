@@ -93,8 +93,8 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 
                     // Spawnear enemigo
                     GameObject nuevoEnemigo = Instantiate(Enemigo, transform.position, Quaternion.identity, transform.parent.parent);
+                    nuevoEnemigo.tag = "Enemigo";
                     Enemigos.Add(nuevoEnemigo);
-
                     // Reiniciar tiempo
                     TiempoRestanteSpawn = TiempoSpawn;
                     PlayerPrefs.SetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoRestanteSpawn);
@@ -256,6 +256,8 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
                 }
 
                 GameObject enemigoRestaurado = Instantiate(Enemigo, pos, Quaternion.identity, transform.parent.parent);
+
+                enemigoRestaurado.tag = "Enemigo";
                 if (!enemigoRestaurado.GetComponent<NavMeshAgent>().isOnNavMesh)
                 {
                     Debug.Log(enemigoRestaurado.name);

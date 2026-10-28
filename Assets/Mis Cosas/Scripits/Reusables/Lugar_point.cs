@@ -45,8 +45,6 @@ public class Lugar_point : MonoBehaviour
 
         float lado = Vector3.Dot(transform.forward, direccion);
 
-        Debug.Log("Lado al entrar: " + lado);
-
         // Si entra por el frente
         if (lado > 0 && PlayerPrefs.GetString("TutorialPeleas", "NO") == "SI")
         {

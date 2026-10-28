@@ -77,6 +77,9 @@ public class Scr_Enemigo : MonoBehaviour
     public float resistenciaElectrificar = 0.25f; // 25% de probabilidad de resistir el Electrificar
     public float resistenciaExplotar = 0.4f; // 40% de probabilidad de resistir la Explotación
 
+    public bool BloqueadoPorZona { get; private set; }
+    private Vector3 ultimaDireccion;
+
     public Renderer Modelo;
     protected virtual void Start()
     {
