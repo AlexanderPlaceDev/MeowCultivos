@@ -35,8 +35,6 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
     Sprite Vacio;
 
 
-
-
     void Start()
     {
         Vacio = Producto.GetComponent<Image>().sprite;
@@ -120,6 +118,8 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        RevisarLluvia();
+
         // =========================
         // ACTUALIZAR CANVAS
         // =========================
@@ -216,18 +216,20 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
         ActualizarPlanta();
     }
 
+
     private void ActualizarPlanta()
     {
         string diaActual = GameObject.Find("Controlador Tiempo")
             .GetComponent<Scr_ControladorTiempo>()
             .DiaActual;
 
-        // Si todavía estamos en el mismo día, no hacemos nada
+        // Si seguimos en el mismo día, no hacemos nada.
         if (diaActual == diaAnterior)
             return;
 
-        if (SemillaPlantada != null)
+        if (SemillaPlantada != null && Regado)
         {
+            // Solo una planta regada puede avanzar su crecimiento.
             DiasPlantado++;
 
             PlayerPrefs.SetInt(
@@ -237,16 +239,13 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
 
             int TiempoCrecimiento = ObtenerTiempoCrecimiento();
 
-            // ACTUALIZAR EL MODELO
+            // Actualizar el modelo únicamente cuando crece.
             ActualizarModeloPlanta();
 
-            // =========================
-            // TERMINÓ DE CRECER
-            // =========================
-
+            // Si terminó de crecer, entregar la fruta.
             if (DiasPlantado >= TiempoCrecimiento)
             {
-                if (Regado && Barril.Cantidad == 0)
+                if (Barril != null && Barril.Cantidad == 0)
                 {
                     Barril.TipoFruta = SemillaPlantada;
 
@@ -263,14 +262,14 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
                     Barril.UltimoDiaPlanta = true;
 
                     Barril.GuardarEstado();
-                    
                 }
             }
 
             ActualizarCanvas();
         }
 
-        // Guardar que este día ya fue procesado
+        // Registrar el día incluso si la planta no está regada.
+        // Así no acumula días sin crecer.
         diaAnterior = diaActual;
 
         PlayerPrefs.SetString(
@@ -280,6 +279,7 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
 
         PlayerPrefs.Save();
     }
+
 
     public void CosecharPlanta()
     {
@@ -384,13 +384,13 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
         if (Regado)
             return;
 
-        if (PlayerPrefs.GetInt("CantidadAgua", 0) >= 2)
+        if (PlayerPrefs.GetInt("CantidadAgua", 0) >= 10)
         {
             Regado = true;
 
             PlayerPrefs.SetInt(
                 "CantidadAgua",
-                PlayerPrefs.GetInt("CantidadAgua", 0) - 2
+                PlayerPrefs.GetInt("CantidadAgua", 0) - 10
             );
 
             PlayerPrefs.SetString("SembradioRegado:" + ID, "Si");
@@ -682,7 +682,7 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
         // =========================
         // REGAR
         // =========================
-        if (!Regado && PlayerPrefs.GetInt("CantidadAgua", 0) >= 2)
+        if (!Regado && PlayerPrefs.GetInt("CantidadAgua", 0) >= 10)
         {
             Botones[0].SetActive(true);
             Botones[0].transform.GetChild(2)
@@ -837,4 +837,55 @@ public class Scr_ControladorSembradioUI : MonoBehaviour
 
         return Mathf.Max(1, TiempoBase);
     }
+
+
+    private void RevisarLluvia()
+    {
+        // No hacer nada si no hay una semilla o ya está regado.
+        if (SemillaPlantada == null || Regado)
+            return;
+
+        Scr_ControladorTiempo tiempo =
+            GameObject.Find("Controlador Tiempo")
+            .GetComponent<Scr_ControladorTiempo>();
+
+        if (!tiempo.EstaLloviendo())
+            return;
+
+        // Regar automáticamente sin consumir agua.
+        Regado = true;
+
+        PlayerPrefs.SetString(
+            "SembradioRegado:" + ID,
+            "Si"
+        );
+
+        // Actualizar el aspecto del abono.
+        if (Abonado)
+        {
+            Abono.GetComponent<MeshRenderer>().material =
+                MaterialesAbono[4];
+        }
+        else if (AbonadoPlus)
+        {
+            Abono.GetComponent<MeshRenderer>().material =
+                MaterialesAbono[5];
+        }
+        else
+        {
+            Abono.GetComponent<MeshRenderer>().material =
+                MaterialesAbono[1];
+        }
+
+        // Actualizar iconos, botones e interfaz.
+        Iconos[0].sprite = Sprites[1];
+
+        ActualizarBotones();
+        ActualizarCanvas();
+
+        PlayerPrefs.Save();
+
+        Debug.Log("Sembradio " + ID + ": regado por la lluvia.");
+    }
+
 }

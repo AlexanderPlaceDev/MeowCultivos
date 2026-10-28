@@ -8,27 +8,27 @@ public class Scr_EnemigoFuera : MonoBehaviour
     [SerializeField] public int Velocidad;
     [SerializeField] public float RadioDeDeambulacion;
 
-    private NavMeshAgent agente;
+    private NavMeshAgent agenteEnemigo;
     private Vector3 ultimaDireccion;
-    private bool movimientoInvertido;
+    public bool movimientoInvertido=false;
 
     private void Awake()
     {
-        agente = GetComponent<NavMeshAgent>();
+        agenteEnemigo = GetComponent<NavMeshAgent>();
     }
 
     private void Update()
     {
-        if (agente == null || !agente.isActiveAndEnabled)
+        if (agenteEnemigo == null || !agenteEnemigo.isActiveAndEnabled)
             return;
 
-        if (agente.velocity.sqrMagnitude > 0.01f)
-            ultimaDireccion = agente.velocity.normalized;
+        if (agenteEnemigo.velocity.sqrMagnitude > 0.01f)
+            ultimaDireccion = agenteEnemigo.velocity.normalized;
     }
 
     public void InvertirMovimiento()
     {
-        if (agente == null || !agente.isOnNavMesh)
+        if (agenteEnemigo == null || !agenteEnemigo.isOnNavMesh)
             return;
 
         movimientoInvertido = true;
@@ -41,8 +41,8 @@ public class Scr_EnemigoFuera : MonoBehaviour
         direccion.y = 0f;
         direccion.Normalize();
 
-        agente.isStopped = false;
-        agente.SetDestination(transform.position - direccion * 5f);
+        agenteEnemigo.isStopped = false;
+        agenteEnemigo.SetDestination(transform.position - direccion * 5f);
     }
 
     public void DesbloquearMovimiento()

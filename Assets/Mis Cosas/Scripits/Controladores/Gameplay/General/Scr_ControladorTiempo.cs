@@ -36,6 +36,15 @@ public class Scr_ControladorTiempo : MonoBehaviour
     public int DineroRecompensa; //Dinero a entregar por la caja de venta
 
     public Scr_controladorClima Clima;
+
+
+    [Header("Controles manuales de clima")]
+    public bool ActivarLluvia = false;
+    public bool ActivarNublado = false;
+    public bool ActivarViento = false;
+    public bool ActivarLunaRoja = false;
+    public bool DesactivarClimas = false;
+
     public enum climas
     {
         Soleado,
@@ -76,6 +85,8 @@ public class Scr_ControladorTiempo : MonoBehaviour
 
     void Update()
     {
+        ProcesarControlesClima();
+
         // Incrementa el tiempo transcurrido
         tiempoTranscurrido += Time.deltaTime;
 
@@ -414,6 +425,22 @@ public class Scr_ControladorTiempo : MonoBehaviour
         ImagenClima.sprite = IconosClima[indiceIcono];
     }
 
+    public bool EstaLloviendo()
+    {
+        int indiceDia = ConseguirDia();
+
+        if (!EstaActivoClima)
+            return false;
+
+        if (ClimaSemanal == null ||
+            indiceDia < 0 ||
+            indiceDia >= ClimaSemanal.Count)
+            return false;
+
+        return ClimaSemanal[indiceDia] == climas.Lluvioso;
+    }
+
+
     // Función para cambiar el skybox entre día y noche
     void ActualizarSkybox()
     {
@@ -438,6 +465,87 @@ public class Scr_ControladorTiempo : MonoBehaviour
         rotacionSkybox += Time.deltaTime * 1f; // Cambia el valor de 1f para ajustar la velocidad de rotación
         RenderSettings.skybox.SetFloat("_Rotation", rotacionSkybox);
     }
+
+
+    private void ProcesarControlesClima()
+    {
+        if (ActivarLluvia)
+        {
+            ActivarLluvia = false;
+            ForzarClima(climas.Lluvioso);
+        }
+        else if (ActivarNublado)
+        {
+            ActivarNublado = false;
+            ForzarClima(climas.Nublado);
+        }
+        else if (ActivarViento)
+        {
+            ActivarViento = false;
+            ForzarClima(climas.Vientoso);
+        }
+        else if (ActivarLunaRoja)
+        {
+            ActivarLunaRoja = false;
+            ForzarClima(climas.LunaRoja);
+        }
+        else if (DesactivarClimas)
+        {
+            DesactivarClimas = false;
+            ForzarClima(climas.Soleado);
+        }
+    }
+
+    private void ForzarClima(climas nuevoClima)
+    {
+        // Validar que el controlador de efectos exista.
+        if (Clima == null)
+        {
+            Debug.LogError("No hay un Scr_controladorClima asignado.");
+            return;
+        }
+
+        // Asegurar que exista el calendario semanal.
+        if (ClimaSemanal == null || ClimaSemanal.Count != 7)
+        {
+            Debug.LogWarning("El calendario climático no tiene 7 días.");
+            return;
+        }
+
+        int indiceDia = ConseguirDia();
+
+        if (indiceDia < 0 || indiceDia >= ClimaSemanal.Count)
+            return;
+
+        // Actualizar el clima previsto para el día actual.
+        ClimaSemanal[indiceDia] = nuevoClima;
+
+        // Reiniciar el temporizador del clima.
+        tiempoClima = 0f;
+
+        if (nuevoClima == climas.Soleado)
+        {
+            // Apagar todos los efectos climáticos.
+            EstaActivoClima = false;
+            duracionClima = 0f;
+            Clima.ApagarClimas();
+        }
+        else
+        {
+            // Mantener activo el clima forzado durante mucho tiempo.
+            EstaActivoClima = true;
+            duracionClima = 999999f;
+
+            Clima.Activar_Clima(nuevoClima.ToString());
+        }
+
+        // Actualizar el aspecto del mundo y guardar el estado.
+        ActualizarSkybox();
+        GuardarClimaDeldia();
+
+        Debug.Log("Clima forzado: " + nuevoClima);
+    }
+
 }
 [System.Serializable]
 public class ProbabilidadesClima

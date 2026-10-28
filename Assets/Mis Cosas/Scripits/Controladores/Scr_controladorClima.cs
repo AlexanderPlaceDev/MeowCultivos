@@ -8,17 +8,7 @@ public class Scr_controladorClima : MonoBehaviour
     public GameObject[] Lluvia;
     public GameObject[] Neblina;
     public GameObject[] NeblinaRoja;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+   
     /*Soleado,
         Nublado,
         Lluvioso,

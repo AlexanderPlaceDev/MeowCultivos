@@ -344546,6 +344546,11 @@ MonoBehaviour:
   HoraInicioNoche: 21
   DineroRecompensa: 0
   Clima: {fileID: 1953515966}
+  ActivarLluvia: 0
+  ActivarNublado: 0
+  ActivarViento: 0
+  ActivarLunaRoja: 0
+  DesactivarClimas: 0
   ClimaSemanal: 
   ProbabilidadesClimaSemanal: 
   EstaActivoClima: 0
@@ -543359,7 +543364,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 83c4e8fb5c546f84c8cc5807dcb2df3d,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 83c4e8fb5c546f84c8cc5807dcb2df3d,
         type: 3}
