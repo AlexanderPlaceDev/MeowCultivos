@@ -34,35 +34,46 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 
         // Recuperar el tiempo de respawn guardado
         TiempoRestanteSpawn = PlayerPrefs.GetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoSpawn);
-        if (Enemigos.Count <= 0)
-        {
-            RestaurarEnemigos(); // Cargar enemigos en escena
-            Spawn = StartCoroutine(SpawnEnemies()); // Iniciar la rutina
-        }
+        RestaurarEnemigos();
+
+        IniciarSpawn();
     }
 
     private void OnEnable()
     {
-        if(Enemigos.Count < CantidadDeEnemigos)
-        {
-
-        // Recuperar el tiempo de respawn guardado
-        TiempoRestanteSpawn = PlayerPrefs.GetFloat($"{IDSpawner}_TiempoRestanteSpawn", TiempoSpawn);
-        RestaurarEnemigos(); // Cargar enemigos en escena
         if (Spawn != null)
         {
-
             StopCoroutine(Spawn);
-            Spawn = StartCoroutine(SpawnEnemies()); // Iniciar la rutina
+            Spawn = null;
         }
-        }
-    }
 
+        if (Enemigos.Count == 0)
+        {
+            TiempoRestanteSpawn = PlayerPrefs.GetFloat(
+                $"{IDSpawner}_TiempoRestanteSpawn",
+                TiempoSpawn
+            );
+
+            RestaurarEnemigos();
+        }
+
+        IniciarSpawn();
+    }
+   
     private void OnDisable()
     {
         if (Spawn != null)
         {
             StopCoroutine(Spawn);
+            Spawn = null;
+        }
+    }
+
+    private void IniciarSpawn()
+    {
+        if (Spawn == null)
+        {
+            Spawn = StartCoroutine(SpawnEnemies());
         }
     }
 
@@ -77,6 +88,7 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
     {
         while (true)
         {
+            //Debug.Log($"[{IDSpawner}] Enemigos actuales: {Enemigos.Count} / Máximos: {CantidadDeEnemigos}");
             // Si NoUsaHaveActive está activo, tratamos haveAcivate como 1 siempre
             int estado = NoUsaHaveActive ? 1 : haveAcivate;
 
@@ -127,13 +139,14 @@ public class Scr_SpawnerEnemigosAfuera : MonoBehaviour
 
     public void ActivarLunaRoja()
     {
-        if (ChecarLunaRoja())
+        int cantidadObjetivo = ChecarLunaRoja()
+            ? Enemigos_normales * 2
+            : Enemigos_normales;
+
+        if (CantidadDeEnemigos != cantidadObjetivo)
         {
-            CantidadDeEnemigos = Enemigos_normales * 2;
-        }
-        else
-        {
-            CantidadDeEnemigos = Enemigos_normales;
+            CantidadDeEnemigos = cantidadObjetivo;
+            //Debug.Log($"[{IDSpawner}] Luna Roja: {ChecarLunaRoja()} | Enemigos máximos: {CantidadDeEnemigos}");
         }
     }
     public bool checartiempoDeSpawn()
