@@ -14,9 +14,12 @@ public class Scr_controladorClima : MonoBehaviour
         Lluvioso,
         Vientoso,
         */
-    public void Activar_Clima(string Clima)
+    public void Activar_Clima(string Clima,bool Apagar)
     {
-        ApagarClimas();
+        if (Apagar)
+        {
+            ApagarClimas();
+        }
         switch (Clima)
         {
             case "Soleado":

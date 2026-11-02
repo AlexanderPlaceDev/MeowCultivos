@@ -37,7 +37,7 @@ public class Scr_JabaAfuera : Scr_EnemigoFuera
         agente = GetComponent<NavMeshAgent>();
         agente.speed = Velocidad;
         Anim = GetComponent<Animator>();
-        audioSource = transform.GetChild(0).GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
 
         // Iniciar la corutina de sonidos una sola vez
         if (audioSource != null)
@@ -158,7 +158,7 @@ public class Scr_JabaAfuera : Scr_EnemigoFuera
     IEnumerator ControlarSonidos()
     {
         bool ultimoEstado = persiguiendo; // para detectar cambios de estado
-
+        
         while (true)
         {
             // Detectar si el estado cambió

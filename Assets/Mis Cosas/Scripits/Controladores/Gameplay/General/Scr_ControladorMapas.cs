@@ -8,7 +8,7 @@ public class Scr_ControladorMapas : MonoBehaviour
     [SerializeField] string NombreMapaBatalla;
     [SerializeField] Material SkyBoxDia;
     [SerializeField] Material SkyBoxNoche;
-
+    Scr_ControladorTiempo controladorTiempo;
     // Flag para evitar guardados mientras se está cargando
     private bool cargando = false;
 
@@ -16,6 +16,8 @@ public class Scr_ControladorMapas : MonoBehaviour
     {
         if (EsMapa)
             CargarEstadoMapas();
+
+        controladorTiempo = GameObject.Find("Controlador Tiempo").GetComponent< Scr_ControladorTiempo>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -47,7 +49,10 @@ public class Scr_ControladorMapas : MonoBehaviour
         {
             if (mapa && mapa.activeSelf) mapa.SetActive(false);
         }
-
+        if(controladorTiempo != null)
+        {
+            controladorTiempo.checarClimaActivado();
+        }
         // IMPORTANT: Si este script es el trigger (EsMapa == false), debemos pedir
         // explícitamente al controlador principal (EsMapa == true) que guarde.
         if (!EsMapa)

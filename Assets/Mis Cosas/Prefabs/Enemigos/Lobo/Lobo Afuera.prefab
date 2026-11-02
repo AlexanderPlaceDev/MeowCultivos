@@ -104,6 +104,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8451311559076053968}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 61a1e30d5ee4d6b43b3b1cde3ed981d8,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4321955211771967420}
     - targetCorrespondingSourceObject: {fileID: -2909969703269092573, guid: 61a1e30d5ee4d6b43b3b1cde3ed981d8,
         type: 3}
       insertIndex: -1
@@ -174,6 +178,7 @@ MonoBehaviour:
   VidaMaxima: 10
   Velocidad: 22
   RadioDeDeambulacion: 30
+  movimientoInvertido: 0
   Vision: {fileID: 4016407324043549624}
   offsetZInicio: 4
   offsetZFinal: 4
@@ -200,6 +205,7 @@ MonoBehaviour:
   Complemento: todos los
   Item: Lobos dientes de sable
   ColorItem: {r: 0, g: 0.39607844, b: 1, a: 1}
+  NombreMapa: Batalla Base
   Modo: 0
   Pista: 2
   Fruta: 
@@ -343,6 +349,19 @@ CapsuleCollider:
   m_Height: 6.27
   m_Direction: 2
   m_Center: {x: 0, y: 2.14, z: 0}
+--- !u!114 &4321955211771967420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693741142263627357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d5364f17fb28794e90a6af4d8f0bf2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  categoria: 3
 --- !u!4 &2074664319175763175 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 61a1e30d5ee4d6b43b3b1cde3ed981d8,

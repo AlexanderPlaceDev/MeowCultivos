@@ -853,6 +853,7 @@ MonoBehaviour:
   VidaMaxima: 30
   Velocidad: 3
   RadioDeDeambulacion: 50
+  movimientoInvertido: 0
   Vision: {fileID: 6854536677381288704}
   TiempoLimitePersiguiendo: 5
   SonidosPersecucion:
@@ -885,6 +886,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5be3fbe55668cb74d8a905ea881511af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EsPlanta: 0
   PrefabEnemigo: {fileID: 5344104364155751016, guid: f17e79eee73293744a8a59538848c7c3,
     type: 3}
   CantidadEnemigosMinima: 1
@@ -894,9 +896,12 @@ MonoBehaviour:
   Complemento: a los
   Item: Esqueletos
   ColorItem: {r: 0.9547169, g: 0.9446168, b: 0.8556425, a: 1}
+  NombreMapa: Batalla Base
   Modo: 0
   Pista: 1
+  Fruta: 
   Cambiando: 0
+  escenaCargada: 0
 --- !u!82 &6924030127490596063
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1047,7 +1052,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d5364f17fb28794e90a6af4d8f0bf2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  categoria: 2
+  categoria: 3
 --- !u!4 &3039752973844267510 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 74f6bff137cb67b41b75f79e4dfe247d,

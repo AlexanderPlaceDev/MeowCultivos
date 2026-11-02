@@ -177,12 +177,12 @@ public class Scr_ControladorTiempo : MonoBehaviour
         if (PlayerPrefs.GetString("ClimaActivadoEsta", "NO") == "SI")
         {
             EstaActivoClima = true;
-            Clima.Activar_Clima(ClimaSemanal[ConseguirDia()].ToString());
+            Clima.Activar_Clima(ClimaSemanal[ConseguirDia()].ToString(),true);
         }
         else
         {
             EstaActivoClima = false;
-            Clima.Activar_Clima("Soleado");
+            Clima.Activar_Clima("Soleado", true);
         }
     }
     public void NuevoclimaSemanal()
@@ -226,6 +226,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
         duracionClima = 0;
         tiempoClima = 0;
         Clima.ApagarClimas();
+        ActualizarSkybox();
         Debug.Log("Se acabo El clima");
         GuardarClimaDeldia();
     }
@@ -244,6 +245,11 @@ public class Scr_ControladorTiempo : MonoBehaviour
                 desactivarClima(); 
 
             }
+            /*
+            if (ClimaSemanal[ConseguirDia()].ToString() == "LunaRoja" && HoraActual >= HoraInicioNoche - 2 || HoraActual <= HoraInicioDia)
+            {
+
+            }*/
         }
         else
         {
@@ -256,7 +262,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
                     EstaActivoClima = true;
                     duracionClima = Random.Range(400f, 500f);
                     //ClimaSemanal.Add(ClimaSemanal[diaActualIndex]);
-                    Clima.Activar_Clima(ClimaSemanal[diaActualIndex].ToString());
+                    Clima.Activar_Clima(ClimaSemanal[diaActualIndex].ToString(), true);
                     ProbabilidadesClimaSemanal[diaActualIndex] = ProbabilidadesClimaSemanal[diaActualIndex] / 3;
                     GuardarClimaDeldia();
                     Debug.Log("Esta " + ClimaSemanal[diaActualIndex]);
@@ -266,7 +272,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
                     EstaActivoClima = true;
                     duracionClima = Random.Range(300f, 480f);
                     //ClimaSemanal.Add(ClimaSemanal[diaActualIndex]);
-                    Clima.Activar_Clima(ClimaSemanal[diaActualIndex].ToString());
+                    Clima.Activar_Clima(ClimaSemanal[diaActualIndex].ToString(), true);
                     ProbabilidadesClimaSemanal[diaActualIndex] = ProbabilidadesClimaSemanal[diaActualIndex] / 3;
                     GuardarClimaDeldia();
                     Debug.Log("Esta " + ClimaSemanal[diaActualIndex]);
@@ -424,7 +430,13 @@ public class Scr_ControladorTiempo : MonoBehaviour
         indiceIcono = Mathf.Clamp(indiceIcono, 0, IconosClima.Length - 1);
         ImagenClima.sprite = IconosClima[indiceIcono];
     }
-
+    public void checarClimaActivado()
+    {
+        if (ClimaSemanal.Count == 7 && EstaActivoClima)
+        {
+            Clima.Activar_Clima(ClimaSemanal[ConseguirDia()].ToString(), false);
+        }
+    }
     public bool EstaLloviendo()
     {
         int indiceDia = ConseguirDia();
@@ -536,7 +548,7 @@ public class Scr_ControladorTiempo : MonoBehaviour
             EstaActivoClima = true;
             duracionClima = 999999f;
 
-            Clima.Activar_Clima(nuevoClima.ToString());
+            Clima.Activar_Clima(nuevoClima.ToString(), true);
         }
 
         // Actualizar el aspecto del mundo y guardar el estado.
