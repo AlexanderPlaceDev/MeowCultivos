@@ -203,6 +203,7 @@ public class Scr_Inventario : MonoBehaviour
         }
 
         GuardarInventario();
+        ControladorMisiones.ActualizarUI();
         OnInventarioActualizado?.Invoke();
 
         return cantidadAgregada;
