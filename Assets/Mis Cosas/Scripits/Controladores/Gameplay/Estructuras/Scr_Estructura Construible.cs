@@ -22,44 +22,30 @@ public class Scr_EstructuraConstruible : MonoBehaviour
     [SerializeField] Scr_CreadorMisiones Mision;
     Scr_Inventario Inventario;
 
+    [SerializeField] float TiempoActualizacion = 0.2f;
+    private float Temporizador;
     ChecarInput Checar_input;
     void Start()
     {
         Inventario = GameObject.Find("Gata").transform.GetChild(7).GetComponent<Scr_Inventario>();
+
         if (PlayerPrefs.GetString(Estructura, "No") == "Si")
         {
             DesactivarCartel();
         }
-        for (int i = 0; i < 4; i++)
+
+        ActualizarMaterialesUI();
+    }
+
+    void Update()
+    {
+        Temporizador += Time.deltaTime;
+
+        if (Temporizador >= TiempoActualizacion)
         {
-            if (Objetos.Length > i)
-            {
-                ObjetosUI[i].GetComponent<Image>().sprite = Objetos[i].Icono;
-                ObjetosUI[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = Cantidades[i].ToString();
-
-                int i2 = 0;
-                foreach (Scr_CreadorObjetos Objeto in Inventario.Objetos)
-                {
-                    if (Objeto == Objetos[i])
-                    {
-                        if (Inventario.Cantidades[i2] >= Cantidades[i])
-                        {
-                            ObjetosUI[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.green;
-                        }
-                        else
-                        {
-                            ObjetosUI[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.red;
-                        }
-                    }
-                    i2++;
-                }
-            }
-            else
-            {
-                ObjetosUI[i].SetActive(false);
-            }
+            ActualizarMaterialesUI();
+            Temporizador = 0;
         }
-
     }
 
     public void BotonAceptar()
@@ -145,5 +131,48 @@ public class Scr_EstructuraConstruible : MonoBehaviour
         }
     }
 
+    private void ActualizarMaterialesUI()
+    {
+        for (int i = 0; i < Objetos.Length; i++)
+        {
+            ObjetosUI[i].SetActive(true);
+
+            // Asignar icono y cantidad requerida
+            ObjetosUI[i].GetComponent<Image>().sprite = Objetos[i].Icono;
+
+            TextMeshProUGUI textoCantidad =
+                ObjetosUI[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+
+            textoCantidad.text = Cantidades[i].ToString();
+
+            // Buscar individualmente el objeto en el inventario
+            int cantidadDisponible = 0;
+
+            for (int j = 0; j <= Inventario.Objetos.Length; j++)
+            {
+                if (Inventario.Objetos[j] == Objetos[i])
+                {
+                    cantidadDisponible = Inventario.Cantidades[j];
+                    break;
+                }
+            }
+
+            // Comprobar si tiene los materiales necesarios
+            if (cantidadDisponible >= Cantidades[i])
+            {
+                textoCantidad.color = Color.green;
+            }
+            else
+            {
+                textoCantidad.color = Color.red;
+            }
+        }
+
+        // Desactivar espacios de objetos que no se utilizan
+        for (int i = Objetos.Length; i < ObjetosUI.Length; i++)
+        {
+            ObjetosUI[i].SetActive(false);
+        }
+    }
 
 }

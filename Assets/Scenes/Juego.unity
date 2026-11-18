@@ -19426,7 +19426,7 @@ MonoBehaviour:
   ColorBotones:
   - {r: 0.69803923, g: 0.69803923, b: 0.69803923, a: 1}
   - {r: 0.41960785, g: 0.41960785, b: 0.41960785, a: 1}
-  CanvasMenu: {fileID: 558630642}
+  CanvasMenu: {fileID: 0}
   TieneBatalla: 0
   EstaDentro: 0
 --- !u!114 &55751143
@@ -19460,6 +19460,7 @@ MonoBehaviour:
     type: 3}
   QuitaMision: 1
   Mision: {fileID: 11400000, guid: 38aa457ca17cae044912a929b4e2a3c9, type: 2}
+  TiempoActualizacion: 0.2
 --- !u!4 &56270971 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7ad178f2dcb685c4dbde656609630156,
